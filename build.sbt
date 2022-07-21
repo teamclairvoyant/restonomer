@@ -1,8 +1,8 @@
 // ----- VARIABLES ----- //
 
-val organization = "com.clairvoyant.restonomer"
-val name = "restonomer"
-val version = "1.0-SNAPSHOT"
+val organizationName = "com.clairvoyant.restonomer"
+val applicationName = "restonomer"
+val releaseVersion = "1.0"
 
 val scalaVersion = "3.1.2"
 val sttpVersion = "3.7.1"
@@ -18,9 +18,9 @@ val commonDependencies = sttpDependencies
 // ----- SETTINGS ----- //
 
 val rootSettings = Seq(
-  Keys.organization := organization,
-  Keys.name := name,
-  Keys.version := version
+  organization := organizationName,
+  name := applicationName,
+  version := releaseVersion
 )
 
 val commonSettings = Seq(
