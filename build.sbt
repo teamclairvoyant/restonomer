@@ -1,4 +1,5 @@
-// VARIABLES
+// ----- VARIABLES ----- //
+
 val organization = "com.clairvoyant.restonomer"
 val name = "restonomer"
 val version = "1.0-SNAPSHOT"
@@ -6,14 +7,16 @@ val version = "1.0-SNAPSHOT"
 val scalaVersion = "3.1.2"
 val sttpVersion = "3.7.1"
 
-// DEPENDENCIES
+// ----- DEPENDENCIES ----- //
+
 val sttpDependencies = Seq(
   "com.softwaremill.sttp.client3" %% "core" % sttpVersion
 )
 
 val commonDependencies = sttpDependencies
 
-// SETTINGS
+// ----- SETTINGS ----- //
+
 val rootSettings = Seq(
   Keys.organization := organization,
   Keys.name := name,
@@ -25,7 +28,8 @@ val commonSettings = Seq(
   libraryDependencies ++= commonDependencies
 )
 
-// ROOT
+// ----- ROOT ----- //
+
 lazy val restonomer = (project in file("."))
   .settings(rootSettings)
   .settings(commonSettings)
