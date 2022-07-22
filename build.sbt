@@ -28,7 +28,11 @@ val commonSettings = Seq(
   libraryDependencies ++= commonDependencies
 )
 
-// ----- ROOT ----- //
+// ----- PROJECTS ----- //
+
+lazy val core = project in file("core")
+
+lazy val app = project in file("core/app")
 
 lazy val restonomer = (project in file("."))
   .settings(rootSettings)
