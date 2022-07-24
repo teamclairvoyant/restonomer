@@ -12,7 +12,7 @@ object RestonomerContext {
 
   def apply(restonomerContextDirectoryPath: String = DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH): RestonomerContext = {
     if (fileExists(restonomerContextDirectoryPath)) {
-      new RestonomerContext(new File(restonomerContextDirectoryPath))
+      new RestonomerContext(restonomerContextDirectoryPath)
     } else {
       throw new RestonomerContextException(
         s"The RestonomerContext directory path: $restonomerContextDirectoryPath does not exists."
@@ -22,9 +22,9 @@ object RestonomerContext {
 
 }
 
-class RestonomerContext(val restonomerContextDirectory: File) {
+class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
-  val checkpointsDirectoryPath: String = s"${restonomerContextDirectory.getPath}/checkpoints"
+  val checkpointsDirectoryPath: String = s"$restonomerContextDirectoryPath/checkpoints"
 
   def buildCheckpoint(checkpointName: String): Checkpoint = {
     if (fileExists(checkpointsDirectoryPath)) {
