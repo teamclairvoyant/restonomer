@@ -4,16 +4,16 @@ val organizationName = "com.clairvoyant.restonomer"
 val applicationName = "restonomer"
 val releaseVersion = "1.0"
 
-val scalaVersion = "3.1.2"
+val scalaVersion = "2.13.8"
+
 val sttpVersion = "3.7.1"
+val pureConfigVersion = "0.17.1"
 
 // ----- DEPENDENCIES ----- //
 
-val sttpDependencies = Seq(
-  "com.softwaremill.sttp.client3" %% "core" % sttpVersion
+val appDependencies = Seq(
+  "com.github.pureconfig" % "pureconfig" % pureConfigVersion
 )
-
-val commonDependencies = sttpDependencies
 
 // ----- SETTINGS ----- //
 
@@ -24,15 +24,26 @@ val rootSettings = Seq(
 )
 
 val commonSettings = Seq(
-  Keys.scalaVersion := scalaVersion,
-  libraryDependencies ++= commonDependencies
+  Keys.scalaVersion := scalaVersion
+)
+
+val appSettings = Seq(
+  libraryDependencies ++= appDependencies
 )
 
 // ----- PROJECTS ----- //
 
 lazy val core = project in file("core")
 
-lazy val app = project in file("core/app")
+lazy val app = (project in file("core/app"))
+  .settings(appSettings)
+  .dependsOn(model, exceptions, common)
+
+lazy val common = project in file("core/common")
+
+lazy val exceptions = project in file("core/exceptions")
+
+lazy val model = project in file("core/model")
 
 lazy val restonomer = (project in file("."))
   .settings(rootSettings)
