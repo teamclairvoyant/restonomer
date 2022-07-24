@@ -12,7 +12,7 @@ val pureConfigVersion = "0.17.1"
 // ----- DEPENDENCIES ----- //
 
 val appDependencies = Seq(
-  "com.github.pureconfig" % "pureconfig" % pureConfigVersion
+  "com.github.pureconfig" %% "pureconfig" % pureConfigVersion
 )
 
 // ----- SETTINGS ----- //

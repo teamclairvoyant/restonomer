@@ -30,7 +30,7 @@ class RestonomerContext(val restonomerContextDirectory: File) {
     if (fileExists(checkpointsDirectoryPath)) {
       val checkpointConfigFilePath = s"$checkpointsDirectoryPath/$checkpointName.conf"
       if (fileExists(checkpointConfigFilePath))
-        loadConfig(checkpointConfigFilePath)
+        loadConfig[Checkpoint](checkpointConfigFilePath)
       else
         throw new RestonomerContextException(
           s"The config file for checkpoint: $checkpointName does not exists under the path: $checkpointConfigFilePath"
