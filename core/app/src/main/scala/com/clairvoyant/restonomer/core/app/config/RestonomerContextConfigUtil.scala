@@ -1,15 +1,14 @@
 package com.clairvoyant.restonomer.core.app.config
 
-import com.clairvoyant.restonomer.core.common.FileUtil.fileExists
+import com.clairvoyant.restonomer.core.common.util.FileUtil.fileExists
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
-import com.clairvoyant.restonomer.core.model.config.RestonomerConfig
 import pureconfig._
 
 import java.io.File
 
-object RestonomerContextConfig {
+object RestonomerContextConfigUtil {
 
-  def buildConfig[C <: RestonomerConfig](configDirectoryPath: String, configName: String)(
+  def buildConfig[C](configDirectoryPath: String, configName: String)(
       implicit reader: ConfigReader[C]
   ): C = {
     if (fileExists(configDirectoryPath)) {
@@ -26,7 +25,7 @@ object RestonomerContextConfig {
       )
   }
 
-  def loadConfig[C <: RestonomerConfig](configFile: File)(implicit reader: ConfigReader[C]): C = {
+  def loadConfig[C](configFile: File)(implicit reader: ConfigReader[C]): C = {
     ConfigSource.file(configFile).load[C] match {
       case Right(config) =>
         config
@@ -35,7 +34,6 @@ object RestonomerContextConfig {
     }
   }
 
-  def loadConfig[C <: RestonomerConfig](configFilePath: String)(implicit reader: ConfigReader[C]): C =
-    loadConfig(new File(configFilePath))
+  def loadConfig[C](configFilePath: String)(implicit reader: ConfigReader[C]): C = loadConfig(new File(configFilePath))
 
 }

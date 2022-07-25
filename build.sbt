@@ -1,10 +1,10 @@
+ThisBuild / scalaVersion := "2.13.8"
+
 // ----- VARIABLES ----- //
 
 val organizationName = "com.clairvoyant.restonomer"
 val applicationName = "restonomer"
 val releaseVersion = "1.0"
-
-val scalaVersion = "2.13.8"
 
 val pureConfigVersion = "0.17.1"
 
@@ -25,10 +25,6 @@ val rootSettings = Seq(
   organization := organizationName,
   name := applicationName,
   version := releaseVersion
-)
-
-val commonSettings = Seq(
-  Keys.scalaVersion := scalaVersion
 )
 
 val appSettings = Seq(
@@ -56,4 +52,3 @@ lazy val model = (project in file("core/model"))
 
 lazy val restonomer = (project in file("."))
   .settings(rootSettings)
-  .settings(commonSettings)

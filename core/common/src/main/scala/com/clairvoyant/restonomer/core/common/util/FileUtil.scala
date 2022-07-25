@@ -1,4 +1,4 @@
-package com.clairvoyant.restonomer.core.common
+package com.clairvoyant.restonomer.core.common.util
 
 import java.nio.file.{Files, Paths}
 
