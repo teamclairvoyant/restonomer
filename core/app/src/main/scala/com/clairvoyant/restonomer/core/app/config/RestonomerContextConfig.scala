@@ -18,6 +18,6 @@ object RestonomerContextConfig {
   }
 
   def loadConfig[C <: RestonomerConfigType](configFilePath: String)(implicit reader: ConfigReader[C]): C =
-    loadConfig(new File(configFilePath))(reader)
+    loadConfig(new File(configFilePath))
 
 }
