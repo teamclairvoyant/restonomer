@@ -5,8 +5,6 @@ import com.clairvoyant.restonomer.core.common.FileUtil.fileExists
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
 import com.clairvoyant.restonomer.core.model.config.Checkpoint
 
-import java.io.File
-
 object RestonomerContext {
   val DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH = "./restonomer_context"
 
@@ -27,6 +25,9 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
   val checkpointsDirectoryPath: String = s"$restonomerContextDirectoryPath/checkpoints"
 
   def buildCheckpoint(checkpointName: String): Checkpoint = {
+    import pureconfig.generic.semiauto._
+
+    implicit val reader = deriveReader[Checkpoint]
     if (fileExists(checkpointsDirectoryPath)) {
       val checkpointConfigFilePath = s"$checkpointsDirectoryPath/$checkpointName.conf"
       if (fileExists(checkpointConfigFilePath))
@@ -40,8 +41,6 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
         s"The checkpoints directory path: $checkpointsDirectoryPath does not exists."
       )
   }
-
-  def buildCheckpoint(checkpointFile: File): Checkpoint = buildCheckpoint(checkpointFile.getName.split("\\.conf").head)
 
   def runCheckpoint(checkpointName: String): Unit = {
     val checkpoint = buildCheckpoint(checkpointName)
