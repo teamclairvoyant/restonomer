@@ -3,9 +3,9 @@ package com.clairvoyant.restonomer.core.app.context
 import com.clairvoyant.restonomer.core.app.config.RestonomerContextConfig.loadConfig
 import com.clairvoyant.restonomer.core.common.FileUtil.fileExists
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
+import com.clairvoyant.restonomer.core.model.config.RestonomerConfigType.implicits._
 import com.clairvoyant.restonomer.core.model.config.{Checkpoint, RestonomerConfigType}
 import pureconfig.ConfigReader
-import pureconfig.generic.semiauto._
 
 object RestonomerContext {
   val DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH = "./restonomer_context"
@@ -25,8 +25,6 @@ object RestonomerContext {
 class RestonomerContext(val restonomerContextDirectoryPath: String) {
   val checkpointsDirectoryPath: String = s"$restonomerContextDirectoryPath/checkpoints"
 
-  implicit val checkpointReader: ConfigReader[Checkpoint] = deriveReader[Checkpoint]
-
   def buildCheckpoint(checkpointName: String): Checkpoint =
     buildConfig[Checkpoint](checkpointsDirectoryPath, checkpointName)
 
@@ -44,7 +42,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
         loadConfig[C](configFilePath)
       else
         throw new RestonomerContextException(
-          s"The config file for config: $configName does not exists under the path: $configFilePath"
+          s"The config file for $configName does not exists under the path: $configFilePath"
         )
     } else
       throw new RestonomerContextException(

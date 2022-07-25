@@ -6,14 +6,18 @@ val releaseVersion = "1.0"
 
 val scalaVersion = "2.13.8"
 
-val sttpVersion = "3.7.1"
 val pureConfigVersion = "0.17.1"
 
-// ----- DEPENDENCIES ----- //
-
-val appDependencies = Seq(
+// ----- TOOL DEPENDENCIES ----- //
+val pureConfigDependencies = Seq(
   "com.github.pureconfig" %% "pureconfig" % pureConfigVersion
 )
+
+// ----- MODULE DEPENDENCIES ----- //
+
+val appDependencies = pureConfigDependencies
+
+val modelDependencies = pureConfigDependencies
 
 // ----- SETTINGS ----- //
 
@@ -31,6 +35,10 @@ val appSettings = Seq(
   libraryDependencies ++= appDependencies
 )
 
+val modelSettings = Seq(
+  libraryDependencies ++= modelDependencies
+)
+
 // ----- PROJECTS ----- //
 
 lazy val core = project in file("core")
@@ -43,7 +51,8 @@ lazy val common = project in file("core/common")
 
 lazy val exceptions = project in file("core/exceptions")
 
-lazy val model = project in file("core/model")
+lazy val model = (project in file("core/model"))
+  .settings(modelSettings)
 
 lazy val restonomer = (project in file("."))
   .settings(rootSettings)
