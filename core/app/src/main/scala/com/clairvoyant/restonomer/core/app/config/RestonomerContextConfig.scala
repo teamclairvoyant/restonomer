@@ -13,7 +13,7 @@ object RestonomerContextConfig {
       case Right(config) =>
         config
       case Left(error) =>
-        throw new RestonomerContextException(error.toString())
+        throw new RestonomerContextException(error.prettyPrint())
     }
   }
 
