@@ -3,7 +3,7 @@ package com.clairvoyant.restonomer.core.app.context
 import com.clairvoyant.restonomer.core.app.config.RestonomerContextConfig.loadConfig
 import com.clairvoyant.restonomer.core.common.FileUtil.fileExists
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
-import com.clairvoyant.restonomer.core.model.config.Checkpoint
+import com.clairvoyant.restonomer.core.model.config.{Checkpoint, RestonomerConfigType}
 import pureconfig.ConfigReader
 import pureconfig.generic.semiauto._
 
@@ -27,25 +27,29 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
   implicit val checkpointReader: ConfigReader[Checkpoint] = deriveReader[Checkpoint]
 
-  def buildCheckpoint(checkpointName: String): Checkpoint = {
-    if (fileExists(checkpointsDirectoryPath)) {
-      val checkpointConfigFilePath = s"$checkpointsDirectoryPath/$checkpointName.conf"
-      if (fileExists(checkpointConfigFilePath))
-        loadConfig[Checkpoint](checkpointConfigFilePath)
-      else
-        throw new RestonomerContextException(
-          s"The config file for checkpoint: $checkpointName does not exists under the path: $checkpointConfigFilePath"
-        )
-    } else
-      throw new RestonomerContextException(
-        s"The checkpoints directory path: $checkpointsDirectoryPath does not exists."
-      )
-  }
+  def buildCheckpoint(checkpointName: String): Checkpoint =
+    buildConfig[Checkpoint](checkpointsDirectoryPath, checkpointName)
 
   def runCheckpoint(checkpointName: String): Unit = {
     val checkpoint = buildCheckpoint(checkpointName)
-
     println(checkpoint)
+  }
+
+  private def buildConfig[C <: RestonomerConfigType](configDirectoryPath: String, configName: String)(
+      implicit reader: ConfigReader[C]
+  ): C = {
+    if (fileExists(configDirectoryPath)) {
+      val configFilePath = s"$configDirectoryPath/$configName.conf"
+      if (fileExists(configFilePath))
+        loadConfig[C](configFilePath)
+      else
+        throw new RestonomerContextException(
+          s"The config file for config: $configName does not exists under the path: $configFilePath"
+        )
+    } else
+      throw new RestonomerContextException(
+        s"The config directory path: $configDirectoryPath does not exists."
+      )
   }
 
 }
