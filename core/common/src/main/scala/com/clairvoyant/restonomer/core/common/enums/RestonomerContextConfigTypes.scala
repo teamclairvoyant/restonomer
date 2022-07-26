@@ -1,5 +1,7 @@
 package com.clairvoyant.restonomer.core.common.enums
 
+import scala.language.implicitConversions
+
 object RestonomerContextConfigTypes extends Enumeration {
 
   protected case class RestonomerContextConfigTypesDetails(configDirectoryName: String)

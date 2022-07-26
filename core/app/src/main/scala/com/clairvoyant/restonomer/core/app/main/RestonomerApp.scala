@@ -7,8 +7,5 @@ object RestonomerApp extends App {
 
   val restonomerContext = RestonomerContext()
 
-  val restonomerContextConfigs = restonomerContext.configs
-  println(restonomerContextConfigs)
-
-  restonomerContext.runCheckpoint(checkpointName = "checkpoint_1")
+  println(restonomerContext.configs)
 }

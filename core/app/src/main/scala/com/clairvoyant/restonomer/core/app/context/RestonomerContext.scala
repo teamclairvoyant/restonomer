@@ -25,23 +25,13 @@ object RestonomerContext {
 class RestonomerContext(val restonomerContextDirectoryPath: String) {
   implicit val checkpointConfigReader: ConfigReader[CheckpointConfig] = deriveReader[CheckpointConfig]
 
-  val configs: RestonomerContextConfig = initRestonomerContextConfig()
-
-  private def initRestonomerContextConfig(): RestonomerContextConfig = {
+  val configs: RestonomerContextConfig = {
     // CHECKPOINT
     val checkpointConfigs = readConfigs[CheckpointConfig](configDirectoryPath =
       s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT.configDirectoryName}"
     )
 
     RestonomerContextConfig(checkpoints = checkpointConfigs)
-  }
-
-  def runCheckpoint(checkpointName: String): Unit = {
-    println(
-      this.configs.checkpoints
-        .flatMap(checkpoints => checkpoints.find(_.name == checkpointName))
-        .getOrElse(throw new RestonomerContextException("Checkpoint not found"))
-    )
   }
 
 }
