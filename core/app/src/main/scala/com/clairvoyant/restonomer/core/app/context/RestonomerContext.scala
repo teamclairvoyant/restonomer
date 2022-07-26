@@ -39,7 +39,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
   def runCheckpoint(checkpointName: String): Unit = {
     println(
       this.configs.checkpoints
-        .map(checkpoints => checkpoints.filter(_.name == checkpointName).head)
+        .flatMap(checkpoints => checkpoints.find(_.name == checkpointName))
         .getOrElse(throw new RestonomerContextException("Checkpoint not found"))
     )
   }
