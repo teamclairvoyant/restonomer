@@ -1,24 +1,22 @@
-package com.clairvoyant.restonomer.core.app.config
+package com.clairvoyant.restonomer.core.app.context
 
 import com.clairvoyant.restonomer.core.common.util.FileUtil.fileExists
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
-import pureconfig._
+import pureconfig.{ConfigReader, ConfigSource}
 
 import java.io.File
 import scala.reflect.ClassTag
 
 object RestonomerContextConfigUtil {
 
-  def readConfigs[C: ClassTag](configDirectoryPath: String)(implicit reader: ConfigReader[C]): Option[List[C]] = {
+  def readConfigs[C: ClassTag](configDirectoryPath: String)(implicit reader: ConfigReader[C]): List[C] = {
     if (fileExists(configDirectoryPath))
-      Option(
-        new File(configDirectoryPath)
-          .listFiles()
-          .map(loadConfig[C])
-          .toList
-      )
+      new File(configDirectoryPath)
+        .listFiles()
+        .map(loadConfig[C])
+        .toList
     else
-      None
+      List.empty
   }
 
   def loadConfig[C](configFile: File)(implicit reader: ConfigReader[C]): C = {

@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.app.context
 
-import com.clairvoyant.restonomer.core.app.config.RestonomerContextConfigUtil.readConfigs
+import RestonomerContextConfigUtil.readConfigs
 import com.clairvoyant.restonomer.core.common.enums.RestonomerContextConfigTypes
 import com.clairvoyant.restonomer.core.common.util.FileUtil.fileExists
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException

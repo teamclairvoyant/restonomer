@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.model.config
 
 case class RestonomerContextConfig(
-    checkpoints: Option[List[CheckpointConfig]],
-    requests: Option[List[RequestConfig]],
-    authentications: Option[List[AuthenticationConfig]]
+    checkpoints: List[CheckpointConfig],
+    requests: List[RequestConfig],
+    authentications: List[AuthenticationConfig]
 )
