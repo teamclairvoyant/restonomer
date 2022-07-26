@@ -6,5 +6,9 @@ object RestonomerApp extends App {
   println("===== Welcome to Restonomer App =====")
 
   val restonomerContext = RestonomerContext()
+
+  val restonomerContextConfigs = restonomerContext.configs
+  println(restonomerContextConfigs)
+
   restonomerContext.runCheckpoint(checkpointName = "checkpoint_1")
 }
