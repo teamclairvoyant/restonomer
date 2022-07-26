@@ -1,6 +1,7 @@
 package com.clairvoyant.restonomer.core.app.context
 
-import RestonomerContextConfigUtil.readConfigs
+import com.clairvoyant.restonomer.core.app.context.RestonomerContextConfigUtil.readConfigs
+import com.clairvoyant.restonomer.core.app.workflow.RestonomerWorkflow
 import com.clairvoyant.restonomer.core.common.enums.RestonomerContextConfigTypes
 import com.clairvoyant.restonomer.core.common.util.FileUtil.fileExists
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
@@ -49,6 +50,11 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
       requests = requestConfigs,
       authentications = authenticationConfigs
     )
+  }
+
+  def runCheckpoint(checkpointName: String): Unit = {
+    val restonomerWorkflow = new RestonomerWorkflow(this)
+    restonomerWorkflow.run(checkpointName)
   }
 
 }
