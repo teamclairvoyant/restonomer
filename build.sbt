@@ -17,7 +17,7 @@ val pureConfigDependencies = Seq(
 
 // ----- MODULE DEPENDENCIES ----- //
 
-val appDependencies = pureConfigDependencies
+val appDependencies = pureConfigDependencies ++ Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
 
 val modelDependencies = pureConfigDependencies
 
