@@ -6,8 +6,7 @@ import com.clairvoyant.restonomer.core.common.enums.RestonomerContextConfigTypes
 import com.clairvoyant.restonomer.core.common.util.FileUtil.fileExists
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
 import com.clairvoyant.restonomer.core.model.config.{CheckpointConfig, RestonomerContextConfig}
-import pureconfig._
-import pureconfig.generic.semiauto.deriveReader
+import pureconfig.generic.auto._
 
 object RestonomerContext {
   val DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH = "./restonomer_context"
@@ -24,7 +23,6 @@ object RestonomerContext {
 }
 
 class RestonomerContext(val restonomerContextDirectoryPath: String) {
-  implicit val checkpointConfigReader: ConfigReader[CheckpointConfig] = deriveReader[CheckpointConfig]
 
   val configs: RestonomerContextConfig = {
 
