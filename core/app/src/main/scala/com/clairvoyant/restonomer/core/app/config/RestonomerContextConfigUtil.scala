@@ -14,7 +14,7 @@ object RestonomerContextConfigUtil {
       Option(
         new File(configDirectoryPath)
           .listFiles()
-          .map(loadConfig[C](_))
+          .map(loadConfig[C])
           .toList
       )
     else
