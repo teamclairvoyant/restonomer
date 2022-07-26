@@ -14,12 +14,8 @@ class RestonomerWorkflow(restonomerContext: RestonomerContext) {
     restonomerContext.configs.checkpoints
       .find(_.name == checkpointName)
       .map(_.request)
-      .foreach { requestConfig =>
-        val request = HttpRequestBuilder(requestConfig).buildHttpRequest
-        val response = request.send(HttpClientSyncBackend())
-
-        println(response.body)
-      }
+      .map(HttpRequestBuilder(_).buildHttpRequest.send(HttpClientSyncBackend()))
+      .foreach(println)
   }
 
 }
