@@ -11,6 +11,4 @@ object RestonomerContextConfigTypes extends Enumeration {
     x.asInstanceOf[RestonomerContextConfigTypesDetails]
 
   val CHECKPOINT: RestonomerContextConfigTypesDetails = RestonomerContextConfigTypesDetails("checkpoints")
-  val REQUEST: RestonomerContextConfigTypesDetails = RestonomerContextConfigTypesDetails("requests")
-  val AUTHENTICATION: RestonomerContextConfigTypesDetails = RestonomerContextConfigTypesDetails("authentications")
 }

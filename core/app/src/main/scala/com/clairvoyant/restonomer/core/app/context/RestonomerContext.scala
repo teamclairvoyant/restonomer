@@ -5,7 +5,7 @@ import com.clairvoyant.restonomer.core.app.workflow.RestonomerWorkflow
 import com.clairvoyant.restonomer.core.common.enums.RestonomerContextConfigTypes
 import com.clairvoyant.restonomer.core.common.util.FileUtil.fileExists
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
-import com.clairvoyant.restonomer.core.model.config.{AuthenticationConfig, CheckpointConfig, RequestConfig, RestonomerContextConfig}
+import com.clairvoyant.restonomer.core.model.config.{CheckpointConfig, RestonomerContextConfig}
 import pureconfig._
 import pureconfig.generic.semiauto.deriveReader
 
@@ -25,8 +25,6 @@ object RestonomerContext {
 
 class RestonomerContext(val restonomerContextDirectoryPath: String) {
   implicit val checkpointConfigReader: ConfigReader[CheckpointConfig] = deriveReader[CheckpointConfig]
-  implicit val requestConfigReader: ConfigReader[RequestConfig] = deriveReader[RequestConfig]
-  implicit val authenticationConfigReader: ConfigReader[AuthenticationConfig] = deriveReader[AuthenticationConfig]
 
   val configs: RestonomerContextConfig = {
 
@@ -35,21 +33,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
       s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT.configDirectoryName}"
     )
 
-    // REQUEST
-    val requestConfigs = readConfigs[RequestConfig](configDirectoryPath =
-      s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.REQUEST.configDirectoryName}"
-    )
-
-    // AUTHENTICATION
-    val authenticationConfigs = readConfigs[AuthenticationConfig](configDirectoryPath =
-      s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.AUTHENTICATION.configDirectoryName}"
-    )
-
-    RestonomerContextConfig(
-      checkpoints = checkpointConfigs,
-      requests = requestConfigs,
-      authentications = authenticationConfigs
-    )
+    RestonomerContextConfig(checkpoints = checkpointConfigs)
   }
 
   def runCheckpoint(checkpointName: String): Unit = {

@@ -6,6 +6,5 @@ case class RequestConfig(
     isHttps: Boolean,
     domain: String,
     url: String,
-    authentication: Option[String],
-    authenticationConfig: Option[AuthenticationConfig]
+    authentication: Option[AuthenticationConfig]
 )

@@ -7,8 +7,10 @@ val applicationName = "restonomer"
 val releaseVersion = "1.0"
 
 val pureConfigVersion = "0.17.1"
+val sttpVersion = "3.7.1"
 
 // ----- TOOL DEPENDENCIES ----- //
+
 val pureConfigDependencies = Seq(
   "com.github.pureconfig" %% "pureconfig" % pureConfigVersion
 )
