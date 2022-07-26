@@ -34,9 +34,6 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
     RestonomerContextConfig(checkpoints = checkpointConfigs)
   }
 
-  def runCheckpoint(checkpointName: String): Unit = {
-    val restonomerWorkflow = new RestonomerWorkflow(restonomerContext = this)
-    restonomerWorkflow.run(checkpointName)
-  }
+  def runCheckpoint(checkpointName: String): Unit = RestonomerWorkflow(this).run(checkpointName)
 
 }
