@@ -57,10 +57,11 @@ lazy val exceptions = project in file("core/exceptions")
 
 lazy val http = (project in file("core/http"))
   .settings(httpSettings)
-  .dependsOn(model)
+  .dependsOn(model, exceptions, common)
 
 lazy val model = (project in file("core/model"))
   .settings(modelSettings)
+  .dependsOn(common)
 
 lazy val restonomer = (project in file("."))
   .settings(rootSettings)

@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.app.workflow
 
 import com.clairvoyant.restonomer.core.app.context.RestonomerContext
-import com.clairvoyant.restonomer.core.http.HttpRequestBuilder
+import com.clairvoyant.restonomer.core.http.request.builder.HttpRequestBuilder
 import sttp.client3.HttpClientSyncBackend
 
 object RestonomerWorkflow {
