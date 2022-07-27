@@ -1,21 +1,20 @@
 package com.clairvoyant.restonomer.core.app.workflow
 
-import com.clairvoyant.restonomer.core.app.context.RestonomerContext
 import com.clairvoyant.restonomer.core.http.request.builder.HttpRequestBuilder
+import com.clairvoyant.restonomer.core.model.config.CheckpointConfig
 import sttp.client3.HttpClientSyncBackend
 
 object RestonomerWorkflow {
-  def apply(restonomerContext: RestonomerContext) = new RestonomerWorkflow(restonomerContext)
+  def apply() = new RestonomerWorkflow
 }
 
-class RestonomerWorkflow(restonomerContext: RestonomerContext) {
+class RestonomerWorkflow {
 
-  def run(checkpointName: String): Unit = {
-    restonomerContext.configs.checkpoints
-      .find(_.name == checkpointName)
-      .map(_.request)
-      .map(HttpRequestBuilder(_).buildHttpRequest.send(HttpClientSyncBackend()))
-      .foreach(println)
+  def run(checkpointConfig: CheckpointConfig): Unit = {
+    val request = HttpRequestBuilder(checkpointConfig.request).buildHttpRequest
+    val response = request.send(HttpClientSyncBackend())
+
+    println(response)
   }
 
 }
