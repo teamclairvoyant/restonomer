@@ -1,9 +1,9 @@
-package com.clairvoyant.restonomer.core.common.enums
+package com.clairvoyant.restonomer.core.http.request.enums
 
-object HttpRequestType extends Enumeration {
-  val SIMPLE_HTTP_REQUEST: HttpRequestType.Value = Value("SimpleHttpRequest")
+object HttpRequestTypes extends Enumeration {
+  val SIMPLE_HTTP_REQUEST: HttpRequestTypes.Value = Value("SimpleHttpRequest")
 
-  def apply(requestType: String): HttpRequestType.Value =
+  def apply(requestType: String): HttpRequestTypes.Value =
     if (isValidHttpRequestType(requestType))
       withName(requestType)
     else
