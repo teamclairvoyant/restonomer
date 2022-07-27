@@ -12,6 +12,6 @@ class HttpRequestBuilder(requestConfig: RequestConfig) {
 
   def buildHttpRequest: Request[Either[String, String], Any] =
     basicRequest
-      .method(method = Method.apply(requestConfig.method), uri = uri"${requestConfig.url}")
+      .method(method = Method(requestConfig.method), uri = uri"${requestConfig.url}")
 
 }
