@@ -1,8 +1,7 @@
 package com.clairvoyant.restonomer.core.app.workflow
 
-import com.clairvoyant.restonomer.core.http.request.builder.HttpRequestBuilder
+import com.clairvoyant.restonomer.core.http.request.enums.{HttpBackendTypes, HttpRequestTypes}
 import com.clairvoyant.restonomer.core.model.config.CheckpointConfig
-import sttp.client3.HttpClientSyncBackend
 
 object RestonomerWorkflow {
   def apply() = new RestonomerWorkflow
@@ -11,8 +10,8 @@ object RestonomerWorkflow {
 class RestonomerWorkflow {
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
-    val request = HttpRequestBuilder(checkpointConfig.request).buildHttpRequest
-    val response = request.send(HttpClientSyncBackend())
+    val request = HttpRequestTypes(checkpointConfig.request).build()
+    val response = request.send(HttpBackendTypes(checkpointConfig.httpBackendType))
 
     println(response)
   }
