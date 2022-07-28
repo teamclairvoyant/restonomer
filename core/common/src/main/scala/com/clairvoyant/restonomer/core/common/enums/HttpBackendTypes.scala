@@ -1,9 +1,7 @@
-package com.clairvoyant.restonomer.core.http.request.enums
+package com.clairvoyant.restonomer.core.common.enums
 
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
 import sttp.client3.{HttpClientSyncBackend, Identity, SttpBackend}
-
-import scala.language.implicitConversions
 
 object HttpBackendTypes extends Enumeration {
   val HTTP_CLIENT_SYNC_BACKEND: HttpBackendTypes.Value = Value("HttpClientSyncBackend")

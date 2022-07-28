@@ -1,7 +1,7 @@
-package com.clairvoyant.restonomer.core.http.request.types
+package com.clairvoyant.restonomer.core.http.request
 
 import com.clairvoyant.restonomer.core.model.config.RequestConfig
-import sttp.client3.{basicRequest, Request, UriContext}
+import sttp.client3.{Request, UriContext, basicRequest}
 import sttp.model.Method
 
 object SimpleHttpRequest {

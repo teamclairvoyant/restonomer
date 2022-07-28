@@ -21,6 +21,8 @@ val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersi
 
 val appDependencies = pureConfigDependencies ++ sttpDependencies
 
+val commonDependencies = pureConfigDependencies ++ sttpDependencies
+
 val httpDependencies = sttpDependencies
 
 val modelDependencies = pureConfigDependencies
@@ -37,6 +39,10 @@ val appSettings = Seq(
   libraryDependencies ++= appDependencies
 )
 
+val commonSettings = Seq(
+  libraryDependencies ++= commonDependencies
+)
+
 val httpSettings = Seq(
   libraryDependencies ++= httpDependencies
 )
@@ -51,7 +57,9 @@ lazy val app = (project in file("core/app"))
   .settings(appSettings)
   .dependsOn(model, exceptions, common, http)
 
-lazy val common = project in file("core/common")
+lazy val common = (project in file("core/common"))
+  .settings(commonSettings)
+  .dependsOn(exceptions)
 
 lazy val exceptions = project in file("core/exceptions")
 
