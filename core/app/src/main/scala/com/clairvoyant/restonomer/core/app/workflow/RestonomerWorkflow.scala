@@ -11,12 +11,9 @@ object RestonomerWorkflow {
 class RestonomerWorkflow(checkpointConfig: CheckpointConfig) {
 
   def run(): Unit = {
-    val restonomerRequest: RestonomerRequest =
-      RestonomerRequest.builder
-        .withRequestConfig(checkpointConfig.request)
-        .build
+    val restonomerRequest: RestonomerRequest = RestonomerRequest(checkpointConfig.request)
 
-    val response: Option[Identity[Response[Either[String, String]]]] = restonomerRequest.send(
+    val response: Identity[Response[Either[String, String]]] = restonomerRequest.send(
       checkpointConfig.httpBackendType
     )
 
