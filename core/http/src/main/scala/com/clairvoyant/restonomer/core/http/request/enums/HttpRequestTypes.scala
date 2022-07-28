@@ -1,5 +1,6 @@
 package com.clairvoyant.restonomer.core.http.request.enums
 
+import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
 import com.clairvoyant.restonomer.core.http.request.types.{HttpRequest, SimpleHttpRequest}
 import com.clairvoyant.restonomer.core.model.config.RequestConfig
 
@@ -13,7 +14,7 @@ object HttpRequestTypes extends Enumeration {
           SimpleHttpRequest
       })(requestConfig)
     else
-      throw new IllegalArgumentException(s"The request-type: ${requestConfig.requestType} is not supported.")
+      throw new RestonomerContextException(s"The request-type: ${requestConfig.requestType} is not supported.")
 
   def isValidHttpRequestType(requestType: String): Boolean = values.exists(_.toString == requestType)
 }
