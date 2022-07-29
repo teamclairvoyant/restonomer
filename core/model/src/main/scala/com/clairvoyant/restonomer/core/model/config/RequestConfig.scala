@@ -5,5 +5,6 @@ case class RequestConfig(
     requestType: String,
     method: String,
     url: String,
+    httpBackendType: String,
     authentication: Option[AuthenticationConfig]
 )

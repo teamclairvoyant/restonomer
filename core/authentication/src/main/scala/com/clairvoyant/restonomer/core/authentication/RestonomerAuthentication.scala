@@ -3,9 +3,10 @@ package com.clairvoyant.restonomer.core.authentication
 import com.clairvoyant.restonomer.core.common.enums.AuthenticationTypes._
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
 import com.clairvoyant.restonomer.core.model.config.AuthenticationConfig
+import sttp.client3.Request
 
 abstract class RestonomerAuthentication {
-  def authenticate()
+  def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any]
 }
 
 object RestonomerAuthentication {

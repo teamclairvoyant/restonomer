@@ -5,17 +5,12 @@ import com.clairvoyant.restonomer.core.common.enums.HttpRequestTypes._
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
 import com.clairvoyant.restonomer.core.model.config.RequestConfig
 import sttp.client3._
-import sttp.model.Method
 
 abstract class RestonomerRequest(requestConfig: RequestConfig) {
-  val restonomerAuthentication: Option[RestonomerAuthentication] = None
+  val restonomerAuthentication: Option[RestonomerAuthentication]
+  val httpRequest: Request[Either[String, String], Any]
 
-  val httpRequest: Request[Either[String, String], Any] = basicRequest.method(
-    method = Method(requestConfig.method),
-    uri = uri"${requestConfig.url}"
-  )
-
-  def authenticate: Request[Either[String, String], Any]
+  def send(): Identity[Response[Either[String, String]]]
 }
 
 object RestonomerRequest {
