@@ -7,9 +7,9 @@ object RestonomerApp extends App {
 
   val restonomerContext = RestonomerContext()
 
-  // SimpleHttpRequest
+  // BasicRequest
   restonomerContext.runCheckpoint(checkpointName = "checkpoint_simple_no_authentication")
 
-  // SimpleHttpRequestWithAuthentication
+  // SimpleRestonomerRequestWithAuthentication
   restonomerContext.runCheckpoint(checkpointName = "checkpoint_simple_with_authentication")
 }
