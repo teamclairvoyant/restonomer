@@ -2,6 +2,7 @@ package com.clairvoyant.restonomer.core.http.request
 
 import com.clairvoyant.restonomer.core.authentication.RestonomerAuthentication
 import com.clairvoyant.restonomer.core.common.enums.HttpBackendTypes
+import com.clairvoyant.restonomer.core.http.response.RestonomerResponse
 import com.clairvoyant.restonomer.core.model.config.RequestConfig
 import sttp.client3._
 import sttp.model.Method
@@ -19,11 +20,14 @@ class RestonomerRequest(requestConfig: RequestConfig) {
       uri = uri"${requestConfig.url}"
     )
 
-  def send(): Identity[Response[Either[String, String]]] =
-    restonomerAuthentication
-      .map(_.authenticate(httpRequest))
-      .getOrElse(httpRequest)
-      .send(httpBackend)
+  def send(): RestonomerResponse = {
+    RestonomerResponse(
+      restonomerAuthentication
+        .map(_.authenticate(httpRequest))
+        .getOrElse(httpRequest)
+        .send(httpBackend)
+    )
+  }
 
 }
 
