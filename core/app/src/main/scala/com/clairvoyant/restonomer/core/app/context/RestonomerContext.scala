@@ -1,6 +1,7 @@
 package com.clairvoyant.restonomer.core.app.context
 
 import com.clairvoyant.restonomer.core.app.workflow.RestonomerWorkflow
+import com.clairvoyant.restonomer.core.backend.RestonomerBackend
 import com.clairvoyant.restonomer.core.common.enums.RestonomerContextConfigTypes
 import com.clairvoyant.restonomer.core.common.util.ConfigUtil.loadConfigsFromDirectory
 import com.clairvoyant.restonomer.core.common.util.FileUtil.fileExists
@@ -35,7 +36,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
   }
 
   def runCheckpoint(checkpointName: String): Unit = {
-    RestonomerWorkflow(
+    RestonomerWorkflow(RestonomerBackend()).run {
       configs.checkpoints
         .find(_.name == checkpointName) match {
         case Some(checkpointConfig) =>
@@ -43,7 +44,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
         case None =>
           throw new RestonomerContextException(s"The checkpoint: $checkpointName does not exists.")
       }
-    ).run()
+    }
   }
 
 }

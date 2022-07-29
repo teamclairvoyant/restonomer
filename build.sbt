@@ -18,11 +18,11 @@ val pureConfigDependencies = Seq(
 
 val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
 
-val nScalaTimeDependencies = Seq("com.github.nscala-time" %% "nscala-time" % nScalaTimeVersion)
-
 // ----- MODULE DEPENDENCIES ----- //
 
-val appDependencies = pureConfigDependencies ++ sttpDependencies ++ nScalaTimeDependencies
+val appDependencies = pureConfigDependencies ++ sttpDependencies
+
+val backendDependencies = sttpDependencies
 
 val commonDependencies = pureConfigDependencies ++ sttpDependencies
 
@@ -40,6 +40,10 @@ val rootSettings = Seq(
 
 val appSettings = Seq(
   libraryDependencies ++= appDependencies
+)
+
+val backendSettings = Seq(
+  libraryDependencies ++= backendDependencies
 )
 
 val commonSettings = Seq(
@@ -61,7 +65,11 @@ lazy val app = (project in file("core/app"))
   .dependsOn(authentication, common, exceptions, model, http)
 
 lazy val authentication = (project in file("core/authentication"))
-  .dependsOn(model)
+  .dependsOn(backend, model)
+
+lazy val backend = (project in file("core/backend"))
+  .settings(backendSettings)
+  .dependsOn(exceptions, model)
 
 lazy val common = (project in file("core/common"))
   .settings(commonSettings)
@@ -71,7 +79,7 @@ lazy val exceptions = project in file("core/exceptions")
 
 lazy val http = (project in file("core/http"))
   .settings(httpSettings)
-  .dependsOn(model, exceptions, common, authentication)
+  .dependsOn(authentication, backend, common, exceptions, model)
 
 lazy val model = (project in file("core/model"))
   .settings(modelSettings)
