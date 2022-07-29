@@ -65,11 +65,7 @@ lazy val app = (project in file("core/app"))
   .dependsOn(authentication, common, exceptions, model, http)
 
 lazy val authentication = (project in file("core/authentication"))
-  .dependsOn(backend, model)
-
-lazy val backend = (project in file("core/backend"))
-  .settings(backendSettings)
-  .dependsOn(exceptions, model)
+  .dependsOn(model)
 
 lazy val common = (project in file("core/common"))
   .settings(commonSettings)
@@ -79,7 +75,7 @@ lazy val exceptions = project in file("core/exceptions")
 
 lazy val http = (project in file("core/http"))
   .settings(httpSettings)
-  .dependsOn(authentication, backend, common, exceptions, model)
+  .dependsOn(authentication, common, exceptions, model)
 
 lazy val model = (project in file("core/model"))
   .settings(modelSettings)
