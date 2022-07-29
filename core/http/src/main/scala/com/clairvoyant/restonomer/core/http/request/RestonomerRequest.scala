@@ -9,12 +9,12 @@ import sttp.model.Method
 
 class RestonomerRequest(requestConfig: RequestConfig) {
 
-  val httpBackend: SttpBackend[Identity, Any] = HttpBackendTypes(requestConfig.httpBackendType)
+  private val httpBackend: SttpBackend[Identity, Any] = HttpBackendTypes(requestConfig.httpBackendType)
 
-  val restonomerAuthentication: Option[RestonomerAuthentication] = requestConfig.authentication
+  private val restonomerAuthentication: Option[RestonomerAuthentication] = requestConfig.authentication
     .map(RestonomerAuthentication(_))
 
-  val httpRequest: Request[Either[String, String], Any] = basicRequest
+  private val httpRequest: Request[Either[String, String], Any] = basicRequest
     .method(
       method = Method(requestConfig.method),
       uri = uri"${requestConfig.url}"
