@@ -4,11 +4,11 @@ import scala.language.implicitConversions
 
 object RestonomerContextConfigTypes extends Enumeration {
 
-  protected case class RestonomerContextConfigTypesDetails(configDirectoryName: String)
-      extends super.Val(configDirectoryName)
+  val CHECKPOINT: RestonomerContextConfigTypesDetails = RestonomerContextConfigTypesDetails("checkpoints")
 
   implicit def valueToRestonomerContextConfigTypesDetails(x: Value): RestonomerContextConfigTypesDetails =
     x.asInstanceOf[RestonomerContextConfigTypesDetails]
 
-  val CHECKPOINT: RestonomerContextConfigTypesDetails = RestonomerContextConfigTypesDetails("checkpoints")
+  protected case class RestonomerContextConfigTypesDetails(configDirectoryName: String)
+      extends super.Val(configDirectoryName)
 }

@@ -3,7 +3,7 @@ package com.clairvoyant.restonomer.core.app.workflow
 import com.clairvoyant.restonomer.core.http.request.RestonomerRequest
 import com.clairvoyant.restonomer.core.http.response.RestonomerResponse
 import com.clairvoyant.restonomer.core.model.config.CheckpointConfig
-import sttp.client3.{basicRequest, UriContext}
+import sttp.client3.{UriContext, basicRequest}
 import sttp.model.Method
 
 object RestonomerWorkflow {

@@ -11,7 +11,7 @@ case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) 
   def authenticate(authenticationConfig: Option[AuthenticationConfig]): RestonomerRequest =
     this.copy(httpRequest =
       authenticationConfig
-        .map(RestonomerAuthentication(_).authenticate(httpRequest))
+        .map(RestonomerAuthentication(_).validateCredentialsAndAuthenticate(httpRequest))
         .getOrElse(httpRequest)
     )
 

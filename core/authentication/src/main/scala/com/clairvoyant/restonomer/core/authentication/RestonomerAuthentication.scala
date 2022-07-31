@@ -6,7 +6,18 @@ import com.clairvoyant.restonomer.core.model.config.AuthenticationConfig
 import sttp.client3.Request
 
 trait RestonomerAuthentication {
+
+  def validateCredentials(): Unit
+
   def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any]
+
+  def validateCredentialsAndAuthenticate(
+      httpRequest: Request[Either[String, String], Any]
+  ): Request[Either[String, String], Any] = {
+    validateCredentials()
+    authenticate(httpRequest)
+  }
+
 }
 
 object RestonomerAuthentication {
