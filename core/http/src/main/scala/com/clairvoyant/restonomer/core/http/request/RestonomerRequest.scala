@@ -3,8 +3,9 @@ package com.clairvoyant.restonomer.core.http.request
 import com.clairvoyant.restonomer.core.authentication.RestonomerAuthentication
 import com.clairvoyant.restonomer.core.common.enums.HttpBackendTypes
 import com.clairvoyant.restonomer.core.http.response.RestonomerResponse
-import com.clairvoyant.restonomer.core.model.config.AuthenticationConfig
-import sttp.client3._
+import com.clairvoyant.restonomer.core.model.config.{AuthenticationConfig, RequestConfig}
+import sttp.client3.{Request, _}
+import sttp.model.Method
 
 case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) {
 
@@ -23,6 +24,18 @@ case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) 
             .map(HttpBackendTypes(_))
             .getOrElse(HttpClientSyncBackend())
         )
+    )
+
+}
+
+object RestonomerRequest {
+
+  def apply(requestConfig: RequestConfig): RestonomerRequest =
+    RestonomerRequest(
+      basicRequest.method(
+        method = requestConfig.method.map(Method(_)).getOrElse(Method.GET),
+        uri = uri"${requestConfig.url}"
+      )
     )
 
 }
