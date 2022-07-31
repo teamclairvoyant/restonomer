@@ -34,8 +34,8 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
     RestonomerContextConfig(checkpoints = checkpointConfigs)
   }
 
-  def runCheckpoint(checkpointName: String): Unit = {
-    RestonomerWorkflow(
+  def runCheckpoint(checkpointName: String): Unit =
+    RestonomerWorkflow().run {
       configs.checkpoints
         .find(_.name == checkpointName) match {
         case Some(checkpointConfig) =>
@@ -43,7 +43,6 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
         case None =>
           throw new RestonomerContextException(s"The checkpoint: $checkpointName does not exists.")
       }
-    ).run()
-  }
+    }
 
 }

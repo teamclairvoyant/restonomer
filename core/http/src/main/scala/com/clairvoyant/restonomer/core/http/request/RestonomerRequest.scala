@@ -3,34 +3,26 @@ package com.clairvoyant.restonomer.core.http.request
 import com.clairvoyant.restonomer.core.authentication.RestonomerAuthentication
 import com.clairvoyant.restonomer.core.common.enums.HttpBackendTypes
 import com.clairvoyant.restonomer.core.http.response.RestonomerResponse
-import com.clairvoyant.restonomer.core.model.config.RequestConfig
+import com.clairvoyant.restonomer.core.model.config.AuthenticationConfig
 import sttp.client3._
-import sttp.model.Method
 
-class RestonomerRequest(requestConfig: RequestConfig) {
+case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) {
 
-  private val httpBackend: SttpBackend[Identity, Any] = HttpBackendTypes(requestConfig.httpBackendType)
-
-  private val restonomerAuthentication: Option[RestonomerAuthentication] = requestConfig.authentication
-    .map(RestonomerAuthentication(_))
-
-  private val httpRequest: Request[Either[String, String], Any] = basicRequest
-    .method(
-      method = Method(requestConfig.method),
-      uri = uri"${requestConfig.url}"
-    )
-
-  def send(): RestonomerResponse = {
-    RestonomerResponse(
-      restonomerAuthentication
-        .map(_.authenticate(httpRequest))
+  def authenticate(authenticationConfig: Option[AuthenticationConfig]): RestonomerRequest =
+    this.copy(httpRequest =
+      authenticationConfig
+        .map(RestonomerAuthentication(_).authenticate(httpRequest))
         .getOrElse(httpRequest)
-        .send(httpBackend)
     )
-  }
 
-}
+  def send(httpBackendType: Option[String]): RestonomerResponse =
+    RestonomerResponse(
+      httpRequest
+        .send(
+          httpBackendType
+            .map(HttpBackendTypes(_))
+            .getOrElse(HttpClientSyncBackend())
+        )
+    )
 
-object RestonomerRequest {
-  def apply(requestConfig: RequestConfig): RestonomerRequest = new RestonomerRequest(requestConfig)
 }

@@ -13,4 +13,3 @@ class BasicAuthentication(credentialConfig: CredentialConfig) extends Restonomer
     )
 
 }
-
