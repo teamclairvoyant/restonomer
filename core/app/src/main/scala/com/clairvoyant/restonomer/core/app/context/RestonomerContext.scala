@@ -46,7 +46,6 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
     }
 
   def runAllCheckpoints(): Unit = {
-    println("\n=====================================================\n")
     configs.checkpoints.foreach { checkpointConfig =>
       println(s"Checkpoint Name -> ${checkpointConfig.name}\n")
       runCheckpoint(checkpointConfig)
