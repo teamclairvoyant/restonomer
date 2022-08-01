@@ -9,6 +9,15 @@ import scala.reflect.ClassTag
 
 object ConfigUtil {
 
+  def loadConfigFromFile[C](configFile: File)(implicit reader: ConfigReader[C]): C = {
+    ConfigSource.file(configFile).load[C] match {
+      case Right(config) =>
+        config
+      case Left(error) =>
+        throw new RestonomerContextException(error.prettyPrint())
+    }
+  }
+
   def loadConfigsFromDirectory[C: ClassTag](configDirectoryPath: String)(implicit reader: ConfigReader[C]): List[C] = {
     if (fileExists(configDirectoryPath))
       new File(configDirectoryPath)
@@ -17,15 +26,6 @@ object ConfigUtil {
         .toList
     else
       List.empty
-  }
-
-  def loadConfigFromFile[C](configFile: File)(implicit reader: ConfigReader[C]): C = {
-    ConfigSource.file(configFile).load[C] match {
-      case Right(config) =>
-        config
-      case Left(error) =>
-        throw new RestonomerContextException(error.prettyPrint())
-    }
   }
 
 }

@@ -26,7 +26,7 @@ class BasicAuthentication(credentialConfig: CredentialConfig) extends Restonomer
         "The provided credentials are invalid. The credentials should contain the password."
       )
     else
-      println("Credentials are validated.")
+      println("Credentials are validated successfully.")
   }
 
   override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {

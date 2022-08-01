@@ -9,6 +9,7 @@ val releaseVersion = "1.0"
 val pureConfigVersion = "0.17.1"
 val sttpVersion = "3.7.1"
 val nScalaTimeVersion = "2.30.0"
+val scalaTestVersion = "3.2.12"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -18,13 +19,17 @@ val pureConfigDependencies = Seq(
 
 val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
 
+val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion % Test)
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val appDependencies = pureConfigDependencies ++ sttpDependencies
 
+val authenticationDependencies = sttpDependencies
+
 val backendDependencies = sttpDependencies
 
-val commonDependencies = pureConfigDependencies ++ sttpDependencies
+val commonDependencies = pureConfigDependencies ++ sttpDependencies ++ scalaTestDependencies
 
 val httpDependencies = sttpDependencies
 
@@ -40,6 +45,10 @@ val rootSettings = Seq(
 
 val appSettings = Seq(
   libraryDependencies ++= appDependencies
+)
+
+val authenticationSettings = Seq(
+  libraryDependencies ++= authenticationDependencies
 )
 
 val backendSettings = Seq(
@@ -65,11 +74,12 @@ lazy val app = (project in file("core/app"))
   .dependsOn(authentication, common, exceptions, model, http)
 
 lazy val authentication = (project in file("core/authentication"))
-  .dependsOn(model)
+  .settings(authenticationSettings)
+  .dependsOn(common, exceptions, model)
 
 lazy val common = (project in file("core/common"))
   .settings(commonSettings)
-  .dependsOn(exceptions)
+  .dependsOn(exceptions, model)
 
 lazy val exceptions = project in file("core/exceptions")
 
@@ -79,7 +89,6 @@ lazy val http = (project in file("core/http"))
 
 lazy val model = (project in file("core/model"))
   .settings(modelSettings)
-  .dependsOn(common)
 
 lazy val restonomer = (project in file("."))
   .settings(rootSettings)
