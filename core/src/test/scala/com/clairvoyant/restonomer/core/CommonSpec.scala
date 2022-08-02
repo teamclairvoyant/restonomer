@@ -5,6 +5,6 @@ import org.scalatest.matchers.must.Matchers
 
 class CommonSpec extends AnyFlatSpec with Matchers {
 
-  val resourcesPath = s"core/src/test/resources/"
+  val resourcesPath = "core/src/test/resources/"
 
 }

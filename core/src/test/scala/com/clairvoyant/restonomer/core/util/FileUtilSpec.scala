@@ -1,5 +1,9 @@
 package com.clairvoyant.restonomer.core.util
 
+import com.clairvoyant.restonomer.core.CommonSpec
+import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+
 class FileUtilSpec extends CommonSpec {
 
   "fileExists" should "return false" in {
