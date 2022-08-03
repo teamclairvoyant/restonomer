@@ -14,9 +14,7 @@ trait RestonomerAuthentication {
   def validateCredentialsAndAuthenticate(
       httpRequest: Request[Either[String, String], Any]
   ): Request[Either[String, String], Any] = {
-    println("Validating Credentials..")
     validateCredentials()
-
     authenticate(httpRequest)
   }
 

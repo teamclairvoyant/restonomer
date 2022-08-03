@@ -12,8 +12,6 @@ class BearerAuthentication(credentialConfig: CredentialConfig) extends Restonome
       throw new RestonomerContextException(
         "The provided credentials are invalid. The credentials should contain bearer-token"
       )
-    else
-      println("Credentials are validated successfully.")
   }
 
   override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
