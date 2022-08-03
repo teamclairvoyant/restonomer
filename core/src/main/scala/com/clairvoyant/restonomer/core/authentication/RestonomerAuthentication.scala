@@ -14,7 +14,9 @@ trait RestonomerAuthentication {
   def validateCredentialsAndAuthenticate(
       httpRequest: Request[Either[String, String], Any]
   ): Request[Either[String, String], Any] = {
+    println("Validating Credentials..")
     validateCredentials()
+
     authenticate(httpRequest)
   }
 
@@ -28,6 +30,8 @@ object RestonomerAuthentication {
       withName(authenticationType) match {
         case BASIC_AUTHENTICATION =>
           new BasicAuthentication(authenticationConfig.credentials)
+        case BEARER_AUTHENTICATION =>
+          new BearerAuthentication(authenticationConfig.credentials)
       }
     } else {
       throw new RestonomerContextException(s"The authentication-type: $authenticationType is not supported.")
