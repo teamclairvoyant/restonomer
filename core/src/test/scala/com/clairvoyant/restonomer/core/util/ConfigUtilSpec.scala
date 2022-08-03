@@ -1,15 +1,15 @@
 package com.clairvoyant.restonomer.core.util
 
-import com.clairvoyant.restonomer.core.CommonSpec
+import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
 import com.clairvoyant.restonomer.core.util.ConfigUtil._
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pureconfig.generic.auto._
 
-import java.io.File
+import java.io.{File, FileNotFoundException}
 
-class ConfigUtilSpec extends CommonSpec {
+class ConfigUtilSpec extends CoreSpec {
 
   "loadConfigFromFile" should "return CheckpointConfig object" in {
     val checkpointFile = new File(s"$resourcesPath/sample-checkpoint-valid.conf")
@@ -26,8 +26,8 @@ class ConfigUtilSpec extends CommonSpec {
     loadConfigsFromDirectory[CheckpointConfig](s"$resourcesPath/checkpoints/") shouldBe a[List[CheckpointConfig]]
   }
 
-  "loadConfigsFromDirectory" should "return empty list" in {
-    loadConfigsFromDirectory[CheckpointConfig](s"$resourcesPath/abcd/") should have size 0
+  "loadConfigsFromDirectory" should "throw FileNotFoundException" in {
+    a[FileNotFoundException] should be thrownBy loadConfigsFromDirectory[CheckpointConfig](s"$resourcesPath/abcd/")
   }
 
   "loadConfigsFromDirectory" should "return list with size 1" in {

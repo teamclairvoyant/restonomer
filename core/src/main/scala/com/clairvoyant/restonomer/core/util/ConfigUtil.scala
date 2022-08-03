@@ -4,7 +4,7 @@ import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
 import pureconfig.{ConfigReader, ConfigSource}
 
-import java.io.File
+import java.io.{File, FileNotFoundException}
 import scala.reflect.ClassTag
 
 object ConfigUtil {
@@ -25,7 +25,7 @@ object ConfigUtil {
         .map(loadConfigFromFile[C])
         .toList
     else
-      List.empty
+      throw new FileNotFoundException(s"The config directory with the path: $configDirectoryPath does not exists.")
   }
 
 }

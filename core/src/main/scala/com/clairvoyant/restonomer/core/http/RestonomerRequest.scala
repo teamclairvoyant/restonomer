@@ -3,7 +3,7 @@ package com.clairvoyant.restonomer.core.http
 import com.clairvoyant.restonomer.core.authentication.RestonomerAuthentication
 import com.clairvoyant.restonomer.core.common.HttpBackendTypes
 import com.clairvoyant.restonomer.core.model.{AuthenticationConfig, RequestConfig}
-import sttp.client3.{HttpClientSyncBackend, Request, UriContext, basicRequest}
+import sttp.client3._
 import sttp.model.Method
 
 case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) {
