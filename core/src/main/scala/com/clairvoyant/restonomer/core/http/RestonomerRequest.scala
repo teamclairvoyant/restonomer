@@ -8,14 +8,14 @@ import sttp.model.Method
 
 case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) {
 
-  def authenticate(authenticationConfig: Option[AuthenticationConfig]): RestonomerRequest =
+  def authenticate(authenticationConfig: Option[AuthenticationConfig] = None): RestonomerRequest =
     this.copy(httpRequest =
       authenticationConfig
         .map(RestonomerAuthentication(_).validateCredentialsAndAuthenticate(httpRequest))
         .getOrElse(httpRequest)
     )
 
-  def send(httpBackendType: Option[String]): RestonomerResponse =
+  def send(httpBackendType: Option[String] = None): RestonomerResponse =
     RestonomerResponse(
       httpRequest
         .send(

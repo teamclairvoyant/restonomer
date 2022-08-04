@@ -16,19 +16,14 @@ class RestonomerRequestSpec extends CoreSpec {
   }
 
   "authenticate - without authenticationConfig" should "return RestonomerRequest object with the same httpRequest" in {
-    val requestConfig = RequestConfig(method = Some("GET"), url = "https://test-domain/url")
-    val authenticationConfig = None
-
-    val restonomerRequest = RestonomerRequest(requestConfig)
+    val restonomerRequest = RestonomerRequest(basicHttpRequest)
     val httpRequest = restonomerRequest.httpRequest
 
-    restonomerRequest.authenticate(authenticationConfig) shouldBe a[RestonomerRequest]
-    restonomerRequest.authenticate(authenticationConfig).httpRequest should be theSameInstanceAs httpRequest
+    restonomerRequest.authenticate() shouldBe a[RestonomerRequest]
+    restonomerRequest.authenticate().httpRequest should be theSameInstanceAs httpRequest
   }
 
   "authenticate - with authenticationConfig" should "return RestonomerRequest object with the new authenticated httpRequest" in {
-    val requestConfig = RequestConfig(method = Some("GET"), url = "https://test-domain/url")
-
     val credentialConfig = CredentialConfig(basicToken = Some("test_token"))
 
     val authenticationConfig = Some(
@@ -38,7 +33,7 @@ class RestonomerRequestSpec extends CoreSpec {
       )
     )
 
-    val restonomerRequest = RestonomerRequest(requestConfig)
+    val restonomerRequest = RestonomerRequest(basicHttpRequest)
     val httpRequest = restonomerRequest.httpRequest
 
     restonomerRequest.authenticate(authenticationConfig) shouldBe a[RestonomerRequest]
@@ -51,10 +46,7 @@ class RestonomerRequestSpec extends CoreSpec {
         .willReturn(aResponse())
     )
 
-    val requestConfig = RequestConfig(method = Some("GET"), url = uri)
-    val httpBackendType = None
-
-    val restonomerResponse = RestonomerRequest(requestConfig).send(httpBackendType)
+    val restonomerResponse = RestonomerRequest(basicHttpRequest).send()
 
     restonomerResponse shouldBe a[RestonomerResponse]
     restonomerResponse.httpResponse shouldBe a[Identity[Response[Either[String, String]]]]
