@@ -9,6 +9,7 @@ val releaseVersion = "1.0"
 val pureConfigVersion = "0.17.1"
 val sttpVersion = "3.7.1"
 val scalaTestVersion = "3.2.12"
+val wireMockVersion = "2.27.2"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -18,9 +19,11 @@ val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersi
 
 val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion % Test)
 
+val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % Test)
+
 // ----- MODULE DEPENDENCIES ----- //
 
-val coreDependencies = pureConfigDependencies ++ sttpDependencies ++ scalaTestDependencies
+val coreDependencies = pureConfigDependencies ++ sttpDependencies ++ scalaTestDependencies ++ wireMockDependencies
 
 // ----- SETTINGS ----- //
 

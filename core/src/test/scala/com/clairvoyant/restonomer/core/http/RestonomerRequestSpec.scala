@@ -1,7 +1,8 @@
 package com.clairvoyant.restonomer.core.http
 
 import com.clairvoyant.restonomer.core.CoreSpec
-import com.clairvoyant.restonomer.core.model.{AuthenticationConfig, CredentialConfig, RequestConfig}
+import com.clairvoyant.restonomer.core.model._
+import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import sttp.client3.Request
 
@@ -42,6 +43,18 @@ class RestonomerRequestSpec extends CoreSpec {
 
     restonomerRequest.authenticate(authenticationConfig) shouldBe a[RestonomerRequest]
     restonomerRequest.authenticate(authenticationConfig).httpRequest shouldNot be theSameInstanceAs httpRequest
+  }
+
+  "send" should "return RestonomerResponse" in {
+    val requestConfig = RequestConfig(method = Some("GET"), url = uri)
+    val httpBackendType = None
+
+    stubFor(
+      get(urlPathEqualTo(url))
+        .willReturn(aResponse())
+    )
+
+    RestonomerRequest(requestConfig).send(httpBackendType) shouldBe a[RestonomerResponse]
   }
 
 }
