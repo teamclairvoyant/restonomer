@@ -4,7 +4,7 @@ import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.core.model._
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import sttp.client3.Request
+import sttp.client3.{Identity, Request, Response}
 
 class RestonomerRequestSpec extends CoreSpec {
 
@@ -46,15 +46,18 @@ class RestonomerRequestSpec extends CoreSpec {
   }
 
   "send" should "return RestonomerResponse" in {
-    val requestConfig = RequestConfig(method = Some("GET"), url = uri)
-    val httpBackendType = None
-
     stubFor(
       get(urlPathEqualTo(url))
         .willReturn(aResponse())
     )
 
-    RestonomerRequest(requestConfig).send(httpBackendType) shouldBe a[RestonomerResponse]
+    val requestConfig = RequestConfig(method = Some("GET"), url = uri)
+    val httpBackendType = None
+
+    val restonomerResponse = RestonomerRequest(requestConfig).send(httpBackendType)
+
+    restonomerResponse shouldBe a[RestonomerResponse]
+    restonomerResponse.httpResponse shouldBe a[Identity[Response[Either[String, String]]]]
   }
 
 }
