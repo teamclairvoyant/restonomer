@@ -4,8 +4,7 @@ import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import com.clairvoyant.restonomer.core.model.CredentialConfig
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import sttp.client3.{Request, UriContext, basicRequest}
-import sttp.model.Method
+import sttp.client3.Request
 
 class BasicAuthenticationSpec extends CoreSpec {
 
@@ -54,9 +53,7 @@ class BasicAuthenticationSpec extends CoreSpec {
     val credentialConfig = CredentialConfig(basicToken = Some("test_token"))
     val basicAuthentication = new BasicAuthentication(credentialConfig)
 
-    val httpRequest = basicRequest.method(Method.GET, uri"https://test-domain/url")
-
-    basicAuthentication.authenticate(httpRequest) shouldBe a[Request[Either[String, String], Any]]
+    basicAuthentication.authenticate(basicHttpRequest) shouldBe a[Request[Either[String, String], Any]]
   }
 
   "authenticate - with user-name and password" should "return the authenticated request" in {
@@ -66,9 +63,7 @@ class BasicAuthenticationSpec extends CoreSpec {
     )
     val basicAuthentication = new BasicAuthentication(credentialConfig)
 
-    val httpRequest = basicRequest.method(Method.GET, uri"https://test-domain/url")
-
-    basicAuthentication.authenticate(httpRequest) shouldBe a[Request[Either[String, String], Any]]
+    basicAuthentication.authenticate(basicHttpRequest) shouldBe a[Request[Either[String, String], Any]]
   }
 
 }

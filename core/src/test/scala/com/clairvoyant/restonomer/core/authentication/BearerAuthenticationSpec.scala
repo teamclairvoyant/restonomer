@@ -4,8 +4,7 @@ import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import com.clairvoyant.restonomer.core.model.CredentialConfig
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import sttp.client3.{Request, UriContext, basicRequest}
-import sttp.model.Method
+import sttp.client3.Request
 
 class BearerAuthenticationSpec extends CoreSpec {
 
@@ -28,9 +27,7 @@ class BearerAuthenticationSpec extends CoreSpec {
     val credentialConfig = CredentialConfig(bearerToken = Some("test_token"))
     val bearerAuthentication = new BearerAuthentication(credentialConfig)
 
-    val httpRequest = basicRequest.method(Method.GET, uri"https://test-domain/url")
-
-    bearerAuthentication.authenticate(httpRequest) shouldBe a[Request[Either[String, String], Any]]
+    bearerAuthentication.authenticate(basicHttpRequest) shouldBe a[Request[Either[String, String], Any]]
   }
 
 }

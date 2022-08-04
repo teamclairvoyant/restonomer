@@ -9,6 +9,7 @@ class RestonomerRequestSpec extends CoreSpec {
 
   "apply" should "return RestonomerRequest object" in {
     val requestConfig = RequestConfig(method = Some("GET"), url = "https://test-domain/url")
+
     RestonomerRequest(requestConfig) shouldBe a[RestonomerRequest]
     RestonomerRequest(requestConfig).httpRequest shouldBe a[Request[Either[String, String], Any]]
   }
@@ -28,6 +29,7 @@ class RestonomerRequestSpec extends CoreSpec {
     val requestConfig = RequestConfig(method = Some("GET"), url = "https://test-domain/url")
 
     val credentialConfig = CredentialConfig(basicToken = Some("test_token"))
+
     val authenticationConfig = Some(
       AuthenticationConfig(
         authenticationType = "BasicAuthentication",
