@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.util
 
-import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
 import pureconfig.{ConfigReader, ConfigSource}
 

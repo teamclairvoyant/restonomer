@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.util
 
 import com.clairvoyant.restonomer.core.CoreSpec
-import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
 import com.clairvoyant.restonomer.core.util.ConfigUtil._
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper

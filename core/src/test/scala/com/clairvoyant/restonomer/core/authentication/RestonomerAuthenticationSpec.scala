@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.authentication
 
 import com.clairvoyant.restonomer.core.CoreSpec
-import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import com.clairvoyant.restonomer.core.model.{AuthenticationConfig, CredentialConfig}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import sttp.client3.{basicRequest, Request, UriContext}

@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.app
 
 import com.clairvoyant.restonomer.core.common.RestonomerContextConfigTypes
-import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import com.clairvoyant.restonomer.core.model.{CheckpointConfig, RestonomerContextConfig}
 import com.clairvoyant.restonomer.core.util.ConfigUtil.loadConfigsFromDirectory
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists

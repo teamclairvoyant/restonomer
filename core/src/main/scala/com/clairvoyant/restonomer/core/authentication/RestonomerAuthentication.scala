@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.authentication
 
 import com.clairvoyant.restonomer.core.common.AuthenticationTypes._
-import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import com.clairvoyant.restonomer.core.model.AuthenticationConfig
 import sttp.client3.Request
 

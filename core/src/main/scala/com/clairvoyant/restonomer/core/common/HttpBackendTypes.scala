@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.common
 
-import com.clairvoyant.restonomer.core.exceptions.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import sttp.client3.{HttpClientSyncBackend, Identity, SttpBackend}
 
 object HttpBackendTypes extends Enumeration {
