@@ -27,7 +27,7 @@ class BasicAuthentication(credentialConfig: CredentialConfig) extends Restonomer
 
   override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
     basicToken
-      .map(httpRequest.auth.basicToken(_))
+      .map(httpRequest.auth.basicToken)
       .getOrElse(
         httpRequest.auth.basic(
           user = credentialConfig.userName.get,
