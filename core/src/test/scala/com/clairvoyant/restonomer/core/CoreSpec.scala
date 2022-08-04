@@ -16,7 +16,7 @@ trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
   val port = 8080
   val url = "/test_url"
 
-  val uri = s"http://$host:$port/$url"
+  val uri = s"http://$host:$port$url"
 
   val basicHttpRequest: Request[Either[String, String], Any] = basicRequest.method(
     method = Method.GET,
