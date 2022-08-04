@@ -50,13 +50,7 @@ class RestonomerRequestSpec extends CoreSpec {
   "send" should "return RestonomerResponse with the mocked response body" in {
     val responseBody = "Sample Response Body"
 
-    stubFor(
-      get(urlPathEqualTo(url))
-        .willReturn(
-          aResponse()
-            .withBody(responseBody)
-        )
-    )
+    stubFor(get(urlPathEqualTo(url)).willReturn(aResponse().withBody(responseBody)))
 
     val restonomerResponse = RestonomerRequest(basicHttpRequest).send()
     restonomerResponse.httpResponse.body.getOrElse() shouldBe responseBody
