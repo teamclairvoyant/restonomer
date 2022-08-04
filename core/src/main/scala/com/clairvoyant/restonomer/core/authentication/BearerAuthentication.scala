@@ -10,7 +10,7 @@ class BearerAuthentication(credentialConfig: CredentialConfig) extends Restonome
   override def validateCredentials(): Unit = {
     if (bearerToken.isEmpty)
       throw new RestonomerContextException(
-        "The provided credentials are invalid. The credentials should contain bearer-token"
+        "The provided credentials are invalid. The credentials should contain bearer-token."
       )
   }
 
