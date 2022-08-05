@@ -52,7 +52,7 @@ class RestonomerAuthenticationSpec extends CoreSpec {
     )
 
     RestonomerAuthentication(authenticationConfig)
-      .validateCredentialsAndAuthenticate(basicHttpRequest) shouldBe a[Request[Either[String, String], Any]]
+      .validateCredentialsAndAuthenticate(basicHttpRequest) shouldBe a[Request[_, _]]
   }
 
 }

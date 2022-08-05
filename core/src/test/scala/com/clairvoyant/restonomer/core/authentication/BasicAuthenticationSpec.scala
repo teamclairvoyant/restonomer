@@ -53,7 +53,7 @@ class BasicAuthenticationSpec extends CoreSpec {
     val credentialConfig = CredentialConfig(basicToken = Some("test_token"))
     val basicAuthentication = new BasicAuthentication(credentialConfig)
 
-    basicAuthentication.authenticate(basicHttpRequest) shouldBe a[Request[Either[String, String], Any]]
+    basicAuthentication.authenticate(basicHttpRequest) shouldBe a[Request[_, _]]
   }
 
   "authenticate - with user-name and password" should "return the authenticated request" in {
@@ -63,7 +63,7 @@ class BasicAuthenticationSpec extends CoreSpec {
     )
     val basicAuthentication = new BasicAuthentication(credentialConfig)
 
-    basicAuthentication.authenticate(basicHttpRequest) shouldBe a[Request[Either[String, String], Any]]
+    basicAuthentication.authenticate(basicHttpRequest) shouldBe a[Request[_, _]]
   }
 
 }

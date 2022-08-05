@@ -1,19 +1,19 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import com.clairvoyant.restonomer.core.model._
+import com.clairvoyant.restonomer.core.{CoreSpec, HttpMockSpec}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import sttp.client3._
 
-class RestonomerRequestSpec extends CoreSpec {
+class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
 
   "apply" should "return RestonomerRequest object" in {
     val requestConfig = RequestConfig(method = Some("GET"), url = "https://test-domain/url")
 
     RestonomerRequest(requestConfig) shouldBe a[RestonomerRequest]
-    RestonomerRequest(requestConfig).httpRequest shouldBe a[Request[Either[String, String], Any]]
+    RestonomerRequest(requestConfig).httpRequest shouldBe a[Request[_, _]]
   }
 
   "authenticate - without authenticationConfig" should "return RestonomerRequest object with the same httpRequest" in {
@@ -45,7 +45,7 @@ class RestonomerRequestSpec extends CoreSpec {
     val restonomerResponse = RestonomerRequest(basicHttpRequest).send()
 
     restonomerResponse shouldBe a[RestonomerResponse]
-    restonomerResponse.httpResponse shouldBe a[Identity[Response[Either[String, String]]]]
+    restonomerResponse.httpResponse shouldBe a[Identity[_]]
   }
 
   "send" should "return RestonomerResponse with the mocked response body" in {

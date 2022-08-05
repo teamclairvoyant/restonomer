@@ -1,14 +1,11 @@
 package com.clairvoyant.restonomer.core
 
-import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers
 import sttp.client3._
 import sttp.model.Method
 
-trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
+trait CoreSpec extends AnyFlatSpec with Matchers {
   val resourcesPath = "core/src/test/resources"
 
   val protocol = "http://"
@@ -22,15 +19,5 @@ trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll {
     method = Method.GET,
     uri = uri"$uri"
   )
-
-  val wireMockServer = new WireMockServer(wireMockConfig().port(port))
-
-  override def beforeAll: Unit = {
-    wireMockServer.start()
-  }
-
-  override def afterAll: Unit = {
-    wireMockServer.stop()
-  }
 
 }

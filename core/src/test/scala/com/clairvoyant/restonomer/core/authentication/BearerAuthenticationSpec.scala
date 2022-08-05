@@ -27,7 +27,7 @@ class BearerAuthenticationSpec extends CoreSpec {
     val credentialConfig = CredentialConfig(bearerToken = Some("test_token"))
     val bearerAuthentication = new BearerAuthentication(credentialConfig)
 
-    bearerAuthentication.authenticate(basicHttpRequest) shouldBe a[Request[Either[String, String], Any]]
+    bearerAuthentication.authenticate(basicHttpRequest) shouldBe a[Request[_, _]]
   }
 
 }

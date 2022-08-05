@@ -23,7 +23,7 @@ class ConfigUtilSpec extends CoreSpec {
   }
 
   "loadConfigsFromDirectory" should "return list that contain CheckpointConfig objects" in {
-    loadConfigsFromDirectory[CheckpointConfig](s"$resourcesPath/checkpoints/") shouldBe a[List[CheckpointConfig]]
+    loadConfigsFromDirectory[CheckpointConfig](s"$resourcesPath/checkpoints/") shouldBe a[List[_]]
   }
 
   "loadConfigsFromDirectory" should "throw FileNotFoundException" in {
