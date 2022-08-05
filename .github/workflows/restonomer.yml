@@ -19,6 +19,6 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-        cache: "sbt 'project core' test"
+        cache: 'sbt'
     - name: Run tests
-      run: sbt test
+      run: sbt "project core" test
