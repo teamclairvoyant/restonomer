@@ -27,7 +27,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
     // CHECKPOINT
     val checkpointConfigs = loadConfigsFromDirectory[CheckpointConfig](configDirectoryPath =
-      s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT.configDirectoryName}"
+      s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}"
     )
 
     RestonomerContextConfig(checkpoints = checkpointConfigs)

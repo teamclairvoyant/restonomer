@@ -1,6 +1,7 @@
 package com.clairvoyant.restonomer.core.http
 
 import com.clairvoyant.restonomer.core.CoreSpec
+import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import com.clairvoyant.restonomer.core.model._
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
@@ -52,8 +53,14 @@ class RestonomerRequestSpec extends CoreSpec {
 
     stubFor(get(urlPathEqualTo(url)).willReturn(aResponse().withBody(responseBody)))
 
-    val restonomerResponse = RestonomerRequest(basicHttpRequest).send()
+    val restonomerResponse = RestonomerRequest(basicHttpRequest).send(Some("HttpClientSyncBackend"))
     restonomerResponse.httpResponse.body.getOrElse() shouldBe responseBody
+  }
+
+  "send with invalid HttpBackendType" should "throw RestonomerContextException" in {
+    the[RestonomerContextException] thrownBy RestonomerRequest(basicHttpRequest).send(
+      Some("ABCDBackendType")
+    ) should have message "The http-backend-type: ABCDBackendType is not supported."
   }
 
 }
