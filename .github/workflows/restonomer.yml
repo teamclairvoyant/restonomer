@@ -20,5 +20,9 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: 'sbt'
-    - name: Run tests
-      run: sbt "project core" test
+    - name: Scalafmt Check
+      run: sbt scalafmtCheckAll
+    - name: Scalafix Check
+      run: sbt "scalafixAll --check"
+    - name: Run Tests
+      run: sbt test

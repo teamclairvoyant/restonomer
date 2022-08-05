@@ -1,5 +1,12 @@
 ThisBuild / scalaVersion := "2.13.8"
 
+inThisBuild(
+  List(
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision
+  )
+)
+
 // ----- VARIABLES ----- //
 
 val organizationName = "com.clairvoyant.restonomer"
@@ -10,6 +17,8 @@ val pureConfigVersion = "0.17.1"
 val sttpVersion = "3.7.1"
 val scalaTestVersion = "3.2.12"
 val wireMockVersion = "2.27.2"
+
+lazy val scalacOptions = Seq("-Wunused")
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -27,20 +36,27 @@ val coreDependencies = pureConfigDependencies ++ sttpDependencies ++ scalaTestDe
 
 // ----- SETTINGS ----- //
 
-val rootSettings = Seq(
-  organization := organizationName,
-  name := applicationName,
-  version := releaseVersion
+val commonSettings = Seq(
+  Keys.scalacOptions ++= scalacOptions
 )
 
-val coreSettings = Seq(
-  libraryDependencies ++= coreDependencies
-)
+val rootSettings =
+  commonSettings ++ Seq(
+    organization := organizationName,
+    name := applicationName,
+    version := releaseVersion
+  )
+
+val coreSettings =
+  commonSettings ++ Seq(
+    libraryDependencies ++= coreDependencies
+  )
 
 // ----- PROJECTS ----- //
 
-lazy val core = (project in file("core"))
-  .settings(coreSettings)
-
 lazy val restonomer = (project in file("."))
   .settings(rootSettings)
+  .aggregate(core)
+
+lazy val core = (project in file("core"))
+  .settings(coreSettings)
