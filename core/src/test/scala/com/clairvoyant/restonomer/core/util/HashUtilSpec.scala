@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.util
 
 import com.clairvoyant.restonomer.core.CoreSpec
-import com.clairvoyant.restonomer.core.util.HashUtil.getMD5EncryptedHash
+import com.clairvoyant.restonomer.core.util.HashUtil._
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
 class HashUtilSpec extends CoreSpec {
@@ -32,6 +32,32 @@ class HashUtilSpec extends CoreSpec {
       format = "%064x",
       charsetName = "ISO-8859-1"
     ) shouldBe "000000000000000000000000000000002410846faa22f2f5b8450c02f69a624c"
+  }
+
+  "getSHA256EncryptedHash" should "return expected sha256 hash value" in {
+    getSHA256EncryptedHash(text) shouldBe "46d4590026dc4147fd6ba109b4ef607e7da72b12aa715e92657a711d149f3dc"
+  }
+
+  "getSHA256EncryptedHash - with format" should "return expected sha256 hash value" in {
+    getSHA256EncryptedHash(
+      text = text,
+      format = "%064x"
+    ) shouldBe "046d4590026dc4147fd6ba109b4ef607e7da72b12aa715e92657a711d149f3dc"
+  }
+
+  "getSHA256EncryptedHash - with charset name" should "return expected sha256 hash value" in {
+    getSHA256EncryptedHash(
+      text = text,
+      charsetName = "US-ASCII"
+    ) shouldBe "46d4590026dc4147fd6ba109b4ef607e7da72b12aa715e92657a711d149f3dc"
+  }
+
+  "getSHA256EncryptedHash - with format and charset name" should "return expected sha256 hash value" in {
+    getSHA256EncryptedHash(
+      text = text,
+      format = "%064x",
+      charsetName = "ISO-8859-1"
+    ) shouldBe "046d4590026dc4147fd6ba109b4ef607e7da72b12aa715e92657a711d149f3dc"
   }
 
 }
