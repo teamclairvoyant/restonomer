@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/bearer-auth-token",
+    "headers": {
+      "Authorization": {
+        "matches": "Bearer abcd1234"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": "Authorized Successfully using Bearer Token"
+  }
+}

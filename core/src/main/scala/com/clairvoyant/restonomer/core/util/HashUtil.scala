@@ -11,6 +11,12 @@ object HashUtil {
   val MD5_ALGORITHM_NAME = "MD5"
   val SHA256_ALGORITHM_NAME = "SHA-256"
 
+  def getMD5EncryptedHash(
+      text: String,
+      format: String = DEFAULT_STRING_FORMAT,
+      charsetName: String = DEFAULT_CHARSET_NAME
+  ): String = getEncryptedHash(text, MD5_ALGORITHM_NAME, format, charsetName)
+
   def getEncryptedHash(
       text: String,
       algorithmName: String,
@@ -21,12 +27,6 @@ object HashUtil {
       format,
       new BigInteger(MessageDigest.getInstance(algorithmName).digest(text.getBytes(charsetName)))
     )
-
-  def getMD5EncryptedHash(
-      text: String,
-      format: String = DEFAULT_STRING_FORMAT,
-      charsetName: String = DEFAULT_CHARSET_NAME
-  ): String = getEncryptedHash(text, MD5_ALGORITHM_NAME, format, charsetName)
 
   def getSHA256EncryptedHash(
       text: String,
