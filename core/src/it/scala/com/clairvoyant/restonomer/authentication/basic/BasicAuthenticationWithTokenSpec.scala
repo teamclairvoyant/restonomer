@@ -6,7 +6,11 @@ class BasicAuthenticationWithTokenSpec extends IntegrationTestDependencies {
   override val mappingsDirectory: String = "basic_authentication"
 
   it should "authenticate request with basic authentication using token" in {
-    restonomerContext.runCheckpoint("checkpoint_basic_authentication_token")
+    restonomerContext.runCheckpoint(checkpointName = "checkpoint_basic_authentication_token")
+  }
+
+  it should "authenticate request with basic authentication using username and password" in {
+    restonomerContext.runCheckpoint(checkpointName = "checkpoint_basic_authentication_up")
   }
 
 }

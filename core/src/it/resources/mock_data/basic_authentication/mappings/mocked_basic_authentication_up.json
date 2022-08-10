@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/basic-auth-up",
+    "headers": {
+      "Authorization": {
+        "matches": "Basic dGVzdF91c2VyOnRlc3RfcGFzc3dvcmQ="
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": "Authorized Successfully using User Name and Password"
+  }
+}

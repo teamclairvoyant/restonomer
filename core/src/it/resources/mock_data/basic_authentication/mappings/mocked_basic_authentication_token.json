@@ -10,6 +10,6 @@
   },
   "response": {
     "status": 200,
-    "body": "Authorized Successfully"
+    "body": "Authorized Successfully using Basic Token"
   }
 }
