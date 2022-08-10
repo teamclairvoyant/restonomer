@@ -1,9 +1,9 @@
-package com.clairvoyant.restonomer.authentication.basic
+package com.clairvoyant.restonomer.authentication
 
-import com.clairvoyant.restonomer.IntegrationTestDependencies
+import com.clairvoyant.restonomer.common.IntegrationTestDependencies
 
-class BasicAuthenticationWithTokenSpec extends IntegrationTestDependencies {
-  override val mappingsDirectory: String = "basic_authentication"
+class BasicAuthenticationSpec extends IntegrationTestDependencies {
+  override val mappingsDirectory: String = "authentication"
 
   it should "authenticate request with basic authentication using token" in {
     restonomerContext.runCheckpoint(checkpointName = "checkpoint_basic_authentication_token")

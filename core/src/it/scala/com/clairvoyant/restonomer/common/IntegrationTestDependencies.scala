@@ -1,4 +1,4 @@
-package com.clairvoyant.restonomer
+package com.clairvoyant.restonomer.common
 
 import com.clairvoyant.restonomer.core.app.RestonomerContext
 import org.scalatest.flatspec.AnyFlatSpec
