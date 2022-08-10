@@ -2,7 +2,7 @@ package com.clairvoyant.restonomer.authentication
 
 import com.clairvoyant.restonomer.common.IntegrationTestDependencies
 
-class BasicAuthenticationSpec extends IntegrationTestDependencies {
+class BasicAuthenticationIntegrationTest extends IntegrationTestDependencies {
   override val mappingsDirectory: String = "authentication"
 
   it should "authenticate request with basic authentication using token" in {
