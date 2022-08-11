@@ -2,7 +2,7 @@ package com.clairvoyant.restonomer.core.app
 
 import com.clairvoyant.restonomer.core.common.RestonomerContextConfigTypes
 import com.clairvoyant.restonomer.core.exception.RestonomerContextException
-import com.clairvoyant.restonomer.core.model.{CheckpointConfig, RestonomerContextConfig}
+import com.clairvoyant.restonomer.core.model.CheckpointConfig
 import com.clairvoyant.restonomer.core.util.ConfigUtil.loadConfigsFromDirectory
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
 import pureconfig.generic.auto._
@@ -23,18 +23,12 @@ object RestonomerContext {
 
 class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
-  val configs: RestonomerContextConfig = {
-
-    // CHECKPOINT
-    val checkpointConfigs = loadConfigsFromDirectory[CheckpointConfig](configDirectoryPath =
-      s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}"
-    )
-
-    RestonomerContextConfig(checkpoints = checkpointConfigs)
-  }
+  val checkpointConfigs: List[CheckpointConfig] = loadConfigsFromDirectory[CheckpointConfig](configDirectoryPath =
+    s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}"
+  )
 
   def runCheckpoint(checkpointName: String): Unit =
-    configs.checkpoints
+    checkpointConfigs
       .find(_.name == checkpointName) match {
       case Some(checkpointConfig) =>
         runCheckpoint(checkpointConfig)
@@ -43,7 +37,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
     }
 
   def runAllCheckpoints(): Unit = {
-    configs.checkpoints.foreach { checkpointConfig =>
+    checkpointConfigs.foreach { checkpointConfig =>
       println(s"Checkpoint Name -> ${checkpointConfig.name}\n")
       runCheckpoint(checkpointConfig)
       println("\n=====================================================\n")

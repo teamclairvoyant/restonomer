@@ -18,8 +18,11 @@ sealed trait RestonomerAuthentication {
 
 }
 
-case class BasicAuthentication(basicToken: Option[String], userName: Option[String], password: Option[String])
-    extends RestonomerAuthentication {
+case class BasicAuthentication(
+    basicToken: Option[String] = None,
+    userName: Option[String] = None,
+    password: Option[String] = None
+) extends RestonomerAuthentication {
 
   override def validateCredentials(): Unit = {
     if (basicToken.isEmpty && userName.isEmpty && password.isEmpty)
@@ -49,7 +52,7 @@ case class BasicAuthentication(basicToken: Option[String], userName: Option[Stri
 
 }
 
-case class BearerAuthentication(bearerToken: Option[String]) extends RestonomerAuthentication {
+case class BearerAuthentication(bearerToken: Option[String] = None) extends RestonomerAuthentication {
 
   override def validateCredentials(): Unit = {
     if (bearerToken.isEmpty)
