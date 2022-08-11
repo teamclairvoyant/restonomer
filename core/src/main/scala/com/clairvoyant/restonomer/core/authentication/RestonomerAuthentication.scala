@@ -1,11 +1,9 @@
 package com.clairvoyant.restonomer.core.authentication
 
-import com.clairvoyant.restonomer.core.common.AuthenticationTypes._
 import com.clairvoyant.restonomer.core.exception.RestonomerContextException
-import com.clairvoyant.restonomer.core.model.AuthenticationConfig
 import sttp.client3.Request
 
-trait RestonomerAuthentication {
+sealed trait RestonomerAuthentication {
 
   def validateCredentials(): Unit
 
@@ -20,20 +18,48 @@ trait RestonomerAuthentication {
 
 }
 
-object RestonomerAuthentication {
+case class BasicAuthentication(basicToken: Option[String], userName: Option[String], password: Option[String])
+    extends RestonomerAuthentication {
 
-  def apply(authenticationConfig: AuthenticationConfig): RestonomerAuthentication = {
-    val authenticationType = authenticationConfig.authenticationType
-    if (isValidAuthenticationType(authenticationType)) {
-      withName(authenticationType) match {
-        case BASIC_AUTHENTICATION =>
-          new BasicAuthentication(authenticationConfig.credentials)
-        case BEARER_AUTHENTICATION =>
-          new BearerAuthentication(authenticationConfig.credentials)
-      }
-    } else {
-      throw new RestonomerContextException(s"The authentication-type: $authenticationType is not supported.")
-    }
+  override def validateCredentials(): Unit = {
+    if (basicToken.isEmpty && userName.isEmpty && password.isEmpty)
+      throw new RestonomerContextException(
+        "The provided credentials are invalid. The credentials should contain either basicToken or both user-name & password."
+      )
+    else if (basicToken.isEmpty && userName.isEmpty)
+      throw new RestonomerContextException(
+        "The provided credentials are invalid. The credentials should contain the user-name."
+      )
+    else if (basicToken.isEmpty && password.isEmpty)
+      throw new RestonomerContextException(
+        "The provided credentials are invalid. The credentials should contain the password."
+      )
+  }
+
+  override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
+    basicToken
+      .map(httpRequest.auth.basicToken)
+      .getOrElse(
+        httpRequest.auth.basic(
+          user = userName.get,
+          password = password.get
+        )
+      )
+  }
+
+}
+
+case class BearerAuthentication(bearerToken: Option[String]) extends RestonomerAuthentication {
+
+  override def validateCredentials(): Unit = {
+    if (bearerToken.isEmpty)
+      throw new RestonomerContextException(
+        "The provided credentials are invalid. The credentials should contain bearer-token."
+      )
+  }
+
+  override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
+    httpRequest.auth.bearer(bearerToken.get)
   }
 
 }
