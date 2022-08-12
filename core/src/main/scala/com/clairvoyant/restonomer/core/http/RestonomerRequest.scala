@@ -2,16 +2,16 @@ package com.clairvoyant.restonomer.core.http
 
 import com.clairvoyant.restonomer.core.authentication.RestonomerAuthentication
 import com.clairvoyant.restonomer.core.common.HttpBackendTypes
-import com.clairvoyant.restonomer.core.model.{AuthenticationConfig, RequestConfig}
+import com.clairvoyant.restonomer.core.model.RequestConfig
 import sttp.client3._
 import sttp.model.Method
 
 case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) {
 
-  def authenticate(authenticationConfig: Option[AuthenticationConfig] = None): RestonomerRequest =
+  def authenticate(authenticationConfig: Option[RestonomerAuthentication] = None): RestonomerRequest =
     this.copy(httpRequest =
       authenticationConfig
-        .map(RestonomerAuthentication(_).validateCredentialsAndAuthenticate(httpRequest))
+        .map(_.validateCredentialsAndAuthenticate(httpRequest))
         .getOrElse(httpRequest)
     )
 

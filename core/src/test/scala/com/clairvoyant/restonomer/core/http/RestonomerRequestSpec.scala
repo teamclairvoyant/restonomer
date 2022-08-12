@@ -1,5 +1,6 @@
 package com.clairvoyant.restonomer.core.http
 
+import com.clairvoyant.restonomer.core.authentication.BasicAuthentication
 import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import com.clairvoyant.restonomer.core.model._
 import com.clairvoyant.restonomer.core.{CoreSpec, HttpMockSpec}
@@ -25,20 +26,13 @@ class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
   }
 
   "authenticate - with authenticationConfig" should "return RestonomerRequest object with the new authenticated httpRequest" in {
-    val credentialConfig = CredentialConfig(basicToken = Some("test_token"))
-
-    val authenticationConfig = Some(
-      AuthenticationConfig(
-        authenticationType = "BasicAuthentication",
-        credentials = credentialConfig
-      )
-    )
+    val authentication = Some(BasicAuthentication(basicToken = Some("test_token")))
 
     val restonomerRequest = RestonomerRequest(basicHttpRequest)
     val httpRequest = restonomerRequest.httpRequest
 
-    restonomerRequest.authenticate(authenticationConfig) shouldBe a[RestonomerRequest]
-    restonomerRequest.authenticate(authenticationConfig).httpRequest shouldNot be theSameInstanceAs httpRequest
+    restonomerRequest.authenticate(authentication) shouldBe a[RestonomerRequest]
+    restonomerRequest.authenticate(authentication).httpRequest shouldNot be theSameInstanceAs httpRequest
   }
 
   "send" should "return RestonomerResponse" in {
