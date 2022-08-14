@@ -23,12 +23,12 @@ object RestonomerContext {
 
 class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
-  val checkpointConfigs: List[CheckpointConfig] = loadConfigsFromDirectory[CheckpointConfig](configDirectoryPath =
+  val checkpoints: List[CheckpointConfig] = loadConfigsFromDirectory[CheckpointConfig](configDirectoryPath =
     s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}"
   )
 
   def runCheckpoint(checkpointName: String): Unit =
-    checkpointConfigs
+    checkpoints
       .find(_.name == checkpointName) match {
       case Some(checkpointConfig) =>
         runCheckpoint(checkpointConfig)
@@ -37,7 +37,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
     }
 
   def runAllCheckpoints(): Unit = {
-    checkpointConfigs.foreach { checkpointConfig =>
+    checkpoints.foreach { checkpointConfig =>
       println(s"Checkpoint Name -> ${checkpointConfig.name}\n")
       runCheckpoint(checkpointConfig)
       println("\n=====================================================\n")
