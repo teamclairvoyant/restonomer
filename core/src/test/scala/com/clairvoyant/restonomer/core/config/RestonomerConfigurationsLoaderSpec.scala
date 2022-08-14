@@ -1,15 +1,15 @@
-package com.clairvoyant.restonomer.core.util
+package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.CoreSpec
+import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
 import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
-import com.clairvoyant.restonomer.core.util.ConfigUtil._
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pureconfig.generic.auto._
 
 import java.io.{File, FileNotFoundException}
 
-class ConfigUtilSpec extends CoreSpec {
+class RestonomerConfigurationsLoaderSpec extends CoreSpec {
 
   "loadConfigFromFile" should "return CheckpointConfig object" in {
     val checkpointFile = new File(s"$resourcesPath/sample-checkpoint-valid.conf")
