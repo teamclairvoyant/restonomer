@@ -7,18 +7,19 @@ import com.clairvoyant.restonomer.core.model.CheckpointConfig
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pureconfig.generic.auto._
 
-import java.io.{File, FileNotFoundException}
+import java.io.FileNotFoundException
 
 class RestonomerConfigurationsLoaderSpec extends CoreSpec {
 
   "loadConfigFromFile" should "return CheckpointConfig object" in {
-    val checkpointFile = new File(s"$resourcesPath/sample-checkpoint-valid.conf")
-    loadConfigFromFile[CheckpointConfig](checkpointFile) shouldBe a[CheckpointConfig]
+    loadConfigFromFile[CheckpointConfig](s"$resourcesPath/sample-checkpoint-valid.conf") shouldBe a[CheckpointConfig]
   }
 
   "loadConfigFromFile" should "throw RestonomerContextException" in {
-    val checkpointFile = new File(s"$resourcesPath/sample-checkpoint-invalid.conf")
-    val thrown = the[RestonomerContextException] thrownBy loadConfigFromFile[CheckpointConfig](checkpointFile)
+    val thrown =
+      the[RestonomerContextException] thrownBy loadConfigFromFile[CheckpointConfig](
+        s"$resourcesPath/sample-checkpoint-invalid.conf"
+      )
     thrown.getMessage should include("Key not found: 'url'")
   }
 

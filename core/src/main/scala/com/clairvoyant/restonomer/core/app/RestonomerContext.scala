@@ -1,6 +1,5 @@
 package com.clairvoyant.restonomer.core.app
 
-import com.clairvoyant.restonomer.core.app.RestonomerContext.CONFIG_VARIABLES_FILE_PATH
 import com.clairvoyant.restonomer.core.common.RestonomerContextConfigTypes
 import com.clairvoyant.restonomer.core.config.ConfigVariablesSubstitutor
 import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
@@ -12,7 +11,6 @@ import pureconfig.generic.auto._
 object RestonomerContext {
 
   val DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH = "./restonomer_context"
-  val CONFIG_VARIABLES_FILE_PATH = s"$DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH/uncommitted/config_variables.conf"
 
   def apply(restonomerContextDirectoryPath: String = DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH): RestonomerContext = {
     if (fileExists(restonomerContextDirectoryPath))
@@ -27,10 +25,13 @@ object RestonomerContext {
 
 class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
+  val CONFIG_VARIABLES_FILE_PATH = s"$restonomerContextDirectoryPath/uncommitted/config_variables.conf"
+  val CHECKPOINTS_CONFIG_DIRECTORY_PATH = s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}"
+
   val configVariables: Map[String, String] = loadConfigVariables(CONFIG_VARIABLES_FILE_PATH)
 
   val checkpoints: List[CheckpointConfig] = loadConfigsFromDirectory[CheckpointConfig](
-    configDirectoryPath = s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}",
+    configDirectoryPath = CHECKPOINTS_CONFIG_DIRECTORY_PATH,
     configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables)
   )
 
