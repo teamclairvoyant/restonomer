@@ -48,7 +48,7 @@ object RestonomerConfigurationsLoader {
     if (fileExists(configVariablesFilePath))
       loadConfigFromFile[Map[String, String]](configVariablesFilePath)
     else
-      Map[String, String]().empty
+      Map()
   }
 
 }

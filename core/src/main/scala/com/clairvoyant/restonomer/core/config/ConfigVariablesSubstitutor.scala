@@ -7,7 +7,9 @@ import scala.util.matching.Regex
 
 class ConfigVariablesSubstitutor(configVariables: Map[String, String]) {
 
-  val CONFIG_VARIABLE_PATTERN: Regex = """\$\{(\S*)}""".r
+  val CONFIG_VARIABLE_REGEX_PATTERN: Regex = """\$\{(\S*)}""".r
+
+  val environmentVariables: Map[String, String] = sys.env
 
   def substituteConfigVariables(configFile: File): String = {
     @tailrec
@@ -16,9 +18,16 @@ class ConfigVariablesSubstitutor(configVariables: Map[String, String]) {
         configString
       else {
         val matcher = remainingMatchers.head
-        val newConfigString = configString.replace(matcher.group(0), s"\"${configVariables(matcher.group(1))}\"")
 
-        substituteConfigVariablesHelper(remainingMatchers.tail, newConfigString)
+        val substituteValue =
+          if (environmentVariables.contains(matcher.group(1)))
+            s"\"${environmentVariables(matcher.group(1))}\""
+          else if (configVariables.contains(matcher.group(1)))
+            s"\"${configVariables(matcher.group(1))}\""
+          else
+            matcher.group(0)
+
+        substituteConfigVariablesHelper(remainingMatchers.tail, configString.replace(matcher.group(0), substituteValue))
       }
     }
 
@@ -28,7 +37,7 @@ class ConfigVariablesSubstitutor(configVariables: Map[String, String]) {
       try configFileSource.mkString
       finally configFileSource.close()
 
-    val matchers = CONFIG_VARIABLE_PATTERN.findAllMatchIn(configString).toList
+    val matchers = CONFIG_VARIABLE_REGEX_PATTERN.findAllMatchIn(configString).toList
 
     substituteConfigVariablesHelper(matchers, configString)
   }
