@@ -5,11 +5,9 @@ import scala.annotation.tailrec
 import scala.io.Source
 import scala.util.matching.Regex
 
-class ConfigVariablesSubstitutor(configVariables: Map[String, String]) {
+class ConfigVariablesSubstitutor(environmentVariables: Map[String, String], configVariables: Map[String, String]) {
 
   val CONFIG_VARIABLE_REGEX_PATTERN: Regex = """\$\{(\S*)}""".r
-
-  val environmentVariables: Map[String, String] = sys.env
 
   def substituteConfigVariables(configFile: File): String = {
     @tailrec
@@ -46,7 +44,9 @@ class ConfigVariablesSubstitutor(configVariables: Map[String, String]) {
 
 object ConfigVariablesSubstitutor {
 
-  def apply(configVariables: Map[String, String] = Map()): ConfigVariablesSubstitutor =
-    new ConfigVariablesSubstitutor(configVariables)
+  def apply(
+      environmentVariables: Map[String, String] = sys.env,
+      configVariables: Map[String, String] = Map()
+  ): ConfigVariablesSubstitutor = new ConfigVariablesSubstitutor(environmentVariables, configVariables)
 
 }
