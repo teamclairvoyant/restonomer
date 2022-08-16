@@ -6,7 +6,7 @@ import java.io.File
 
 class ConfigVariablesSubstitutorSpec extends CoreSpec {
 
-  val configFile = new File(s"$resourcesPath/checkpoints/sample-checkpoint-conf-variable.conf")
+  val configFile = new File(s"$resourcesPath/sample-checkpoint-conf-variable.conf")
 
   "substituteConfigVariables - with empty config variables and empty env variables" should "return" in {
     val configVariables = Map[String, String]()
