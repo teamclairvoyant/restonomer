@@ -14,7 +14,7 @@ val applicationName = "restonomer"
 val releaseVersion = "1.0"
 
 val pureConfigVersion = "0.17.1"
-val sttpVersion = "3.7.1"
+val sttpVersion = "3.7.2"
 val scalaTestVersion = "3.2.12"
 val wireMockVersion = "2.27.2"
 
