@@ -70,7 +70,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |""".stripMargin
 
       val environmentVariables = Map[String, String]("BASIC_AUTH_TOKEN" -> "abcd1234")
-      val configVariables = Map[String, String]("BASIC_AUTH_TOKEN_1" -> "efgh5678")
+      val configVariables = Map[String, String]()
 
       ConfigVariablesSubstitutor(environmentVariables, configVariables).substituteConfigVariables(
         configFile
@@ -92,7 +92,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |}
           |""".stripMargin
 
-      val environmentVariables = Map[String, String]("BASIC_AUTH_TOKEN_1" -> "abcd1234")
+      val environmentVariables = Map[String, String]()
       val configVariables = Map[String, String]("BASIC_AUTH_TOKEN" -> "efgh5678")
 
       ConfigVariablesSubstitutor(environmentVariables, configVariables).substituteConfigVariables(
