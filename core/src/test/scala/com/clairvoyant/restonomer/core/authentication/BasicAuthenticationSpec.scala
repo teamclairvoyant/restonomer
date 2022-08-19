@@ -3,7 +3,7 @@ package com.clairvoyant.restonomer.core.authentication
 import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import sttp.client3.Request
+import sttp.model.Header
 
 class BasicAuthenticationSpec extends CoreSpec {
 
@@ -43,13 +43,19 @@ class BasicAuthenticationSpec extends CoreSpec {
   "authenticate - with basic-token" should "return the authenticated request" in {
     val authentication = BasicAuthentication(basicToken = Some("test_token"))
 
-    authentication.authenticate(basicHttpRequest) shouldBe a[Request[_, _]]
+    authentication
+      .authenticate(basicHttpRequest)
+      .headers
+      .exists(_.equals(Header("Authorization", "Basic test_token"))) shouldBe true
   }
 
   "authenticate - with user-name and password" should "return the authenticated request" in {
     val authentication = BasicAuthentication(userName = Some("test_user"), password = Some("test_password"))
 
-    authentication.authenticate(basicHttpRequest) shouldBe a[Request[_, _]]
+    authentication
+      .authenticate(basicHttpRequest)
+      .headers
+      .exists(_.equals(Header("Authorization", "Basic dGVzdF91c2VyOnRlc3RfcGFzc3dvcmQ="))) shouldBe true
   }
 
 }

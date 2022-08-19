@@ -1,7 +1,9 @@
 package com.clairvoyant.restonomer.core.authentication
 
+import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders
+import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.{COOKIE, QUERY_STRING, REQUEST_HEADER, isValidAPIKeyPlaceholder}
 import com.clairvoyant.restonomer.core.exception.RestonomerContextException
-import sttp.client3.Request
+import sttp.client3.{Identity, Request}
 
 sealed trait RestonomerAuthentication {
 
@@ -27,7 +29,7 @@ case class BasicAuthentication(
   override def validateCredentials(): Unit = {
     if (basicToken.isEmpty && userName.isEmpty && password.isEmpty)
       throw new RestonomerContextException(
-        "The provided credentials are invalid. The credentials should contain either basicToken or both user-name & password."
+        "The provided credentials are invalid. The credentials should contain either basic-token or both user-name & password."
       )
     else if (basicToken.isEmpty && userName.isEmpty)
       throw new RestonomerContextException(
@@ -52,17 +54,52 @@ case class BasicAuthentication(
 
 }
 
-case class BearerAuthentication(bearerToken: Option[String] = None) extends RestonomerAuthentication {
+case class BearerAuthentication(bearerToken: String) extends RestonomerAuthentication {
 
   override def validateCredentials(): Unit = {
-    if (bearerToken.isEmpty)
+    if (bearerToken.isBlank)
       throw new RestonomerContextException(
-        "The provided credentials are invalid. The credentials should contain bearer-token."
+        "The provided credentials are invalid. The credentials should contain valid bearer-token."
       )
   }
 
   override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
-    httpRequest.auth.bearer(bearerToken.get)
+    httpRequest.auth.bearer(bearerToken)
+  }
+
+}
+
+case class APIKeyAuthentication(apiKeyName: String, apiKeyValue: String, placeholder: String)
+    extends RestonomerAuthentication {
+
+  override def validateCredentials(): Unit = {
+    if (apiKeyName.isBlank)
+      throw new RestonomerContextException(
+        "The provided credentials are invalid. The credentials should contain valid api-key-name."
+      )
+    else if (apiKeyValue.isBlank)
+      throw new RestonomerContextException(
+        "The provided credentials are invalid. The credentials should contain valid api-key-value."
+      )
+    else if (!isValidAPIKeyPlaceholder(placeholder))
+      throw new RestonomerContextException(
+        s"The provided credentials are invalid. The placeholder: $placeholder is not supported."
+      )
+  }
+
+  override def authenticate(
+      httpRequest: Request[Either[String, String], Any]
+  ): Request[Either[String, String], Any] = {
+    APIKeyPlaceholders.withName(placeholder) match {
+      case QUERY_STRING =>
+        httpRequest.copy[Identity, Either[String, String], Any](
+          uri = httpRequest.uri.addParam(apiKeyName, apiKeyValue)
+        )
+      case REQUEST_HEADER =>
+        httpRequest.header(apiKeyName, apiKeyValue, replaceExisting = true)
+      case COOKIE =>
+        httpRequest.cookie(apiKeyName, apiKeyValue)
+    }
   }
 
 }
