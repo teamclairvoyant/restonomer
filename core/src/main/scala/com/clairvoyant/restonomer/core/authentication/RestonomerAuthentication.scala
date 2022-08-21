@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.authentication
 
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders
-import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.{COOKIE, QUERY_STRING, REQUEST_HEADER, isValidAPIKeyPlaceholder}
+import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.{isValidAPIKeyPlaceholder, COOKIE, QUERY_STRING, REQUEST_HEADER}
 import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import sttp.client3.{Identity, Request}
 
