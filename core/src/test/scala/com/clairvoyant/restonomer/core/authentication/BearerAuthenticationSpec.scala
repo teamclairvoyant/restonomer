@@ -11,7 +11,7 @@ class BearerAuthenticationSpec extends CoreSpec {
     val authentication = BearerAuthentication("")
 
     the[RestonomerContextException] thrownBy authentication.validateCredentials() should have message
-      "The provided credentials are invalid. The credentials should contain bearer-token."
+      "The provided credentials are invalid. The credentials should contain valid bearer-token."
   }
 
   "validateCredentials - with bearer-token" should "not throw RestonomerContextException" in {

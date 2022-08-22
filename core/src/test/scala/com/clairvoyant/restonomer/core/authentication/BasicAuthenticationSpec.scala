@@ -11,7 +11,7 @@ class BasicAuthenticationSpec extends CoreSpec {
     val authentication = BasicAuthentication()
 
     the[RestonomerContextException] thrownBy authentication.validateCredentials() should have message
-      "The provided credentials are invalid. The credentials should contain either basicToken or both user-name & password."
+      "The provided credentials are invalid. The credentials should contain either basic-token or both user-name & password."
   }
 
   "validateCredentials - with only user-name" should "throw RestonomerContextException" in {
