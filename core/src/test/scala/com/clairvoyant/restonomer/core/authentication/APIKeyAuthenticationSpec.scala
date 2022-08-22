@@ -7,9 +7,12 @@ import sttp.model.{Header, HeaderNames}
 
 class APIKeyAuthenticationSpec extends CoreSpec {
 
+  val apiKeyName = "test_api_key_name"
+  val apiKeyValue = "test_api_key_value"
+
   val apiKeyAuthentication: APIKeyAuthentication = APIKeyAuthentication(
-    apiKeyName = "test_api_key_name",
-    apiKeyValue = "test_api_key_value",
+    apiKeyName = apiKeyName,
+    apiKeyValue = apiKeyValue,
     placeholder = "QueryString"
   )
 
@@ -39,7 +42,7 @@ class APIKeyAuthenticationSpec extends CoreSpec {
       .authenticate(basicHttpRequest)
       .uri
       .paramsMap
-      .exists(param => param._1 == "test_api_key_name" && param._2 == "test_api_key_value") shouldBe true
+      .exists(param => param._1 == apiKeyName && param._2 == apiKeyValue) shouldBe true
   }
 
   "authenticate - with REQUEST_HEADER as placeholder" should "return Request object with required headers" in {
@@ -47,7 +50,7 @@ class APIKeyAuthenticationSpec extends CoreSpec {
       .copy(placeholder = "RequestHeader")
       .authenticate(basicHttpRequest)
       .headers
-      .contains(Header("test_api_key_name", "test_api_key_value")) shouldBe true
+      .contains(Header(apiKeyName, apiKeyValue)) shouldBe true
   }
 
   "authenticate - with Cookie as placeholder" should "return Request object with required cookies" in {
@@ -55,7 +58,7 @@ class APIKeyAuthenticationSpec extends CoreSpec {
       .copy(placeholder = "Cookie")
       .authenticate(basicHttpRequest)
       .header(HeaderNames.Cookie)
-      .exists(_.equals("test_api_key_name=test_api_key_value")) shouldBe true
+      .exists(_.equals(s"$apiKeyName=$apiKeyValue")) shouldBe true
   }
 
 }
