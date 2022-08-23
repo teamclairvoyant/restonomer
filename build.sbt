@@ -59,5 +59,4 @@ lazy val restonomer = (project in file("."))
   .aggregate(core)
 
 lazy val core = (project in file("core"))
-  .configs(IntegrationTest)
   .settings(coreSettings)
