@@ -7,6 +7,8 @@ inThisBuild(
   )
 )
 
+Global / excludeLintKeys += Keys.parallelExecution
+
 // ----- VARIABLES ----- //
 
 val organizationName = "com.clairvoyant.restonomer"
@@ -47,7 +49,11 @@ val rootSettings =
     version := releaseVersion
   )
 
-val coreSettings = commonSettings ++ Seq(libraryDependencies ++= coreDependencies) ++ Defaults.itSettings
+val coreSettings =
+  commonSettings ++ Seq(
+    libraryDependencies ++= coreDependencies,
+    IntegrationTest / parallelExecution := false
+  ) ++ Defaults.itSettings
 
 // ----- PROJECTS ----- //
 
