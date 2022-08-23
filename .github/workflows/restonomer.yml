@@ -25,4 +25,4 @@ jobs:
     - name: Scalafix Check
       run: sbt "scalafixAll --check"
     - name: Run Tests
-      run: sbt "project core" test
+      run: sbt test

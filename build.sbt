@@ -26,9 +26,9 @@ val pureConfigDependencies = Seq("com.github.pureconfig" %% "pureconfig" % pureC
 
 val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
 
-val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion % Test)
+val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion % "it,test")
 
-val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % Test)
+val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % "it,test")
 
 // ----- MODULE DEPENDENCIES ----- //
 
@@ -47,10 +47,7 @@ val rootSettings =
     version := releaseVersion
   )
 
-val coreSettings =
-  commonSettings ++ Seq(
-    libraryDependencies ++= coreDependencies
-  )
+val coreSettings = commonSettings ++ Seq(libraryDependencies ++= coreDependencies) ++ Defaults.itSettings
 
 // ----- PROJECTS ----- //
 
@@ -59,4 +56,5 @@ lazy val restonomer = (project in file("."))
   .aggregate(core)
 
 lazy val core = (project in file("core"))
+  .configs(IntegrationTest)
   .settings(coreSettings)
