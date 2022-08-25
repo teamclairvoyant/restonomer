@@ -7,6 +7,8 @@ inThisBuild(
   )
 )
 
+Global / excludeLintKeys += Keys.parallelExecution
+
 // ----- VARIABLES ----- //
 
 val organizationName = "com.clairvoyant.restonomer"
@@ -14,7 +16,7 @@ val applicationName = "restonomer"
 val releaseVersion = "1.0"
 
 val pureConfigVersion = "0.17.1"
-val sttpVersion = "3.7.2"
+val sttpVersion = "3.7.4"
 val scalaTestVersion = "3.2.12"
 val wireMockVersion = "2.27.2"
 
@@ -26,9 +28,9 @@ val pureConfigDependencies = Seq("com.github.pureconfig" %% "pureconfig" % pureC
 
 val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
 
-val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion % Test)
+val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion % "it,test")
 
-val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % Test)
+val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % "it,test")
 
 // ----- MODULE DEPENDENCIES ----- //
 
@@ -49,8 +51,9 @@ val rootSettings =
 
 val coreSettings =
   commonSettings ++ Seq(
-    libraryDependencies ++= coreDependencies
-  )
+    libraryDependencies ++= coreDependencies,
+    IntegrationTest / parallelExecution := false
+  ) ++ Defaults.itSettings
 
 // ----- PROJECTS ----- //
 
@@ -59,4 +62,5 @@ lazy val restonomer = (project in file("."))
   .aggregate(core)
 
 lazy val core = (project in file("core"))
+  .configs(IntegrationTest)
   .settings(coreSettings)
