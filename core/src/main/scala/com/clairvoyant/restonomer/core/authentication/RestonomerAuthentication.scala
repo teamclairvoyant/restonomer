@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.authentication
 
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders
-import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.{isValidAPIKeyPlaceholder, COOKIE, QUERY_STRING, REQUEST_HEADER}
+import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.{COOKIE, QUERY_STRING, REQUEST_HEADER, isValidAPIKeyPlaceholder}
 import com.clairvoyant.restonomer.core.exception.RestonomerContextException
 import sttp.client3.{Identity, Request}
 
@@ -90,7 +90,7 @@ case class APIKeyAuthentication(apiKeyName: String, apiKeyValue: String, placeho
   override def authenticate(
       httpRequest: Request[Either[String, String], Any]
   ): Request[Either[String, String], Any] = {
-    APIKeyPlaceholders.withName(placeholder) match {
+    APIKeyPlaceholders(placeholder) match {
       case QUERY_STRING =>
         httpRequest.copy[Identity, Either[String, String], Any](
           uri = httpRequest.uri.addParam(apiKeyName, apiKeyValue)

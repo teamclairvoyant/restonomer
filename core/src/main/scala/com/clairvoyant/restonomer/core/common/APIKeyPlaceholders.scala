@@ -7,4 +7,5 @@ object APIKeyPlaceholders extends Enumeration {
 
   def isValidAPIKeyPlaceholder(apiKeyPlaceholder: String): Boolean = values.exists(_.toString == apiKeyPlaceholder)
 
+  def apply(placeholder: String): APIKeyPlaceholders.Value = APIKeyPlaceholders.withName(placeholder)
 }
