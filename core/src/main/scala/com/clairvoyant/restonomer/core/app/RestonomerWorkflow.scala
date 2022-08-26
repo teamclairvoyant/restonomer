@@ -7,7 +7,7 @@ class RestonomerWorkflow {
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
     val restonomerRequest: RestonomerRequest = RestonomerRequest(checkpointConfig.request)
-      .authenticate(checkpointConfig.authentication)
+      .authenticate(checkpointConfig.request.authentication)
 
     val restonomerResponse: RestonomerResponse = restonomerRequest.send(checkpointConfig.httpBackendType)
 
