@@ -1,19 +1,10 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.authentication.RestonomerAuthentication
 import com.clairvoyant.restonomer.core.common.HttpBackendTypes
-import com.clairvoyant.restonomer.core.model.RequestConfig
 import sttp.client3._
 import sttp.model.Method
 
-case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) {
-
-  def authenticate(authenticationConfig: Option[RestonomerAuthentication] = None): RestonomerRequest =
-    this.copy(httpRequest =
-      authenticationConfig
-        .map(_.validateCredentialsAndAuthenticate(httpRequest))
-        .getOrElse(httpRequest)
-    )
+class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) {
 
   def send(httpBackendType: Option[String] = None): RestonomerResponse =
     RestonomerResponse(
@@ -29,11 +20,11 @@ case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) 
 
 object RestonomerRequest {
 
-  def apply(requestConfig: RequestConfig): RestonomerRequest =
-    RestonomerRequest(
+  def builder(method: Option[String], url: String): RestonomerRequestBuilder =
+    RestonomerRequestBuilder(
       basicRequest.method(
-        method = requestConfig.method.map(Method(_)).getOrElse(Method.GET),
-        uri = uri"${requestConfig.url}"
+        method = method.map(Method(_)).getOrElse(Method.GET),
+        uri = uri"$url"
       )
     )
 
