@@ -12,6 +12,7 @@ class RestonomerWorkflow {
       RestonomerRequest
         .builder(requestConfig.method, requestConfig.url)
         .withAuthentication(requestConfig.authentication)
+        .withHeaders(requestConfig.headers)
         .build
 
     val restonomerResponse = restonomerRequest.send(checkpointConfig.httpBackendType)

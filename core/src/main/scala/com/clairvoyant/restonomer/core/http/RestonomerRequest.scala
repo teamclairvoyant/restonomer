@@ -20,10 +20,10 @@ class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) {
 
 object RestonomerRequest {
 
-  def builder(method: Option[String], url: String): RestonomerRequestBuilder =
+  def builder(method: String, url: String): RestonomerRequestBuilder =
     RestonomerRequestBuilder(
       basicRequest.method(
-        method = method.map(Method(_)).getOrElse(Method.GET),
+        method = Method(method),
         uri = uri"$url"
       )
     )

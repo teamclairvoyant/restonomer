@@ -12,5 +12,9 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
         .getOrElse(httpRequest)
     )
 
+  def withHeaders(headers: Map[String, String]): RestonomerRequestBuilder = {
+    copy(httpRequest = httpRequest.headers(headers))
+  }
+
   def build: RestonomerRequest = new RestonomerRequest(httpRequest)
 }
