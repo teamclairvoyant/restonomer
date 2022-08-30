@@ -5,6 +5,7 @@ import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
 import pureconfig.{ConfigReader, ConfigSource}
 
 import java.io.{File, FileNotFoundException}
+import scala.annotation.tailrec
 import scala.reflect.ClassTag
 
 object RestonomerConfigurationsLoader {
@@ -29,13 +30,26 @@ object RestonomerConfigurationsLoader {
       configDirectoryPath: String,
       configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
   )(implicit reader: ConfigReader[C]): List[C] = {
-    if (fileExists(configDirectoryPath)) {
-      new File(configDirectoryPath)
-        .listFiles()
-        .map(configVariablesSubstitutor.substituteConfigVariables)
-        .map(loadConfigFromString[C])
-        .toList
-    } else
+    @tailrec
+    def loadConfigsFromDirectoryHelper(remainingFiles: List[File], configs: List[C]): List[C] = {
+      if (remainingFiles.isEmpty)
+        configs
+      else {
+        val file = remainingFiles.head
+
+        if (file.isDirectory)
+          loadConfigsFromDirectoryHelper(file.listFiles().toList ++ remainingFiles.tail, configs)
+        else
+          loadConfigsFromDirectoryHelper(
+            remainingFiles.tail,
+            loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(file)) :: configs
+          )
+      }
+    }
+
+    if (fileExists(configDirectoryPath))
+      loadConfigsFromDirectoryHelper(new File(configDirectoryPath).listFiles().toList, List())
+    else
       throw new FileNotFoundException(s"The config directory with the path: $configDirectoryPath does not exists.")
   }
 
