@@ -31,18 +31,18 @@ object RestonomerConfigurationsLoader {
       configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
   )(implicit reader: ConfigReader[C]): List[C] = {
     @tailrec
-    def loadConfigsFromDirectoryHelper(remainingFiles: List[File], configs: List[C]): List[C] = {
-      if (remainingFiles.isEmpty)
+    def loadConfigsFromDirectoryHelper(remainingConfigFiles: List[File], configs: List[C]): List[C] = {
+      if (remainingConfigFiles.isEmpty)
         configs
       else {
-        val file = remainingFiles.head
+        val configFile = remainingConfigFiles.head
 
-        if (file.isDirectory)
-          loadConfigsFromDirectoryHelper(file.listFiles().toList ++ remainingFiles.tail, configs)
+        if (configFile.isDirectory)
+          loadConfigsFromDirectoryHelper(configFile.listFiles().toList ++ remainingConfigFiles.tail, configs)
         else
           loadConfigsFromDirectoryHelper(
-            remainingFiles.tail,
-            loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(file)) :: configs
+            remainingConfigFiles.tail,
+            loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(configFile)) :: configs
           )
       }
     }
