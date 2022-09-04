@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/custom-headers",
+    "headers": {
+      "header_key_1": {
+        "matches": "header_value_1"
+      },
+      "header_key_2": {
+        "matches": "header_value_2"
+      }
+    }
+  },
+  "response": {
+    "body": "Custom headers are added to the request"
+  }
+}
