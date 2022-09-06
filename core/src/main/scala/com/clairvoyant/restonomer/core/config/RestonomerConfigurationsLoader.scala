@@ -27,9 +27,9 @@ object RestonomerConfigurationsLoader {
   }
 
   def loadConfigsFromDirectory[C: ClassTag](
-      configDirectoryPath: String,
-      configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
-  )(implicit reader: ConfigReader[C]): List[C] = {
+                                             configDirectoryPath: String,
+                                             configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
+                                           )(implicit reader: ConfigReader[C]): List[C] = {
     @tailrec
     def loadConfigsFromDirectoryHelper(remainingConfigFiles: List[File], configs: List[C]): List[C] = {
       if (remainingConfigFiles.isEmpty)
@@ -61,5 +61,16 @@ object RestonomerConfigurationsLoader {
         throw new RestonomerContextException(error.prettyPrint())
     }
   }
+
+  def loadConfigsFromFilePath[C: ClassTag](configFilePath: String,
+                                           configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor())
+                                          (implicit reader: ConfigReader[C]): C = {
+
+    if (fileExists(configFilePath))
+      loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath)))
+    else
+      throw new FileNotFoundException(s"The config directory with the path: $configFilePath does not exists.")
+  }
+
 
 }

@@ -30,21 +30,21 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
   val configVariables: Map[String, String] = loadConfigVariables(CONFIG_VARIABLES_FILE_PATH)
 
-  val checkpoints: List[CheckpointConfig] = loadConfigsFromDirectory[CheckpointConfig](
-    configDirectoryPath = CHECKPOINTS_CONFIG_DIRECTORY_PATH,
-    configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
-  )
 
-  def runCheckpoint(checkpointName: String): Unit =
-    checkpoints
-      .find(_.name == checkpointName) match {
-      case Some(checkpointConfig) =>
-        runCheckpoint(checkpointConfig)
-      case None =>
-        throw new RestonomerContextException(s"The checkpoint: $checkpointName does not exists.")
-    }
+
+  def runCheckpoint(checkpointFileName: String): Unit = {
+    val filePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointFileName"
+
+    val checkpoint: CheckpointConfig = loadConfigsFromFilePath[CheckpointConfig](filePath,
+      configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables))
+    runCheckpoint(checkpoint)
+  }
 
   def runAllCheckpoints(): Unit = {
+    val checkpoints: List[CheckpointConfig] = loadConfigsFromDirectory[CheckpointConfig](
+      configDirectoryPath = CHECKPOINTS_CONFIG_DIRECTORY_PATH,
+      configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
+    )
     checkpoints.foreach { checkpointConfig =>
       println(s"Checkpoint Name -> ${checkpointConfig.name}\n")
       runCheckpoint(checkpointConfig)
