@@ -30,8 +30,8 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
   val configVariables: Map[String, String] = loadConfigVariables(CONFIG_VARIABLES_FILE_PATH)
 
-  def runCheckpoint(checkpointFileName: String): Unit = {
-    val filePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointFileName"
+  def runCheckpoint(checkpointName: String): Unit = {
+    val filePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointName.conf"
 
     val checkpoint: CheckpointConfig = loadConfigsFromFilePath[CheckpointConfig](
       filePath,
