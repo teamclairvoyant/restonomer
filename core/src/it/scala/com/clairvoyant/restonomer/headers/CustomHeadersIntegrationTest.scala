@@ -6,15 +6,15 @@ class CustomHeadersIntegrationTest extends IntegrationTestDependencies {
   override val mappingsDirectory: String = "headers"
 
   it should "add no custom headers when empty headers provided" in {
-    restonomerContext.runCheckpoint(checkpointName = "checkpoint_add_empty_custom_headers")
+    restonomerContext.runCheckpointWithPath("checkpoint_add_empty_custom_headers")
   }
 
   it should "add no custom headers when headers are not provided" in {
-    restonomerContext.runCheckpoint(checkpointName = "checkpoint_blank_custom_headers")
+    restonomerContext.runCheckpointWithPath("checkpoint_blank_custom_headers")
   }
 
   it should "add custom headers when headers are provided" in {
-    restonomerContext.runCheckpoint(checkpointName = "checkpoint_add_custom_headers")
+    restonomerContext.runCheckpointWithPath("checkpoint_add_custom_headers")
   }
 
 }
