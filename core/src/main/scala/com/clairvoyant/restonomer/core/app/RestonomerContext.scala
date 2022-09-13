@@ -3,7 +3,7 @@ package com.clairvoyant.restonomer.core.app
 import com.clairvoyant.restonomer.core.common.RestonomerContextConfigTypes
 import com.clairvoyant.restonomer.core.config.ConfigVariablesSubstitutor
 import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
-import com.clairvoyant.restonomer.core.exception.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
 import pureconfig.generic.auto._
@@ -16,7 +16,7 @@ object RestonomerContext {
     if (fileExists(restonomerContextDirectoryPath))
       new RestonomerContext(restonomerContextDirectoryPath)
     else
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         s"The RestonomerContext directory path: $restonomerContextDirectoryPath does not exists."
       )
   }
@@ -41,7 +41,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
       case Some(checkpointConfig) =>
         runCheckpoint(checkpointConfig)
       case None =>
-        throw new RestonomerContextException(s"The checkpoint: $checkpointName does not exists.")
+        throw new RestonomerException(s"The checkpoint: $checkpointName does not exists.")
     }
 
   def runAllCheckpoints(): Unit = {

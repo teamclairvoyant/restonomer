@@ -2,7 +2,7 @@ package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
-import com.clairvoyant.restonomer.core.exception.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pureconfig.generic.auto._
@@ -27,9 +27,9 @@ class RestonomerConfigurationsLoaderSpec extends CoreSpec {
     loadConfigFromFile[CheckpointConfig](s"$resourcesPath/sample-checkpoint-valid.conf") shouldBe a[CheckpointConfig]
   }
 
-  "loadConfigFromFile" should "throw RestonomerContextException" in {
+  "loadConfigFromFile" should "throw RestonomerException" in {
     val thrown =
-      the[RestonomerContextException] thrownBy loadConfigFromFile[CheckpointConfig](
+      the[RestonomerException] thrownBy loadConfigFromFile[CheckpointConfig](
         s"$resourcesPath/sample-checkpoint-invalid.conf"
       )
     thrown.getMessage should include("Key not found: 'url'")
@@ -67,7 +67,7 @@ class RestonomerConfigurationsLoaderSpec extends CoreSpec {
         |request = {}
         |""".stripMargin
 
-    val thrown = the[RestonomerContextException] thrownBy loadConfigFromString[CheckpointConfig](configString)
+    val thrown = the[RestonomerException] thrownBy loadConfigFromString[CheckpointConfig](configString)
 
     thrown.getMessage should include("Key not found: 'url'")
   }

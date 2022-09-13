@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.config
 
-import com.clairvoyant.restonomer.core.exception.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
 import pureconfig.{ConfigReader, ConfigSource}
 
@@ -22,7 +22,7 @@ object RestonomerConfigurationsLoader {
       case Right(config) =>
         config
       case Left(error) =>
-        throw new RestonomerContextException(error.prettyPrint())
+        throw new RestonomerException(error.prettyPrint())
     }
   }
 
@@ -58,7 +58,7 @@ object RestonomerConfigurationsLoader {
       case Right(config) =>
         config
       case Left(error) =>
-        throw new RestonomerContextException(error.prettyPrint())
+        throw new RestonomerException(error.prettyPrint())
     }
   }
 

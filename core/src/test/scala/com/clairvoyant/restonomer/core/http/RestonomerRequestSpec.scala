@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.exception.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.{CoreSpec, HttpMockSpec}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
@@ -33,8 +33,8 @@ class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
     restonomerResponse.httpResponse.body.getOrElse() shouldBe responseBody
   }
 
-  "send with invalid HttpBackendType" should "throw RestonomerContextException" in {
-    the[RestonomerContextException] thrownBy new RestonomerRequest(basicHttpRequest).send(
+  "send with invalid HttpBackendType" should "throw RestonomerException" in {
+    the[RestonomerException] thrownBy new RestonomerRequest(basicHttpRequest).send(
       Some("ABCDBackendType")
     ) should have message "The http-backend-type: ABCDBackendType is not supported."
   }
