@@ -30,12 +30,12 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
   val configVariables: Map[String, String] = loadConfigVariables(CONFIG_VARIABLES_FILE_PATH)
 
-  def runCheckpoint(checkpointName: String): Unit = {
-    val checkpoints: List[CheckpointConfig] = loadConfigsFromDirectory[CheckpointConfig](
-      configDirectoryPath = CHECKPOINTS_CONFIG_DIRECTORY_PATH,
-      configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables),
-      fileName = Option(checkpointName)
+  def runAllCheckpointsInDir(dirPath: String): Unit = {
+    val checkpoints = loadConfigsFromDirectory[CheckpointConfig](
+      configDirectoryPath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$dirPath",
+      configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
     )
+
     checkpoints.foreach { checkpointConfig =>
       println(s"Checkpoint Name -> ${checkpointConfig.name}\n")
       runCheckpoint(checkpointConfig)
@@ -44,20 +44,19 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
   }
 
   def runCheckpointWithPath(checkpointPath: String): Unit = {
-    val filePath = s"$restonomerContextDirectoryPath/$checkpointPath"
-
-    val checkpoint: CheckpointConfig = loadConfigsFromFilePath[CheckpointConfig](
-      configFilePath = filePath,
+    val checkpoint = loadConfigsFromFilePath[CheckpointConfig](
+      configFilePath = s"$restonomerContextDirectoryPath/checkpoints/$checkpointPath",
       configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
     )
     runCheckpoint(checkpoint)
   }
 
   def runAllCheckpoints(): Unit = {
-    val checkpoints: List[CheckpointConfig] = loadConfigsFromDirectory[CheckpointConfig](
+    val checkpoints = loadConfigsFromDirectory[CheckpointConfig](
       configDirectoryPath = CHECKPOINTS_CONFIG_DIRECTORY_PATH,
       configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
     )
+
     checkpoints.foreach { checkpointConfig =>
       println(s"Checkpoint Name -> ${checkpointConfig.name}\n")
       runCheckpoint(checkpointConfig)
