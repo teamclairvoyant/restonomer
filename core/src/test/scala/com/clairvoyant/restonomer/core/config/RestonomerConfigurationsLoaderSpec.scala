@@ -54,6 +54,12 @@ class RestonomerConfigurationsLoaderSpec extends CoreSpec {
         |request = {
         |  name = "request_no_authentication"
         |  url = "http://test-domain.com"
+        |}
+        |
+        |response = {
+        |  body = {
+        |    format = "JSON"
+        |  }
         |}""".stripMargin
 
     loadConfigFromString[CheckpointConfig](configString) shouldBe a[CheckpointConfig]

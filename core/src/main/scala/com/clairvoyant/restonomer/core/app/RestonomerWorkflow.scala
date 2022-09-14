@@ -30,7 +30,7 @@ class RestonomerWorkflow(implicit val sparkSession: SparkSession) {
     val restonomerResponseDataFrame = ResponseToDataFrameConverter(checkpointConfig.response.body.format)
       .convertResponseToDataFrame(restonomerResponseBody)
 
-    restonomerResponseDataFrame.show()
+    restonomerResponseDataFrame.show(truncate = false)
   }
 
 }

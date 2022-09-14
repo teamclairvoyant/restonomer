@@ -15,11 +15,11 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
         |
         |request = {
         |  url = "http://test-domain.com"
-        |}
         |
-        |authentication = {
-        |  type = "basic-authentication"
-        |  basic-token = ${BASIC_AUTH_TOKEN}
+        |  authentication = {
+        |    type = "basic-authentication"
+        |    basic-token = ${BASIC_AUTH_TOKEN}
+        |  }
         |}
         |""".stripMargin
 
@@ -38,11 +38,11 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |
           |request = {
           |  url = "http://test-domain.com"
-          |}
           |
-          |authentication = {
-          |  type = "basic-authentication"
-          |  basic-token = "abcd1234"
+          |  authentication = {
+          |    type = "basic-authentication"
+          |    basic-token = "abcd1234"
+          |  }
           |}
           |""".stripMargin
 
@@ -61,11 +61,11 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |
           |request = {
           |  url = "http://test-domain.com"
-          |}
           |
-          |authentication = {
-          |  type = "basic-authentication"
-          |  basic-token = "abcd1234"
+          |  authentication = {
+          |    type = "basic-authentication"
+          |    basic-token = "abcd1234"
+          |  }
           |}
           |""".stripMargin
 
@@ -84,11 +84,11 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |
           |request = {
           |  url = "http://test-domain.com"
-          |}
           |
-          |authentication = {
-          |  type = "basic-authentication"
-          |  basic-token = "efgh5678"
+          |  authentication = {
+          |    type = "basic-authentication"
+          |    basic-token = "efgh5678"
+          |  }
           |}
           |""".stripMargin
 
