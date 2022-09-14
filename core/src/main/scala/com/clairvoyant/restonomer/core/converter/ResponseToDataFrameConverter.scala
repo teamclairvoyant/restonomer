@@ -6,9 +6,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 
 trait ResponseToDataFrameConverter {
 
-  val sparkSession: SparkSession = SparkSession.builder().master("local[*]").getOrCreate()
-
-  def convertResponseToDataFrame(restonomerResponseBody: String): DataFrame
+  def convertResponseToDataFrame(restonomerResponseBody: String)(implicit sparkSession: SparkSession): DataFrame
 
 }
 

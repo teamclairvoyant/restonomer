@@ -4,8 +4,10 @@ import com.clairvoyant.restonomer.core.converter.ResponseToDataFrameConverter
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.RestonomerRequest
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
+import org.apache.spark.SparkConf
+import org.apache.spark.sql.SparkSession
 
-class RestonomerWorkflow {
+class RestonomerWorkflow(implicit val sparkSession: SparkSession) {
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
     val restonomerRequest =
@@ -25,12 +27,26 @@ class RestonomerWorkflow {
           responseBody
       }
 
-    println(restonomerResponseBody)
-
     val restonomerResponseDataFrame = ResponseToDataFrameConverter(checkpointConfig.response.body.format)
       .convertResponseToDataFrame(restonomerResponseBody)
 
     restonomerResponseDataFrame.show()
+  }
+
+}
+
+object RestonomerWorkflow {
+
+  def apply(applicationConfigurations: Map[String, String]): RestonomerWorkflow = {
+    implicit val sparkSession: SparkSession = SparkSession
+      .builder()
+      .config(
+        new SparkConf()
+          .setMaster(applicationConfigurations("spark.master"))
+      )
+      .getOrCreate()
+
+    new RestonomerWorkflow()
   }
 
 }

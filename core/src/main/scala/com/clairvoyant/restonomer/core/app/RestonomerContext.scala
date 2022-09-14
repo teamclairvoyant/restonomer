@@ -25,8 +25,11 @@ object RestonomerContext {
 
 class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
+  val APPLICATION_CONFIG_FILE_PATH = s"$restonomerContextDirectoryPath/application.conf"
   val CONFIG_VARIABLES_FILE_PATH = s"$restonomerContextDirectoryPath/uncommitted/config_variables.conf"
   val CHECKPOINTS_CONFIG_DIRECTORY_PATH = s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}"
+
+  val applicationConfigurations: Map[String, String] = loadApplicationConfigurations(APPLICATION_CONFIG_FILE_PATH)
 
   val configVariables: Map[String, String] = loadConfigVariables(CONFIG_VARIABLES_FILE_PATH)
 
@@ -52,6 +55,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
     }
   }
 
-  def runCheckpoint(checkpointConfig: CheckpointConfig): Unit = new RestonomerWorkflow().run(checkpointConfig)
+  def runCheckpoint(checkpointConfig: CheckpointConfig): Unit =
+    RestonomerWorkflow(applicationConfigurations).run(checkpointConfig)
 
 }

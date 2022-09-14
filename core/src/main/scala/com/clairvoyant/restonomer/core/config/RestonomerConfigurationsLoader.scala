@@ -10,6 +10,13 @@ import scala.reflect.ClassTag
 
 object RestonomerConfigurationsLoader {
 
+  def loadApplicationConfigurations(applicationConfigFilePath: String): Map[String, String] = {
+    if (fileExists(applicationConfigFilePath))
+      loadConfigFromFile[Map[String, String]](applicationConfigFilePath)
+    else
+      throw new RestonomerException(s"The application config file path: $applicationConfigFilePath does not exists.")
+  }
+
   def loadConfigVariables(configVariablesFilePath: String): Map[String, String] = {
     if (fileExists(configVariablesFilePath))
       loadConfigFromFile[Map[String, String]](configVariablesFilePath)

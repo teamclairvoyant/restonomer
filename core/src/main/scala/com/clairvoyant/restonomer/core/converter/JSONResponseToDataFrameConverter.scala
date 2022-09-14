@@ -1,12 +1,14 @@
 package com.clairvoyant.restonomer.core.converter
 
-import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 class JSONResponseToDataFrameConverter extends ResponseToDataFrameConverter {
 
-  import sparkSession.implicits._
+  override def convertResponseToDataFrame(
+      restonomerResponseBody: String
+  )(implicit sparkSession: SparkSession): DataFrame = {
+    import sparkSession.implicits._
 
-  override def convertResponseToDataFrame(restonomerResponseBody: String): DataFrame = {
     sparkSession.read
       .json(Seq(restonomerResponseBody).toDS())
   }
