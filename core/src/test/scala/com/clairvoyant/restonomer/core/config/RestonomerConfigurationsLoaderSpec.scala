@@ -23,18 +23,6 @@ class RestonomerConfigurationsLoaderSpec extends CoreSpec {
     loadConfigVariables(s"$resourcesPath/uncommitted/config_variables.conf") should have size 2
   }
 
-  "loadConfigFromFile" should "return CheckpointConfig object" in {
-    loadConfigFromFile[CheckpointConfig](s"$resourcesPath/sample-checkpoint-valid.conf") shouldBe a[CheckpointConfig]
-  }
-
-  "loadConfigFromFile" should "throw RestonomerException" in {
-    val thrown =
-      the[RestonomerException] thrownBy loadConfigFromFile[CheckpointConfig](
-        s"$resourcesPath/sample-checkpoint-invalid.conf"
-      )
-    thrown.getMessage should include("Key not found: 'url'")
-  }
-
   "loadConfigsFromDirectory" should "return list that contain CheckpointConfig objects" in {
     loadConfigsFromDirectory[CheckpointConfig](s"$resourcesPath/checkpoints/") shouldBe a[List[_]]
   }
