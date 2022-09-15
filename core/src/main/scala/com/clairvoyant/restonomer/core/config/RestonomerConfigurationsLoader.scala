@@ -62,4 +62,15 @@ object RestonomerConfigurationsLoader {
     }
   }
 
+  def loadConfigsFromFilePath[C: ClassTag](
+      configFilePath: String,
+      configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
+  )(implicit reader: ConfigReader[C]): C = {
+
+    if (fileExists(configFilePath))
+      loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath)))
+    else
+      throw new FileNotFoundException(s"The config directory with the path: $configFilePath does not exists.")
+  }
+
 }

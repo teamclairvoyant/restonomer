@@ -30,21 +30,33 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
   val configVariables: Map[String, String] = loadConfigVariables(CONFIG_VARIABLES_FILE_PATH)
 
-  val checkpoints: List[CheckpointConfig] = loadConfigsFromDirectory[CheckpointConfig](
-    configDirectoryPath = CHECKPOINTS_CONFIG_DIRECTORY_PATH,
-    configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
-  )
+  def runAllCheckpointsInDir(dirPath: String): Unit = {
+    val checkpoints = loadConfigsFromDirectory[CheckpointConfig](
+      configDirectoryPath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$dirPath",
+      configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
+    )
 
-  def runCheckpoint(checkpointName: String): Unit =
-    checkpoints
-      .find(_.name == checkpointName) match {
-      case Some(checkpointConfig) =>
-        runCheckpoint(checkpointConfig)
-      case None =>
-        throw new RestonomerContextException(s"The checkpoint: $checkpointName does not exists.")
+    checkpoints.foreach { checkpointConfig =>
+      println(s"Checkpoint Name -> ${checkpointConfig.name}\n")
+      runCheckpoint(checkpointConfig)
+      println("\n=====================================================\n")
     }
+  }
+
+  def runCheckpointWithPath(checkpointPath: String): Unit = {
+    val checkpoint = loadConfigsFromFilePath[CheckpointConfig](
+      configFilePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointPath",
+      configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
+    )
+    runCheckpoint(checkpoint)
+  }
 
   def runAllCheckpoints(): Unit = {
+    val checkpoints = loadConfigsFromDirectory[CheckpointConfig](
+      configDirectoryPath = CHECKPOINTS_CONFIG_DIRECTORY_PATH,
+      configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
+    )
+
     checkpoints.foreach { checkpointConfig =>
       println(s"Checkpoint Name -> ${checkpointConfig.name}\n")
       runCheckpoint(checkpointConfig)
