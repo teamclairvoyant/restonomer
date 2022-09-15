@@ -28,8 +28,7 @@ object RestonomerConfigurationsLoader {
 
   def loadConfigsFromDirectory[C: ClassTag](
       configDirectoryPath: String,
-      configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(),
-      fileName: Option[String] = None
+      configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
   )(implicit reader: ConfigReader[C]): List[C] = {
     @tailrec
     def loadConfigsFromDirectoryHelper(remainingConfigFiles: List[File], configs: List[C]): List[C] = {
@@ -40,23 +39,11 @@ object RestonomerConfigurationsLoader {
 
         if (configFile.isDirectory)
           loadConfigsFromDirectoryHelper(configFile.listFiles().toList ++ remainingConfigFiles.tail, configs)
-        else {
-          if (fileName.isEmpty)
-            loadConfigsFromDirectoryHelper(
-              remainingConfigFiles.tail,
-              loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(configFile)) :: configs
-            )
-          else {
-            if (configFile.getName.split("\\.").head == fileName.get)
-              loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(configFile)) :: configs
-            else
-              loadConfigsFromDirectoryHelper(
-                remainingConfigFiles.tail,
-                configs
-              )
-          }
-
-        }
+        else
+          loadConfigsFromDirectoryHelper(
+            remainingConfigFiles.tail,
+            loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(configFile)) :: configs
+          )
       }
     }
 

@@ -45,7 +45,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
   def runCheckpointWithPath(checkpointPath: String): Unit = {
     val checkpoint = loadConfigsFromFilePath[CheckpointConfig](
-      configFilePath = s"$restonomerContextDirectoryPath/checkpoints/$checkpointPath",
+      configFilePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointPath",
       configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
     )
     runCheckpoint(checkpoint)
