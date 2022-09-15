@@ -12,28 +12,33 @@ import scala.reflect.ClassTag
 
 object RestonomerConfigurationsLoader {
 
-  def loadApplicationConfiguration(applicationConfigFilePath: String): ApplicationConfig = {
-    if (fileExists(applicationConfigFilePath))
-      loadConfigFromFile[ApplicationConfig](applicationConfigFilePath)
-    else
-      throw new RestonomerException(s"The application config file path: $applicationConfigFilePath does not exists.")
-  }
-
   def loadConfigVariables(configVariablesFilePath: String): Map[String, String] = {
     if (fileExists(configVariablesFilePath))
-      loadConfigFromFile[Map[String, String]](configVariablesFilePath)
+      loadConfigsFromFilePath[Map[String, String]](configVariablesFilePath)
     else
       Map()
   }
 
-  def loadConfigFromFile[C](configFilePath: String)(implicit reader: ConfigReader[C]): C = {
-    ConfigSource.file(new File(configFilePath)).load[C] match {
-      case Right(config) =>
-        config
-      case Left(error) =>
-        throw new RestonomerException(error.prettyPrint())
-    }
+  def loadApplicationConfig(
+      applicationConfigFilePath: String,
+      configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
+  ): ApplicationConfig = {
+    if (fileExists(applicationConfigFilePath))
+      loadConfigsFromFilePath[ApplicationConfig](
+        configFilePath = applicationConfigFilePath,
+        configVariablesSubstitutor = configVariablesSubstitutor
+      )
+    else
+      throw new FileNotFoundException(
+        s"The application config file with the path: $applicationConfigFilePath does not exists."
+      )
   }
+
+  def loadConfigsFromFilePath[C: ClassTag](
+      configFilePath: String,
+      configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
+  )(implicit reader: ConfigReader[C]): C =
+    loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath)))
 
   def loadConfigsFromDirectory[C: ClassTag](
       configDirectoryPath: String,
@@ -69,17 +74,6 @@ object RestonomerConfigurationsLoader {
       case Left(error) =>
         throw new RestonomerException(error.prettyPrint())
     }
-  }
-
-  def loadConfigsFromFilePath[C: ClassTag](
-      configFilePath: String,
-      configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
-  )(implicit reader: ConfigReader[C]): C = {
-
-    if (fileExists(configFilePath))
-      loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath)))
-    else
-      throw new FileNotFoundException(s"The config directory with the path: $configFilePath does not exists.")
   }
 
 }
