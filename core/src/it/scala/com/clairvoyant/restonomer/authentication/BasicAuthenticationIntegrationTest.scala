@@ -10,7 +10,7 @@ class BasicAuthenticationIntegrationTest extends IntegrationTestDependencies {
   }
 
   it should "authenticate request with basic authentication using username and password" in {
-    restonomerContext.runCheckpointWithPath("group1/checkpoint_basic_authentication_up.conf")
+    restonomerContext.runCheckpointWithPath("checkpoint_basic_authentication_up.conf")
   }
 
 }
