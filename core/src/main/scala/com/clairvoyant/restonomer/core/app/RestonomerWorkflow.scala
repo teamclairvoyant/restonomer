@@ -3,7 +3,7 @@ package com.clairvoyant.restonomer.core.app
 import com.clairvoyant.restonomer.core.converter.ResponseToDataFrameConverter
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.RestonomerRequest
-import com.clairvoyant.restonomer.core.model.CheckpointConfig
+import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 
@@ -37,12 +37,19 @@ class RestonomerWorkflow(implicit val sparkSession: SparkSession) {
 
 object RestonomerWorkflow {
 
-  def apply(applicationConfigurations: Map[String, String]): RestonomerWorkflow = {
+  def apply(applicationConfig: ApplicationConfig): RestonomerWorkflow = {
+    val sparkConf = new SparkConf()
+
     implicit val sparkSession: SparkSession = SparkSession
       .builder()
       .config(
-        new SparkConf()
-          .setMaster(applicationConfigurations("spark.master"))
+        applicationConfig.sparkConfigs
+          .map { sparkConfigs =>
+            sparkConfigs.foldLeft(sparkConf) { case (sparkConf, sparkConfig) =>
+              sparkConf.set(sparkConfig._1, sparkConfig._2)
+            }
+          }
+          .getOrElse(sparkConf)
       )
       .getOrCreate()
 

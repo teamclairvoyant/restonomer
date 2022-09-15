@@ -4,7 +4,7 @@ import com.clairvoyant.restonomer.core.common.RestonomerContextConfigTypes
 import com.clairvoyant.restonomer.core.config.ConfigVariablesSubstitutor
 import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import com.clairvoyant.restonomer.core.model.CheckpointConfig
+import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
 import pureconfig.generic.auto._
 
@@ -29,7 +29,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
   val CONFIG_VARIABLES_FILE_PATH = s"$restonomerContextDirectoryPath/uncommitted/config_variables.conf"
   val CHECKPOINTS_CONFIG_DIRECTORY_PATH = s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}"
 
-  val applicationConfigurations: Map[String, String] = loadApplicationConfigurations(APPLICATION_CONFIG_FILE_PATH)
+  val applicationConfig: ApplicationConfig = loadApplicationConfiguration(APPLICATION_CONFIG_FILE_PATH)
 
   val configVariables: Map[String, String] = loadConfigVariables(CONFIG_VARIABLES_FILE_PATH)
 
@@ -56,6 +56,6 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
   }
 
   def runCheckpoint(checkpointConfig: CheckpointConfig): Unit =
-    RestonomerWorkflow(applicationConfigurations).run(checkpointConfig)
+    RestonomerWorkflow(applicationConfig).run(checkpointConfig)
 
 }

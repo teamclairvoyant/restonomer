@@ -1,7 +1,9 @@
 package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.exception.RestonomerException
+import com.clairvoyant.restonomer.core.model.ApplicationConfig
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
+import pureconfig.generic.auto._
 import pureconfig.{ConfigReader, ConfigSource}
 
 import java.io.{File, FileNotFoundException}
@@ -10,9 +12,9 @@ import scala.reflect.ClassTag
 
 object RestonomerConfigurationsLoader {
 
-  def loadApplicationConfigurations(applicationConfigFilePath: String): Map[String, String] = {
+  def loadApplicationConfiguration(applicationConfigFilePath: String): ApplicationConfig = {
     if (fileExists(applicationConfigFilePath))
-      loadConfigFromFile[Map[String, String]](applicationConfigFilePath)
+      loadConfigFromFile[ApplicationConfig](applicationConfigFilePath)
     else
       throw new RestonomerException(s"The application config file path: $applicationConfigFilePath does not exists.")
   }
