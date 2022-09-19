@@ -19,7 +19,7 @@ val pureConfigVersion = "0.17.1"
 val sttpVersion = "3.7.4"
 val scalaTestVersion = "3.2.12"
 val wireMockVersion = "2.27.2"
-
+val jwtCoreVersion = "9.1.1"
 lazy val scalacOptions = Seq("-Wunused")
 
 // ----- TOOL DEPENDENCIES ----- //
@@ -32,9 +32,10 @@ val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersio
 
 val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % "it,test")
 
+val jwtDependency = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 // ----- MODULE DEPENDENCIES ----- //
 
-val coreDependencies = pureConfigDependencies ++ sttpDependencies ++ scalaTestDependencies ++ wireMockDependencies
+val coreDependencies = pureConfigDependencies ++ sttpDependencies ++ scalaTestDependencies ++ wireMockDependencies ++ jwtDependency
 
 // ----- SETTINGS ----- //
 
