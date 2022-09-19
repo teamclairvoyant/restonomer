@@ -3,7 +3,7 @@ package com.clairvoyant.restonomer.core.config
 import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import com.clairvoyant.restonomer.core.model.CheckpointConfig
+import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pureconfig.generic.auto._
 
@@ -21,6 +21,33 @@ class RestonomerConfigurationsLoaderSpec extends CoreSpec {
 
   "loadConfigVariables - with existing valid config variable file" should "return non empty map" in {
     loadConfigVariables(s"$resourcesPath/uncommitted/config_variables.conf") should have size 2
+  }
+
+  "loadApplicationConfig - with non existing file" should "throw RestonomerException" in {
+    val thrown = the[FileNotFoundException] thrownBy loadApplicationConfig(s"$resourcesPath/application_invalid.conf")
+
+    thrown.getMessage should include(
+      "The application config file with the path: core/src/test/resources/application_invalid.conf does not exists."
+    )
+  }
+
+  "loadApplicationConfig - with existing valid file" should "return populated ApplicationConfig object" in {
+    loadApplicationConfig(s"$resourcesPath/application.conf") shouldBe a[ApplicationConfig]
+  }
+
+  "loadConfigsFromFilePath - with non existing file" should "throw RestonomerException" in {
+    val thrown =
+      the[FileNotFoundException] thrownBy loadConfigsFromFilePath[CheckpointConfig](
+        s"$resourcesPath/checkpoint_invalid.conf"
+      )
+
+    thrown.getMessage should include("No such file or directory")
+  }
+
+  "loadConfigsFromFilePath - with existing valid file" should "return populated config object" in {
+    loadConfigsFromFilePath[CheckpointConfig](s"$resourcesPath/sample-checkpoint-valid.conf") shouldBe a[
+      CheckpointConfig
+    ]
   }
 
   "loadConfigsFromDirectory" should "return list that contain CheckpointConfig objects" in {
