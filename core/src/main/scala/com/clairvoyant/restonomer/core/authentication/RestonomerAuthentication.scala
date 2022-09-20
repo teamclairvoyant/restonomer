@@ -94,18 +94,6 @@ case class JwtAuthentication(
           JwtAlgorithm.ES256
         case "ES384" =>
           JwtAlgorithm.ES384
-        case "HS512" =>
-          JwtAlgorithm.HS512
-        case "RS256" =>
-          JwtAlgorithm.RS256
-        case "RS384" =>
-          JwtAlgorithm.RS384
-        case "RS512" =>
-          JwtAlgorithm.RS512
-        case "ES256" =>
-          JwtAlgorithm.ES256
-        case "ES384" =>
-          JwtAlgorithm.ES384
         case "ES512" =>
           JwtAlgorithm.ES512
         case "Ed25519" =>
