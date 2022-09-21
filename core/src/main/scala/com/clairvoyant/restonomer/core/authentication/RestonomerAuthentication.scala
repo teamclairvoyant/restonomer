@@ -2,7 +2,7 @@ package com.clairvoyant.restonomer.core.authentication
 
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.{isValidAPIKeyPlaceholder, COOKIE, QUERY_STRING, REQUEST_HEADER}
-import com.clairvoyant.restonomer.core.exception.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import sttp.client3.{Identity, Request}
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim}
 import java.time.Clock
@@ -30,15 +30,15 @@ case class BasicAuthentication(
 
   override def validateCredentials(): Unit = {
     if (basicToken.isEmpty && userName.isEmpty && password.isEmpty)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain either basic-token or both user-name & password."
       )
     else if (basicToken.isEmpty && userName.isEmpty)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain the user-name."
       )
     else if (basicToken.isEmpty && password.isEmpty)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain the password."
       )
   }
@@ -63,11 +63,11 @@ case class JwtAuthentication(
 ) extends RestonomerAuthentication {
 
   implicit val clock: Clock = Clock.systemUTC
-  var encodingAlgo:JwtAlgorithm = _
+  var encodingAlgo: JwtAlgorithm = _
 
   override def validateCredentials(): Unit = {
     if (subject.isBlank || secretKey.isBlank)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain subject and secret-key."
       )
   }
@@ -76,8 +76,7 @@ case class JwtAuthentication(
 
     if (algo.isEmpty) {
       encodingAlgo = JwtAlgorithm.HS256
-    }
-    else {
+    } else {
       encodingAlgo =
         algo.get match {
           case "HMD5" =>
@@ -120,7 +119,7 @@ case class BearerAuthentication(bearerToken: String) extends RestonomerAuthentic
 
   override def validateCredentials(): Unit = {
     if (bearerToken.isBlank)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain valid bearer-token."
       )
   }
@@ -136,15 +135,15 @@ case class APIKeyAuthentication(apiKeyName: String, apiKeyValue: String, placeho
 
   override def validateCredentials(): Unit = {
     if (apiKeyName.isBlank)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain valid api-key-name."
       )
     else if (apiKeyValue.isBlank)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain valid api-key-value."
       )
     else if (!isValidAPIKeyPlaceholder(placeholder))
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         s"The provided credentials are invalid. The placeholder: $placeholder is not supported."
       )
   }

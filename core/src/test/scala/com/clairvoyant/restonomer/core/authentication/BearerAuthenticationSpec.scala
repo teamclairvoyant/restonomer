@@ -1,20 +1,20 @@
 package com.clairvoyant.restonomer.core.authentication
 
 import com.clairvoyant.restonomer.core.CoreSpec
-import com.clairvoyant.restonomer.core.exception.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import sttp.model.Header
 
 class BearerAuthenticationSpec extends CoreSpec {
 
-  "validateCredentials - with empty credentials" should "throw RestonomerContextException" in {
+  "validateCredentials - with empty credentials" should "throw RestonomerException" in {
     val authentication = BearerAuthentication("")
 
-    the[RestonomerContextException] thrownBy authentication.validateCredentials() should have message
+    the[RestonomerException] thrownBy authentication.validateCredentials() should have message
       "The provided credentials are invalid. The credentials should contain valid bearer-token."
   }
 
-  "validateCredentials - with bearer-token" should "not throw RestonomerContextException" in {
+  "validateCredentials - with bearer-token" should "not throw RestonomerException" in {
     val authentication = BearerAuthentication(bearerToken = "test_token")
 
     noException should be thrownBy authentication.validateCredentials()

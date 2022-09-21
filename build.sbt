@@ -16,10 +16,12 @@ val applicationName = "restonomer"
 val releaseVersion = "1.0"
 
 val pureConfigVersion = "0.17.1"
-val sttpVersion = "3.7.4"
+val sttpVersion = "3.7.6"
 val scalaTestVersion = "3.2.12"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.1.1"
+val sparkVersion = "3.3.0"
+
 lazy val scalacOptions = Seq("-Wunused")
 
 // ----- TOOL DEPENDENCIES ----- //
@@ -35,7 +37,16 @@ val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" 
 val jwtDependency = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 // ----- MODULE DEPENDENCIES ----- //
 
-val coreDependencies = pureConfigDependencies ++ sttpDependencies ++ scalaTestDependencies ++ wireMockDependencies ++ jwtDependency
+val sparkDependencies = Seq(
+  "org.apache.spark" %% "spark-core" % sparkVersion,
+  "org.apache.spark" %% "spark-sql" % sparkVersion
+)
+
+// ----- MODULE DEPENDENCIES ----- //
+
+val coreDependencies =
+  pureConfigDependencies ++ sttpDependencies ++ scalaTestDependencies ++ wireMockDependencies ++ sparkDependencies ++ jwtDependency
+
 
 // ----- SETTINGS ----- //
 
