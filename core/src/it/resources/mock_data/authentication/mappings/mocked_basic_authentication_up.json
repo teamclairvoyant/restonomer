@@ -10,6 +10,6 @@
   },
   "response": {
     "status": 200,
-    "body": "Authorized Successfully using User Name and Password"
+    "body": "{'authorization_status': 'Authorized Successfully using User Name and Password'}"
   }
 }

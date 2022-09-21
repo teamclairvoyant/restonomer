@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.common
 
-import com.clairvoyant.restonomer.core.exception.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import sttp.client3.{HttpClientSyncBackend, Identity, SttpBackend}
 
 object HttpBackendTypes extends Enumeration {
@@ -13,7 +13,7 @@ object HttpBackendTypes extends Enumeration {
           HttpClientSyncBackend()
       }
     else
-      throw new RestonomerContextException(s"The http-backend-type: $httpBackendType is not supported.")
+      throw new RestonomerException(s"The http-backend-type: $httpBackendType is not supported.")
 
   def isValidHttpBackend(httpBackendType: String): Boolean = values.exists(_.toString == httpBackendType)
 }

@@ -2,7 +2,7 @@ package com.clairvoyant.restonomer.core.authentication
 
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.{isValidAPIKeyPlaceholder, COOKIE, QUERY_STRING, REQUEST_HEADER}
-import com.clairvoyant.restonomer.core.exception.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import sttp.client3.{Identity, Request}
 
 sealed trait RestonomerAuthentication {
@@ -28,15 +28,15 @@ case class BasicAuthentication(
 
   override def validateCredentials(): Unit = {
     if (basicToken.isEmpty && userName.isEmpty && password.isEmpty)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain either basic-token or both user-name & password."
       )
     else if (basicToken.isEmpty && userName.isEmpty)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain the user-name."
       )
     else if (basicToken.isEmpty && password.isEmpty)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain the password."
       )
   }
@@ -58,7 +58,7 @@ case class BearerAuthentication(bearerToken: String) extends RestonomerAuthentic
 
   override def validateCredentials(): Unit = {
     if (bearerToken.isBlank)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain valid bearer-token."
       )
   }
@@ -74,15 +74,15 @@ case class APIKeyAuthentication(apiKeyName: String, apiKeyValue: String, placeho
 
   override def validateCredentials(): Unit = {
     if (apiKeyName.isBlank)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain valid api-key-name."
       )
     else if (apiKeyValue.isBlank)
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain valid api-key-value."
       )
     else if (!isValidAPIKeyPlaceholder(placeholder))
-      throw new RestonomerContextException(
+      throw new RestonomerException(
         s"The provided credentials are invalid. The placeholder: $placeholder is not supported."
       )
   }

@@ -1,5 +1,6 @@
 package com.clairvoyant.restonomer.core
 
+import org.apache.spark.sql.SparkSession
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers
 import sttp.client3._
@@ -14,5 +15,10 @@ trait CoreSpec extends AnyFlatSpec with Matchers {
     method = Method.GET,
     uri = uri"$uri"
   )
+
+  implicit lazy val sparkSession: SparkSession = SparkSession
+    .builder()
+    .master("local[*]")
+    .getOrCreate()
 
 }

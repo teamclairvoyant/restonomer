@@ -5,6 +5,6 @@
   },
   "response": {
     "status": 200,
-    "body": "Authorized Successfully using API Key Authentication with Query String"
+    "body": "{'authorization_status': 'Authorized Successfully using API Key Authentication with Query String'}"
   }
 }

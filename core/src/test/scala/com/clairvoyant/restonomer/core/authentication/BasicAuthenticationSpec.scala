@@ -1,40 +1,40 @@
 package com.clairvoyant.restonomer.core.authentication
 
 import com.clairvoyant.restonomer.core.CoreSpec
-import com.clairvoyant.restonomer.core.exception.RestonomerContextException
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import sttp.model.Header
 
 class BasicAuthenticationSpec extends CoreSpec {
 
-  "validateCredentials - with empty credentials" should "throw RestonomerContextException" in {
+  "validateCredentials - with empty credentials" should "throw RestonomerException" in {
     val authentication = BasicAuthentication()
 
-    the[RestonomerContextException] thrownBy authentication.validateCredentials() should have message
+    the[RestonomerException] thrownBy authentication.validateCredentials() should have message
       "The provided credentials are invalid. The credentials should contain either basic-token or both user-name & password."
   }
 
-  "validateCredentials - with only user-name" should "throw RestonomerContextException" in {
+  "validateCredentials - with only user-name" should "throw RestonomerException" in {
     val authentication = BasicAuthentication(userName = Some("test_user"))
 
-    the[RestonomerContextException] thrownBy authentication.validateCredentials() should have message
+    the[RestonomerException] thrownBy authentication.validateCredentials() should have message
       "The provided credentials are invalid. The credentials should contain the password."
   }
 
-  "validateCredentials - with only password" should "throw RestonomerContextException" in {
+  "validateCredentials - with only password" should "throw RestonomerException" in {
     val authentication = BasicAuthentication(password = Some("test_password"))
 
-    the[RestonomerContextException] thrownBy authentication.validateCredentials() should have message
+    the[RestonomerException] thrownBy authentication.validateCredentials() should have message
       "The provided credentials are invalid. The credentials should contain the user-name."
   }
 
-  "validateCredentials - with only basic-token" should "not throw RestonomerContextException" in {
+  "validateCredentials - with only basic-token" should "not throw RestonomerException" in {
     val authentication = BasicAuthentication(basicToken = Some("test_token"))
 
     noException should be thrownBy authentication.validateCredentials()
   }
 
-  "validateCredentials - with only user-name and password" should "not throw RestonomerContextException" in {
+  "validateCredentials - with only user-name and password" should "not throw RestonomerException" in {
     val authentication = BasicAuthentication(userName = Some("test_user"), password = Some("test_password"))
 
     noException should be thrownBy authentication.validateCredentials()

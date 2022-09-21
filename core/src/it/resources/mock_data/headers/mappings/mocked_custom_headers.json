@@ -12,6 +12,6 @@
     }
   },
   "response": {
-    "body": "Custom headers are added to the request"
+    "body": "{'response': 'Custom headers are added to the request'}"
   }
 }
