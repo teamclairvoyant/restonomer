@@ -57,50 +57,59 @@ case class BasicAuthentication(
 }
 
 case class JwtAuthentication(
-    subject: Option[String] = None,
-    secretKey: Option[String] = None,
+    subject: String,
+    secretKey: String,
     algo: Option[String] = None
 ) extends RestonomerAuthentication {
 
   implicit val clock: Clock = Clock.systemUTC
+  var encodingAlgo:JwtAlgorithm = _
 
   override def validateCredentials(): Unit = {
-    if (subject.isEmpty || secretKey.isEmpty || algo.isEmpty)
+    if (subject.isBlank || secretKey.isBlank)
       throw new RestonomerContextException(
-        "The provided credentials are invalid. The credentials should contain subject, secret-key and encoding algo."
+        "The provided credentials are invalid. The credentials should contain subject and secret-key."
       )
   }
 
   override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
-    val encodingAlgo =
-      algo.get match {
-        case "HMD5" =>
-          JwtAlgorithm.HMD5
-        case "HS224" =>
-          JwtAlgorithm.HS224
-        case "HS256" =>
-          JwtAlgorithm.HS256
-        case "HS384" =>
-          JwtAlgorithm.HS384
-        case "HS512" =>
-          JwtAlgorithm.HS512
-        case "RS256" =>
-          JwtAlgorithm.RS256
-        case "RS384" =>
-          JwtAlgorithm.RS384
-        case "RS512" =>
-          JwtAlgorithm.RS512
-        case "ES256" =>
-          JwtAlgorithm.ES256
-        case "ES384" =>
-          JwtAlgorithm.ES384
-        case "ES512" =>
-          JwtAlgorithm.ES512
-        case "Ed25519" =>
-          JwtAlgorithm.Ed25519
-      }
-    val sub = subject.get
-    val token = Jwt.encode(JwtClaim(s"""{"subject":"$sub"}""").issuedNow.expiresIn(1800), secretKey.get, encodingAlgo)
+
+    if (algo.isEmpty) {
+      encodingAlgo = JwtAlgorithm.HS256
+    }
+    else {
+      encodingAlgo =
+        algo.get match {
+          case "HMD5" =>
+            JwtAlgorithm.HMD5
+          case "HS224" =>
+            JwtAlgorithm.HS224
+          case "HS256" =>
+            JwtAlgorithm.HS256
+          case "HS384" =>
+            JwtAlgorithm.HS384
+          case "HS512" =>
+            JwtAlgorithm.HS512
+          case "RS256" =>
+            JwtAlgorithm.RS256
+          case "RS384" =>
+            JwtAlgorithm.RS384
+          case "RS512" =>
+            JwtAlgorithm.RS512
+          case "ES256" =>
+            JwtAlgorithm.ES256
+          case "ES384" =>
+            JwtAlgorithm.ES384
+          case "ES512" =>
+            JwtAlgorithm.ES512
+          case "Ed25519" =>
+            JwtAlgorithm.Ed25519
+          case default =>
+            JwtAlgorithm.HS256
+        }
+    }
+    val sub = subject
+    val token = Jwt.encode(JwtClaim(s"""{"subject":"$sub"}""").issuedNow.expiresIn(1800), secretKey, encodingAlgo)
     val headers = Map("authorization" -> s"Bearer $token")
     httpRequest.headers(headers)
   }
