@@ -103,7 +103,7 @@ case class JwtAuthentication(
             JwtAlgorithm.ES512
           case "Ed25519" =>
             JwtAlgorithm.Ed25519
-          case default =>
+          case _ =>
             JwtAlgorithm.HS256
         }
     }
