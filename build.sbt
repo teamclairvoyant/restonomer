@@ -11,12 +11,12 @@ Global / excludeLintKeys += Keys.parallelExecution
 
 // ----- VARIABLES ----- //
 
-val organizationName = "com.clairvoyant.restonomer"
+val organizationName = "com.clairvoyant"
 val applicationName = "restonomer"
 val releaseVersion = "1.0"
 
 val pureConfigVersion = "0.17.1"
-val sttpVersion = "3.7.6"
+val sttpVersion = "3.8.0"
 val scalaTestVersion = "3.2.12"
 val wireMockVersion = "2.27.2"
 val sparkVersion = "3.3.0"
@@ -71,3 +71,11 @@ lazy val restonomer = (project in file("."))
 lazy val core = (project in file("core"))
   .configs(IntegrationTest)
   .settings(coreSettings)
+
+lazy val docs = (project in file("generated-docs"))
+  .enablePlugins(MdocPlugin)
+  .settings(
+    mdocVariables := Map(
+      "VERSION" -> releaseVersion
+    )
+  )
