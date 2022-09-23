@@ -71,11 +71,3 @@ lazy val restonomer = (project in file("."))
 lazy val core = (project in file("core"))
   .configs(IntegrationTest)
   .settings(coreSettings)
-
-lazy val docs = (project in file("generated-docs"))
-  .enablePlugins(MdocPlugin)
-  .settings(
-    mdocVariables := Map(
-      "VERSION" -> releaseVersion
-    )
-  )
