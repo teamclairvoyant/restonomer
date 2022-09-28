@@ -12,7 +12,7 @@ import java.io.FileNotFoundException
 
 object RestonomerContext {
 
-  val DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH = "./restonomer_context"
+  private val DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH = "./restonomer_context"
 
   def apply(restonomerContextDirectoryPath: String = DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH): RestonomerContext = {
     if (fileExists(restonomerContextDirectoryPath))
@@ -27,13 +27,15 @@ object RestonomerContext {
 
 class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
-  val CONFIG_VARIABLES_FILE_PATH = s"$restonomerContextDirectoryPath/uncommitted/config_variables.conf"
-  val APPLICATION_CONFIG_FILE_PATH = s"$restonomerContextDirectoryPath/application.conf"
-  val CHECKPOINTS_CONFIG_DIRECTORY_PATH = s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}"
+  private val CONFIG_VARIABLES_FILE_PATH = s"$restonomerContextDirectoryPath/uncommitted/config_variables.conf"
+  private val APPLICATION_CONFIG_FILE_PATH = s"$restonomerContextDirectoryPath/application.conf"
 
-  val configVariables: Map[String, String] = loadConfigVariables(CONFIG_VARIABLES_FILE_PATH)
+  private val CHECKPOINTS_CONFIG_DIRECTORY_PATH =
+    s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}"
 
-  val applicationConfig: ApplicationConfig = loadApplicationConfig(
+  private val configVariables: Map[String, String] = loadConfigVariables(CONFIG_VARIABLES_FILE_PATH)
+
+  private val applicationConfig: ApplicationConfig = loadApplicationConfig(
     applicationConfigFilePath = APPLICATION_CONFIG_FILE_PATH,
     configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
   )
