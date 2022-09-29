@@ -15,7 +15,7 @@ Restonomer has been designed with a clear focus on solving the various data retr
 * implementing an optimised solution that works in a concurrent and distributed fashion
 
 
-Restonomer also provides users with a toolkit for transformation and persistance of the data that include:
+Restonomer also provides users with a toolkit for transformation and persistence of the data that include:
 
 * dealing with a variety of response data types (String / Bytes / Zipped)
 
@@ -49,4 +49,22 @@ Restonomer, at a high level, aims at providing users with a fault-tolerant and s
    :caption: Config Classes
    
    config_classes
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Restonomer Request
+   
+   restonomer_request
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Restonomer Response
+   
+   restonomer_response
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Response to DataFrame Converters
+   
+   dataframe_converters
 ```

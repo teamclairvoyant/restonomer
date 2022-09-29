@@ -1,5 +1,5 @@
-# Run single checkpoint in the restonomer context
+# Run single checkpoint
 
-# Run all checkpoints under specific directory in the restonomer context
+# Run all checkpoints under specific directory
 
-# Run all checkpoints in the restonomer context
+# Run all checkpoints
