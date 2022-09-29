@@ -1,10 +1,12 @@
 package com.clairvoyant.restonomer.core.authentication
 
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders
-import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.{isValidAPIKeyPlaceholder, COOKIE, QUERY_STRING, REQUEST_HEADER}
+import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.{COOKIE, QUERY_STRING, REQUEST_HEADER, isValidAPIKeyPlaceholder}
 import com.clairvoyant.restonomer.core.exception.RestonomerException
+import pdi.jwt.algorithms.JwtUnknownAlgorithm
 import sttp.client3.{Identity, Request}
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim}
+
 import java.time.Clock
 
 sealed trait RestonomerAuthentication {
@@ -59,7 +61,8 @@ case class BasicAuthentication(
 case class JwtAuthentication(
     subject: String,
     secretKey: String,
-    algo: Option[String] = None
+    algorithm: String = JwtAlgorithm.HS256.name,
+    tokenExpiresIn: Long = 1800
 ) extends RestonomerAuthentication {
 
   implicit val clock: Clock = Clock.systemUTC
@@ -68,51 +71,22 @@ case class JwtAuthentication(
   override def validateCredentials(): Unit = {
     if (subject.isBlank || secretKey.isBlank)
       throw new RestonomerException(
-        "The provided credentials are invalid. The credentials should contain subject and secret-key."
+        "The provided credentials are invalid. The credentials should contain both subject and secret-key."
       )
-  }
 
-  override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
-
-    if (algo.isEmpty) {
-      encodingAlgo = JwtAlgorithm.HS256
-    } else {
-      encodingAlgo =
-        algo.get match {
-          case "HMD5" =>
-            JwtAlgorithm.HMD5
-          case "HS224" =>
-            JwtAlgorithm.HS224
-          case "HS256" =>
-            JwtAlgorithm.HS256
-          case "HS384" =>
-            JwtAlgorithm.HS384
-          case "HS512" =>
-            JwtAlgorithm.HS512
-          case "RS256" =>
-            JwtAlgorithm.RS256
-          case "RS384" =>
-            JwtAlgorithm.RS384
-          case "RS512" =>
-            JwtAlgorithm.RS512
-          case "ES256" =>
-            JwtAlgorithm.ES256
-          case "ES384" =>
-            JwtAlgorithm.ES384
-          case "ES512" =>
-            JwtAlgorithm.ES512
-          case "Ed25519" =>
-            JwtAlgorithm.Ed25519
-          case _ =>
-            JwtAlgorithm.HS256
-        }
+    if (JwtAlgorithm.fromString(algorithm.toUpperCase()).isInstanceOf[JwtUnknownAlgorithm]) {
+      throw new RestonomerException(s"The provided algorithm: $algorithm is not supported.")
     }
-    val sub = subject
-    val token = Jwt.encode(JwtClaim(s"""{"subject":"$sub"}""").issuedNow.expiresIn(1800), secretKey, encodingAlgo)
-    val headers = Map("authorization" -> s"Bearer $token")
-    httpRequest.headers(headers)
   }
-
+  override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
+    httpRequest.auth.bearer(
+      Jwt.encode(
+        claim = JwtClaim(subject = Option(subject)).issuedNow.expiresIn(tokenExpiresIn),
+        key = secretKey,
+        algorithm = JwtAlgorithm.fromString(algorithm.toUpperCase())
+      )
+    )
+  }
 }
 
 case class BearerAuthentication(bearerToken: String) extends RestonomerAuthentication {
