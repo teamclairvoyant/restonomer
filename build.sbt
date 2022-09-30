@@ -19,6 +19,7 @@ val pureConfigVersion = "0.17.1"
 val sttpVersion = "3.8.0"
 val scalaTestVersion = "3.2.12"
 val wireMockVersion = "2.27.2"
+val jwtCoreVersion = "9.1.1"
 val sparkVersion = "3.3.0"
 
 lazy val scalacOptions = Seq("-Wunused")
@@ -33,6 +34,9 @@ val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersio
 
 val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % "it,test")
 
+val jwtDependency = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
+// ----- MODULE DEPENDENCIES ----- //
+
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion
@@ -41,7 +45,8 @@ val sparkDependencies = Seq(
 // ----- MODULE DEPENDENCIES ----- //
 
 val coreDependencies =
-  pureConfigDependencies ++ sttpDependencies ++ scalaTestDependencies ++ wireMockDependencies ++ sparkDependencies
+  pureConfigDependencies ++ sttpDependencies ++ scalaTestDependencies ++ wireMockDependencies ++ sparkDependencies ++ jwtDependency
+
 
 // ----- SETTINGS ----- //
 
