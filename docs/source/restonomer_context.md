@@ -110,3 +110,53 @@ spark-configs = {
 
 # Config Variables
 
+While providing the checkpoint configuration, there may come a situation where you would not want to provide a static 
+value for any particular field but rather want to provide some dynamic value which is passed on to the application 
+at runtime. Here comes config variables to the rescue.
+
+The config variables are denoted like `${<config_variable>}`
+
+Example: `${BASIC_AUTH_TOKEN}`
+
+Below is the sample checkpoint configuration using config variables:
+
+```hocon
+name = "sample_postman_checkpoint"
+
+request = {
+  url = "https://postman-echo.com/basic-auth"
+  
+  authentication = {
+    type = "basic-authentication"
+    basic-token = ${BASIC_AUTH_TOKEN}
+  }
+}
+
+response = {
+  body = {
+    format = "JSON"
+  }
+}
+```
+
+There are two ways of substituting the config variables by their actual values at runtime:
+
+* You can provide config variable and its value in `config_variables.conf` file kept in `uncommitted` folder under 
+restonomer context directory.
+
+    Below is the sample `config_variables.conf` file content:
+
+    ```hocon
+    BASIC_AUTH_TOKEN = "token1234"
+    BEARER_AUTH_TOKEN = "token5678"
+    ```
+  
+* You can provide config variable and its value by setting it in environment variable before running the application.
+
+The restonomer application first looks for the substitute value in environment variables. If the value is not 
+present over there, then it starts looking for the value in the `config_variables.conf` file.
+
+So, environment variables get priority over `config_variables.conf` file.
+
+In case the value is not present in both, then the value is not substituted and the application reads the checkpoint 
+configuration the same way it is provided.
