@@ -35,6 +35,7 @@ val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersio
 val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % "it,test")
 
 val jwtDependency = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val sparkDependencies = Seq(
@@ -46,7 +47,6 @@ val sparkDependencies = Seq(
 
 val coreDependencies =
   pureConfigDependencies ++ sttpDependencies ++ scalaTestDependencies ++ wireMockDependencies ++ sparkDependencies ++ jwtDependency
-
 
 // ----- SETTINGS ----- //
 
