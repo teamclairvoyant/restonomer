@@ -64,9 +64,7 @@ You can place a checkpoint file either:
 
 * directly under `checkpoints` directory
 
-OR
-
-* you can have subdirectories under `checkpoints` directory and can keep checkpoint files in that subdirectory
+* or you can have subdirectories under `checkpoints` directory and can keep checkpoint files in that subdirectory
 
 For example, `checkpoints` directory can have below structure:
 
@@ -86,6 +84,29 @@ restonomer_context\
 
 This kind of hierarchical structure helps user to categorise their checkpoints by keeping set of files in different subdirectories.
 
-# Application Config
+# Application Configurations
+
+Application configurations are high level configs that application requires in order to behave in a specific way.
+
+Application configurations are represented by a case class `ApplicationConfig` :
+
+```scala
+case class ApplicationConfig(
+    sparkConfigs: Option[Map[String, String]]
+)
+```
+
+Application configurations are provided in a file `application.conf` that is kept under restonomer context directory.
+
+This conf file contains all application related configurations such as spark configurations.
+
+Below is the sample `application.conf` file:
+
+```hocon
+spark-configs = {
+  "spark.master" = "local[*]"
+}
+```
 
 # Config Variables
+
