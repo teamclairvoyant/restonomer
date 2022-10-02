@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.authentication
 
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders
-import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.{isValidAPIKeyPlaceholder, COOKIE, QUERY_STRING, REQUEST_HEADER}
+import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.{isValidAPIKeyPlaceholder, COOKIE, QUERY_PARAM, REQUEST_HEADER}
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import pdi.jwt.algorithms.JwtUnknownAlgorithm
 import sttp.client3.{Identity, Request}
@@ -127,7 +127,7 @@ case class APIKeyAuthentication(apiKeyName: String, apiKeyValue: String, placeho
       httpRequest: Request[Either[String, String], Any]
   ): Request[Either[String, String], Any] = {
     APIKeyPlaceholders(placeholder) match {
-      case QUERY_STRING =>
+      case QUERY_PARAM =>
         httpRequest.copy[Identity, Either[String, String], Any](
           uri = httpRequest.uri.addParam(apiKeyName, apiKeyValue)
         )

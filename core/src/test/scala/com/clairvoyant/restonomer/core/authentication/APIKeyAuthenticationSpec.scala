@@ -1,6 +1,7 @@
 package com.clairvoyant.restonomer.core.authentication
 
 import com.clairvoyant.restonomer.core.CoreSpec
+import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import sttp.model.{Header, HeaderNames}
@@ -13,7 +14,7 @@ class APIKeyAuthenticationSpec extends CoreSpec {
   val apiKeyAuthentication: APIKeyAuthentication = APIKeyAuthentication(
     apiKeyName = apiKeyName,
     apiKeyValue = apiKeyValue,
-    placeholder = "QueryString"
+    placeholder = APIKeyPlaceholders.QUERY_PARAM.toString
   )
 
   "validateCredentials - with blank api-key-name" should "throw RestonomerException" in {
@@ -37,7 +38,7 @@ class APIKeyAuthenticationSpec extends CoreSpec {
       "The provided credentials are invalid. The placeholder: InvalidPlaceholder is not supported."
   }
 
-  "authenticate - with QUERY_STRING as placeholder" should "return Request object with modified uri" in {
+  "authenticate - with QUERY_PARAM as placeholder" should "return Request object with modified uri" in {
     apiKeyAuthentication
       .authenticate(basicHttpRequest)
       .uri
