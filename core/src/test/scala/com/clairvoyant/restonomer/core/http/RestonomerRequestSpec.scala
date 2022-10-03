@@ -18,7 +18,7 @@ class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
   }
 
   "send" should "return RestonomerResponse" in {
-    val restonomerResponse = new RestonomerRequest(basicHttpRequest).send()
+    val restonomerResponse = new RestonomerRequest(basicHttpRequest).send("HttpClientSyncBackend")
 
     restonomerResponse shouldBe a[RestonomerResponse]
     restonomerResponse.httpResponse shouldBe a[Identity[_]]
@@ -29,13 +29,13 @@ class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
 
     stubFor(get(urlPathEqualTo(url)).willReturn(aResponse().withBody(responseBody)))
 
-    val restonomerResponse = new RestonomerRequest(basicHttpRequest).send(Some("HttpClientSyncBackend"))
+    val restonomerResponse = new RestonomerRequest(basicHttpRequest).send("HttpClientSyncBackend")
     restonomerResponse.httpResponse.body.getOrElse() shouldBe responseBody
   }
 
   "send with invalid HttpBackendType" should "throw RestonomerException" in {
     the[RestonomerException] thrownBy new RestonomerRequest(basicHttpRequest).send(
-      Some("ABCDBackendType")
+      "ABCDBackendType"
     ) should have message "The http-backend-type: ABCDBackendType is not supported."
   }
 

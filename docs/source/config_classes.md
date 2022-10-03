@@ -44,7 +44,7 @@ response = {
   }
 }
 
-httpBackendType = "HttpClientSyncBackend"
+http-backend-type = "HttpClientSyncBackend"
 ```
 
 # Request Config
