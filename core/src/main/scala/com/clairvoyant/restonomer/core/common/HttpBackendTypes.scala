@@ -4,7 +4,7 @@ import com.clairvoyant.restonomer.core.exception.RestonomerException
 import sttp.client3.{HttpClientSyncBackend, Identity, SttpBackend}
 
 object HttpBackendTypes extends Enumeration {
-  private val HTTP_CLIENT_SYNC_BACKEND: HttpBackendTypes.Value = Value("HttpClientSyncBackend")
+  val HTTP_CLIENT_SYNC_BACKEND: HttpBackendTypes.Value = Value("HttpClientSyncBackend")
 
   def apply(httpBackendType: String): SttpBackend[Identity, Any] =
     if (isValidHttpBackend(httpBackendType))
@@ -15,5 +15,6 @@ object HttpBackendTypes extends Enumeration {
     else
       throw new RestonomerException(s"The http-backend-type: $httpBackendType is not supported.")
 
-  def isValidHttpBackend(httpBackendType: String): Boolean = values.exists(_.toString == httpBackendType)
+  private def isValidHttpBackend(httpBackendType: String): Boolean = values.exists(_.toString == httpBackendType)
+
 }

@@ -10,7 +10,7 @@ case class CheckpointConfig(
     name: String,
     request: RequestConfig,
     response: ResponseConfig,
-    httpBackendType: String = "HttpClientSyncBackend"
+    httpBackendType: String = HttpBackendTypes.HTTP_CLIENT_SYNC_BACKEND.toString
 )
 ```
 
@@ -48,6 +48,27 @@ http-backend-type = "HttpClientSyncBackend"
 ```
 
 # Request Config
+
+The basic http request configurations are represented by `RequestConfig` class:
+
+```scala
+case class RequestConfig(
+    method: String = Method.GET.method,
+    url: String,
+    authentication: Option[RestonomerAuthentication] = None,
+    headers: Map[String, String] = Map[String, String]().empty
+)
+```
+
+The request configuration contains below configs options to be provided by the user:
+
+| Config Name    | Mandatory | Default Value | Description                                                                                                                                                                             |
+|:---------------|:---------:|:-------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| method         |    No     |     `GET`     | Http request method                                                                                                                                                                     |
+| url            |    Yes    |       -       | Url for the REST API request                                                                                                                                                            |
+| authentication |    Yes    |       -       | The type of authentication mechanism supported by Http Request<br/>Restonomer supports: `basic-authentication`, `bearer-authentication`, `api-key-authentication`, `jwt-authentication` |
+| headers        |    No     |       -       | List of headers to provided as a part of Http request in the form of key-value pairs                                                                                                    |
+
 
 # Authentication Config
 
