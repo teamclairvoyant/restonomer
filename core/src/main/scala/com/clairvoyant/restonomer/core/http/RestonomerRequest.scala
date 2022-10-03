@@ -6,7 +6,7 @@ import sttp.model.Method
 
 class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) {
 
-  def send(httpBackendType: Option[String] = None): RestonomerResponse =
+  def send(httpBackendType: Option[String]): RestonomerResponse =
     RestonomerResponse(
       httpRequest
         .send(
