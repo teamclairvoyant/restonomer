@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.common
 
 object APIKeyPlaceholders extends Enumeration {
-  val QUERY_STRING: APIKeyPlaceholders.Value = Value("QueryString")
+  val QUERY_PARAM: APIKeyPlaceholders.Value = Value("QueryParam")
   val REQUEST_HEADER: APIKeyPlaceholders.Value = Value("RequestHeader")
   val COOKIE: APIKeyPlaceholders.Value = Value("Cookie")
 
