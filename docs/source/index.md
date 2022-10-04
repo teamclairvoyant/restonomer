@@ -15,7 +15,7 @@ Restonomer has been designed with a clear focus on solving the various data retr
 * implementing an optimised solution that works in a concurrent and distributed fashion
 
 
-Restonomer also provides users with a toolkit for transformation and persistance of the data that include:
+Restonomer also provides users with a toolkit for transformation and persistence of the data that include:
 
 * dealing with a variety of response data types (String / Bytes / Zipped)
 
@@ -26,5 +26,27 @@ Restonomer also provides users with a toolkit for transformation and persistance
 * persisting the huge datasets to a specific storage system
 
 
-
 Restonomer, at a high level, aims at providing users with a fault-tolerant and scalable solution to retrieve huge datasets from REST APIs, transform the datasets, and persist the datasets in a concurrent and distributed fashion.
+
+
+# Table of contents
+
+```eval_rst
+.. toctree::
+   :maxdepth: 2
+   :caption: Restonomer Context
+   
+   restonomer_context
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Running Checkpoints
+   
+   running_checkpoints
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Config Classes
+   
+   config_classes
+```

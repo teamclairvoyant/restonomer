@@ -11,12 +11,12 @@ Global / excludeLintKeys += Keys.parallelExecution
 
 // ----- VARIABLES ----- //
 
-val organizationName = "com.clairvoyant.restonomer"
+val organizationName = "com.clairvoyant"
 val applicationName = "restonomer"
 val releaseVersion = "1.0"
 
 val pureConfigVersion = "0.17.1"
-val sttpVersion = "3.7.6"
+val sttpVersion = "3.8.0"
 val scalaTestVersion = "3.2.12"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.1.1"
@@ -35,6 +35,7 @@ val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersio
 val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % "it,test")
 
 val jwtDependency = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val sparkDependencies = Seq(
@@ -46,7 +47,6 @@ val sparkDependencies = Seq(
 
 val coreDependencies =
   pureConfigDependencies ++ sttpDependencies ++ scalaTestDependencies ++ wireMockDependencies ++ sparkDependencies ++ jwtDependency
-
 
 // ----- SETTINGS ----- //
 

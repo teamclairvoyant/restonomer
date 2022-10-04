@@ -15,5 +15,6 @@ object HttpBackendTypes extends Enumeration {
     else
       throw new RestonomerException(s"The http-backend-type: $httpBackendType is not supported.")
 
-  def isValidHttpBackend(httpBackendType: String): Boolean = values.exists(_.toString == httpBackendType)
+  private def isValidHttpBackend(httpBackendType: String): Boolean = values.exists(_.toString == httpBackendType)
+
 }

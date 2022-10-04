@@ -7,7 +7,7 @@ import scala.util.matching.Regex
 
 class ConfigVariablesSubstitutor(environmentVariables: Map[String, String], configVariables: Map[String, String]) {
 
-  val CONFIG_VARIABLE_REGEX_PATTERN: Regex = """\$\{(\S*)}""".r
+  private val CONFIG_VARIABLE_REGEX_PATTERN: Regex = """\$\{(\S*)}""".r
 
   def substituteConfigVariables(configFile: File): String = {
     @tailrec
