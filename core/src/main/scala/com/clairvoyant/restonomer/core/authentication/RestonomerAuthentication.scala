@@ -73,8 +73,11 @@ case class BearerAuthentication(bearerToken: String) extends RestonomerAuthentic
 
 }
 
-case class APIKeyAuthentication(apiKeyName: String, apiKeyValue: String, placeholder: String)
-    extends RestonomerAuthentication {
+case class APIKeyAuthentication(
+    apiKeyName: String,
+    apiKeyValue: String,
+    placeholder: String
+) extends RestonomerAuthentication {
 
   override def validateCredentials(): Unit = {
     if (apiKeyName.isBlank)

@@ -49,22 +49,4 @@ Restonomer, at a high level, aims at providing users with a fault-tolerant and s
    :caption: Config Classes
    
    config_classes
-   
-.. toctree::
-   :maxdepth: 2
-   :caption: Restonomer Request
-   
-   restonomer_request
-   
-.. toctree::
-   :maxdepth: 2
-   :caption: Restonomer Response
-   
-   restonomer_response
-   
-.. toctree::
-   :maxdepth: 2
-   :caption: Response to DataFrame Converters
-   
-   dataframe_converters
 ```

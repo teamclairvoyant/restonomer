@@ -8,7 +8,7 @@ class APIKeyAuthenticationIntegrationTest extends IntegrationTestDependencies {
 
   it should "authenticate request with api key authentication using query string" in {
     restonomerContext.runCheckpoint(checkpointFilePath =
-      s"$checkpointsDirectoryPath/checkpoint_api_key_authentication_query_string.conf"
+      s"$checkpointsDirectoryPath/checkpoint_api_key_authentication_query_param.conf"
     )
   }
 
