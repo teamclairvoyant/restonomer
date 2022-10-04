@@ -1,6 +1,6 @@
-# Steps to install sphinx and create html files for docs
+# Steps to install [sphinx](https://www.sphinx-doc.org/en/master/) and create html files for docs
 
-* Go to the terminal and navigate to the `restonomer` directory
+* Go to the terminal and navigate to the `restonomer` root directory
 * Run the below commands:
 ```text
    python -m venv .venv
