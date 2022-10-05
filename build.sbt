@@ -36,8 +36,6 @@ val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" 
 
 val jwtDependency = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 
-// ----- MODULE DEPENDENCIES ----- //
-
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion
