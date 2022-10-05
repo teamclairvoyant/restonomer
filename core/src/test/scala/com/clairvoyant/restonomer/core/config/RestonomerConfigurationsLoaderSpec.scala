@@ -11,16 +11,18 @@ import java.io.FileNotFoundException
 
 class RestonomerConfigurationsLoaderSpec extends CoreSpec {
 
-  "loadConfigVariables - with empty config variable file" should "return empty map" in {
-    loadConfigVariables(s"$resourcesPath/uncommitted/config_variables_empty.conf") should have size 0
+  implicit val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
+
+  "loadConfigVariablesFromFile - with empty config variable file" should "return empty map" in {
+    loadConfigVariablesFromFile(s"$resourcesPath/uncommitted/config_variables_empty.conf") should have size 0
   }
 
-  "loadConfigVariables - with non existing config variable file" should "return empty map" in {
-    loadConfigVariables(s"$resourcesPath/uncommitted/config_variables_invalid.conf") should have size 0
+  "loadConfigVariablesFromFile - with non existing config variable file" should "return empty map" in {
+    loadConfigVariablesFromFile(s"$resourcesPath/uncommitted/config_variables_invalid.conf") should have size 0
   }
 
-  "loadConfigVariables - with existing valid config variable file" should "return non empty map" in {
-    loadConfigVariables(s"$resourcesPath/uncommitted/config_variables.conf") should have size 2
+  "loadConfigVariablesFromFile - with existing valid config variable file" should "return non empty map" in {
+    loadConfigVariablesFromFile(s"$resourcesPath/uncommitted/config_variables.conf") should have size 2
   }
 
   "loadApplicationConfig - with non existing file" should "throw RestonomerException" in {

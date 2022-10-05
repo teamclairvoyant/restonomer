@@ -38,7 +38,7 @@ class RestonomerContext(
   private val CHECKPOINTS_CONFIG_DIRECTORY_PATH =
     s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}"
 
-  private val configVariablesFromFile: Map[String, String] = loadConfigVariables(CONFIG_VARIABLES_FILE_PATH)
+  private val configVariablesFromFile: Map[String, String] = loadConfigVariablesFromFile(CONFIG_VARIABLES_FILE_PATH)
 
   implicit private val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
     configVariablesFromFile = configVariablesFromFile,

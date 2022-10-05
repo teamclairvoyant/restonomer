@@ -12,7 +12,7 @@ import scala.reflect.ClassTag
 
 object RestonomerConfigurationsLoader {
 
-  def loadConfigVariables(configVariablesFilePath: String): Map[String, String] = {
+  def loadConfigVariablesFromFile(configVariablesFilePath: String): Map[String, String] = {
     if (fileExists(configVariablesFilePath)) {
       implicit val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
       loadConfigsFromFilePath[Map[String, String]](configVariablesFilePath)
