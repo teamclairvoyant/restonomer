@@ -5,7 +5,6 @@
 ```text
    python -m venv .venv
    source .venv/bin/activate
-   python -m pip install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org sphinx
    python -m pip install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org -r docs/requirements.txt
    sphinx-build -b html docs/source/ docs/build/html
 ```

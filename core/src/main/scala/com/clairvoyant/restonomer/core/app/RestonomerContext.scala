@@ -4,7 +4,7 @@ import com.clairvoyant.restonomer.core.common.RestonomerContextConfigTypes
 import com.clairvoyant.restonomer.core.config.ConfigVariablesSubstitutor
 import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
+import com.clairvoyant.restonomer.core.model.CheckpointConfig
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
 import pureconfig.generic.auto._
 
@@ -14,9 +14,12 @@ object RestonomerContext {
 
   private val DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH = "./restonomer_context"
 
-  def apply(restonomerContextDirectoryPath: String = DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH): RestonomerContext = {
+  def apply(
+      restonomerContextDirectoryPath: String = DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH,
+      configVariablesFromApplicationArgs: Map[String, String] = Map()
+  ): RestonomerContext = {
     if (fileExists(restonomerContextDirectoryPath))
-      new RestonomerContext(restonomerContextDirectoryPath)
+      new RestonomerContext(restonomerContextDirectoryPath, configVariablesFromApplicationArgs)
     else
       throw new RestonomerException(
         s"The RestonomerContext directory path: $restonomerContextDirectoryPath does not exists."
@@ -25,20 +28,24 @@ object RestonomerContext {
 
 }
 
-class RestonomerContext(val restonomerContextDirectoryPath: String) {
-
+class RestonomerContext(
+    val restonomerContextDirectoryPath: String,
+    val configVariablesFromApplicationArgs: Map[String, String]
+) {
   private val CONFIG_VARIABLES_FILE_PATH = s"$restonomerContextDirectoryPath/uncommitted/config_variables.conf"
   private val APPLICATION_CONFIG_FILE_PATH = s"$restonomerContextDirectoryPath/application.conf"
 
   private val CHECKPOINTS_CONFIG_DIRECTORY_PATH =
     s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}"
 
-  private val configVariables: Map[String, String] = loadConfigVariables(CONFIG_VARIABLES_FILE_PATH)
+  private val configVariablesFromFile = loadConfigVariablesFromFile(CONFIG_VARIABLES_FILE_PATH)
 
-  private val applicationConfig: ApplicationConfig = loadApplicationConfig(
-    applicationConfigFilePath = APPLICATION_CONFIG_FILE_PATH,
-    configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
+  implicit private val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
+    configVariablesFromFile = configVariablesFromFile,
+    configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
   )
+
+  private val applicationConfig = loadApplicationConfig(APPLICATION_CONFIG_FILE_PATH)
 
   private def runCheckpoint(checkpointConfig: CheckpointConfig): Unit =
     RestonomerWorkflow(applicationConfig).run(checkpointConfig)
@@ -55,11 +62,7 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
     val absoluteCheckpointFilePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointFilePath"
 
     if (fileExists(absoluteCheckpointFilePath)) {
-      val checkpointConfig = loadConfigsFromFilePath[CheckpointConfig](
-        configFilePath = absoluteCheckpointFilePath,
-        configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
-      )
-
+      val checkpointConfig = loadConfigsFromFilePath[CheckpointConfig](absoluteCheckpointFilePath)
       runCheckpoint(checkpointConfig)
     } else
       throw new FileNotFoundException(s"The checkpoint file with the path: $checkpointFilePath does not exists.")
@@ -67,19 +70,13 @@ class RestonomerContext(val restonomerContextDirectoryPath: String) {
 
   def runCheckpointsUnderDirectory(checkpointsDirectoryPath: String): Unit = {
     val checkpoints = loadConfigsFromDirectory[CheckpointConfig](
-      configDirectoryPath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointsDirectoryPath",
-      configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
+      configDirectoryPath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointsDirectoryPath"
     )
-
     runCheckpoints(checkpoints)
   }
 
   def runAllCheckpoints(): Unit = {
-    val checkpoints = loadConfigsFromDirectory[CheckpointConfig](
-      configDirectoryPath = CHECKPOINTS_CONFIG_DIRECTORY_PATH,
-      configVariablesSubstitutor = ConfigVariablesSubstitutor(configVariables = configVariables)
-    )
-
+    val checkpoints = loadConfigsFromDirectory[CheckpointConfig](CHECKPOINTS_CONFIG_DIRECTORY_PATH)
     runCheckpoints(checkpoints)
   }
 

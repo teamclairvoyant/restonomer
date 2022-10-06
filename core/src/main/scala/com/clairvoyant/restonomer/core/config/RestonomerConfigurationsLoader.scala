@@ -12,38 +12,34 @@ import scala.reflect.ClassTag
 
 object RestonomerConfigurationsLoader {
 
-  def loadConfigVariables(configVariablesFilePath: String): Map[String, String] = {
-    if (fileExists(configVariablesFilePath))
+  def loadConfigVariablesFromFile(configVariablesFilePath: String): Map[String, String] = {
+    if (fileExists(configVariablesFilePath)) {
+      implicit val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
       loadConfigsFromFilePath[Map[String, String]](configVariablesFilePath)
-    else
+    } else
       Map()
   }
 
-  def loadApplicationConfig(
-      applicationConfigFilePath: String,
-      configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
+  def loadApplicationConfig(applicationConfigFilePath: String)(
+      implicit configVariablesSubstitutor: ConfigVariablesSubstitutor
   ): ApplicationConfig = {
     if (fileExists(applicationConfigFilePath))
-      loadConfigsFromFilePath[ApplicationConfig](
-        configFilePath = applicationConfigFilePath,
-        configVariablesSubstitutor = configVariablesSubstitutor
-      )
+      loadConfigsFromFilePath[ApplicationConfig](configFilePath = applicationConfigFilePath)
     else
       throw new FileNotFoundException(
         s"The application config file with the path: $applicationConfigFilePath does not exists."
       )
   }
 
-  def loadConfigsFromFilePath[C: ClassTag](
-      configFilePath: String,
-      configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
-  )(implicit reader: ConfigReader[C]): C =
-    loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath)))
+  def loadConfigsFromFilePath[C: ClassTag](configFilePath: String)(
+      implicit configVariablesSubstitutor: ConfigVariablesSubstitutor,
+      reader: ConfigReader[C]
+  ): C = loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath)))
 
-  def loadConfigsFromDirectory[C: ClassTag](
-      configDirectoryPath: String,
-      configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
-  )(implicit reader: ConfigReader[C]): List[C] = {
+  def loadConfigsFromDirectory[C: ClassTag](configDirectoryPath: String)(
+      implicit configVariablesSubstitutor: ConfigVariablesSubstitutor,
+      reader: ConfigReader[C]
+  ): List[C] = {
     @tailrec
     def loadConfigsFromDirectoryHelper(remainingConfigFiles: List[File], configs: List[C]): List[C] = {
       if (remainingConfigFiles.isEmpty)
