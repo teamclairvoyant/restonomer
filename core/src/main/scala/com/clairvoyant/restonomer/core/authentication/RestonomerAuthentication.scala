@@ -126,9 +126,10 @@ case class JWTAuthentication(
         "The provided credentials are invalid. The credentials should contain both subject and secret-key."
       )
 
-    JwtAlgorithm.fromString(algorithm.toUpperCase) match {
-      case JwtUnknownAlgorithm(algorithm.toUpperCase) =>
+    JwtAlgorithm.fromString(algorithm) match {
+      case JwtUnknownAlgorithm(algorithm) =>
         throw new RestonomerException(s"The provided algorithm: $algorithm is not supported.")
+      case _ =>
     }
   }
 
@@ -137,7 +138,7 @@ case class JWTAuthentication(
       Jwt.encode(
         claim = JwtClaim(subject = Option(subject)).issuedNow.expiresIn(tokenExpiresIn),
         key = secretKey,
-        algorithm = JwtAlgorithm.fromString(algorithm.toUpperCase)
+        algorithm = JwtAlgorithm.fromString(algorithm)
       )
     )
   }
