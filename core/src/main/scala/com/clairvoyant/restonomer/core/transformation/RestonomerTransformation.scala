@@ -1,4 +1,4 @@
-package com.clairvoyant.restonomer.core.model
+package com.clairvoyant.restonomer.core.transformation
 
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.{col, lit}
@@ -7,7 +7,7 @@ sealed trait RestonomerTransformation {
   def transform(restonomerResponseDF: DataFrame): DataFrame
 }
 
-private case class AddColumn(
+case class AddColumn(
     columnName: String,
     columnValue: String,
     columnDataType: Option[String]
