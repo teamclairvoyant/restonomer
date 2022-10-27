@@ -9,6 +9,8 @@ inThisBuild(
 
 Global / excludeLintKeys += Keys.parallelExecution
 
+conflictManager := ConflictManager.default
+
 // ----- VARIABLES ----- //
 
 val organizationName = "com.clairvoyant"
@@ -30,7 +32,7 @@ val pureConfigDependencies = Seq("com.github.pureconfig" %% "pureconfig" % pureC
 
 val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
 
-val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion % "it,test")
+val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion)
 
 val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % "it,test")
 
@@ -44,7 +46,12 @@ val sparkDependencies = Seq(
 // ----- MODULE DEPENDENCIES ----- //
 
 val coreDependencies =
-  pureConfigDependencies ++ sttpDependencies ++ scalaTestDependencies ++ wireMockDependencies ++ sparkDependencies ++ jwtDependency
+  pureConfigDependencies ++
+    sttpDependencies ++
+    sparkDependencies ++
+    jwtDependency ++
+    scalaTestDependencies.map(_ % "it,test") ++
+    wireMockDependencies
 
 // ----- SETTINGS ----- //
 
@@ -65,12 +72,23 @@ val coreSettings =
     IntegrationTest / parallelExecution := false
   ) ++ Defaults.itSettings
 
+val sparkUtilsSettings =
+  commonSettings ++ Seq(
+    libraryDependencies ++= coreDependencies,
+    IntegrationTest / parallelExecution := false
+  ) ++ Defaults.itSettings
+
 // ----- PROJECTS ----- //
 
 lazy val restonomer = (project in file("."))
   .settings(rootSettings)
-  .aggregate(core)
+  .aggregate(core, `spark-utils`)
 
 lazy val core = (project in file("core"))
   .configs(IntegrationTest)
   .settings(coreSettings)
+  .dependsOn(`spark-utils`)
+
+lazy val `spark-utils` = (project in file("spark-utils"))
+  .configs(IntegrationTest)
+  .settings(sparkUtilsSettings)
