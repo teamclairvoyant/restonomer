@@ -8,4 +8,7 @@ case class RequestConfig(
     url: String,
     authentication: Option[RestonomerAuthentication] = None,
     headers: Map[String, String] = Map[String, String]().empty
+    
+    // Declaring body as optional - Rest 51
+    body: Option[String] = None
 )
