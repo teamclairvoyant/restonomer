@@ -15,6 +15,11 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
   def withHeaders(headers: Map[String, String]): RestonomerRequestBuilder = {
     copy(httpRequest = httpRequest.headers(headers))
   }
+  
+  //Rest - 51
+  def withBody(body: Option[String] = None): RestonomerRequestBuilder= {
+    copy(httpRequest = httpRequest.body(body))
+  }
 
   def build: RestonomerRequest = new RestonomerRequest(httpRequest)
 }
