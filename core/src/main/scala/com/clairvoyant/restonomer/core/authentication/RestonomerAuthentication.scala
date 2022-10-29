@@ -106,6 +106,9 @@ case class APIKeyAuthentication(
         httpRequest.header(apiKeyName, apiKeyValue, replaceExisting = true)
       case COOKIE =>
         httpRequest.cookie(apiKeyName, apiKeyValue)
+      // Rest- 51
+      case REQUEST_Body =>
+        httpRequest.body(apiKeyName, apiKeyValue, replaceExisting = true)
     }
   }
 
