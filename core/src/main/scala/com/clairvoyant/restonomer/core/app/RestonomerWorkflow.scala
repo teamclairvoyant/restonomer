@@ -15,6 +15,8 @@ class RestonomerWorkflow(implicit val sparkSession: SparkSession) {
         .builder(checkpointConfig.request.method, checkpointConfig.request.url)
         .withAuthentication(checkpointConfig.request.authentication)
         .withHeaders(checkpointConfig.request.headers)
+         // Rest - 51
+        .withBody(checkpointConfig.request.body)
         .build
 
     val restonomerResponse = restonomerRequest.send(checkpointConfig.httpBackendType)
