@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.spark.utils
 
-import cats.data.Validated
+import cats.data.{Validated, ValidatedNel}
 import cats.implicits._
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, Row}
@@ -15,22 +15,22 @@ trait DataFrameMatchers {
   private def collectSorted(dataFrame: DataFrame, columnsToSortBy: List[String]): List[Row] =
     dataFrame.sort(columnsToSortBy.head, columnsToSortBy.tail: _*).collectAsList().asScala.toList
 
-  private def validateSize(actualDFRows: List[Row], expectedDFRows: List[Row]): Validated[String, Unit] =
-    Validated.cond(
+  private def validateSize(actualDFRows: List[Row], expectedDFRows: List[Row]): ValidatedNel[String, Unit] =
+    Validated.condNel(
       test = actualDFRows.size == expectedDFRows.size,
       a = (),
-      e = s"Size of actual DF (${actualDFRows.size}) does not match size of expected DF (${expectedDFRows.size})"
+      e = s"* Size of actual DF (${actualDFRows.size}) does not match size of expected DF (${expectedDFRows.size})"
     )
 
   private def validateColumns(
       actualDFColumns: Set[String],
       expectedDFColumns: Set[String]
-  ): Validated[String, Unit] =
-    Validated.cond(
+  ): ValidatedNel[String, Unit] =
+    Validated.condNel(
       test = actualDFColumns == expectedDFColumns,
       a = (),
       e =
-        s"""Actual DF has different columns than Expected DF
+        s"""* Actual DF has different columns than Expected DF
            |Actual DF columns: ${actualDFColumns.toList.sorted.mkString(",")}
            |Expected DF columns: ${expectedDFColumns.toList.sorted.mkString(",")}
            |Extra columns: ${(actualDFColumns -- expectedDFColumns).toList.sorted.mkString(",")}
@@ -38,7 +38,7 @@ trait DataFrameMatchers {
        """.stripMargin
     )
 
-  private def validateSchema(actualDFSchema: StructType, expectedDFSchema: StructType): Validated[String, Unit] = {
+  private def validateSchema(actualDFSchema: StructType, expectedDFSchema: StructType): ValidatedNel[String, Unit] = {
     val actualDFSchemaSorted = actualDFSchema.fields.sortBy(_.name)
     val expectedDFSchemaSorted = expectedDFSchema.fields.sortBy(_.name)
 
@@ -47,11 +47,11 @@ trait DataFrameMatchers {
         actualDFStructField.dataType != expectedDFStructField.dataType
     }
 
-    Validated.cond(
+    Validated.condNel(
       test = nonMatchingFieldsPairs.isEmpty,
       a = (),
       e =
-        s"""Actual DF has different column types than Expected DF
+        s"""* Actual DF has different column types than Expected DF
            |Actual DF columns: ${StructType(nonMatchingFieldsPairs.map(_._1).sortBy(_.name)).treeString}
            |Expected DF columns: ${StructType(nonMatchingFieldsPairs.map(_._2).sortBy(_.name)).treeString}
            |Non matching columns: ${nonMatchingFieldsPairs.map { case (actualDFStructField, expectedDFStructField) =>
@@ -65,7 +65,7 @@ trait DataFrameMatchers {
       actualDFRows: List[Row],
       expectedDFRows: List[Row],
       columns: Seq[String]
-  ): Validated[String, Unit] = {
+  ): ValidatedNel[String, Unit] = {
     val actualDFRowsValues = actualDFRows.map(_.getValuesMap(columns))
     val expectedDFRowsValues = expectedDFRows.map(_.getValuesMap(columns))
 
@@ -73,7 +73,7 @@ trait DataFrameMatchers {
         actualDFRow: Map[String, Any],
         expectedDFRow: Map[String, Any],
         rowNumber: Int
-    ): Validated[String, Unit] = {
+    ): ValidatedNel[String, Unit] = {
       expectedDFRow.toList.traverse_ { case (fieldName, expectedDFRowValue) =>
         val actualDFRowValueOption = actualDFRow.get(fieldName)
         val actualDFRowValueClassOption = actualDFRowValueOption.map(_.getClass)
@@ -81,11 +81,11 @@ trait DataFrameMatchers {
         val expectedDFRowValueOption = Option(expectedDFRowValue)
         val expectedDFRowValueClassOption = expectedDFRowValueOption.map(_.getClass)
 
-        Validated.cond(
-          test = actualDFRowValueOption == expectedDFRowValue,
+        Validated.condNel(
+          test = actualDFRowValueOption == expectedDFRowValueOption,
           a = (),
           e =
-            s"Row: $rowNumber, field: $fieldName: ${actualDFRowValueOption.orNull} (${actualDFRowValueClassOption.orNull}) does not match expected ${expectedDFRowValueOption.orNull} (${expectedDFRowValueClassOption.orNull})"
+            s"* Row: $rowNumber, field: $fieldName: ${actualDFRowValueOption.orNull} (${actualDFRowValueClassOption.orNull}) does not match expected ${expectedDFRowValueOption.orNull} (${expectedDFRowValueClassOption.orNull})"
         )
       }
     }

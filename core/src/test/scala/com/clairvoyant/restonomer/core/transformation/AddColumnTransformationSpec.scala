@@ -3,7 +3,6 @@ package com.clairvoyant.restonomer.core.transformation
 import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
 import org.apache.spark.sql.DataFrame
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
 class AddColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
   import sparkSession.implicits._

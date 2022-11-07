@@ -1,7 +1,6 @@
 package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.CoreSpec
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
 import java.io.File
 
