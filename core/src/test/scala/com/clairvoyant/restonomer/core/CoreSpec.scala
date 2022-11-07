@@ -6,7 +6,7 @@ import org.scalatest.matchers.must.Matchers
 import sttp.client3._
 import sttp.model.Method
 
-trait CoreSpec extends AnyFlatSpec with Matchers {
+trait CoreSpec extends AnyFlatSpec {
   val resourcesPath = "core/src/test/resources"
   val url = "/test_url"
   val uri = s"http://localhost:8080$url"

@@ -1,10 +1,11 @@
 package com.clairvoyant.restonomer.spark.utils
 
 import cats.data.Validated
+import cats.implicits._
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, Row}
-import org.scalatest.matchers.Matcher
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.matchers.{MatchResult, Matcher}
 
 import scala.jdk.CollectionConverters.ListHasAsScala
 
@@ -60,6 +61,41 @@ trait DataFrameMatchers {
     )
   }
 
+  def validateRows(
+      actualDFRows: List[Row],
+      expectedDFRows: List[Row],
+      columns: Seq[String]
+  ): Validated[String, Unit] = {
+    val actualDFRowsValues = actualDFRows.map(_.getValuesMap(columns))
+    val expectedDFRowsValues = expectedDFRows.map(_.getValuesMap(columns))
+
+    def validateRow(
+        actualDFRow: Map[String, Any],
+        expectedDFRow: Map[String, Any],
+        rowNumber: Int
+    ): Validated[String, Unit] = {
+      expectedDFRow.toList.traverse_ { case (fieldName, expectedDFRowValue) =>
+        val actualDFRowValueOption = actualDFRow.get(fieldName)
+        val actualDFRowValueClassOption = actualDFRowValueOption.map(_.getClass)
+
+        val expectedDFRowValueOption = Option(expectedDFRowValue)
+        val expectedDFRowValueClassOption = expectedDFRowValueOption.map(_.getClass)
+
+        Validated.cond(
+          test = actualDFRowValueOption == expectedDFRowValue,
+          a = (),
+          e =
+            s"Row: $rowNumber, field: $fieldName: ${actualDFRowValueOption.orNull} (${actualDFRowValueClassOption.orNull}) does not match expected ${expectedDFRowValueOption.orNull} (${expectedDFRowValueClassOption.orNull})"
+        )
+      }
+    }
+
+    actualDFRowsValues.zip(expectedDFRowsValues).zipWithIndex.traverse_ {
+      case ((actualDFRow, expectedDFRow), rowNumber) =>
+        validateRow(actualDFRow, expectedDFRow, rowNumber)
+    }
+  }
+
   def matchExpectedDataFrame(
       expectedDF: DataFrame,
       columnsToSort: List[String] = List.empty
@@ -86,9 +122,26 @@ trait DataFrameMatchers {
       val actualDFRows = collectSorted(actualDF, columnsToSortBy)
       val expectedDFRows = collectSorted(expectedDF, columnsToSortBy)
 
-      val sizeValidation = validateSize(actualDFRows, expectedDFRows)
       val columnsValidation = validateColumns(actualDFColumns, expectedDFColumns)
+      val sizeValidation = validateSize(actualDFRows, expectedDFRows)
       val schemaValidation = validateSchema(actualDF.schema, expectedDF.schema)
+      lazy val rowsValidation = validateRows(actualDFRows, expectedDFRows, actualDFColumns.toSeq.sorted)
+
+      val allValidations = columnsValidation
+        .combine(sizeValidation)
+        .combine(schemaValidation)
+        .andThen((_: Unit) => rowsValidation)
+
+      val validationMessages = allValidations.fold(_.toList, _ => List.empty)
+
+      MatchResult(
+        matches = allValidations.isValid,
+        rawFailureMessage =
+          s"""Content of data frame does not match expected data.
+             |${validationMessages.mkString("\n")}
+             |""".stripMargin,
+        rawNegatedFailureMessage = "Content of actual data frame matches expected data frame"
+      )
     }
 
 }
