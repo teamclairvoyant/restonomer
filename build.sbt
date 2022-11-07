@@ -9,8 +9,6 @@ inThisBuild(
 
 Global / excludeLintKeys += Keys.parallelExecution
 
-conflictManager := ConflictManager.default
-
 // ----- VARIABLES ----- //
 
 val organizationName = "com.clairvoyant"
@@ -23,6 +21,7 @@ val scalaTestVersion = "3.2.14"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.1.1"
 val sparkVersion = "3.3.0"
+val catsVersion = "2.8.0"
 
 lazy val scalacOptions = Seq("-Wunused")
 
@@ -43,6 +42,8 @@ val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-sql" % sparkVersion
 )
 
+val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val coreDependencies =
@@ -50,6 +51,7 @@ val coreDependencies =
     sttpDependencies ++
     sparkDependencies ++
     jwtDependency ++
+    catsDependencies ++
     scalaTestDependencies.map(_ % "it,test") ++
     wireMockDependencies
 
