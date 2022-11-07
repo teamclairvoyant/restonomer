@@ -89,7 +89,7 @@ lazy val restonomer = (project in file("."))
 lazy val core = (project in file("core"))
   .configs(IntegrationTest)
   .settings(coreSettings)
-  .dependsOn(`spark-utils` % "compile->compile;test->test;it->it,test->it")
+  .dependsOn(`spark-utils` % "test->test")
 
 lazy val `spark-utils` = (project in file("spark-utils"))
   .configs(IntegrationTest)
