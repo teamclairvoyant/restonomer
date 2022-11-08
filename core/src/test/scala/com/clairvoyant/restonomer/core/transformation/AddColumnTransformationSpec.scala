@@ -22,8 +22,7 @@ class AddColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(
-      expectedDF = expectedRestonomerResponseTransformedDF,
-      columnsToSort = expectedRestonomerResponseTransformedDF.columns.toList
+      expectedDF = expectedRestonomerResponseTransformedDF
     )
   }
 
