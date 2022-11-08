@@ -10,7 +10,7 @@ class AddColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
   val restonomerResponseDF: DataFrame = Seq(("val_A", "val_B", "val_C")).toDF("col_A", "col_B", "col_C")
 
   "transform() - with column-data-type" should "transform the dataframe" in {
-    val restonomerTransformation = AddColumnTransformation(
+    val restonomerTransformation = AddColumn(
       columnName = "col_D",
       columnValue = "val_D",
       columnDataType = Some("string")

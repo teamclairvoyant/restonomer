@@ -7,7 +7,7 @@ sealed trait RestonomerTransformation {
   def transform(restonomerResponseDF: DataFrame): DataFrame
 }
 
-case class AddColumnTransformation(
+case class AddColumn(
     columnName: String,
     columnValue: String,
     columnDataType: Option[String]
