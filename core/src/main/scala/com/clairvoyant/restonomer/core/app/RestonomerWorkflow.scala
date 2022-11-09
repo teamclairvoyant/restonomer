@@ -30,14 +30,11 @@ class RestonomerWorkflow(implicit val sparkSession: SparkSession) {
     val restonomerResponseDF = ResponseToDataFrameConverter(checkpointConfig.response.body.format)
       .convertResponseToDataFrame(restonomerResponseBody)
 
-    val restonomerResponseTransformedDF = checkpointConfig.response.transformations
-      .map { restonomerTransformations =>
-        restonomerTransformations.foldLeft(restonomerResponseDF) {
-          case (restonomerResponseDF, restonomerTransformation) =>
-            restonomerTransformation.transform(restonomerResponseDF)
+    val restonomerResponseTransformedDF =
+      checkpointConfig.response.transformations
+        .foldLeft(restonomerResponseDF) { case (restonomerResponseDF, restonomerTransformation) =>
+          restonomerTransformation.transform(restonomerResponseDF)
         }
-      }
-      .getOrElse(restonomerResponseDF)
 
     restonomerResponseTransformedDF.show(truncate = false)
   }
