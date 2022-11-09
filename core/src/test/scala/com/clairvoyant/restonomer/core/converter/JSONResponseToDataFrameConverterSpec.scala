@@ -1,7 +1,6 @@
 package com.clairvoyant.restonomer.core.converter
 
 import com.clairvoyant.restonomer.core.CoreSpec
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
 class JSONResponseToDataFrameConverterSpec extends CoreSpec {
 

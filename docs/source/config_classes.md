@@ -216,15 +216,17 @@ In restonomer framework, the details about the http response (like response body
 
 ```scala
 case class ResponseConfig(
-    body: ResponseBodyConfig
+     body: ResponseBodyConfig,
+     transformations: Option[List[RestonomerTransformation]] = None
 )
 ```
 
 User need to provide below configs for Response Configuration:
 
-| Config Name | Mandatory | Default Value | Description                                                       |
-|:------------|:---------:|:-------------:|:------------------------------------------------------------------|
-| body        |    Yes    |       -       | The body of the http response represented by `ResponseBodyConfig` |
+| Config Name     | Mandatory | Default Value | Description                                                                |
+|:----------------|:---------:|:-------------:|:---------------------------------------------------------------------------|
+| body            |    Yes    |       -       | The body of the http response represented by `ResponseBodyConfig`          |
+| transformations |    No     |  Empty List   | List of transformations to be applied on the restonomer response dataframe |
 
 The response configurations are provided in the checkpoint file in the below manner:
 
@@ -233,6 +235,15 @@ response = {
   body = {
     format = "JSON"
   }
+
+  transformations = [
+    {
+      type = "add-column"
+      column-name = "col_D"
+      column-value = "val_D"
+      column-data-type = "string"
+    }
+  ]
 }
 ```
 

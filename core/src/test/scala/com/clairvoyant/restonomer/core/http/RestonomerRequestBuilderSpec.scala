@@ -2,7 +2,6 @@ package com.clairvoyant.restonomer.core.http
 
 import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.core.authentication.BasicAuthentication
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import sttp.model.Header
 
 class RestonomerRequestBuilderSpec extends CoreSpec {

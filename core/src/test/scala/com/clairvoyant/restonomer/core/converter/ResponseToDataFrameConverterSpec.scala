@@ -2,7 +2,6 @@ package com.clairvoyant.restonomer.core.converter
 
 import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
 class ResponseToDataFrameConverterSpec extends CoreSpec {
 
