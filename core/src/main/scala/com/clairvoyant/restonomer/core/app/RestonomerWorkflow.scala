@@ -36,7 +36,7 @@ class RestonomerWorkflow(implicit val sparkSession: SparkSession) {
           restonomerTransformation.transform(restonomerResponseDF)
         }
 
-    restonomerResponseTransformedDF.show(truncate = false)
+    checkpointConfig.response.persistence.persist(restonomerResponseTransformedDF)
   }
 
 }
