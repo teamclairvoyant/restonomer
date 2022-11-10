@@ -6,7 +6,8 @@ object ResponseBodyFormatTypes extends Enumeration {
 
   val JSON: ResponseBodyFormatTypes.Value = Value("JSON")
 
-  def isValidResponseBodyFormat(responseBodyFormat: String): Boolean = values.exists(_.toString == responseBodyFormat)
+  private def isValidResponseBodyFormat(responseBodyFormat: String): Boolean =
+    values.exists(_.toString == responseBodyFormat)
 
   def apply(responseBodyFormat: String): ResponseBodyFormatTypes.Value = {
     if (isValidResponseBodyFormat(responseBodyFormat))

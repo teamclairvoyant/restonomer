@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.persistence
 
-import com.clairvoyant.restonomer.spark.utils.SparkSessionFileSystemHelper
+import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 sealed trait RestonomerPersistence {
@@ -10,17 +10,15 @@ sealed trait RestonomerPersistence {
 }
 
 case class FileSystem(
-    outputFileFormat: String,
-    outputFilePath: String
+    fileFormat: String,
+    filePath: String
 ) extends RestonomerPersistence {
 
   def persist(restonomerResponseDF: DataFrame)(implicit sparkSession: SparkSession): Unit =
-    new SparkSessionFileSystemHelper(
+    new DataFrameToFileSystemWriter(
       sparkSession = sparkSession,
-      path = outputFilePath
-    ).saveDataFrame(
-      dataFrame = restonomerResponseDF,
-      format = outputFileFormat
-    )
+      fileFormat = fileFormat,
+      filePath = filePath
+    ).write(restonomerResponseDF)
 
 }
