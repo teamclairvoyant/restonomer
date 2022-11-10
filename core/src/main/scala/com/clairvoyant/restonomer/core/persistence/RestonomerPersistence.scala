@@ -4,15 +4,18 @@ import org.apache.spark.sql.DataFrame
 
 sealed trait RestonomerPersistence {
 
-  val format: String
   def persist(restonomerResponseDataFrame: DataFrame): Unit
 
 }
 
-case class LocalFileSystem(override val format: String, path: String) extends RestonomerPersistence {
+case class FileSystem(
+    outputFileFormat: String,
+    outputFilePath: String
+) extends RestonomerPersistence {
 
-  override def persist(restonomerResponseDataFrame: DataFrame): Unit = {
-    restonomerResponseDataFrame.write.format(format).save(path)
-  }
+  override def persist(restonomerResponseDataFrame: DataFrame): Unit =
+    restonomerResponseDataFrame.write
+      .format(outputFileFormat)
+      .save(outputFilePath)
 
 }
