@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.config
 
-import com.clairvoyant.restonomer.core.CoreSpec
+import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}

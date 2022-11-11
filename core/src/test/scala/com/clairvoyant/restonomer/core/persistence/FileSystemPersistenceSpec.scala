@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.persistence
 
-import com.clairvoyant.restonomer.core.CoreSpec
+import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.commons.io.FileUtils
 import org.apache.spark.sql.DataFrame
@@ -35,8 +35,6 @@ class FileSystemPersistenceSpec extends CoreSpec {
       )
     }
 
-  override def afterAll(): Unit = {
-    FileUtils.deleteDirectory(new File(dataFrameToFileSystemWriterOutputDirPath))
-  }
+  override def afterAll(): Unit = FileUtils.deleteDirectory(new File(dataFrameToFileSystemWriterOutputDirPath))
 
 }

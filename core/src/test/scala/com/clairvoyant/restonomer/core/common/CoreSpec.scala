@@ -1,4 +1,4 @@
-package com.clairvoyant.restonomer.core
+package com.clairvoyant.restonomer.core.common
 
 import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
 import org.apache.spark.sql.SparkSession

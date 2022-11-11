@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.http
 
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import com.clairvoyant.restonomer.core.{CoreSpec, HttpMockSpec}
+import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import sttp.client3._
 import sttp.model.Method

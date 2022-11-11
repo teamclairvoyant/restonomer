@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.util
 
-import com.clairvoyant.restonomer.core.CoreSpec
+import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.core.util.HashUtil._
 
 class HashUtilSpec extends CoreSpec {
