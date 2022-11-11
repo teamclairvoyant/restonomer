@@ -4,8 +4,9 @@ import com.clairvoyant.restonomer.core.converter.ResponseToDataFrameConverter
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.{RestonomerRequest, RestonomerResponse}
 import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig, RequestConfig}
-import com.clairvoyant.restonomer.core.persistence.RestonomerPersistence
+import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersistence}
 import com.clairvoyant.restonomer.core.transformation.RestonomerTransformation
+import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
@@ -74,7 +75,19 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
   private def persistRestonomerResponseDataFrame(
       restonomerResponseDF: DataFrame,
       restonomerPersistence: RestonomerPersistence
-  ): Unit = restonomerPersistence.persist(restonomerResponseDF)
+  ): Unit = {
+    val dataFrameWriter =
+      restonomerPersistence match {
+        case FileSystem(fileFormat, filePath) =>
+          new DataFrameToFileSystemWriter(
+            sparkSession = sparkSession,
+            fileFormat = fileFormat,
+            filePath = filePath
+          )
+      }
+
+    restonomerPersistence.persist(restonomerResponseDF, dataFrameWriter)
+  }
 
 }
 
