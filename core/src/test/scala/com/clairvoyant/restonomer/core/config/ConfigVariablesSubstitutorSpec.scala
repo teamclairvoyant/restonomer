@@ -1,7 +1,6 @@
 package com.clairvoyant.restonomer.core.config
 
-import com.clairvoyant.restonomer.core.CoreSpec
-
+import com.clairvoyant.restonomer.core.common.CoreSpec
 import java.io.File
 
 class ConfigVariablesSubstitutorSpec extends CoreSpec {
@@ -19,6 +18,18 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |  authentication = {
           |    type = "basic-authentication"
           |    basic-token = ${BASIC_AUTH_TOKEN}
+          |  }
+          |}
+          |
+          |response = {
+          |  body = {
+          |    format = "JSON"
+          |  }
+          |
+          |  persistence = {
+          |    type = "file-system"
+          |    file-format = "json"
+          |    file-path = "/tmp"
           |  }
           |}
           |""".stripMargin
@@ -44,6 +55,18 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    basic-token = "efgh5678"
           |  }
           |}
+          |
+          |response = {
+          |  body = {
+          |    format = "JSON"
+          |  }
+          |
+          |  persistence = {
+          |    type = "file-system"
+          |    file-format = "json"
+          |    file-path = "/tmp"
+          |  }
+          |}
           |""".stripMargin
 
       val configVariablesFromFile = Map("BASIC_AUTH_TOKEN" -> "efgh5678")
@@ -65,6 +88,18 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |  authentication = {
           |    type = "basic-authentication"
           |    basic-token = "abcd1234"
+          |  }
+          |}
+          |
+          |response = {
+          |  body = {
+          |    format = "JSON"
+          |  }
+          |
+          |  persistence = {
+          |    type = "file-system"
+          |    file-format = "json"
+          |    file-path = "/tmp"
           |  }
           |}
           |""".stripMargin
@@ -90,6 +125,18 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    basic-token = "efgh5678"
           |  }
           |}
+          |
+          |response = {
+          |  body = {
+          |    format = "JSON"
+          |  }
+          |
+          |  persistence = {
+          |    type = "file-system"
+          |    file-format = "json"
+          |    file-path = "/tmp"
+          |  }
+          |}
           |""".stripMargin
 
       val configVariablesFromFile = Map[String, String]()
@@ -112,6 +159,18 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |  authentication = {
           |    type = "basic-authentication"
           |    basic-token = "abcd1234"
+          |  }
+          |}
+          |
+          |response = {
+          |  body = {
+          |    format = "JSON"
+          |  }
+          |
+          |  persistence = {
+          |    type = "file-system"
+          |    file-format = "json"
+          |    file-path = "/tmp"
           |  }
           |}
           |""".stripMargin

@@ -5,6 +5,6 @@
   },
   "response": {
     "status": 200,
-    "body": "{'authorization_status': 'Authorized Successfully using API Key Authentication with Query Param'}"
+    "bodyFileName": "mocked_api_key_authentication_query_param_response.json"
   }
 }

@@ -8,6 +8,6 @@ object RestonomerApp extends App {
   private val restonomerContext = RestonomerContext(configVariablesFromApplicationArgs = configVariables)
 
   restonomerContext.runCheckpoint(checkpointFilePath = "checkpoint_no_authentication.conf")
-  restonomerContext.runCheckpointsUnderDirectory(checkpointsDirectoryPath = "category-1")
-  restonomerContext.runAllCheckpoints()
+  //restonomerContext.runCheckpointsUnderDirectory(checkpointsDirectoryPath = "category-1")
+  //restonomerContext.runAllCheckpoints()
 }

@@ -15,7 +15,7 @@ val organizationName = "com.clairvoyant"
 val applicationName = "restonomer"
 val releaseVersion = "1.0"
 
-val pureConfigVersion = "0.17.1"
+val pureConfigVersion = "0.17.2"
 val sttpVersion = "3.8.3"
 val scalaTestVersion = "3.2.14"
 val wireMockVersion = "2.27.2"
@@ -89,8 +89,8 @@ lazy val restonomer = (project in file("."))
 lazy val core = (project in file("core"))
   .configs(IntegrationTest)
   .settings(coreSettings)
-  .dependsOn(`spark-utils` % "test->test")
+  .dependsOn(`spark-utils` % "compile->compile;test->test;it->it;test->it")
 
 lazy val `spark-utils` = (project in file("spark-utils"))
-  .configs(IntegrationTest)
+  .configs(IntegrationTest.extend(Test))
   .settings(sparkUtilsSettings)

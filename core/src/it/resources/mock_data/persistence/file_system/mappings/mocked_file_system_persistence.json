@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/file-system-persistence"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_file_system_persistence_response.json"
+  }
+}

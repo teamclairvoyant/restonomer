@@ -12,6 +12,6 @@
     }
   },
   "response": {
-    "body": "{'response': 'Custom headers are added to the request'}"
+    "bodyFileName": "mocked_custom_headers_response.json"
   }
 }

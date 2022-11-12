@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.core.authentication.BasicAuthentication
+import com.clairvoyant.restonomer.core.common.CoreSpec
 import sttp.model.Header
 
 class RestonomerRequestBuilderSpec extends CoreSpec {

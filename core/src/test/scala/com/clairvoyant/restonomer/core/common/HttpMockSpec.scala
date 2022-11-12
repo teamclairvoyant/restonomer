@@ -1,4 +1,4 @@
-package com.clairvoyant.restonomer.core
+package com.clairvoyant.restonomer.core.common
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig

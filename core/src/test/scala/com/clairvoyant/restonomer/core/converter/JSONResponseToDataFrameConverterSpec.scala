@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.converter
 
-import com.clairvoyant.restonomer.core.CoreSpec
+import com.clairvoyant.restonomer.core.common.CoreSpec
 
 class JSONResponseToDataFrameConverterSpec extends CoreSpec {
 

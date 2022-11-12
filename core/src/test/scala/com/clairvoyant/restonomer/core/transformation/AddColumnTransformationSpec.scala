@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.restonomer.core.CoreSpec
+import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row}

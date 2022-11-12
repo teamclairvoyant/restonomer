@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.authentication
 
-import com.clairvoyant.restonomer.core.CoreSpec
+import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import sttp.model.Header
 
