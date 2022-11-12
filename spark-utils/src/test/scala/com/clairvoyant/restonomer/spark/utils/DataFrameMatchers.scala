@@ -96,19 +96,12 @@ trait DataFrameMatchers {
     }
   }
 
-  def matchExpectedDataFrame(
-      expectedDF: DataFrame,
-      columnsToSort: List[String] = List.empty
-  ): Matcher[DataFrame] =
+  def matchExpectedDataFrame(expectedDF: DataFrame): Matcher[DataFrame] =
     (actualDF: DataFrame) => {
       val actualDFColumns = actualDF.columns.toSet
       val expectedDFColumns = expectedDF.columns.toSet
 
-      val columnsToSortBy =
-        if (columnsToSort.isEmpty)
-          actualDFColumns.intersect(expectedDFColumns).toList
-        else
-          columnsToSort
+      val columnsToSortBy = actualDFColumns.intersect(expectedDFColumns).toList
 
       if (columnsToSortBy.isEmpty) {
         throw new RuntimeException(

@@ -76,6 +76,12 @@ class RestonomerConfigurationsLoaderSpec extends CoreSpec {
         |  body = {
         |    format = "JSON"
         |  }
+        |
+        |  persistence = {
+        |    type = "file-system"
+        |    file-format = "json"
+        |    file-path = "/tmp"
+        |  }
         |}""".stripMargin
 
     loadConfigFromString[CheckpointConfig](configString) shouldBe a[CheckpointConfig]

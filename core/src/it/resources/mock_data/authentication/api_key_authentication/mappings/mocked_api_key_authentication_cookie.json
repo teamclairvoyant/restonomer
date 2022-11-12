@@ -10,6 +10,6 @@
   },
   "response": {
     "status": 200,
-    "body": "{'authorization_status': 'Authorized Successfully using API Key Authentication with Cookie'}"
+    "bodyFileName": "mocked_api_key_authentication_cookie_response.json"
   }
 }

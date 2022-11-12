@@ -20,6 +20,18 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    basic-token = ${BASIC_AUTH_TOKEN}
           |  }
           |}
+          |
+          |response = {
+          |  body = {
+          |    format = "JSON"
+          |  }
+          |
+          |  persistence = {
+          |    type = "file-system"
+          |    file-format = "json"
+          |    file-path = "/tmp"
+          |  }
+          |}
           |""".stripMargin
 
       val configVariablesFromFile = Map[String, String]()
@@ -41,6 +53,18 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |  authentication = {
           |    type = "basic-authentication"
           |    basic-token = "efgh5678"
+          |  }
+          |}
+          |
+          |response = {
+          |  body = {
+          |    format = "JSON"
+          |  }
+          |
+          |  persistence = {
+          |    type = "file-system"
+          |    file-format = "json"
+          |    file-path = "/tmp"
           |  }
           |}
           |""".stripMargin
@@ -66,6 +90,18 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    basic-token = "abcd1234"
           |  }
           |}
+          |
+          |response = {
+          |  body = {
+          |    format = "JSON"
+          |  }
+          |
+          |  persistence = {
+          |    type = "file-system"
+          |    file-format = "json"
+          |    file-path = "/tmp"
+          |  }
+          |}
           |""".stripMargin
 
       val configVariablesFromFile = Map[String, String]()
@@ -87,6 +123,18 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |  authentication = {
           |    type = "basic-authentication"
           |    basic-token = "efgh5678"
+          |  }
+          |}
+          |
+          |response = {
+          |  body = {
+          |    format = "JSON"
+          |  }
+          |
+          |  persistence = {
+          |    type = "file-system"
+          |    file-format = "json"
+          |    file-path = "/tmp"
           |  }
           |}
           |""".stripMargin
@@ -111,6 +159,18 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |  authentication = {
           |    type = "basic-authentication"
           |    basic-token = "abcd1234"
+          |  }
+          |}
+          |
+          |response = {
+          |  body = {
+          |    format = "JSON"
+          |  }
+          |
+          |  persistence = {
+          |    type = "file-system"
+          |    file-format = "json"
+          |    file-path = "/tmp"
           |  }
           |}
           |""".stripMargin

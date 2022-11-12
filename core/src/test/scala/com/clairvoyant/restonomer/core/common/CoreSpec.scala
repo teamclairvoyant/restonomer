@@ -8,8 +8,6 @@ import org.scalatest.matchers.should.Matchers
 import sttp.client3._
 import sttp.model.Method
 
-import java.nio.file.Files
-
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
 
   val resourcesPath = "core/src/test/resources"
@@ -25,8 +23,5 @@ trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with Dat
     .builder()
     .master("local[*]")
     .getOrCreate()
-
-  lazy val dataFrameToFileSystemWriterOutputDirPath: String =
-    Files.createTempDirectory(s"out_${System.currentTimeMillis()}").toString
 
 }

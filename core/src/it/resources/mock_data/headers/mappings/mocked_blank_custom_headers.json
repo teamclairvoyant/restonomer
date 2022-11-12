@@ -4,6 +4,6 @@
     "url": "/blank-custom-headers"
   },
   "response": {
-    "body": "{'response': 'No custom headers found with blank headers as input'}"
+    "bodyFileName": "mocked_blank_custom_headers_response.json"
   }
 }

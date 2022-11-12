@@ -10,6 +10,6 @@
   },
   "response": {
     "status": 200,
-    "body": "{'authorization_status': 'Authorized Successfully using Basic Token'}"
+    "bodyFileName": "mocked_basic_authentication_token_response.json"
   }
 }
