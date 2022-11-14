@@ -49,10 +49,22 @@ Restonomer, at a high level, aims at providing users with a fault-tolerant and s
    :caption: Config Classes
    
    config_classes
+ 
+.. toctree::
+   :maxdepth: 2
+   :caption: Restonomer Authentication
    
+   restonomer_authentication
+     
 .. toctree::
    :maxdepth: 2
    :caption: Restonomer Transformations
    
    restonomer_transformations
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Restonomer Persistence
+   
+   restonomer_persistence
 ```
