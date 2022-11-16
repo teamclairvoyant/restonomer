@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/token-request",
+    "headers": {
+      "Authorization": {
+        "matches": "Bearer test_token_123"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_token_request_response.json"
+  }
+}

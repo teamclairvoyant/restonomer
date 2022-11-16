@@ -22,6 +22,7 @@ val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.1.1"
 val sparkVersion = "3.3.0"
 val catsVersion = "2.8.0"
+val json4sJacksonVersion = "4.0.6"
 
 lazy val scalacOptions = Seq("-Wunused")
 
@@ -43,6 +44,8 @@ val sparkDependencies = Seq(
 )
 
 val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
+
+val json4sJacksonDependencies = Seq("org.json4s" %% "json4s-jackson" % json4sJacksonVersion)
 
 // ----- MODULE DEPENDENCIES ----- //
 

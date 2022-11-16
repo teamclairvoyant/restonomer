@@ -1,7 +1,8 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
+import com.clairvoyant.restonomer.core.exception.RestonomerException
+import com.clairvoyant.restonomer.core.model.RequestConfig
 import com.github.tomakehurst.wiremock.client.WireMock._
 import sttp.client3._
 import sttp.model.Method
@@ -9,11 +10,13 @@ import sttp.model.Method
 class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
 
   "builder" should "return RestonomerRequestBuilder object" in {
-    val method = Method.GET.method
-    val url = "https://test-domain/url"
+    val requestConfig = RequestConfig(
+      method = Method.GET.method,
+      url = "https://test-domain/url"
+    )
 
-    RestonomerRequest.builder(method, url) shouldBe a[RestonomerRequestBuilder]
-    RestonomerRequest.builder(method, url).httpRequest shouldBe a[Request[_, _]]
+    RestonomerRequest.builder(requestConfig) shouldBe a[RestonomerRequestBuilder]
+    RestonomerRequest.builder(requestConfig).httpRequest shouldBe a[Request[_, _]]
   }
 
   "send" should "return RestonomerResponse" in {

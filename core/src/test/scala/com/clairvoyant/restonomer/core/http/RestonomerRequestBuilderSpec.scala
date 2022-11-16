@@ -1,10 +1,13 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.authentication.BasicAuthentication
-import com.clairvoyant.restonomer.core.common.CoreSpec
+import com.clairvoyant.restonomer.core.authentication.{BasicAuthentication, BearerAuthentication}
+import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
+import com.clairvoyant.restonomer.core.model.RequestConfig
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlPathEqualTo}
 import sttp.model.Header
+import sttp.model.HeaderNames.Authorization
 
-class RestonomerRequestBuilderSpec extends CoreSpec {
+class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
 
   "withAuthentication - without authenticationConfig" should "return RestonomerRequestBuilder object with the same httpRequest" in {
     val authentication = None
@@ -26,6 +29,37 @@ class RestonomerRequestBuilderSpec extends CoreSpec {
     restonomerRequestBuilder
       .withAuthentication(authentication)
       .httpRequest shouldNot be theSameInstanceAs restonomerRequestBuilder.httpRequest
+  }
+
+  "withAuthentication - with token request" should "return RestonomerRequestBuilder object with the new authenticated httpRequest" in {
+    val tokenRequest = Some(
+      RequestConfig(
+        url = uri,
+        authentication = Some(BearerAuthentication(bearerToken = "bearer_token_123"))
+      )
+    )
+
+    val tokenRequestResponseBody =
+      """
+        |{
+        |  "basic_token": "token_xyz"
+        |}
+        |""".stripMargin
+
+    val authentication = Some(
+      BasicAuthentication(
+        tokenRequest = tokenRequest,
+        basicToken = Some("token[basic_token]")
+      )
+    )
+
+    stubFor(get(urlPathEqualTo(url)).willReturn(aResponse().withBody(tokenRequestResponseBody)))
+
+    RestonomerRequestBuilder(basicHttpRequest)
+      .withAuthentication(authentication)
+      .httpRequest
+      .headers
+      .exists(header => header.name == Authorization && header.value == "Basic token_xyz") shouldBe true
   }
 
   "withHeaders - with custom headers" should "be added to the request" in {
