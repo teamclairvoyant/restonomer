@@ -8,12 +8,12 @@ import scala.util.matching.Regex
 
 case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {
 
-  def withAuthentication(authenticationConfig: Option[RestonomerAuthentication] = None): RestonomerRequestBuilder = {
+  def withAuthentication(authenticationConfig: Option[RestonomerAuthentication]): RestonomerRequestBuilder = {
     val TOKEN_CREDENTIAL_REGEX_PATTERN: Regex = """token\[(.*)]""".r
 
     def substituteCredentialFromTokenRequestResponse(
         credential: String
-    )(implicit tokenRequestResponseMap: Map[String, String]): String = {
+    )(implicit tokenRequestResponseMap: Map[String, String]): String =
       TOKEN_CREDENTIAL_REGEX_PATTERN
         .findFirstMatchIn(credential)
         .map { matcher =>
@@ -27,7 +27,6 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
           }
         }
         .getOrElse(credential)
-    }
 
     copy(httpRequest =
       authenticationConfig
