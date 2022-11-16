@@ -173,6 +173,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    file-path = "/tmp"
           |  }
           |}
+
           |""".stripMargin
 
       val configVariablesFromFile = Map("BASIC_AUTH_TOKEN" -> "abcd1234")

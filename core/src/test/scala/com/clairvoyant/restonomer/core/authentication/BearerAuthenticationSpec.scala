@@ -7,7 +7,7 @@ import sttp.model.Header
 class BearerAuthenticationSpec extends CoreSpec {
 
   "validateCredentials - with empty credentials" should "throw RestonomerException" in {
-    val authentication = BearerAuthentication("")
+    val authentication = BearerAuthentication(bearerToken = "")
 
     the[RestonomerException] thrownBy authentication.validateCredentials() should have message
       "The provided credentials are invalid. The credentials should contain valid bearer-token."

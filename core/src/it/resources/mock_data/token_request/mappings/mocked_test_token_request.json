@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/test-token-request",
+    "headers": {
+      "Authorization": {
+        "matches": "Basic basic_123"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_test_token_request_response.json"
+  }
+}

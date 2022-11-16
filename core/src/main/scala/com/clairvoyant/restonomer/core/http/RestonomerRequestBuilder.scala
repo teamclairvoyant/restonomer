@@ -1,25 +1,32 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.authentication.{BasicAuthentication, BearerAuthentication, RestonomerAuthentication}
+import com.clairvoyant.restonomer.core.authentication._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import sttp.client3.Request
+
+import scala.util.matching.Regex
 
 case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {
 
   def withAuthentication(authenticationConfig: Option[RestonomerAuthentication] = None): RestonomerRequestBuilder = {
-    // TODO: Implement this method
+    val TOKEN_CREDENTIAL_REGEX_PATTERN: Regex = """token\[(.*)]""".r
+
     def substituteCredentialFromTokenRequestResponse(
         credential: String
     )(implicit tokenRequestResponseMap: Map[String, String]): String = {
-      // TODO: get the credential value only if the credential is matching the specific format
-      tokenRequestResponseMap.get(credential) match {
-        case Some(value) =>
-          value
-        case None =>
-          throw new RestonomerException(
-            s"Could not find the value of $credential in the token request response: $tokenRequestResponseMap"
-          )
-      }
+      TOKEN_CREDENTIAL_REGEX_PATTERN
+        .findFirstMatchIn(credential)
+        .map { matcher =>
+          tokenRequestResponseMap.get(matcher.group(1)) match {
+            case Some(value) =>
+              value
+            case None =>
+              throw new RestonomerException(
+                s"Could not find the value of $credential in the token request response: $tokenRequestResponseMap"
+              )
+          }
+        }
+        .getOrElse(credential)
     }
 
     copy(httpRequest =
@@ -28,17 +35,28 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
           restonomerAuthentication.tokenRequestResponse
             .map { implicit tokenRequestResponseMap =>
               restonomerAuthentication match {
-                // TODO: How to force adding here if new authentication is introduced ?
-                case basicAuthentication @ BasicAuthentication(basicToken, userName, password) =>
+                case basicAuthentication @ BasicAuthentication(_, basicToken, userName, password) =>
                   basicAuthentication.copy(
                     basicToken = basicToken.map(substituteCredentialFromTokenRequestResponse),
                     userName = userName.map(substituteCredentialFromTokenRequestResponse),
                     password = password.map(substituteCredentialFromTokenRequestResponse)
                   )
 
-                case bearerAuthentication @ BearerAuthentication(bearerToken) =>
+                case bearerAuthentication @ BearerAuthentication(_, bearerToken) =>
                   bearerAuthentication.copy(
                     bearerToken = substituteCredentialFromTokenRequestResponse(bearerToken)
+                  )
+
+                case apiKeyAuthentication @ APIKeyAuthentication(_, apiKeyName, apiKeyValue, _) =>
+                  apiKeyAuthentication.copy(
+                    apiKeyName = substituteCredentialFromTokenRequestResponse(apiKeyName),
+                    apiKeyValue = substituteCredentialFromTokenRequestResponse(apiKeyValue)
+                  )
+
+                case jwtAuthentication @ JWTAuthentication(_, subject, secretKey, _, _) =>
+                  jwtAuthentication.copy(
+                    subject = substituteCredentialFromTokenRequestResponse(subject),
+                    secretKey = substituteCredentialFromTokenRequestResponse(secretKey)
                   )
               }
             }
