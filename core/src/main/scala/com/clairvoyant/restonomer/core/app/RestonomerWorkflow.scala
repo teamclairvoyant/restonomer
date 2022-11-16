@@ -40,9 +40,7 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
   private def buildRestonomerRequest(requestConfig: RequestConfig): RestonomerRequest =
     RestonomerRequest
-      .builder(requestConfig.method, requestConfig.url)
-      .withAuthentication(requestConfig.authentication)
-      .withHeaders(requestConfig.headers)
+      .builder(requestConfig)
       .build
 
   private def getRestonomerResponse(

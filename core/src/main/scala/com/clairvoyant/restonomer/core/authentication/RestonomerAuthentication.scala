@@ -3,13 +3,38 @@ package com.clairvoyant.restonomer.core.authentication
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
+import com.clairvoyant.restonomer.core.http.RestonomerRequest
+import com.clairvoyant.restonomer.core.model.RequestConfig
+import org.json4s.DefaultFormats
+import org.json4s.jackson.JsonMethods
 import pdi.jwt.algorithms.JwtUnknownAlgorithm
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim}
 import sttp.client3.{Identity, Request}
 
 import java.time.Clock
 
-sealed trait RestonomerAuthentication {
+sealed abstract class RestonomerAuthentication(val tokenRequest: Option[RequestConfig] = None) {
+
+  lazy val tokenRequestResponse: Option[Map[String, String]] = tokenRequest
+    .map { tRequest =>
+      implicit val formats: DefaultFormats.type = org.json4s.DefaultFormats
+
+      JsonMethods
+        .parse(
+          RestonomerRequest
+            .builder(tRequest)
+            .build
+            .send()
+            .httpResponse
+            .body match {
+            case Left(errorMessage) =>
+              throw new RestonomerException(errorMessage)
+            case Right(responseBody) =>
+              responseBody
+          }
+        )
+        .extract[Map[String, String]]
+    }
 
   def validateCredentials(): Unit
 
