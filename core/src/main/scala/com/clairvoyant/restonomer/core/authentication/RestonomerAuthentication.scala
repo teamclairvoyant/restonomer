@@ -1,38 +1,48 @@
 package com.clairvoyant.restonomer.core.authentication
 
-import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders._
+import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders._
+import com.clairvoyant.restonomer.core.common._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.RestonomerRequest
-import com.clairvoyant.restonomer.core.model.RequestConfig
+import com.clairvoyant.restonomer.core.model.TokenConfig
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
+import pdi.jwt._
 import pdi.jwt.algorithms.JwtUnknownAlgorithm
-import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim}
 import sttp.client3.{Identity, Request}
 
 import java.time.Clock
 
-sealed abstract class RestonomerAuthentication(val tokenRequest: Option[RequestConfig]) {
+sealed abstract class RestonomerAuthentication(val token: Option[TokenConfig]) {
 
-  lazy val tokenRequestResponse: Option[Map[String, String]] = tokenRequest.map { tRequest =>
-    implicit val formats: DefaultFormats.type = org.json4s.DefaultFormats
+  lazy val tokensMap: Option[Map[String, String]] = token.map { tokenConfig =>
+    val tokenHttpResponse =
+      RestonomerRequest
+        .builder(tokenConfig.tokenRequest)
+        .build
+        .send()
+        .httpResponse
 
-    JsonMethods
-      .parse(
-        RestonomerRequest
-          .builder(tRequest)
-          .build
-          .send()
-          .httpResponse
-          .body match {
-          case Left(errorMessage) =>
-            throw new RestonomerException(errorMessage)
-          case Right(responseBody) =>
-            responseBody
-        }
-      )
-      .extract[Map[String, String]]
+    TokenResponsePlaceholders(tokenConfig.tokenResponse.placeholder) match {
+      case RESPONSE_BODY =>
+        implicit val formats: DefaultFormats.type = org.json4s.DefaultFormats
+
+        JsonMethods
+          .parse(
+            tokenHttpResponse.body match {
+              case Left(errorMessage) =>
+                throw new RestonomerException(errorMessage)
+              case Right(responseBody) =>
+                responseBody
+            }
+          )
+          .extract[Map[String, String]]
+
+      case RESPONSE_HEADERS =>
+        tokenHttpResponse.headers.map(header => header.name -> header.value).toMap
+    }
+
   }
 
   def validateCredentials(): Unit
@@ -49,11 +59,11 @@ sealed abstract class RestonomerAuthentication(val tokenRequest: Option[RequestC
 }
 
 case class BasicAuthentication(
-    override val tokenRequest: Option[RequestConfig] = None,
+    override val token: Option[TokenConfig] = None,
     basicToken: Option[String] = None,
     userName: Option[String] = None,
     password: Option[String] = None
-) extends RestonomerAuthentication(tokenRequest) {
+) extends RestonomerAuthentication(token) {
 
   override def validateCredentials(): Unit = {
     if (basicToken.isEmpty && userName.isEmpty && password.isEmpty)
@@ -84,9 +94,9 @@ case class BasicAuthentication(
 }
 
 case class BearerAuthentication(
-    override val tokenRequest: Option[RequestConfig] = None,
+    override val token: Option[TokenConfig] = None,
     bearerToken: String
-) extends RestonomerAuthentication(tokenRequest) {
+) extends RestonomerAuthentication(token) {
 
   override def validateCredentials(): Unit = {
     if (bearerToken.isBlank)
@@ -102,11 +112,11 @@ case class BearerAuthentication(
 }
 
 case class APIKeyAuthentication(
-    override val tokenRequest: Option[RequestConfig] = None,
+    override val token: Option[TokenConfig] = None,
     apiKeyName: String,
     apiKeyValue: String,
     placeholder: String
-) extends RestonomerAuthentication(tokenRequest) {
+) extends RestonomerAuthentication(token) {
 
   override def validateCredentials(): Unit = {
     if (apiKeyName.isBlank)
@@ -141,12 +151,12 @@ case class APIKeyAuthentication(
 }
 
 case class JWTAuthentication(
-    override val tokenRequest: Option[RequestConfig] = None,
+    override val token: Option[TokenConfig] = None,
     subject: String,
     secretKey: String,
     algorithm: String = JwtAlgorithm.HS256.name,
     tokenExpiresIn: Long = 1800
-) extends RestonomerAuthentication(tokenRequest) {
+) extends RestonomerAuthentication(token) {
 
   implicit val clock: Clock = Clock.systemDefaultZone()
 

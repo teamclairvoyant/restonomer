@@ -11,18 +11,18 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
   def withAuthentication(authenticationConfig: Option[RestonomerAuthentication]): RestonomerRequestBuilder = {
     val TOKEN_CREDENTIAL_REGEX_PATTERN: Regex = """token\[(.*)]""".r
 
-    def substituteCredentialFromTokenRequestResponse(
+    def substituteCredentialFromTokens(
         credential: String
-    )(implicit tokenRequestResponseMap: Map[String, String]): String =
+    )(implicit tokens: Map[String, String]): String =
       TOKEN_CREDENTIAL_REGEX_PATTERN
         .findFirstMatchIn(credential)
         .map { matcher =>
-          tokenRequestResponseMap.get(matcher.group(1)) match {
+          tokens.get(matcher.group(1)) match {
             case Some(value) =>
               value
             case None =>
               throw new RestonomerException(
-                s"Could not find the value of $credential in the token request response: $tokenRequestResponseMap"
+                s"Could not find the value of $credential in the token response: $tokens"
               )
           }
         }
@@ -31,31 +31,31 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
     copy(httpRequest =
       authenticationConfig
         .map { restonomerAuthentication =>
-          restonomerAuthentication.tokenRequestResponse
-            .map { implicit tokenRequestResponseMap =>
+          restonomerAuthentication.tokensMap
+            .map { implicit tokens =>
               restonomerAuthentication match {
                 case basicAuthentication @ BasicAuthentication(_, basicToken, userName, password) =>
                   basicAuthentication.copy(
-                    basicToken = basicToken.map(substituteCredentialFromTokenRequestResponse),
-                    userName = userName.map(substituteCredentialFromTokenRequestResponse),
-                    password = password.map(substituteCredentialFromTokenRequestResponse)
+                    basicToken = basicToken.map(substituteCredentialFromTokens),
+                    userName = userName.map(substituteCredentialFromTokens),
+                    password = password.map(substituteCredentialFromTokens)
                   )
 
                 case bearerAuthentication @ BearerAuthentication(_, bearerToken) =>
                   bearerAuthentication.copy(
-                    bearerToken = substituteCredentialFromTokenRequestResponse(bearerToken)
+                    bearerToken = substituteCredentialFromTokens(bearerToken)
                   )
 
                 case apiKeyAuthentication @ APIKeyAuthentication(_, apiKeyName, apiKeyValue, _) =>
                   apiKeyAuthentication.copy(
-                    apiKeyName = substituteCredentialFromTokenRequestResponse(apiKeyName),
-                    apiKeyValue = substituteCredentialFromTokenRequestResponse(apiKeyValue)
+                    apiKeyName = substituteCredentialFromTokens(apiKeyName),
+                    apiKeyValue = substituteCredentialFromTokens(apiKeyValue)
                   )
 
                 case jwtAuthentication @ JWTAuthentication(_, subject, secretKey, _, _) =>
                   jwtAuthentication.copy(
-                    subject = substituteCredentialFromTokenRequestResponse(subject),
-                    secretKey = substituteCredentialFromTokenRequestResponse(secretKey)
+                    subject = substituteCredentialFromTokens(subject),
+                    secretKey = substituteCredentialFromTokens(secretKey)
                   )
               }
             }
