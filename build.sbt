@@ -74,13 +74,13 @@ val rootSettings =
 val coreSettings =
   commonSettings ++ Seq(
     libraryDependencies ++= coreDependencies,
+    Test / parallelExecution := false,
     IntegrationTest / parallelExecution := false
   ) ++ Defaults.itSettings
 
 val sparkUtilsSettings =
   commonSettings ++ Seq(
-    libraryDependencies ++= coreDependencies,
-    IntegrationTest / parallelExecution := false
+    libraryDependencies ++= coreDependencies
   ) ++ Defaults.itSettings
 
 // ----- PROJECTS ----- //
