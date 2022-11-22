@@ -53,7 +53,7 @@ The basic http request configurations are represented by `RequestConfig` class:
 
 ```scala
 case class RequestConfig(
-    method: String = Method.GET.method,
+    method: Method = Method.GET,
     url: String,
     authentication: Option[RestonomerAuthentication] = None,
     headers: Map[String, String] = Map[String, String]().empty
