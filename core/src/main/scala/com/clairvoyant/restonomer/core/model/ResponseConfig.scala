@@ -8,3 +8,5 @@ case class ResponseConfig(
     transformations: List[RestonomerTransformation] = List.empty,
     persistence: RestonomerPersistence
 )
+
+case class ResponseBodyConfig(format: String)

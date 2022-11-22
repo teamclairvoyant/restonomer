@@ -2,7 +2,7 @@ package com.clairvoyant.restonomer.core.http
 
 import com.clairvoyant.restonomer.core.authentication.{BasicAuthentication, BearerAuthentication}
 import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
-import com.clairvoyant.restonomer.core.model.RequestConfig
+import com.clairvoyant.restonomer.core.model.{RequestConfig, TokenConfig, TokenResponseConfig}
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlPathEqualTo}
 import sttp.model.Header
 import sttp.model.HeaderNames.Authorization
@@ -32,10 +32,13 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
   }
 
   "withAuthentication - with token request" should "return RestonomerRequestBuilder object with the new authenticated httpRequest" in {
-    val tokenRequest = Some(
-      RequestConfig(
-        url = uri,
-        authentication = Some(BearerAuthentication(bearerToken = "bearer_token_123"))
+    val token = Some(
+      TokenConfig(
+        tokenRequest = RequestConfig(
+          url = uri,
+          authentication = Some(BearerAuthentication(bearerToken = "bearer_token_123"))
+        ),
+        tokenResponse = TokenResponseConfig(placeholder = "ResponseBody")
       )
     )
 
@@ -48,7 +51,7 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
 
     val authentication = Some(
       BasicAuthentication(
-        tokenRequest = tokenRequest,
+        token = token,
         basicToken = Some("token[basic_token]")
       )
     )

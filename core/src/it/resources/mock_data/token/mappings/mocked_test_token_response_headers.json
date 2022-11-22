@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/test-token-request",
+    "url": "/test-token-response-headers",
     "headers": {
       "Authorization": {
         "matches": "Basic basic_123"
@@ -10,6 +10,6 @@
   },
   "response": {
     "status": 200,
-    "bodyFileName": "mocked_test_token_request_response.json"
+    "bodyFileName": "mocked_test_token_response_headers_response.json"
   }
 }
