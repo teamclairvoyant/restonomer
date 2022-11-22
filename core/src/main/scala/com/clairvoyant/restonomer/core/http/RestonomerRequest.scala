@@ -3,7 +3,6 @@ package com.clairvoyant.restonomer.core.http
 import com.clairvoyant.restonomer.core.common.HttpBackendTypes
 import com.clairvoyant.restonomer.core.model.RequestConfig
 import sttp.client3._
-import sttp.model.Method
 
 class RestonomerRequest(val httpRequest: Request[Either[String, String], Any]) {
 
@@ -17,7 +16,7 @@ object RestonomerRequest {
   def builder(requestConfig: RequestConfig): RestonomerRequestBuilder =
     RestonomerRequestBuilder(
       basicRequest.method(
-        method = Method(requestConfig.method),
+        method = requestConfig.method,
         uri = uri"${requestConfig.url}"
       )
     )
