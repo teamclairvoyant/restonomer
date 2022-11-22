@@ -5,10 +5,13 @@ import org.apache.spark.sql.SparkSession
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import pureconfig.ConfigReader
 import sttp.client3._
-import sttp.model.Method
+import sttp.model.{Method, Uri}
 
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
+
+  implicit val urlReader: ConfigReader[Uri] = ConfigReader[String].map(url => uri"$url")
 
   val resourcesPath = "core/src/test/resources"
   val url = "/test_url"

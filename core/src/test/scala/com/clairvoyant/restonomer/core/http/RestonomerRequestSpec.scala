@@ -12,7 +12,7 @@ class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
   "builder" should "return RestonomerRequestBuilder object" in {
     val requestConfig = RequestConfig(
       method = Method.GET,
-      url = "https://test-domain/url"
+      url = uri"https://test-domain/url"
     )
 
     RestonomerRequest.builder(requestConfig) shouldBe a[RestonomerRequestBuilder]

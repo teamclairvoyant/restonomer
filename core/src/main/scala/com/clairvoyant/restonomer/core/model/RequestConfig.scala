@@ -1,11 +1,11 @@
 package com.clairvoyant.restonomer.core.model
 
 import com.clairvoyant.restonomer.core.authentication.RestonomerAuthentication
-import sttp.model.Method
+import sttp.model.{Method, Uri}
 
 case class RequestConfig(
     method: Method = Method.GET,
-    url: String,
+    url: Uri,
     authentication: Option[RestonomerAuthentication] = None,
     headers: Map[String, String] = Map.empty
 )

@@ -4,6 +4,7 @@ import com.clairvoyant.restonomer.core.authentication.{BasicAuthentication, Bear
 import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
 import com.clairvoyant.restonomer.core.model.{RequestConfig, TokenConfig, TokenResponseConfig}
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlPathEqualTo}
+import sttp.client3.UriContext
 import sttp.model.Header
 import sttp.model.HeaderNames.Authorization
 
@@ -35,7 +36,7 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
     val token = Some(
       TokenConfig(
         tokenRequest = RequestConfig(
-          url = uri,
+          url = uri"$uri",
           authentication = Some(BearerAuthentication(bearerToken = "bearer_token_123"))
         ),
         tokenResponse = TokenResponseConfig(placeholder = "ResponseBody")
