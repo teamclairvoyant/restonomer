@@ -1,7 +1,7 @@
 The authentication in restonomer is represented by abstract class `RestonomerAuthentication`:
 
 ```scala
-sealed abstract class RestonomerAuthentication(val tokenRequest: Option[RequestConfig]) {
+sealed abstract class RestonomerAuthentication(val token: Option[TokenConfig]) {
 
   def validateCredentials(): Unit
 
@@ -32,11 +32,11 @@ The basic authentication in restonomer framework is represented by class `BasicA
 
 ```scala
 case class BasicAuthentication(
-    override val tokenRequest: Option[RequestConfig] = None,
+    override val token: Option[TokenConfig] = None,
     basicToken: Option[String] = None,
     userName: Option[String] = None,
     password: Option[String] = None
-) extends RestonomerAuthentication(tokenRequest)
+) extends RestonomerAuthentication(token)
 ```
 
 Basic authentication can be achieved in restonomer using 2 ways:
@@ -66,9 +66,9 @@ The bearer authentication in restonomer framework is represented by class `Beare
 
 ```scala
 case class BearerAuthentication(
-    override val tokenRequest: Option[RequestConfig] = None,
+    override val token: Option[TokenConfig] = None,
     bearerToken: String
-) extends RestonomerAuthentication(tokenRequest)
+) extends RestonomerAuthentication(token)
 ```
 
 You would need to provide just the bearer auth token to the `authentication` configuration in checkpoint:
@@ -86,11 +86,11 @@ The API key authentication in restonomer framework is represented by class `APIK
 
 ```scala
 case class APIKeyAuthentication(
-    override val tokenRequest: Option[RequestConfig] = None,
+    override val token: Option[TokenConfig] = None,
     apiKeyName: String,
     apiKeyValue: String,
     placeholder: String
-) extends RestonomerAuthentication(tokenRequest)
+) extends RestonomerAuthentication(token)
 ```
 
 The API key authentication config expects user to provide below 3 details:
@@ -114,12 +114,12 @@ The JWT authentication in restonomer framework is represented by class `JWTAuthe
 
 ```scala
 case class JWTAuthentication(
-    override val tokenRequest: Option[RequestConfig] = None,
+    override val token: Option[TokenConfig] = None,
     subject: String,
     secretKey: String,
     algorithm: String = JwtAlgorithm.HS256.name,
     tokenExpiresIn: Long = 1800
-) extends RestonomerAuthentication(tokenRequest)
+) extends RestonomerAuthentication(token)
 ```
 
 # Token Request
@@ -136,8 +136,9 @@ For example, consider the below authentication configuration:
 
 ```hocon
 authentication = {
+  token = {
     token-request = {
-      url = "http://localhost:8080/token-request"
+      url = "http://localhost:8080/token-response-body"
 
       authentication = {
         type = "bearer-authentication"
@@ -145,8 +146,13 @@ authentication = {
       }
     }
 
-    type = "basic-authentication"
-    basic-token = "token[secret]"
+    token-response = {
+      placeholder = "ResponseBody"
+    }
+  }
+
+  type = "basic-authentication"
+  basic-token = "token[secret]"
 }
 ```
 
@@ -159,7 +165,13 @@ field in the below format:
 ```text
 token[X]
 ```
-**_It is assumed that the token request will always generate the response in a json format that will contain the attribute 
-required by the main data request._**
+
+User can configure whether the token needs to be fetched from token response body or token response headers.
+The `placeholder` config in `token-response` can be initialised with below 2 values: 
+* `ResponseBody`
+* `ResponseHeaders`
+
+**_If the token is to be fetched from the token response body, it is assumed that the token request will always generate 
+the token response in a json format that will contain the attribute required by the main data request._**
 
 The token request follows the same structure as the main data request.

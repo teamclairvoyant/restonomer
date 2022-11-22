@@ -159,3 +159,62 @@ body = {
   format = "JSON"
 }
 ```
+
+# Token Config
+
+The configurations related to the token request for authentication are represented by class `TokenConfig`:
+
+```scala
+case class TokenConfig(
+    tokenRequest: RequestConfig,
+    tokenResponse: TokenResponseConfig
+)
+```
+
+User need to provide below configs for TokenConfig:
+
+| Config Name   | Mandatory | Default Value | Description                                                                                                |
+|:--------------|:---------:|:-------------:|:-----------------------------------------------------------------------------------------------------------|
+| tokenRequest  |    Yes    |       -       | The configuration for the token request to be triggered. It follows the same structure as `RequestConfig`. |
+| tokenResponse |    Yes    |       -       | The configuration for the token response received from the token request.                                  |
+
+The token config are provided in the checkpoint file in the below manner:
+
+```hocon
+token = {
+    token-request = {
+        url = "http://localhost:8080/token-response-body"
+
+        authentication = {
+          type = "bearer-authentication"
+          bearer-token = "test_token_123"
+        }
+      }
+
+      token-response = {
+        placeholder = "ResponseBody"
+      }
+    }
+```
+
+# Token Response Config
+
+The configurations related to the token response for authentication are represented by class `TokenResponseConfig`:
+
+```scala
+case class TokenResponseConfig(placeholder: String)
+```
+
+User need to provide below configs for TokenResponseConfig:
+
+| Config Name | Mandatory | Default Value | Description                                                                                                                              |
+|:------------|:---------:|:-------------:|:-----------------------------------------------------------------------------------------------------------------------------------------|
+| placeholder |    Yes    |       -       | The place holder where the token response will have the credentials. <br/>It can contain 2 values: `ResponseBody` and `ResponseHeaders`. |
+
+The token response config are provided in the checkpoint file in the below manner:
+
+```hocon
+token-response = {
+    placeholder = "ResponseBody"
+}
+```
