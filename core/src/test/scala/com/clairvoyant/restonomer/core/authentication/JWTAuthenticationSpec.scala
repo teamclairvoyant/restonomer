@@ -3,7 +3,6 @@ package com.clairvoyant.restonomer.core.authentication
 import com.clairvoyant.restonomer.core.CoreSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-import sttp.model.Header
 
 class JWTAuthenticationSpec extends CoreSpec {
 
