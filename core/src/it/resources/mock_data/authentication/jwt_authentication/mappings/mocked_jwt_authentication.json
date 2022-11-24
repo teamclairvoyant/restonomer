@@ -1,13 +1,10 @@
 {
   "request": {
     "method": "GET",
-    "url": "/jwt-auth-token",
-    "headers": {
-
-    }
+    "url": "/jwt-auth-token"
   },
   "response": {
     "status": 200,
-    "body": "{'token': 'Bearer 12njkenj4jnrey=='}"
+    "body": "{'token': '12njkenj4jnrey=='}"
   }
 }
