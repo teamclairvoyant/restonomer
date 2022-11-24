@@ -3,7 +3,6 @@ package com.clairvoyant.restonomer.core.authentication
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 
-
 class JWTAuthenticationSpec extends CoreSpec {
 
   val subject = "test_subject"
