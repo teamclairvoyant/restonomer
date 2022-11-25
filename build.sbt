@@ -52,7 +52,6 @@ val json4sJacksonDependencies = Seq("org.json4s" %% "json4s-jackson" % json4sJac
 val coreDependencies =
   pureConfigDependencies ++
     sttpDependencies ++
-    sparkDependencies ++
     jwtDependencies ++
     scalaTestDependencies.map(_ % "it,test") ++
     wireMockDependencies
