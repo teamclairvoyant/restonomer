@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/jwt-auth-token"
+  },
+  "response": {
+    "status": 200,
+    "body": "{'token': '12njkenj4jnrey=='}"
+  }
+}
