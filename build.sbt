@@ -19,9 +19,9 @@ val pureConfigVersion = "0.17.2"
 val sttpVersion = "3.8.3"
 val scalaTestVersion = "3.2.14"
 val wireMockVersion = "2.27.2"
-val jwtCoreVersion = "9.1.1"
+val jwtCoreVersion = "9.1.2"
 val sparkVersion = "3.3.0"
-val catsVersion = "2.8.0"
+val catsVersion = "2.9.0"
 val json4sJacksonVersion = "4.0.6"
 
 lazy val scalacOptions = Seq("-Wunused")
@@ -36,7 +36,7 @@ val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersio
 
 val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % "it,test")
 
-val jwtDependency = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
+val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
@@ -53,10 +53,14 @@ val coreDependencies =
   pureConfigDependencies ++
     sttpDependencies ++
     sparkDependencies ++
-    jwtDependency ++
-    catsDependencies ++
+    jwtDependencies ++
     scalaTestDependencies.map(_ % "it,test") ++
     wireMockDependencies
+
+val sparkUtilsDependencies =
+  sparkDependencies ++
+    catsDependencies ++
+    scalaTestDependencies.map(_ % "test")
 
 // ----- SETTINGS ----- //
 
@@ -80,8 +84,8 @@ val coreSettings =
 
 val sparkUtilsSettings =
   commonSettings ++ Seq(
-    libraryDependencies ++= coreDependencies
-  ) ++ Defaults.itSettings
+    libraryDependencies ++= sparkUtilsDependencies
+  )
 
 // ----- PROJECTS ----- //
 
@@ -95,5 +99,4 @@ lazy val core = (project in file("core"))
   .dependsOn(`spark-utils` % "compile->compile;test->test;it->it;test->it")
 
 lazy val `spark-utils` = (project in file("spark-utils"))
-  .configs(IntegrationTest.extend(Test))
   .settings(sparkUtilsSettings)
