@@ -98,4 +98,5 @@ lazy val core = (project in file("core"))
   .dependsOn(`spark-utils` % "compile->compile;test->test;it->it;test->it")
 
 lazy val `spark-utils` = (project in file("spark-utils"))
+  .configs(IntegrationTest.extend(Test))
   .settings(sparkUtilsSettings)
