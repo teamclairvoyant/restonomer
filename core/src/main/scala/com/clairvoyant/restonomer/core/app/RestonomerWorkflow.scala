@@ -3,34 +3,36 @@ package com.clairvoyant.restonomer.core.app
 import com.clairvoyant.restonomer.core.converter.ResponseToDataFrameConverter
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.{RestonomerRequest, RestonomerResponse}
-import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig, RequestConfig}
+import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
 import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersistence}
-import com.clairvoyant.restonomer.core.transformation.RestonomerTransformation
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import sttp.client3.Response
+import sttp.model.StatusCode
 
 class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
-  def run(checkpointConfig: CheckpointConfig): Unit = {
-    val restonomerRequest = buildRestonomerRequest(checkpointConfig.request)
+  private val maxRetries = 20
 
-    val restonomerResponse = getRestonomerResponse(
-      restonomerRequest = restonomerRequest,
-      httpBackendType = checkpointConfig.httpBackendType
-    )
+  def run(checkpointConfig: CheckpointConfig): Unit = {
+    val restonomerRequest =
+      RestonomerRequest
+        .builder(checkpointConfig.request)
+        .build
+
+    val restonomerResponse = restonomerRequest.send(checkpointConfig.httpBackendType)
 
     val restonomerResponseBody = getRestonomerResponseBody(restonomerResponse)
 
-    val restonomerResponseDF = convertRestonomerResponseBodyToDataFrame(
-      restonomerResponseBody = restonomerResponseBody,
-      restonomerResponseBodyFormat = checkpointConfig.response.body.format
-    )
+    val restonomerResponseDF = ResponseToDataFrameConverter(checkpointConfig.response.body.format)
+      .convertResponseToDataFrame(restonomerResponseBody)
 
-    val restonomerResponseTransformedDF = transformRestonomerResponseDataFrame(
-      restonomerResponseDF = restonomerResponseDF,
-      restonomerTransformations = checkpointConfig.response.transformations
-    )
+    val restonomerResponseTransformedDF =
+      checkpointConfig.response.transformations.foldLeft(restonomerResponseDF) {
+        case (restonomerResponseDF, restonomerTransformation) =>
+          restonomerTransformation.transform(restonomerResponseDF)
+      }
 
     persistRestonomerResponseDataFrame(
       restonomerResponseDF = restonomerResponseTransformedDF,
@@ -38,37 +40,17 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
     )
   }
 
-  private def buildRestonomerRequest(requestConfig: RequestConfig): RestonomerRequest =
-    RestonomerRequest
-      .builder(requestConfig)
-      .build
-
-  private def getRestonomerResponse(
-      restonomerRequest: RestonomerRequest,
-      httpBackendType: String
-  ): RestonomerResponse = restonomerRequest.send(httpBackendType)
-
-  private def getRestonomerResponseBody(restonomerResponse: RestonomerResponse): String =
-    restonomerResponse.httpResponse.body match {
-      case Left(errorMessage) =>
-        throw new RestonomerException(errorMessage)
-      case Right(responseBody) =>
-        responseBody
+  private def getRestonomerResponseBody(restonomerResponse: RestonomerResponse, retries: Int = 0): String = {
+    restonomerResponse.httpResponse match {
+      case response @ Response(_, StatusCode.Ok, _, _, _, _) if retries <= maxRetries =>
+        response.body match {
+          case Left(errorMessage) =>
+            throw new RestonomerException(errorMessage)
+          case Right(responseBody) =>
+            responseBody
+        }
     }
-
-  private def convertRestonomerResponseBodyToDataFrame(
-      restonomerResponseBody: String,
-      restonomerResponseBodyFormat: String
-  ): DataFrame =
-    ResponseToDataFrameConverter(restonomerResponseBodyFormat).convertResponseToDataFrame(restonomerResponseBody)
-
-  private def transformRestonomerResponseDataFrame(
-      restonomerResponseDF: DataFrame,
-      restonomerTransformations: List[RestonomerTransformation]
-  ): DataFrame =
-    restonomerTransformations.foldLeft(restonomerResponseDF) { case (restonomerResponseDF, restonomerTransformation) =>
-      restonomerTransformation.transform(restonomerResponseDF)
-    }
+  }
 
   private def persistRestonomerResponseDataFrame(
       restonomerResponseDF: DataFrame,
