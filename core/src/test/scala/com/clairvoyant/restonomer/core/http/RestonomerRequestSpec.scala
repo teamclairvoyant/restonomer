@@ -1,11 +1,13 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
+import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpBackendTypes, HttpMockSpec}
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.RequestConfig
 import com.github.tomakehurst.wiremock.client.WireMock._
 import sttp.client3._
 import sttp.model.Method
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
 
@@ -31,8 +33,11 @@ class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
 
     stubFor(get(urlPathEqualTo(url)).willReturn(aResponse().withBody(responseBody)))
 
-    val restonomerResponse = new RestonomerRequest(basicHttpRequest).send("HttpClientSyncBackend")
-    restonomerResponse.httpResponse.body.getOrElse() shouldBe responseBody
+    val restonomerResponse = new RestonomerRequest(basicHttpRequest).send(
+      HttpBackendTypes.HTTP_CLIENT_FUTURE_BACKEND.toString
+    )
+
+    restonomerResponse.httpResponse.foreach(_.body.getOrElse() shouldBe responseBody)
   }
 
   "send with invalid HttpBackendType" should "throw RestonomerException" in {
