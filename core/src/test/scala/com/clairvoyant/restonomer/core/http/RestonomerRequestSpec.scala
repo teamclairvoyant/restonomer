@@ -8,6 +8,7 @@ import sttp.client3._
 import sttp.model.Method
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
 
@@ -22,10 +23,12 @@ class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
   }
 
   "send" should "return RestonomerResponse" in {
-    val restonomerResponse = new RestonomerRequest(basicHttpRequest).send("HttpClientSyncBackend")
+    val restonomerResponse = new RestonomerRequest(basicHttpRequest).send(
+      HttpBackendTypes.HTTP_CLIENT_FUTURE_BACKEND.toString
+    )
 
     restonomerResponse shouldBe a[RestonomerResponse]
-    restonomerResponse.httpResponse shouldBe a[Identity[_]]
+    restonomerResponse.httpResponse shouldBe a[Future[Response[Either[String, String]]]]
   }
 
   "send" should "return RestonomerResponse with the mocked response body" in {
