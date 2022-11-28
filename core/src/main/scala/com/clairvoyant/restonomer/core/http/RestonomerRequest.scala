@@ -6,7 +6,7 @@ import sttp.client3._
 
 class RestonomerRequest(val httpRequest: Request[Either[String, String], Any]) {
 
-  def send(httpBackendType: String = HttpBackendTypes.HTTP_CLIENT_SYNC_BACKEND.toString): RestonomerResponse =
+  def send(httpBackendType: String = HttpBackendTypes.HTTP_CLIENT_FUTURE_BACKEND.toString): RestonomerResponse =
     RestonomerResponse(httpRequest.send(HttpBackendTypes(httpBackendType)))
 
 }

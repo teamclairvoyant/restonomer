@@ -11,37 +11,44 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import sttp.client3.Response
 import sttp.model.StatusCode
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
+
 class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
   private val maxRetries = 20
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
-    val restonomerRequest =
-      RestonomerRequest
-        .builder(checkpointConfig.request)
-        .build
-
-    val restonomerResponse = restonomerRequest.send(checkpointConfig.httpBackendType)
+    val restonomerResponse = RestonomerRequest
+      .builder(checkpointConfig.request)
+      .build
+      .send(checkpointConfig.httpBackendType)
 
     val restonomerResponseBody = getRestonomerResponseBody(restonomerResponse)
 
-    val restonomerResponseDF = ResponseToDataFrameConverter(checkpointConfig.response.body.format)
-      .convertResponseToDataFrame(restonomerResponseBody)
+    val restonomerResponseDF = restonomerResponseBody.map {
+      ResponseToDataFrameConverter(checkpointConfig.response.body.format).convertResponseToDataFrame
+    }
 
-    val restonomerResponseTransformedDF =
-      checkpointConfig.response.transformations.foldLeft(restonomerResponseDF) {
-        case (restonomerResponseDF, restonomerTransformation) =>
-          restonomerTransformation.transform(restonomerResponseDF)
-      }
+    val restonomerResponseTransformedDF = restonomerResponseDF.map { df =>
+      checkpointConfig.response.transformations
+        .foldLeft(df) { case (df, restonomerTransformation) =>
+          restonomerTransformation.transform(df)
+        }
+    }
 
-    persistRestonomerResponseDataFrame(
+    val persistedRestonomerResponseDF = persistRestonomerResponseDataFrame(
       restonomerResponseDF = restonomerResponseTransformedDF,
       restonomerPersistence = checkpointConfig.response.persistence
     )
+
+    Await.result(persistedRestonomerResponseDF, Duration.Inf)
+
   }
 
-  private def getRestonomerResponseBody(restonomerResponse: RestonomerResponse, retries: Int = 0): String = {
-    restonomerResponse.httpResponse match {
+  private def getRestonomerResponseBody(restonomerResponse: RestonomerResponse, retries: Int = 0): Future[String] = {
+    restonomerResponse.httpResponse.map {
       case response @ Response(_, StatusCode.Ok, _, _, _, _) if retries <= maxRetries =>
         response.body match {
           case Left(errorMessage) =>
@@ -53,9 +60,9 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
   }
 
   private def persistRestonomerResponseDataFrame(
-      restonomerResponseDF: DataFrame,
+      restonomerResponseDF: Future[DataFrame],
       restonomerPersistence: RestonomerPersistence
-  ): Unit = {
+  ): Future[Unit] = {
     val dataFrameWriter =
       restonomerPersistence match {
         case FileSystem(fileFormat, filePath) =>
@@ -66,12 +73,12 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
           )
       }
 
-    restonomerPersistence.persist(restonomerResponseDF, dataFrameWriter)
+    restonomerResponseDF.map(restonomerPersistence.persist(_, dataFrameWriter))
   }
 
 }
 
-object RestonomerWorkflow {
+private object RestonomerWorkflow {
 
   def apply(applicationConfig: ApplicationConfig): RestonomerWorkflow = {
     implicit val sparkSession: SparkSession = SparkSession

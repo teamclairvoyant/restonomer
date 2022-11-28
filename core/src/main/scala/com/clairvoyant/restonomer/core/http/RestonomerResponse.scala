@@ -1,5 +1,7 @@
 package com.clairvoyant.restonomer.core.http
 
-import sttp.client3.{Identity, Response}
+import sttp.client3.Response
 
-case class RestonomerResponse(httpResponse: Identity[Response[Either[String, String]]])
+import scala.concurrent.Future
+
+case class RestonomerResponse(httpResponse: Future[Response[Either[String, String]]])

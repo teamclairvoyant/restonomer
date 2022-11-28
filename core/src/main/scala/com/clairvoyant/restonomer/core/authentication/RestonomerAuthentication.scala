@@ -13,37 +13,42 @@ import pdi.jwt.algorithms.JwtUnknownAlgorithm
 import sttp.client3.{Identity, Request}
 
 import java.time.Clock
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 sealed abstract class RestonomerAuthentication(val token: Option[TokenConfig]) {
 
-  lazy val tokensMap: Option[Map[String, String]] = token.map { tokenConfig =>
-    val tokenHttpResponse =
-      RestonomerRequest
-        .builder(tokenConfig.tokenRequest)
-        .build
-        .send()
-        .httpResponse
+  lazy val tokensMap: Option[Map[String, String]] = token
+    .map { tokenConfig =>
+      // TODO: Try removing Await
+      val tokenHttpResponse = Await.result(
+        RestonomerRequest
+          .builder(tokenConfig.tokenRequest)
+          .build
+          .send()
+          .httpResponse,
+        Duration.Inf
+      )
 
-    TokenResponsePlaceholders(tokenConfig.tokenResponse.placeholder) match {
-      case RESPONSE_BODY =>
-        implicit val formats: DefaultFormats.type = org.json4s.DefaultFormats
+      TokenResponsePlaceholders(tokenConfig.tokenResponse.placeholder) match {
+        case RESPONSE_BODY =>
+          implicit val formats: DefaultFormats.type = org.json4s.DefaultFormats
 
-        JsonMethods
-          .parse(
-            tokenHttpResponse.body match {
-              case Left(errorMessage) =>
-                throw new RestonomerException(errorMessage)
-              case Right(responseBody) =>
-                responseBody
-            }
-          )
-          .extract[Map[String, String]]
+          JsonMethods
+            .parse(
+              tokenHttpResponse.body match {
+                case Left(errorMessage) =>
+                  throw new RestonomerException(errorMessage)
+                case Right(responseBody) =>
+                  responseBody
+              }
+            )
+            .extract[Map[String, String]]
 
-      case RESPONSE_HEADERS =>
-        tokenHttpResponse.headers.map(header => header.name -> header.value).toMap
+        case RESPONSE_HEADERS =>
+          tokenHttpResponse.headers.map(header => header.name -> header.value).toMap
+      }
     }
-
-  }
 
   def validateCredentials(): Unit
 

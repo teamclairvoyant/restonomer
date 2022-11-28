@@ -6,5 +6,5 @@ case class CheckpointConfig(
     name: String,
     request: RequestConfig,
     response: ResponseConfig,
-    httpBackendType: String = HttpBackendTypes.HTTP_CLIENT_SYNC_BACKEND.toString
+    httpBackendType: String = HttpBackendTypes.HTTP_CLIENT_FUTURE_BACKEND.toString
 )
