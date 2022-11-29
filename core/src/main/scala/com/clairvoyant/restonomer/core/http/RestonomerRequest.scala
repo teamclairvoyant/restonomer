@@ -4,7 +4,7 @@ import com.clairvoyant.restonomer.core.common.HttpBackendTypes
 import com.clairvoyant.restonomer.core.model.RequestConfig
 import sttp.client3._
 
-class RestonomerRequest(val httpRequest: Request[Either[String, String], Any]) {
+case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) {
 
   def send(httpBackendType: String = HttpBackendTypes.HTTP_CLIENT_FUTURE_BACKEND.toString): RestonomerResponse =
     RestonomerResponse(httpRequest.send(HttpBackendTypes(httpBackendType)))
