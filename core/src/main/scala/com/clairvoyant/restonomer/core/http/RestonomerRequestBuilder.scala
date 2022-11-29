@@ -1,38 +1,75 @@
 package com.clairvoyant.restonomer.core.http
 
 import com.clairvoyant.restonomer.core.authentication._
+import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders
+import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders.{RESPONSE_BODY, RESPONSE_HEADERS}
 import com.clairvoyant.restonomer.core.exception.RestonomerException
+import com.clairvoyant.restonomer.core.model.TokenConfig
+import org.json4s.DefaultFormats
+import org.json4s.jackson.JsonMethods
 import sttp.client3.Request
 
-import scala.util.matching.Regex
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {
 
-  def withAuthentication(authenticationConfig: Option[RestonomerAuthentication]): RestonomerRequestBuilder = {
-    val TOKEN_CREDENTIAL_REGEX_PATTERN: Regex = """token\[(.*)]""".r
+  private def getTokensMap(tokenConfig: TokenConfig): Map[String, String] = {
+    // TODO: Remove Await here
+    val tokenHttpResponse = Await.result(
+      RestonomerRequest
+        .builder(tokenConfig.tokenRequest)
+        .build
+        .send()
+        .httpResponse,
+      Duration.Inf
+    )
 
-    def substituteCredentialFromTokens(
-        credential: String
-    )(implicit tokens: Map[String, String]): String =
-      TOKEN_CREDENTIAL_REGEX_PATTERN
-        .findFirstMatchIn(credential)
-        .map { matcher =>
-          tokens.get(matcher.group(1)) match {
-            case Some(value) =>
-              value
-            case None =>
-              throw new RestonomerException(
-                s"Could not find the value of $credential in the token response: $tokens"
-              )
-          }
+    TokenResponsePlaceholders(tokenConfig.tokenResponse.placeholder) match {
+      case RESPONSE_BODY =>
+        implicit val formats: DefaultFormats.type = org.json4s.DefaultFormats
+
+        JsonMethods
+          .parse(
+            tokenHttpResponse.body match {
+              case Left(errorMessage) =>
+                throw new RestonomerException(errorMessage)
+              case Right(responseBody) =>
+                responseBody
+            }
+          )
+          .extract[Map[String, String]]
+
+      case RESPONSE_HEADERS =>
+        tokenHttpResponse.headers.map(header => header.name -> header.value).toMap
+    }
+  }
+
+  private def substituteCredentialFromTokens(
+      credential: String
+  )(implicit tokens: Map[String, String]): String =
+    """token\[(.*)]""".r
+      .findFirstMatchIn(credential)
+      .map { matcher =>
+        tokens.get(matcher.group(1)) match {
+          case Some(value) =>
+            value
+          case None =>
+            throw new RestonomerException(
+              s"Could not find the value of $credential in the token response: $tokens"
+            )
         }
-        .getOrElse(credential)
+      }
+      .getOrElse(credential)
 
+  def withAuthentication(authenticationConfig: Option[RestonomerAuthentication]): RestonomerRequestBuilder = {
     copy(httpRequest =
       authenticationConfig
         .map { restonomerAuthentication =>
-          restonomerAuthentication.tokensMap
-            .map { implicit tokens =>
+          restonomerAuthentication.token
+            .map { tokenConfig =>
+              implicit val tokens: Map[String, String] = getTokensMap(tokenConfig)
+
               restonomerAuthentication match {
                 case basicAuthentication @ BasicAuthentication(_, basicToken, userName, password) =>
                   basicAuthentication.copy(
@@ -58,6 +95,7 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
                     secretKey = substituteCredentialFromTokens(secretKey)
                   )
               }
+
             }
             .getOrElse(restonomerAuthentication)
             .validateCredentialsAndAuthenticate(httpRequest)
