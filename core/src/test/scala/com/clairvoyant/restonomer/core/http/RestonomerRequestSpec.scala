@@ -1,7 +1,6 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpBackendTypes, HttpMockSpec}
-import com.clairvoyant.restonomer.core.exception.RestonomerException
+import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
 import com.clairvoyant.restonomer.core.model.RequestConfig
 import com.github.tomakehurst.wiremock.client.WireMock._
 import sttp.client3._
@@ -23,9 +22,7 @@ class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
   }
 
   "send" should "return RestonomerResponse" in {
-    val restonomerResponse = new RestonomerRequest(basicHttpRequest).send(
-      HttpBackendTypes.HTTP_CLIENT_FUTURE_BACKEND.toString
-    )
+    val restonomerResponse = new RestonomerRequest(basicHttpRequest).send()
 
     restonomerResponse shouldBe a[RestonomerResponse]
     restonomerResponse.httpResponse shouldBe a[Future[Response[Either[String, String]]]]
@@ -36,17 +33,9 @@ class RestonomerRequestSpec extends CoreSpec with HttpMockSpec {
 
     stubFor(get(urlPathEqualTo(url)).willReturn(aResponse().withBody(responseBody)))
 
-    val restonomerResponse = new RestonomerRequest(basicHttpRequest).send(
-      HttpBackendTypes.HTTP_CLIENT_FUTURE_BACKEND.toString
-    )
+    val restonomerResponse = new RestonomerRequest(basicHttpRequest).send()
 
     restonomerResponse.httpResponse.foreach(_.body.getOrElse() shouldBe responseBody)
-  }
-
-  "send with invalid HttpBackendType" should "throw RestonomerException" in {
-    the[RestonomerException] thrownBy new RestonomerRequest(basicHttpRequest).send(
-      "ABCDBackendType"
-    ) should have message "The http-backend-type: ABCDBackendType is not supported."
   }
 
 }

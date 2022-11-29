@@ -7,7 +7,7 @@ import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersis
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import sttp.client3.{HttpClientFutureBackend, Request, Response, UriContext}
+import sttp.client3.{Response, UriContext}
 import sttp.model.HeaderNames._
 import sttp.model.StatusCode
 
@@ -20,13 +20,12 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
   private val maxRetries = 20
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
-    val httpRequest =
+    val restonomerRequest =
       RestonomerRequest
         .builder(checkpointConfig.request)
         .build
-        .httpRequest
 
-    val restonomerResponseData = getRestonomerResponseData(httpRequest)
+    val restonomerResponseData = getRestonomerResponseData(restonomerRequest)
 
     val restonomerResponseDF = restonomerResponseData.map {
       ResponseToDataFrameConverter(checkpointConfig.response.body.format).convertResponseToDataFrame
@@ -49,25 +48,28 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
   }
 
   private def getRestonomerResponseData(
-      httpRequest: Request[Either[String, String], Any],
+      restonomerRequest: RestonomerRequest,
       retries: Int = 0
   ): Future[String] = {
-    httpRequest
-      .send(HttpClientFutureBackend())
+    restonomerRequest
+      .send()
+      .httpResponse
       .flatMap {
         case response @ Response(_, StatusCode.Ok, _, _, _, _) if retries <= maxRetries =>
           response.body match {
             case Left(_) =>
-              getRestonomerResponseData(httpRequest, retries + 1)
+              getRestonomerResponseData(restonomerRequest, retries + 1)
             case Right(responseBody) =>
               Future(responseBody)
           }
 
         case response @ Response(_, StatusCode.Found, _, _, _, _) =>
           getRestonomerResponseData(
-            httpRequest.method(
-              method = httpRequest.method,
-              uri = uri"${response.header(Location).get}"
+            restonomerRequest.copy(httpRequest =
+              restonomerRequest.httpRequest.method(
+                method = restonomerRequest.httpRequest.method,
+                uri = uri"${response.header(Location).get}"
+              )
             )
           )
       }
