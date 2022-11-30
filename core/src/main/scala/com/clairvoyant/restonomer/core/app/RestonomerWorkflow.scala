@@ -7,17 +7,34 @@ import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersis
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import retry.Success
 import sttp.client3.{Response, UriContext}
 import sttp.model.HeaderNames._
 import sttp.model.StatusCode
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration.{Duration, DurationInt}
 import scala.concurrent.{Await, Future}
+import scala.util.Random
 
 class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
   private val maxRetries = 20
+
+  val r: Random.type = scala.util.Random
+  private def sleepTimeInSeconds: Int = 10 + r.nextInt(20 - 10) + 1
+
+  private val statusToRetry: Set[StatusCode] = Set(
+    StatusCode.Forbidden,
+    StatusCode.TooManyRequests,
+    StatusCode.BadGateway,
+    StatusCode.Unauthorized,
+    StatusCode.InternalServerError,
+    StatusCode.GatewayTimeout,
+    StatusCode.ServiceUnavailable,
+    StatusCode.RequestTimeout,
+    StatusCode(524)
+  )
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
     val restonomerRequest =
@@ -63,15 +80,26 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
               Future(responseBody)
           }
 
-        case response @ Response(_, StatusCode.Found, _, _, _, _) =>
+        case Response(_, StatusCode.Found, _, headers, _, requestMetadata) =>
           getRestonomerResponseData(
-            restonomerRequest.copy(httpRequest =
-              restonomerRequest.httpRequest.method(
-                method = restonomerRequest.httpRequest.method,
-                uri = uri"${response.header(Location).get}"
+            restonomerRequest
+              .copy(httpRequest =
+                restonomerRequest.httpRequest
+                  .method(
+                    method = requestMetadata.method,
+                    uri = uri"${headers.find(_.name == Location).get}"
+                  )
               )
-            )
           )
+
+        case Response(_, statusCode, _, headers, _, _) if statusToRetry.contains(statusCode) && retries < maxRetries =>
+          val retryAfter = headers
+            .find(_.name.toLowerCase == "retry-after")
+            .map(_.value.toInt * 1000)
+            .getOrElse(sleepTimeInSeconds * 1000)
+
+          implicit val responseDataShouldNotBeBlank: Success[String] = Success[String](!_.isBlank)
+          retry.Pause(1, retryAfter.millis).apply { () => getRestonomerResponseData(restonomerRequest, retries + 1) }
       }
   }
 

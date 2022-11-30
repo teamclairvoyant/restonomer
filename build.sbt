@@ -23,6 +23,7 @@ val jwtCoreVersion = "9.1.2"
 val sparkVersion = "3.3.0"
 val catsVersion = "2.9.0"
 val json4sJacksonVersion = "4.0.6"
+val retryVersion = "0.3.6"
 
 lazy val scalacOptions = Seq("-Wunused")
 
@@ -45,7 +46,7 @@ val sparkDependencies = Seq(
 
 val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
 
-val json4sJacksonDependencies = Seq("org.json4s" %% "json4s-jackson" % json4sJacksonVersion)
+val retryDependencies = Seq("com.softwaremill.retry" %% "retry" % retryVersion)
 
 // ----- MODULE DEPENDENCIES ----- //
 
@@ -53,6 +54,7 @@ val coreDependencies =
   pureConfigDependencies ++
     sttpDependencies ++
     jwtDependencies ++
+    retryDependencies ++
     scalaTestDependencies.map(_ % "it,test") ++
     wireMockDependencies
 
