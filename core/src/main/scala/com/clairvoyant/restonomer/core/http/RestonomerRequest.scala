@@ -14,14 +14,16 @@ case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) 
 
 object RestonomerRequest {
 
-  def builder(requestConfig: RequestConfig, akkaHttpBackend: SttpBackend[Future, Any]): RestonomerRequestBuilder =
+  def builder(
+      requestConfig: RequestConfig
+  )(implicit akkaHttpBackend: SttpBackend[Future, Any]): RestonomerRequestBuilder =
     RestonomerRequestBuilder(
       basicRequest.method(
         method = requestConfig.method,
         uri = requestConfig.url
       )
     )
-      .withAuthentication(requestConfig.authentication, akkaHttpBackend)
+      .withAuthentication(requestConfig.authentication)
       .withHeaders(requestConfig.headers)
 
 }

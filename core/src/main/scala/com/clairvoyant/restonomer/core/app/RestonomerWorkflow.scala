@@ -14,8 +14,9 @@ import sttp.model.HeaderNames._
 import sttp.model.StatusCode
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration.{Duration, DurationInt, FiniteDuration}
 import scala.concurrent.{Await, Future}
+import scala.util.Random
 
 class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
@@ -32,16 +33,19 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
     StatusCode.RequestTimeout
   )
 
+  val r: Random.type = scala.util.Random
+  private def sleepTimeInSeconds: Int = 10 + r.nextInt(20 - 10) + 1
+
   def run(checkpointConfig: CheckpointConfig): Unit = {
-    val actorSystem = ActorSystem(checkpointConfig.name)
-    val akkaHttpBackend = AkkaHttpBackend.usingActorSystem(actorSystem)
+    implicit val actorSystem: ActorSystem = ActorSystem(checkpointConfig.name)
+    implicit val akkaHttpBackend: SttpBackend[Future, Any] = AkkaHttpBackend.usingActorSystem(actorSystem)
 
     val restonomerRequest =
       RestonomerRequest
-        .builder(checkpointConfig.request, akkaHttpBackend)
+        .builder(checkpointConfig.request)
         .build
 
-    val restonomerResponseData = getRestonomerResponseData(restonomerRequest, akkaHttpBackend)
+    val restonomerResponseData = getRestonomerResponseData(restonomerRequest)
 
     val restonomerResponseDF = restonomerResponseData.map {
       ResponseToDataFrameConverter(checkpointConfig.response.body.format).convertResponseToDataFrame
@@ -66,17 +70,16 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
   private def getRestonomerResponseData(
       restonomerRequest: RestonomerRequest,
-      akkaHttpBackend: SttpBackend[Future, Any],
       retries: Int = 0
-  ): Future[String] = {
+  )(implicit actorSystem: ActorSystem, akkaHttpBackend: SttpBackend[Future, Any]): Future[String] = {
     restonomerRequest
       .send(akkaHttpBackend)
       .httpResponse
       .flatMap {
-        case response @ Response(_, StatusCode.Ok, _, _, _, _) if retries <= maxRetries =>
+        case response @ Response(_, StatusCode.Ok, _, _, _, _) if retries < maxRetries =>
           response.body match {
             case Left(_) =>
-              getRestonomerResponseData(restonomerRequest, akkaHttpBackend, retries + 1)
+              getRestonomerResponseData(restonomerRequest, retries + 1)
             case Right(responseBody) =>
               Future(responseBody)
           }
@@ -91,10 +94,29 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
                     uri = uri"${headers.find(_.name == Location).get}"
                   )
               ),
-            akkaHttpBackend
+            retries
+          )
+
+        case Response(_, statusCode, _, headers, _, _) if statusToRetry.contains(statusCode) && retries < maxRetries =>
+          waitBeforeRetry(
+            retryAfter =
+              headers
+                .find(_.name.toLowerCase == "retry-after")
+                .map(_.value.toInt * 1000)
+                .getOrElse(sleepTimeInSeconds * 1000)
+                .millis,
+            whatToRetry = getRestonomerResponseData(restonomerRequest, retries + 1)
           )
       }
   }
+
+  private def waitBeforeRetry[T](retryAfter: FiniteDuration, whatToRetry: => Future[T])(
+      implicit actorSystem: ActorSystem
+  ): Future[T] =
+    akka.pattern.after(
+      duration = retryAfter,
+      using = actorSystem.scheduler
+    )(whatToRetry)
 
   private def persistRestonomerResponseDataFrame(
       restonomerResponseDF: Future[DataFrame],
