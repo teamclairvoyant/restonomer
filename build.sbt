@@ -17,13 +17,13 @@ val releaseVersion = "1.0"
 
 val pureConfigVersion = "0.17.2"
 val sttpVersion = "3.8.3"
+val akkaBackendVersion = "3.8.3"
+val akkaStreamVersion = "2.8.0-M1"
 val scalaTestVersion = "3.2.14"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.1.2"
 val sparkVersion = "3.3.0"
 val catsVersion = "2.9.0"
-val json4sJacksonVersion = "4.0.6"
-val retryVersion = "0.3.6"
 
 lazy val scalacOptions = Seq("-Wunused")
 
@@ -32,6 +32,11 @@ lazy val scalacOptions = Seq("-Wunused")
 val pureConfigDependencies = Seq("com.github.pureconfig" %% "pureconfig" % pureConfigVersion)
 
 val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
+
+val akkaBackendDependencies = Seq(
+  "com.softwaremill.sttp.client3" %% "akka-http-backend" % akkaBackendVersion,
+  "com.typesafe.akka" %% "akka-stream" % akkaStreamVersion
+)
 
 val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion)
 
@@ -46,15 +51,13 @@ val sparkDependencies = Seq(
 
 val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
 
-val retryDependencies = Seq("com.softwaremill.retry" %% "retry" % retryVersion)
-
 // ----- MODULE DEPENDENCIES ----- //
 
 val coreDependencies =
   pureConfigDependencies ++
     sttpDependencies ++
+    akkaBackendDependencies ++
     jwtDependencies ++
-    retryDependencies ++
     scalaTestDependencies.map(_ % "it,test") ++
     wireMockDependencies
 

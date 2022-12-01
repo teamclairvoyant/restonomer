@@ -1,5 +1,6 @@
 package com.clairvoyant.restonomer.core.app
 
+import akka.actor.ActorSystem
 import com.clairvoyant.restonomer.core.converter.ResponseToDataFrameConverter
 import com.clairvoyant.restonomer.core.http.RestonomerRequest
 import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
@@ -7,22 +8,18 @@ import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersis
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import retry.Success
-import sttp.client3.{Response, UriContext}
+import sttp.client3.akkahttp.AkkaHttpBackend
+import sttp.client3.{Response, SttpBackend, UriContext}
 import sttp.model.HeaderNames._
 import sttp.model.StatusCode
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.{Duration, DurationInt}
+import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
-import scala.util.Random
 
 class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
   private val maxRetries = 20
-
-  val r: Random.type = scala.util.Random
-  private def sleepTimeInSeconds: Int = 10 + r.nextInt(20 - 10) + 1
 
   private val statusToRetry: Set[StatusCode] = Set(
     StatusCode.Forbidden,
@@ -32,17 +29,19 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
     StatusCode.InternalServerError,
     StatusCode.GatewayTimeout,
     StatusCode.ServiceUnavailable,
-    StatusCode.RequestTimeout,
-    StatusCode(524)
+    StatusCode.RequestTimeout
   )
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
+    val actorSystem = ActorSystem(checkpointConfig.name)
+    val akkaHttpBackend = AkkaHttpBackend.usingActorSystem(actorSystem)
+
     val restonomerRequest =
       RestonomerRequest
-        .builder(checkpointConfig.request)
+        .builder(checkpointConfig.request, akkaHttpBackend)
         .build
 
-    val restonomerResponseData = getRestonomerResponseData(restonomerRequest)
+    val restonomerResponseData = getRestonomerResponseData(restonomerRequest, akkaHttpBackend)
 
     val restonomerResponseDF = restonomerResponseData.map {
       ResponseToDataFrameConverter(checkpointConfig.response.body.format).convertResponseToDataFrame
@@ -54,6 +53,7 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
           restonomerTransformation.transform(df)
         }
     }
+    restonomerResponseTransformedDF.map(_.show())
 
     val persistedRestonomerResponseDF = persistRestonomerResponseDataFrame(
       restonomerResponseDF = restonomerResponseTransformedDF,
@@ -61,21 +61,22 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
     )
 
     Await.result(persistedRestonomerResponseDF, Duration.Inf)
-
+    Await.result(actorSystem.terminate(), Duration.Inf)
   }
 
   private def getRestonomerResponseData(
       restonomerRequest: RestonomerRequest,
+      akkaHttpBackend: SttpBackend[Future, Any],
       retries: Int = 0
   ): Future[String] = {
     restonomerRequest
-      .send()
+      .send(akkaHttpBackend)
       .httpResponse
       .flatMap {
         case response @ Response(_, StatusCode.Ok, _, _, _, _) if retries <= maxRetries =>
           response.body match {
             case Left(_) =>
-              getRestonomerResponseData(restonomerRequest, retries + 1)
+              getRestonomerResponseData(restonomerRequest, akkaHttpBackend, retries + 1)
             case Right(responseBody) =>
               Future(responseBody)
           }
@@ -89,17 +90,9 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
                     method = requestMetadata.method,
                     uri = uri"${headers.find(_.name == Location).get}"
                   )
-              )
+              ),
+            akkaHttpBackend
           )
-
-        case Response(_, statusCode, _, headers, _, _) if statusToRetry.contains(statusCode) && retries < maxRetries =>
-          val retryAfter = headers
-            .find(_.name.toLowerCase == "retry-after")
-            .map(_.value.toInt * 1000)
-            .getOrElse(sleepTimeInSeconds * 1000)
-
-          implicit val responseDataShouldNotBeBlank: Success[String] = Success[String](!_.isBlank)
-          retry.Pause(1, retryAfter.millis).apply { () => getRestonomerResponseData(restonomerRequest, retries + 1) }
       }
   }
 

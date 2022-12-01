@@ -7,21 +7,21 @@ import scala.concurrent.Future
 
 case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) {
 
-  def send(httpBackendType: SttpBackend[Future, _] = HttpClientFutureBackend()): RestonomerResponse =
-    RestonomerResponse(httpRequest.send(httpBackendType))
+  def send(akkaHttpBackend: SttpBackend[Future, Any]): RestonomerResponse =
+    RestonomerResponse(httpRequest.send(akkaHttpBackend))
 
 }
 
 object RestonomerRequest {
 
-  def builder(requestConfig: RequestConfig): RestonomerRequestBuilder =
+  def builder(requestConfig: RequestConfig, akkaHttpBackend: SttpBackend[Future, Any]): RestonomerRequestBuilder =
     RestonomerRequestBuilder(
       basicRequest.method(
         method = requestConfig.method,
         uri = requestConfig.url
       )
     )
-      .withAuthentication(requestConfig.authentication)
+      .withAuthentication(requestConfig.authentication, akkaHttpBackend)
       .withHeaders(requestConfig.headers)
 
 }

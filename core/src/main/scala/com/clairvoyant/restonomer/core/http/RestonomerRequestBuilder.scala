@@ -7,20 +7,19 @@ import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.TokenConfig
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
-import sttp.client3.Request
+import sttp.client3.{Request, SttpBackend}
 
-import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {
 
-  private def getTokensMap(tokenConfig: TokenConfig): Map[String, String] = {
-    // TODO: Remove Await here
+  private def getTokensMap(tokenConfig: TokenConfig, akkaHttpBackend: SttpBackend[Future, Any]): Map[String, String] = {
     val tokenHttpResponse = Await.result(
       RestonomerRequest
-        .builder(tokenConfig.tokenRequest)
+        .builder(tokenConfig.tokenRequest, akkaHttpBackend)
         .build
-        .send()
+        .send(akkaHttpBackend)
         .httpResponse,
       Duration.Inf
     )
@@ -62,13 +61,16 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
       }
       .getOrElse(credential)
 
-  def withAuthentication(authenticationConfig: Option[RestonomerAuthentication]): RestonomerRequestBuilder = {
+  def withAuthentication(
+      authenticationConfig: Option[RestonomerAuthentication],
+      akkaHttpBackend: SttpBackend[Future, Any]
+  ): RestonomerRequestBuilder = {
     copy(httpRequest =
       authenticationConfig
         .map { restonomerAuthentication =>
           restonomerAuthentication.token
             .map { tokenConfig =>
-              implicit val tokens: Map[String, String] = getTokensMap(tokenConfig)
+              implicit val tokens: Map[String, String] = getTokensMap(tokenConfig, akkaHttpBackend)
 
               restonomerAuthentication match {
                 case basicAuthentication @ BasicAuthentication(_, basicToken, userName, password) =>
