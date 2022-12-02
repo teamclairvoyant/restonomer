@@ -64,14 +64,17 @@ class RestonomerContext(
       throw new FileNotFoundException(s"The checkpoint file with the path: $checkpointFilePath does not exists.")
   }
 
-  private def runCheckpoint(checkpointConfig: CheckpointConfig): Unit =
-    RestonomerWorkflow(applicationConfig)
-      .run(checkpointConfig)
-
   def runCheckpointsUnderDirectory(checkpointsDirectoryPath: String): Unit =
     runCheckpoints(
       loadConfigsFromDirectory[CheckpointConfig](
         configDirectoryPath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointsDirectoryPath"
+      )
+    )
+
+  def runAllCheckpoints(): Unit =
+    runCheckpoints(
+      loadConfigsFromDirectory[CheckpointConfig](
+        configDirectoryPath = CHECKPOINTS_CONFIG_DIRECTORY_PATH
       )
     )
 
@@ -82,11 +85,8 @@ class RestonomerContext(
       println("\n=====================================================\n")
     }
 
-  def runAllCheckpoints(): Unit =
-    runCheckpoints(
-      loadConfigsFromDirectory[CheckpointConfig](
-        configDirectoryPath = CHECKPOINTS_CONFIG_DIRECTORY_PATH
-      )
-    )
+  private def runCheckpoint(checkpointConfig: CheckpointConfig): Unit =
+    RestonomerWorkflow(applicationConfig)
+      .run(checkpointConfig)
 
 }

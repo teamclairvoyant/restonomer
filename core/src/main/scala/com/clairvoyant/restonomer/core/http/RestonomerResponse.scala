@@ -47,9 +47,12 @@ object RestonomerResponse {
         case Response(body, StatusCode.Ok, _, _, _, _) if retries < maxRetries =>
           body match {
             case Left(_) =>
-              getBody(restonomerRequest, retries + 1)
-            case Right(responseData) =>
-              Future(responseData)
+              waitBeforeRetry(
+                retryAfter = (sleepTimeInSeconds * 1000).millis,
+                whatToRetry = getBody(restonomerRequest, retries + 1)
+              )
+            case Right(responseBody) =>
+              Future(responseBody)
           }
 
         case Response(_, StatusCode.Found, _, headers, _, requestMetadata) =>
@@ -78,14 +81,19 @@ object RestonomerResponse {
 
         case Response(body, StatusCode.MovedPermanently, _, _, _, _) =>
           body match {
-            case Left(value) =>
-              throw new RestonomerException(value)
-            case Right(value) =>
-              throw new RestonomerException(value)
+            case Left(errorMessage) =>
+              throw new RestonomerException(errorMessage)
+            case Right(responseBody) =>
+              throw new RestonomerException(responseBody)
           }
 
         case Response(_, StatusCode.NoContent, _, _, _, _) =>
           throw new RestonomerException("No Content")
+
+        case _ =>
+          throw new RestonomerException(
+            s"Something totally unexpected bad happened while calling the API $retries times."
+          )
       }
 
   }
