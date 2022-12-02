@@ -51,10 +51,6 @@ class RestonomerContext(
 
   private val applicationConfig = loadApplicationConfig(APPLICATION_CONFIG_FILE_PATH)
 
-  private def runCheckpoint(checkpointConfig: CheckpointConfig): Unit =
-    RestonomerWorkflow(applicationConfig)
-      .run(checkpointConfig)
-
   def runCheckpoint(checkpointFilePath: String): Unit = {
     val absoluteCheckpointFilePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointFilePath"
 
@@ -68,12 +64,9 @@ class RestonomerContext(
       throw new FileNotFoundException(s"The checkpoint file with the path: $checkpointFilePath does not exists.")
   }
 
-  private def runCheckpoints(checkpointConfigs: List[CheckpointConfig]): Unit =
-    checkpointConfigs.foreach { checkpointConfig =>
-      println(s"Checkpoint Name -> ${checkpointConfig.name}\n")
-      runCheckpoint(checkpointConfig)
-      println("\n=====================================================\n")
-    }
+  private def runCheckpoint(checkpointConfig: CheckpointConfig): Unit =
+    RestonomerWorkflow(applicationConfig)
+      .run(checkpointConfig)
 
   def runCheckpointsUnderDirectory(checkpointsDirectoryPath: String): Unit =
     runCheckpoints(
@@ -81,6 +74,13 @@ class RestonomerContext(
         configDirectoryPath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointsDirectoryPath"
       )
     )
+
+  private def runCheckpoints(checkpointConfigs: List[CheckpointConfig]): Unit =
+    checkpointConfigs.foreach { checkpointConfig =>
+      println(s"Checkpoint Name -> ${checkpointConfig.name}\n")
+      runCheckpoint(checkpointConfig)
+      println("\n=====================================================\n")
+    }
 
   def runAllCheckpoints(): Unit =
     runCheckpoints(

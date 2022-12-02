@@ -5,12 +5,7 @@ import sttp.client3._
 
 import scala.concurrent.Future
 
-case class RestonomerRequest(httpRequest: Request[Either[String, String], Any]) {
-
-  def send(akkaHttpBackend: SttpBackend[Future, Any]): RestonomerResponse =
-    RestonomerResponse(httpRequest.send(akkaHttpBackend))
-
-}
+case class RestonomerRequest(httpRequest: Request[Either[String, String], Any])
 
 object RestonomerRequest {
 

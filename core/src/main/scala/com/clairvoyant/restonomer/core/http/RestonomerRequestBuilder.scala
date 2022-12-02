@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.authentication.TokenRequestHandler._
+import com.clairvoyant.restonomer.core.authentication.TokenRequestHandler.getTokensMap
 import com.clairvoyant.restonomer.core.authentication._
 import sttp.client3.{Request, SttpBackend}
 
@@ -16,31 +16,31 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
         .map { restonomerAuthentication =>
           restonomerAuthentication.token
             .map { tokenConfig =>
-              implicit val tokensMap: Map[String, String] = getTokensMap(tokenConfig)
+              val credentialsWithTokenSubstitutor = CredentialsWithTokenSubstitutor(getTokensMap(tokenConfig))
 
               restonomerAuthentication match {
                 case basicAuthentication @ BasicAuthentication(_, basicToken, userName, password) =>
                   basicAuthentication.copy(
-                    basicToken = basicToken.map(substituteCredentialFromTokens),
-                    userName = userName.map(substituteCredentialFromTokens),
-                    password = password.map(substituteCredentialFromTokens)
+                    basicToken = basicToken.map(credentialsWithTokenSubstitutor.substituteCredentialWithToken),
+                    userName = userName.map(credentialsWithTokenSubstitutor.substituteCredentialWithToken),
+                    password = password.map(credentialsWithTokenSubstitutor.substituteCredentialWithToken)
                   )
 
                 case bearerAuthentication @ BearerAuthentication(_, bearerToken) =>
                   bearerAuthentication.copy(
-                    bearerToken = substituteCredentialFromTokens(bearerToken)
+                    bearerToken = credentialsWithTokenSubstitutor.substituteCredentialWithToken(bearerToken)
                   )
 
                 case apiKeyAuthentication @ APIKeyAuthentication(_, apiKeyName, apiKeyValue, _) =>
                   apiKeyAuthentication.copy(
-                    apiKeyName = substituteCredentialFromTokens(apiKeyName),
-                    apiKeyValue = substituteCredentialFromTokens(apiKeyValue)
+                    apiKeyName = credentialsWithTokenSubstitutor.substituteCredentialWithToken(apiKeyName),
+                    apiKeyValue = credentialsWithTokenSubstitutor.substituteCredentialWithToken(apiKeyValue)
                   )
 
                 case jwtAuthentication @ JWTAuthentication(_, subject, secretKey, _, _) =>
                   jwtAuthentication.copy(
-                    subject = substituteCredentialFromTokens(subject),
-                    secretKey = substituteCredentialFromTokens(secretKey)
+                    subject = credentialsWithTokenSubstitutor.substituteCredentialWithToken(subject),
+                    secretKey = credentialsWithTokenSubstitutor.substituteCredentialWithToken(secretKey)
                   )
               }
 

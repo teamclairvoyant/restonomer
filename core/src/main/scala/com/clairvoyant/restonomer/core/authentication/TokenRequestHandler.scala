@@ -20,12 +20,11 @@ object TokenRequestHandler {
   )(implicit akkaHttpBackend: SttpBackend[Future, Any]): Map[String, String] = {
     @volatile var tokensMap = Map[String, String]()
 
-    val tokenHttpResponse =
-      RestonomerRequest
-        .builder(tokenConfig.tokenRequest)
-        .build
-        .send(akkaHttpBackend)
-        .httpResponse
+    val tokenHttpResponse = RestonomerRequest
+      .builder(tokenConfig.tokenRequest)
+      .build
+      .httpRequest
+      .send(akkaHttpBackend)
 
     val tokensMapFuture = tokenHttpResponse.map { tokenResponse =>
       TokenResponsePlaceholders(tokenConfig.tokenResponse.placeholder) match {
@@ -57,22 +56,5 @@ object TokenRequestHandler {
 
     tokensMap
   }
-
-  def substituteCredentialFromTokens(
-      credential: String
-  )(implicit tokens: Map[String, String]): String =
-    """token\[(.*)]""".r
-      .findFirstMatchIn(credential)
-      .map { matcher =>
-        tokens.get(matcher.group(1)) match {
-          case Some(value) =>
-            value
-          case None =>
-            throw new RestonomerException(
-              s"Could not find the value of $credential in the token response: $tokens"
-            )
-        }
-      }
-      .getOrElse(credential)
 
 }
