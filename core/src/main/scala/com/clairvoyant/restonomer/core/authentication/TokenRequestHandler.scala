@@ -9,52 +9,41 @@ import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
 import sttp.client3.SttpBackend
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.util.{Failure, Success}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 object TokenRequestHandler {
 
   def getTokensMap(
       tokenConfig: TokenConfig
   )(implicit akkaHttpBackend: SttpBackend[Future, Any]): Map[String, String] = {
-    @volatile var tokensMap = Map[String, String]()
+    val tokenHttpResponse = Await.result(
+      RestonomerRequest
+        .builder(tokenConfig.tokenRequest)
+        .build
+        .httpRequest
+        .send(akkaHttpBackend),
+      Duration.Inf
+    )
 
-    val tokenHttpResponse = RestonomerRequest
-      .builder(tokenConfig.tokenRequest)
-      .build
-      .httpRequest
-      .send(akkaHttpBackend)
+    TokenResponsePlaceholders(tokenConfig.tokenResponse.placeholder) match {
+      case RESPONSE_BODY =>
+        implicit val formats: DefaultFormats.type = org.json4s.DefaultFormats
 
-    val tokensMapFuture = tokenHttpResponse.map { tokenResponse =>
-      TokenResponsePlaceholders(tokenConfig.tokenResponse.placeholder) match {
-        case RESPONSE_BODY =>
-          implicit val formats: DefaultFormats.type = org.json4s.DefaultFormats
+        JsonMethods
+          .parse(
+            tokenHttpResponse.body match {
+              case Left(errorMessage) =>
+                throw new RestonomerException(errorMessage)
+              case Right(responseBody) =>
+                responseBody
+            }
+          )
+          .extract[Map[String, String]]
 
-          JsonMethods
-            .parse(
-              tokenResponse.body match {
-                case Left(errorMessage) =>
-                  throw new RestonomerException(errorMessage)
-                case Right(responseBody) =>
-                  responseBody
-              }
-            )
-            .extract[Map[String, String]]
-
-        case RESPONSE_HEADERS =>
-          tokenResponse.headers.map(header => header.name -> header.value).toMap
-      }
+      case RESPONSE_HEADERS =>
+        tokenHttpResponse.headers.map(header => header.name -> header.value).toMap
     }
-
-    tokensMapFuture.onComplete {
-      case Success(value) =>
-        tokensMap = value
-      case Failure(exception) =>
-        exception.printStackTrace()
-    }
-
-    tokensMap
   }
 
 }
