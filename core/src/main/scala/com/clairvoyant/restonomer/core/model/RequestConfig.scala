@@ -7,5 +7,6 @@ case class RequestConfig(
     method: Method = Method.GET,
     url: Uri,
     authentication: Option[RestonomerAuthentication] = None,
-    headers: Map[String, String] = Map.empty
+    headers: Map[String, String] = Map.empty,
+    body: Option[String] = None
 )

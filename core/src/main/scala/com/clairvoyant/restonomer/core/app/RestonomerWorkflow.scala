@@ -15,6 +15,7 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
   def run(checkpointConfig: CheckpointConfig): Unit = {
     val restonomerRequest = buildRestonomerRequest(checkpointConfig.request)
 
+
     val restonomerResponse = getRestonomerResponse(
       restonomerRequest = restonomerRequest,
       httpBackendType = checkpointConfig.httpBackendType
@@ -41,6 +42,7 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
   private def buildRestonomerRequest(requestConfig: RequestConfig): RestonomerRequest =
     RestonomerRequest
       .builder(requestConfig)
+      .withBody(requestConfig.body)
       .build
 
   private def getRestonomerResponse(
