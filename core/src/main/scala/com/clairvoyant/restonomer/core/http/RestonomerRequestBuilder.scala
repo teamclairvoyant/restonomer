@@ -70,7 +70,7 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
     copy(httpRequest = httpRequest.headers(headers))
 
   def withBody(body: Option[String] = None): RestonomerRequestBuilder = {
-    copy(httpRequest = body.map(s=>httpRequest.body(s)).getOrElse(httpRequest))
+    copy(httpRequest = body.map(s => httpRequest.body(s)).getOrElse(httpRequest))
   }
 
   def build: RestonomerRequest = new RestonomerRequest(httpRequest)
