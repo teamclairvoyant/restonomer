@@ -75,7 +75,7 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
 
   "withBody - with custom Body" should "be added to the request" in {
     val body = "body_value"
-    val restonomerRequestBuilder = RestonomerRequestBuilder(basicHttpRequest).withBody(Option (body))
+    val restonomerRequestBuilder = RestonomerRequestBuilder(basicHttpRequest).withBody(Option(body))
 
     restonomerRequestBuilder.httpRequest.body.show shouldBe s"string: $body"
   }
