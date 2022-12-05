@@ -2,6 +2,7 @@ package com.clairvoyant.restonomer.core.transformation
 
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.lit
+import org.apache.spark.sql.functions.{col, to_json}
 
 sealed trait RestonomerTransformation {
   def transform(restonomerResponseDF: DataFrame): DataFrame
@@ -17,5 +18,15 @@ case class AddColumn(
     columnDataType
       .map(dataType => restonomerResponseDF.withColumn(columnName, lit(columnValue).cast(dataType)))
       .getOrElse(restonomerResponseDF.withColumn(columnName, lit(columnValue)))
+
+}
+
+case class ConvertColumnToJson(
+    columnName: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF
+      .withColumn(columnName, to_json(col(columnName)))
 
 }
