@@ -22,7 +22,11 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
     implicit val akkaHttpBackend: SttpBackend[Future, Any] = AkkaHttpBackend.usingActorSystem(actorSystem)
 
     val restonomerRequest = RestonomerRequest.builder(checkpointConfig.request).build
-    val restonomerResponse = RestonomerResponse.fetchFromRequest(restonomerRequest)
+
+    val restonomerResponse = RestonomerResponse.fetchFromRequest(
+      restonomerRequest = restonomerRequest,
+      retryConfig = checkpointConfig.response.retry
+    )
 
     val restonomerResponseDF = restonomerResponse.body
       .map(ResponseToDataFrameConverter(checkpointConfig.response.body.format).convertResponseToDataFrame)

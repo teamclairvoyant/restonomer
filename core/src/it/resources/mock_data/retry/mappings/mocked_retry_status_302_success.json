@@ -1,0 +1,11 @@
+{
+  "request": {
+    "url": "/retry-status-302-success"
+  },
+  "response": {
+    "status": 302,
+    "headers": {
+      "Location": "http://localhost:8080/retry-status-302-success-redirect"
+    }
+  }
+}

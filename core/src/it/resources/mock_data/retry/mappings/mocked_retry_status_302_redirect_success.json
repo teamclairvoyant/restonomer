@@ -1,0 +1,12 @@
+{
+  "request": {
+    "url": "/retry-status-302-success-redirect"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Location": "http://localhost:8080/retry-status-302-success-redirect"
+    },
+    "bodyFileName": "mocked_retry_status_302_success_response.json"
+  }
+}
