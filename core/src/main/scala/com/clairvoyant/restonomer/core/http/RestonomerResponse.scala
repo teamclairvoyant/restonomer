@@ -85,7 +85,7 @@ object RestonomerResponse {
           )
 
         case Response(_, StatusCode.NoContent, _, _, _, _) =>
-          throw new RestonomerException("No Content")
+          throw new RestonomerException("No Content.")
 
         case _ =>
           throw new RestonomerException(

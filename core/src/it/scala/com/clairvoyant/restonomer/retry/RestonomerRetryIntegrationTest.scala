@@ -1,6 +1,7 @@
 package com.clairvoyant.restonomer.retry
 
 import com.clairvoyant.restonomer.common.IntegrationTestDependencies
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 
 class RestonomerRetryIntegrationTest extends IntegrationTestDependencies {
 
@@ -19,7 +20,7 @@ class RestonomerRetryIntegrationTest extends IntegrationTestDependencies {
 
   // StatusCode.MovedPermanently (Redirection is done by akka itself)
 
-  it should "throw an exception in case of status 301" in {
+  it should "return the response body successfully in case of status 301" in {
     runCheckpoint(checkpointFileName = "checkpoint_retry_status_301.conf")
 
     val outputDF = readOutputJSON()
@@ -48,6 +49,14 @@ class RestonomerRetryIntegrationTest extends IntegrationTestDependencies {
     val expectedDF = readExpectedMockJSON(fileName = "expected_retry_status_429.json")
 
     outputDF should matchExpectedDataFrame(expectedDF)
+  }
+
+  // StatusCode.NoContent
+
+  it should "throw an exception in case of status 204" in {
+    the[RestonomerException] thrownBy runCheckpoint(checkpointFileName =
+      "checkpoint_retry_status_204.conf"
+    ) should have message "No Content."
   }
 
 }
