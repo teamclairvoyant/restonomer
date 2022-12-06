@@ -1,7 +1,6 @@
 package com.clairvoyant.restonomer.core.http
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.model.EntityStreamException
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.RetryConfig
 import sttp.client3._
@@ -89,21 +88,7 @@ object RestonomerResponse {
 
         case _ =>
           throw new RestonomerException(
-            s"Something totally unexpected bad happened while calling the API $currentRetryAttemptNumber times."
-          )
-      }
-      .recoverWith {
-        case ex: EntityStreamException if currentRetryAttemptNumber < maxRetries =>
-          waitBeforeRetry(
-            whatToRetry = getBody(
-              restonomerRequest = restonomerRequest,
-              statusCodesToRetry = statusCodesToRetry,
-              maxRetries = maxRetries,
-              currentRetryAttemptNumber = currentRetryAttemptNumber + 1
-            ),
-            message = ex.getMessage,
-            maxRetries = maxRetries,
-            currentRetryAttemptNumber = currentRetryAttemptNumber
+            s"Something totally unexpected bad happened while calling the API ${currentRetryAttemptNumber + 1} times."
           )
       }
 

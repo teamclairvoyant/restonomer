@@ -59,4 +59,12 @@ class RestonomerRetryIntegrationTest extends IntegrationTestDependencies {
     ) should have message "No Content."
   }
 
+  // Default Case
+
+  it should "throw an exception in case of status 405" in {
+    the[RestonomerException] thrownBy runCheckpoint(checkpointFileName =
+      "checkpoint_retry_status_405.conf"
+    ) should have message "Something totally unexpected bad happened while calling the API 1 times."
+  }
+
 }
