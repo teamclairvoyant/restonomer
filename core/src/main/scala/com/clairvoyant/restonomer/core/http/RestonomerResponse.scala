@@ -47,20 +47,6 @@ object RestonomerResponse {
         case Response(body, StatusCode.Ok, _, _, _, _) =>
           Future(body.toSeq.head)
 
-        case Response(_, StatusCode.Found, _, headers, _, requestMetadata) =>
-          getBody(
-            restonomerRequest = restonomerRequest
-              .copy(httpRequest =
-                restonomerRequest.httpRequest.method(
-                  method = requestMetadata.method,
-                  uri = uri"${headers.find(_.name == Location).get}"
-                )
-              ),
-            statusCodesToRetry = statusCodesToRetry,
-            maxRetries = maxRetries,
-            currentRetryAttemptNumber = currentRetryAttemptNumber + 1
-          )
-
         case response @ Response(_, statusCode, _, headers, _, _)
             if statusCodesToRetry.contains(statusCode) && currentRetryAttemptNumber < maxRetries =>
           waitBeforeRetry(
@@ -84,13 +70,19 @@ object RestonomerResponse {
             headers = headers
           )
 
-        case Response(body, StatusCode.MovedPermanently, _, _, _, _) =>
-          body match {
-            case Left(errorMessage) =>
-              throw new RestonomerException(errorMessage)
-            case Right(responseBody) =>
-              throw new RestonomerException(responseBody)
-          }
+        case Response(_, StatusCode.Found, _, headers, _, requestMetadata) =>
+          getBody(
+            restonomerRequest = restonomerRequest
+              .copy(httpRequest =
+                restonomerRequest.httpRequest.method(
+                  method = requestMetadata.method,
+                  uri = uri"${headers.find(_.name == Location).get}"
+                )
+              ),
+            statusCodesToRetry = statusCodesToRetry,
+            maxRetries = maxRetries,
+            currentRetryAttemptNumber = currentRetryAttemptNumber + 1
+          )
 
         case Response(_, StatusCode.NoContent, _, _, _, _) =>
           throw new RestonomerException("No Content")

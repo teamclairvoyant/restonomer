@@ -17,7 +17,18 @@ class RestonomerRetryIntegrationTest extends IntegrationTestDependencies {
     outputDF should matchExpectedDataFrame(expectedDF)
   }
 
-  // StatusCode.Found
+  // StatusCode.MovedPermanently (Redirection is done by akka itself)
+
+  it should "throw an exception in case of status 301" in {
+    runCheckpoint(checkpointFileName = "checkpoint_retry_status_301.conf")
+
+    val outputDF = readOutputJSON()
+    val expectedDF = readExpectedMockJSON(fileName = "expected_retry_status_301.json")
+
+    outputDF should matchExpectedDataFrame(expectedDF)
+  }
+
+  // StatusCode.Found (Redirection is done by restonomer)
 
   it should "return the response body successfully in case of status 302" in {
     runCheckpoint(checkpointFileName = "checkpoint_retry_status_302.conf")
