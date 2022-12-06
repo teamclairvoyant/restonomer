@@ -48,15 +48,12 @@ object RestonomerResponse {
           Future(body.toSeq.head)
 
         case Response(_, StatusCode.Found, _, headers, _, requestMetadata) =>
-          val newUri = uri"${headers.find(_.name == Location).get}"
-          println(s"##### Redirecting to $newUri #####")
-
           getBody(
             restonomerRequest = restonomerRequest
               .copy(httpRequest =
                 restonomerRequest.httpRequest.method(
                   method = requestMetadata.method,
-                  uri = newUri
+                  uri = uri"${headers.find(_.name == Location).get}"
                 )
               ),
             statusCodesToRetry = statusCodesToRetry,
@@ -68,7 +65,15 @@ object RestonomerResponse {
             if statusCodesToRetry.contains(statusCode) && currentRetryAttemptNumber < maxRetries =>
           waitBeforeRetry(
             whatToRetry = getBody(
-              restonomerRequest = restonomerRequest,
+              restonomerRequest = restonomerRequest
+                .copy(
+                  httpRequest = restonomerRequest.httpRequest
+                    .header(
+                      k = "retry-attempt",
+                      v = (currentRetryAttemptNumber + 1).toString,
+                      replaceExisting = true
+                    )
+                ),
               statusCodesToRetry = statusCodesToRetry,
               maxRetries = maxRetries,
               currentRetryAttemptNumber = currentRetryAttemptNumber + 1

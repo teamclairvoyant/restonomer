@@ -9,10 +9,10 @@ class RestonomerRetryIntegrationTest extends IntegrationTestDependencies {
   // StatusCode.OK
 
   it should "return the response body successfully in case of status 200" in {
-    runCheckpoint(checkpointFileName = "checkpoint_retry_status_200_success.conf")
+    runCheckpoint(checkpointFileName = "checkpoint_retry_status_200.conf")
 
     val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_retry_status_200_success.json")
+    val expectedDF = readExpectedMockJSON(fileName = "expected_retry_status_200.json")
 
     outputDF should matchExpectedDataFrame(expectedDF)
   }
@@ -20,10 +20,21 @@ class RestonomerRetryIntegrationTest extends IntegrationTestDependencies {
   // StatusCode.Found
 
   it should "return the response body successfully in case of status 302" in {
-    runCheckpoint(checkpointFileName = "checkpoint_retry_status_302_success.conf")
+    runCheckpoint(checkpointFileName = "checkpoint_retry_status_302.conf")
 
     val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_retry_status_302_success.json")
+    val expectedDF = readExpectedMockJSON(fileName = "expected_retry_status_302.json")
+
+    outputDF should matchExpectedDataFrame(expectedDF)
+  }
+
+  // StatusCode.TooManyRequests
+
+  it should "return the response body successfully in case of status 429" in {
+    runCheckpoint(checkpointFileName = "checkpoint_retry_status_429.conf")
+
+    val outputDF = readOutputJSON()
+    val expectedDF = readExpectedMockJSON(fileName = "expected_retry_status_429.json")
 
     outputDF should matchExpectedDataFrame(expectedDF)
   }
