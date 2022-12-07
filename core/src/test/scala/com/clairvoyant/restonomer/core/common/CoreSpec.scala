@@ -7,7 +7,10 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import pureconfig.ConfigReader
 import sttp.client3._
+import sttp.client3.akkahttp.AkkaHttpBackend
 import sttp.model.{Method, Uri}
+
+import scala.concurrent.Future
 
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
 
@@ -26,5 +29,7 @@ trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with Dat
     .builder()
     .master("local[*]")
     .getOrCreate()
+
+  implicit val akkaHttpBackend: SttpBackend[Future, Any] = AkkaHttpBackend()
 
 }

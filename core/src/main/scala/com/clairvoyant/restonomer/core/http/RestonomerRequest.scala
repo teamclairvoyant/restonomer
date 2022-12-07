@@ -1,19 +1,17 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.common.HttpBackendTypes
 import com.clairvoyant.restonomer.core.model.RequestConfig
 import sttp.client3._
 
-class RestonomerRequest(val httpRequest: Request[Either[String, String], Any]) {
+import scala.concurrent.Future
 
-  def send(httpBackendType: String = HttpBackendTypes.HTTP_CLIENT_SYNC_BACKEND.toString): RestonomerResponse =
-    RestonomerResponse(httpRequest.send(HttpBackendTypes(httpBackendType)))
-
-}
+case class RestonomerRequest(httpRequest: Request[Either[String, String], Any])
 
 object RestonomerRequest {
 
-  def builder(requestConfig: RequestConfig): RestonomerRequestBuilder =
+  def builder(
+      requestConfig: RequestConfig
+  )(implicit akkaHttpBackend: SttpBackend[Future, Any]): RestonomerRequestBuilder =
     RestonomerRequestBuilder(
       basicRequest.method(
         method = requestConfig.method,

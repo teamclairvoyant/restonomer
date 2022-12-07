@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/retry-status-302-redirect"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_retry_status_302_response.json"
+  }
+}

@@ -1,79 +1,56 @@
 package com.clairvoyant.restonomer.core.app
 
+import akka.actor.ActorSystem
 import com.clairvoyant.restonomer.core.converter.ResponseToDataFrameConverter
-import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.{RestonomerRequest, RestonomerResponse}
-import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig, RequestConfig}
+import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
 import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersistence}
-import com.clairvoyant.restonomer.core.transformation.RestonomerTransformation
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import sttp.client3.SttpBackend
+import sttp.client3.akkahttp.AkkaHttpBackend
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
-    val restonomerRequest = buildRestonomerRequest(checkpointConfig.request)
+    implicit val actorSystem: ActorSystem = ActorSystem(checkpointConfig.name)
+    implicit val akkaHttpBackend: SttpBackend[Future, Any] = AkkaHttpBackend.usingActorSystem(actorSystem)
 
-    val restonomerResponse = getRestonomerResponse(
+    val restonomerRequest = RestonomerRequest.builder(checkpointConfig.request).build
+
+    val restonomerResponse = RestonomerResponse.fetchFromRequest(
       restonomerRequest = restonomerRequest,
-      httpBackendType = checkpointConfig.httpBackendType
+      retryConfig = checkpointConfig.response.retry
     )
 
-    val restonomerResponseBody = getRestonomerResponseBody(restonomerResponse)
+    val restonomerResponseDF = restonomerResponse.body
+      .map(ResponseToDataFrameConverter(checkpointConfig.response.body.format).convertResponseToDataFrame)
 
-    val restonomerResponseDF = convertRestonomerResponseBodyToDataFrame(
-      restonomerResponseBody = restonomerResponseBody,
-      restonomerResponseBodyFormat = checkpointConfig.response.body.format
-    )
+    val restonomerResponseTransformedDF = restonomerResponseDF.map { df =>
+      checkpointConfig.response.transformations
+        .foldLeft(df) { case (df, restonomerTransformation) =>
+          restonomerTransformation.transform(df)
+        }
+    }
 
-    val restonomerResponseTransformedDF = transformRestonomerResponseDataFrame(
-      restonomerResponseDF = restonomerResponseDF,
-      restonomerTransformations = checkpointConfig.response.transformations
-    )
-
-    persistRestonomerResponseDataFrame(
+    val persistedRestonomerResponseDF = persistRestonomerResponseDataFrame(
       restonomerResponseDF = restonomerResponseTransformedDF,
       restonomerPersistence = checkpointConfig.response.persistence
     )
+
+    Await.result(persistedRestonomerResponseDF, Duration.Inf)
+    Await.result(actorSystem.terminate(), Duration.Inf)
   }
 
-  private def buildRestonomerRequest(requestConfig: RequestConfig): RestonomerRequest =
-    RestonomerRequest
-      .builder(requestConfig)
-      .build
-
-  private def getRestonomerResponse(
-      restonomerRequest: RestonomerRequest,
-      httpBackendType: String
-  ): RestonomerResponse = restonomerRequest.send(httpBackendType)
-
-  private def getRestonomerResponseBody(restonomerResponse: RestonomerResponse): String =
-    restonomerResponse.httpResponse.body match {
-      case Left(errorMessage) =>
-        throw new RestonomerException(errorMessage)
-      case Right(responseBody) =>
-        responseBody
-    }
-
-  private def convertRestonomerResponseBodyToDataFrame(
-      restonomerResponseBody: String,
-      restonomerResponseBodyFormat: String
-  ): DataFrame =
-    ResponseToDataFrameConverter(restonomerResponseBodyFormat).convertResponseToDataFrame(restonomerResponseBody)
-
-  private def transformRestonomerResponseDataFrame(
-      restonomerResponseDF: DataFrame,
-      restonomerTransformations: List[RestonomerTransformation]
-  ): DataFrame =
-    restonomerTransformations.foldLeft(restonomerResponseDF) { case (restonomerResponseDF, restonomerTransformation) =>
-      restonomerTransformation.transform(restonomerResponseDF)
-    }
-
   private def persistRestonomerResponseDataFrame(
-      restonomerResponseDF: DataFrame,
+      restonomerResponseDF: Future[DataFrame],
       restonomerPersistence: RestonomerPersistence
-  ): Unit = {
+  ): Future[Unit] = {
     val dataFrameWriter =
       restonomerPersistence match {
         case FileSystem(fileFormat, filePath) =>
@@ -84,12 +61,12 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
           )
       }
 
-    restonomerPersistence.persist(restonomerResponseDF, dataFrameWriter)
+    restonomerResponseDF.map(restonomerPersistence.persist(_, dataFrameWriter))
   }
 
 }
 
-object RestonomerWorkflow {
+private object RestonomerWorkflow {
 
   def apply(applicationConfig: ApplicationConfig): RestonomerWorkflow = {
     implicit val sparkSession: SparkSession = SparkSession
