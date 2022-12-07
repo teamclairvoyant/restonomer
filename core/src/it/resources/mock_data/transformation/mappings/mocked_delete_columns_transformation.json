@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/delete-columns-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_delete_columns_transformation_response.json"
+  }
+}
