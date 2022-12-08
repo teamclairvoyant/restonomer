@@ -1,63 +1,49 @@
 package com.clairvoyant.restonomer.core.http
 
+import com.clairvoyant.restonomer.core.authentication.TokenRequestHandler.getTokensMap
 import com.clairvoyant.restonomer.core.authentication._
-import com.clairvoyant.restonomer.core.exception.RestonomerException
-import sttp.client3.Request
+import sttp.client3.{Request, SttpBackend}
 
-import scala.util.matching.Regex
+import scala.concurrent.Future
 
 case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {
 
-  def withAuthentication(authenticationConfig: Option[RestonomerAuthentication]): RestonomerRequestBuilder = {
-    val TOKEN_CREDENTIAL_REGEX_PATTERN: Regex = """token\[(.*)]""".r
-
-    def substituteCredentialFromTokens(
-        credential: String
-    )(implicit tokens: Map[String, String]): String =
-      TOKEN_CREDENTIAL_REGEX_PATTERN
-        .findFirstMatchIn(credential)
-        .map { matcher =>
-          tokens.get(matcher.group(1)) match {
-            case Some(value) =>
-              value
-            case None =>
-              throw new RestonomerException(
-                s"Could not find the value of $credential in the token response: $tokens"
-              )
-          }
-        }
-        .getOrElse(credential)
-
+  def withAuthentication(
+      authenticationConfig: Option[RestonomerAuthentication]
+  )(implicit akkaHttpBackend: SttpBackend[Future, Any]): RestonomerRequestBuilder = {
     copy(httpRequest =
       authenticationConfig
         .map { restonomerAuthentication =>
-          restonomerAuthentication.tokensMap
-            .map { implicit tokens =>
+          restonomerAuthentication.token
+            .map { tokenConfig =>
+              val credentialsWithTokenSubstitutor = CredentialsWithTokenSubstitutor(getTokensMap(tokenConfig))
+
               restonomerAuthentication match {
                 case basicAuthentication @ BasicAuthentication(_, basicToken, userName, password) =>
                   basicAuthentication.copy(
-                    basicToken = basicToken.map(substituteCredentialFromTokens),
-                    userName = userName.map(substituteCredentialFromTokens),
-                    password = password.map(substituteCredentialFromTokens)
+                    basicToken = basicToken.map(credentialsWithTokenSubstitutor.substituteCredentialWithToken),
+                    userName = userName.map(credentialsWithTokenSubstitutor.substituteCredentialWithToken),
+                    password = password.map(credentialsWithTokenSubstitutor.substituteCredentialWithToken)
                   )
 
                 case bearerAuthentication @ BearerAuthentication(_, bearerToken) =>
                   bearerAuthentication.copy(
-                    bearerToken = substituteCredentialFromTokens(bearerToken)
+                    bearerToken = credentialsWithTokenSubstitutor.substituteCredentialWithToken(bearerToken)
                   )
 
                 case apiKeyAuthentication @ APIKeyAuthentication(_, apiKeyName, apiKeyValue, _) =>
                   apiKeyAuthentication.copy(
-                    apiKeyName = substituteCredentialFromTokens(apiKeyName),
-                    apiKeyValue = substituteCredentialFromTokens(apiKeyValue)
+                    apiKeyName = credentialsWithTokenSubstitutor.substituteCredentialWithToken(apiKeyName),
+                    apiKeyValue = credentialsWithTokenSubstitutor.substituteCredentialWithToken(apiKeyValue)
                   )
 
                 case jwtAuthentication @ JWTAuthentication(_, subject, secretKey, _, _) =>
                   jwtAuthentication.copy(
-                    subject = substituteCredentialFromTokens(subject),
-                    secretKey = substituteCredentialFromTokens(secretKey)
+                    subject = credentialsWithTokenSubstitutor.substituteCredentialWithToken(subject),
+                    secretKey = credentialsWithTokenSubstitutor.substituteCredentialWithToken(secretKey)
                   )
               }
+
             }
             .getOrElse(restonomerAuthentication)
             .validateCredentialsAndAuthenticate(httpRequest)

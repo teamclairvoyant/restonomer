@@ -97,6 +97,7 @@ In restonomer framework, the details about the http response (like response body
 
 ```scala
 case class ResponseConfig(
+     retry: RetryConfig = RetryConfig(),
      body: ResponseBodyConfig,
      transformations: Option[List[RestonomerTransformation]] = None,
      persistence: RestonomerPersistence
@@ -107,6 +108,7 @@ User need to provide below configs for Response Configuration:
 
 | Config Name     | Mandatory | Default Value | Description                                                                                         |
 |:----------------|:---------:|:-------------:|:----------------------------------------------------------------------------------------------------|
+| retry           |    No     |       -       | The auto retry configuration                                                                        |
 | body            |    Yes    |       -       | The body of the http response represented by `ResponseBodyConfig`                                   |
 | transformations |    No     |  Empty List   | List of transformations to be applied on the restonomer response dataframe                          |
 | persistence     |    Yes    |       -       | The persistence attribute that tells where to persist the transformed restonomer response dataframe |
@@ -115,6 +117,11 @@ The response configurations are provided in the checkpoint file in the below man
 
 ```hocon
 response = {
+  retry = {
+    max-retries = 5
+    status-codes-to-retry = [429, 301]
+  }
+ 
   body = {
     format = "JSON"
   }
@@ -133,6 +140,32 @@ response = {
     file-format = "json"
     file-path = "./rest-output/"
  }
+}
+```
+
+# Retry Config
+
+The configurations related to the auto retry mechanism of Restonomer are represented by class `RetryConfig`:
+
+```scala
+case class RetryConfig(
+    maxRetries: Int = 20,
+    statusCodesToRetry: List[Int] = List(403, 429, 502, 401, 500, 504, 503, 408)
+)
+```
+User need to provide below configs for Retry Configuration:
+
+| Config Name           | Mandatory |              Default Value               | Description                                                                                                                      |
+|:----------------------|:---------:|:----------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------|
+| max-retries           |    No     |                    20                    | This config tells restonomer the maximum number of attempts to retry in case of a request failure                                |
+| status-codes-to-retry |    No     | [403, 429, 502, 401, 500, 504, 503, 408] | This config provides the restonomer with the list of response status codes for which user wants restonomer to retry the request. |
+
+The retry configurations are provided in the checkpoint file in the below manner:
+
+```hocon
+retry = {
+  max-retries = 5
+  status-codes-to-retry = [429, 301]
 }
 ```
 

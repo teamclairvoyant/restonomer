@@ -42,7 +42,7 @@ response = {
 
 # Types of restonomer transformations
 
-## AddColumn Transformation
+## AddLiteralColumn
 
 It lets the user add a new column with a literal value of the desired data type.
 
@@ -58,9 +58,28 @@ User can configure the AddColumn transformation in the below manner:
 
 ```hocon
 {
-  type = "add-column"
+  type = "add-literal-column"
   column-name = "col_D"
   column-value = "val_D"
   column-data-type = "string"
+}
+```
+
+## DeleteColumns
+
+It lets the user delete specific columns from the restonomer response dataframe.
+
+This transformation needs below inputs from the user:
+
+| Input Arguments  | Mandatory | Default Value | Description                        |
+|:-----------------|:---------:|:-------------:|:-----------------------------------|
+| column-names     |    Yes    |       -       | List of column names to be deleted |
+
+User can configure the AddColumn transformation in the below manner:
+
+```hocon
+{
+  type = "delete-columns"
+  column-names = ["col_A", "col_B"]
 }
 ```

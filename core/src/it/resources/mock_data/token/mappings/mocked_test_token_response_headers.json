@@ -4,7 +4,7 @@
     "url": "/test-token-response-headers",
     "headers": {
       "Authorization": {
-        "matches": "Basic basic_123"
+        "matches": "Bearer bearer_123"
       }
     }
   },
