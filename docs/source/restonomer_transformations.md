@@ -54,7 +54,7 @@ This transformation needs below inputs from the user:
 | column-value     |    Yes    |       -       | Literal value of the new column                            |
 | column-data-type |    No     |    string     | The spark sql data type that new column needs to be casted |
 
-User can configure the AddColumn transformation in the below manner:
+User can configure the `AddColumn` transformation in the below manner:
 
 ```hocon
 {
@@ -75,11 +75,31 @@ This transformation needs below inputs from the user:
 |:-----------------|:---------:|:-------------:|:-----------------------------------|
 | column-names     |    Yes    |       -       | List of column names to be deleted |
 
-User can configure the AddColumn transformation in the below manner:
+User can configure the `DeleteColumns` transformation in the below manner:
 
 ```hocon
 {
   type = "delete-columns"
   column-names = ["col_A", "col_B"]
+}
+```
+
+## ExplodeColumn
+
+It lets the user explode specific column values into multiple rows with the same column name from the restonomer 
+response dataframe.
+
+This transformation needs below inputs from the user:
+
+| Input Arguments | Mandatory | Default Value | Description                       |
+|:----------------|:---------:|:-------------:|:----------------------------------|
+| column-name     |    Yes    |       -       | The name of column to be exploded |
+
+User can configure the `ExplodeColumn` transformation in the below manner:
+
+```hocon
+{
+  type = "explode-column"
+  column-name = "col_A"
 }
 ```
