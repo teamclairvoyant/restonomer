@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.functions.lit
+import org.apache.spark.sql.functions.{col, lit}
 
 object DataFrameTransformerImplicits {
 
@@ -16,9 +16,10 @@ object DataFrameTransformerImplicits {
         .map(dataType => df.withColumn(columnName, lit(columnValue).cast(dataType)))
         .getOrElse(df.withColumn(columnName, lit(columnValue)))
 
-    def dropColumns(
-        columnNames: Set[String]
-    ): DataFrame = df.drop(columnNames.toList: _*)
+    def drop(columnNames: Set[String]): DataFrame = df.drop(columnNames.toList: _*)
+
+    def explode(columnName: String): DataFrame =
+      df.withColumn(columnName, org.apache.spark.sql.functions.explode(col(columnName)))
 
   }
 
