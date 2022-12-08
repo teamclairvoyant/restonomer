@@ -26,6 +26,14 @@ case class DeleteColumns(
     columnNames: Set[String]
 ) extends RestonomerTransformation {
 
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.dropColumns(columnNames)
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.drop(columnNames)
+
+}
+
+case class ExplodeColumn(
+    columnName: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.explode(columnName)
 
 }
