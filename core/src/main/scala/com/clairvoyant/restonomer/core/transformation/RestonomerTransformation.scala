@@ -37,3 +37,13 @@ case class ExplodeColumn(
   override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.explode(columnName)
 
 }
+
+case class CastNestedColumn(
+    columnName: String,
+    ddl: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.castNestedColumn(columnName, ddl)
+
+}

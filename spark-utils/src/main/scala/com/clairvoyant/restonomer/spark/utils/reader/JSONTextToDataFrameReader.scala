@@ -9,8 +9,6 @@ class JSONTextToDataFrameReader(
 
   import sparkSession.implicits._
 
-  override def read: DataFrame =
-    sparkSession.read
-      .json(Seq(text).toDS())
+  override def read: DataFrame = sparkSession.read.json(Seq(text).toDS())
 
 }
