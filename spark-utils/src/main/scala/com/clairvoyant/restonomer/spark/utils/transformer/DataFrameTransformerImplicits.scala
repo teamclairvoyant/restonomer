@@ -1,7 +1,8 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.functions.{col, lit}
+import org.apache.spark.sql.functions.{col, from_json, lit, to_json}
+import org.apache.spark.sql.types.DataType
 
 object DataFrameTransformerImplicits {
 
@@ -20,6 +21,11 @@ object DataFrameTransformerImplicits {
 
     def explode(columnName: String): DataFrame =
       df.withColumn(columnName, org.apache.spark.sql.functions.explode(col(columnName)))
+
+    def castNestedColumn(
+        columnName: String,
+        ddl: String
+    ): DataFrame = df.withColumn(columnName, from_json(to_json(col(columnName)), DataType.fromDDL(ddl)))
 
   }
 

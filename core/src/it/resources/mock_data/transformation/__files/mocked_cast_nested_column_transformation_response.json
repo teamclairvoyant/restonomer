@@ -1,0 +1,7 @@
+{
+  "col_A": "val_A",
+  "col_B": {
+    "col_C": "val_C",
+    "col_D": 5
+  }
+}
