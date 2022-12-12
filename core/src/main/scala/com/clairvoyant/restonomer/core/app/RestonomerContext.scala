@@ -1,10 +1,9 @@
 package com.clairvoyant.restonomer.core.app
 
-import com.clairvoyant.restonomer.core.common.RestonomerContextConfigTypes
 import com.clairvoyant.restonomer.core.config.ConfigVariablesSubstitutor
 import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import com.clairvoyant.restonomer.core.model.CheckpointConfig
+import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
 import pureconfig.ConfigReader
 import pureconfig.generic.auto._
@@ -25,7 +24,7 @@ object RestonomerContext {
       new RestonomerContext(restonomerContextDirectoryPath, configVariablesFromApplicationArgs)
     else
       throw new RestonomerException(
-        s"The RestonomerContext directory path: $restonomerContextDirectoryPath does not exists."
+        s"The restonomerContextDirectoryPath: $restonomerContextDirectoryPath does not exists."
       )
 
 }
@@ -38,30 +37,46 @@ class RestonomerContext(
 
   private val CONFIG_VARIABLES_FILE_PATH = s"$restonomerContextDirectoryPath/uncommitted/config_variables.conf"
   private val APPLICATION_CONFIG_FILE_PATH = s"$restonomerContextDirectoryPath/application.conf"
+  private val CHECKPOINTS_CONFIG_DIRECTORY_PATH = s"$restonomerContextDirectoryPath/checkpoints"
 
-  private val CHECKPOINTS_CONFIG_DIRECTORY_PATH =
-    s"$restonomerContextDirectoryPath/${RestonomerContextConfigTypes.CHECKPOINT}"
+  private val configVariablesFromFile = {
+    implicit val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
+      configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
+    )
 
-  private val configVariablesFromFile = loadConfigVariablesFromFile(CONFIG_VARIABLES_FILE_PATH)
+    loadConfigsFromFilePath[Map[String, String]](
+      configFilePath = CONFIG_VARIABLES_FILE_PATH,
+      fileNotFoundAction = () => Map()
+    )
+  }
 
   implicit private val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
     configVariablesFromFile = configVariablesFromFile,
     configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
   )
 
-  private val applicationConfig = loadApplicationConfig(APPLICATION_CONFIG_FILE_PATH)
+  private val applicationConfig = loadConfigsFromFilePath[ApplicationConfig](
+    configFilePath = APPLICATION_CONFIG_FILE_PATH,
+    fileNotFoundAction =
+      () =>
+        throw new FileNotFoundException(
+          s"The application config file with the path: $APPLICATION_CONFIG_FILE_PATH does not exists."
+        )
+  )
 
   def runCheckpoint(checkpointFilePath: String): Unit = {
     val absoluteCheckpointFilePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointFilePath"
 
-    if (fileExists(absoluteCheckpointFilePath))
-      runCheckpoint(
-        loadConfigsFromFilePath[CheckpointConfig](
-          configFilePath = absoluteCheckpointFilePath
-        )
+    runCheckpoint(
+      loadConfigsFromFilePath[CheckpointConfig](
+        configFilePath = absoluteCheckpointFilePath,
+        fileNotFoundAction =
+          () =>
+            throw new FileNotFoundException(
+              s"The checkpoint file with the path: $absoluteCheckpointFilePath does not exists."
+            )
       )
-    else
-      throw new FileNotFoundException(s"The checkpoint file with the path: $checkpointFilePath does not exists.")
+    )
   }
 
   def runCheckpointsUnderDirectory(checkpointsDirectoryPath: String): Unit =

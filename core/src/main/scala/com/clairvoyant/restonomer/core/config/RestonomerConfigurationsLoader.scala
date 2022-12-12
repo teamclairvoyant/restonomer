@@ -1,9 +1,7 @@
 package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import com.clairvoyant.restonomer.core.model.ApplicationConfig
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
-import pureconfig.generic.auto._
 import pureconfig.{ConfigReader, ConfigSource}
 
 import java.io.{File, FileNotFoundException}
@@ -12,29 +10,18 @@ import scala.reflect.ClassTag
 
 object RestonomerConfigurationsLoader {
 
-  def loadConfigVariablesFromFile(configVariablesFilePath: String): Map[String, String] = {
-    if (fileExists(configVariablesFilePath)) {
-      implicit val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
-      loadConfigsFromFilePath[Map[String, String]](configVariablesFilePath)
-    } else
-      Map()
-  }
-
-  def loadApplicationConfig(applicationConfigFilePath: String)(
-      implicit configVariablesSubstitutor: ConfigVariablesSubstitutor
-  ): ApplicationConfig = {
-    if (fileExists(applicationConfigFilePath))
-      loadConfigsFromFilePath[ApplicationConfig](configFilePath = applicationConfigFilePath)
-    else
-      throw new FileNotFoundException(
-        s"The application config file with the path: $applicationConfigFilePath does not exists."
-      )
-  }
-
-  def loadConfigsFromFilePath[C: ClassTag](configFilePath: String)(
+  def loadConfigsFromFilePath[C: ClassTag](
+      configFilePath: String,
+      fileNotFoundAction: () => C
+  )(
       implicit configVariablesSubstitutor: ConfigVariablesSubstitutor,
       reader: ConfigReader[C]
-  ): C = loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath)))
+  ): C = {
+    if (fileExists(configFilePath))
+      loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath)))
+    else
+      fileNotFoundAction()
+  }
 
   def loadConfigsFromDirectory[C: ClassTag](configDirectoryPath: String)(
       implicit configVariablesSubstitutor: ConfigVariablesSubstitutor,
