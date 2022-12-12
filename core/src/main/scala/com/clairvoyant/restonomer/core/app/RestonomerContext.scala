@@ -44,10 +44,10 @@ class RestonomerContext(
       configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
     )
 
-    loadConfigsFromFilePath[Map[String, String]](
-      configFilePath = CONFIG_VARIABLES_FILE_PATH,
-      fileNotFoundAction = () => Map()
-    )
+    if (fileExists(CONFIG_VARIABLES_FILE_PATH))
+      loadConfigFromFile[Map[String, String]](CONFIG_VARIABLES_FILE_PATH)
+    else
+      Map[String, String]()
   }
 
   implicit private val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
@@ -55,43 +55,43 @@ class RestonomerContext(
     configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
   )
 
-  private val applicationConfig = loadConfigsFromFilePath[ApplicationConfig](
-    configFilePath = APPLICATION_CONFIG_FILE_PATH,
-    fileNotFoundAction =
-      () =>
-        throw new FileNotFoundException(
-          s"The application config file with the path: $APPLICATION_CONFIG_FILE_PATH does not exists."
-        )
-  )
+  private val applicationConfig =
+    if (fileExists(APPLICATION_CONFIG_FILE_PATH))
+      loadConfigFromFile[ApplicationConfig](APPLICATION_CONFIG_FILE_PATH)
+    else
+      throw new FileNotFoundException(
+        s"The application config file with the path: $APPLICATION_CONFIG_FILE_PATH does not exists."
+      )
 
   def runCheckpoint(checkpointFilePath: String): Unit = {
     val absoluteCheckpointFilePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointFilePath"
 
-    runCheckpoint(
-      loadConfigsFromFilePath[CheckpointConfig](
-        configFilePath = absoluteCheckpointFilePath,
-        fileNotFoundAction =
-          () =>
-            throw new FileNotFoundException(
-              s"The checkpoint file with the path: $absoluteCheckpointFilePath does not exists."
-            )
+    if (fileExists(absoluteCheckpointFilePath))
+      runCheckpoint(loadConfigFromFile[CheckpointConfig](absoluteCheckpointFilePath))
+    else
+      throw new FileNotFoundException(
+        s"The checkpoint file with the path: $absoluteCheckpointFilePath does not exists."
       )
-    )
   }
 
-  def runCheckpointsUnderDirectory(checkpointsDirectoryPath: String): Unit =
-    runCheckpoints(
-      loadConfigsFromDirectory[CheckpointConfig](
-        configDirectoryPath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointsDirectoryPath"
+  def runCheckpointsUnderDirectory(checkpointsDirectoryPath: String): Unit = {
+    val absoluteCheckpointsDirectoryPath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointsDirectoryPath"
+
+    if (fileExists(absoluteCheckpointsDirectoryPath))
+      runCheckpoints(loadConfigsFromDirectory[CheckpointConfig](absoluteCheckpointsDirectoryPath))
+    else
+      throw new FileNotFoundException(
+        s"The config directory with the path: $absoluteCheckpointsDirectoryPath does not exists."
       )
-    )
+  }
 
   def runAllCheckpoints(): Unit =
-    runCheckpoints(
-      loadConfigsFromDirectory[CheckpointConfig](
-        configDirectoryPath = CHECKPOINTS_CONFIG_DIRECTORY_PATH
+    if (fileExists(CHECKPOINTS_CONFIG_DIRECTORY_PATH))
+      runCheckpoints(loadConfigsFromDirectory[CheckpointConfig](CHECKPOINTS_CONFIG_DIRECTORY_PATH))
+    else
+      throw new FileNotFoundException(
+        s"The config directory with the path: $CHECKPOINTS_CONFIG_DIRECTORY_PATH does not exists."
       )
-    )
 
   private def runCheckpoints(checkpointConfigs: List[CheckpointConfig]): Unit =
     checkpointConfigs.foreach { checkpointConfig =>
@@ -101,7 +101,6 @@ class RestonomerContext(
     }
 
   private def runCheckpoint(checkpointConfig: CheckpointConfig): Unit =
-    RestonomerWorkflow(applicationConfig)
-      .run(checkpointConfig)
+    RestonomerWorkflow(applicationConfig).run(checkpointConfig)
 
 }

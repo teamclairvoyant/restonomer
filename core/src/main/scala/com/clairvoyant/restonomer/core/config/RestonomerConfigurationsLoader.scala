@@ -1,29 +1,29 @@
 package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
 import pureconfig.{ConfigReader, ConfigSource}
 
-import java.io.{File, FileNotFoundException}
+import java.io.File
 import scala.annotation.tailrec
-import scala.reflect.ClassTag
 
 object RestonomerConfigurationsLoader {
 
-  def loadConfigsFromFilePath[C: ClassTag](
-      configFilePath: String,
-      fileNotFoundAction: () => C
+  def loadConfigFromFile[C](
+      configFilePath: String
   )(
       implicit configVariablesSubstitutor: ConfigVariablesSubstitutor,
       reader: ConfigReader[C]
-  ): C = {
-    if (fileExists(configFilePath))
-      loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath)))
-    else
-      fileNotFoundAction()
-  }
+  ): C =
+    ConfigSource
+      .string(configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath)))
+      .load[C] match {
+      case Right(config) =>
+        config
+      case Left(error) =>
+        throw new RestonomerException(error.prettyPrint())
+    }
 
-  def loadConfigsFromDirectory[C: ClassTag](configDirectoryPath: String)(
+  def loadConfigsFromDirectory[C](configDirectoryPath: String)(
       implicit configVariablesSubstitutor: ConfigVariablesSubstitutor,
       reader: ConfigReader[C]
   ): List[C] = {
@@ -39,24 +39,12 @@ object RestonomerConfigurationsLoader {
         else
           loadConfigsFromDirectoryHelper(
             remainingConfigFiles.tail,
-            loadConfigFromString(configVariablesSubstitutor.substituteConfigVariables(configFile)) :: configs
+            loadConfigFromFile(configFile.getPath) :: configs
           )
       }
     }
 
-    if (fileExists(configDirectoryPath))
-      loadConfigsFromDirectoryHelper(new File(configDirectoryPath).listFiles().toList, List())
-    else
-      throw new FileNotFoundException(s"The config directory with the path: $configDirectoryPath does not exists.")
-  }
-
-  def loadConfigFromString[C](configText: String)(implicit reader: ConfigReader[C]): C = {
-    ConfigSource.string(configText).load[C] match {
-      case Right(config) =>
-        config
-      case Left(error) =>
-        throw new RestonomerException(error.prettyPrint())
-    }
+    loadConfigsFromDirectoryHelper(new File(configDirectoryPath).listFiles().toList, List())
   }
 
 }
