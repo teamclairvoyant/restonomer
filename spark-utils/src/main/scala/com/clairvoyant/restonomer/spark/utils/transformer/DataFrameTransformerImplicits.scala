@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
-import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.{col, from_json, lit, to_json}
-import org.apache.spark.sql.types.DataType
+import org.apache.spark.sql.types.{DataType, StructType}
+import org.apache.spark.sql.{Column, DataFrame}
 
 object DataFrameTransformerImplicits {
 
@@ -26,6 +26,28 @@ object DataFrameTransformerImplicits {
         columnName: String,
         ddl: String
     ): DataFrame = df.withColumn(columnName, from_json(to_json(col(columnName)), DataType.fromDDL(ddl)))
+
+    def flattenSchema: DataFrame = {
+      def flattenSchemaFromStructType(
+          schema: StructType,
+          prefix: Option[String] = None
+      ): Array[Column] =
+        schema.fields.flatMap { field =>
+          val newColName = prefix.map(p => s"$p.${field.name}").getOrElse(field.name)
+
+          field.dataType match {
+            case st: StructType =>
+              flattenSchemaFromStructType(st, Some(newColName))
+            case _ =>
+              Array(col(newColName).as(newColName.replace(".", "_")))
+          }
+        }
+
+      if (df.schema.exists(_.dataType.isInstanceOf[StructType]))
+        df.select(flattenSchemaFromStructType(df.schema): _*)
+      else
+        df
+    }
 
   }
 
