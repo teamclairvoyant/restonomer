@@ -47,3 +47,9 @@ case class CastNestedColumn(
     restonomerResponseDF.castNestedColumn(columnName, ddl)
 
 }
+
+case class FlattenSchema() extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.flattenSchema
+
+}
