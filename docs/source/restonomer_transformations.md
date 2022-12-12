@@ -188,3 +188,54 @@ The transformed response will now have the flat schema as below:
   "rewardApprovedMonthPeriod_to": "2021-10"
 }
 ```
+
+## CastColumns
+
+It lets the user cast the data type of multiple columns to the desired different types at once.
+
+This transformation expects user to provide below inputs:
+
+| Input Arguments         | Mandatory | Default Value | Description                                               |
+|:------------------------|:---------:|:-------------:|:----------------------------------------------------------|
+| column-data-type-mapper |    Yes    |       -       | It defines the mapping of column to its desired data type |
+
+For example, consider we have below restonomer response in json:
+
+```json
+{
+  "col_A": 5,
+  "col_B": 4,
+  "col_C": 3.4678
+}
+```
+
+Now, suppose the requirement is to cast above columns into below data types:
+
+```text
+col_A -> string
+col_B -> double
+col_C -> decimal type with precision 19 and scale 2
+```
+
+Then, user can configure the `CastColumns` transformation in the below manner:
+
+```hocon
+{
+  type = "cast-columns"
+  column-data-type-mapper = {
+    "col_A" = "string"
+    "col_B" = "double"
+    "col_C" = "decimal(19,2)"
+  }
+}
+```
+
+The transformed response will now have the columns with the desired data types:
+
+```json
+{
+  "col_A": "5",
+  "col_B": 4.0,
+  "col_C": 3.47
+}
+```

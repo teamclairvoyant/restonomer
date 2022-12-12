@@ -53,3 +53,12 @@ case class FlattenSchema() extends RestonomerTransformation {
   override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.flattenSchema
 
 }
+
+case class CastColumns(
+    columnDataTypeMapper: Map[String, String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.castColumns(columnDataTypeMapper)
+
+}

@@ -49,6 +49,16 @@ object DataFrameTransformerImplicits {
         df
     }
 
+    def castColumns(columnDataTypeMapper: Map[String, String]): DataFrame =
+      df.select(
+        df.columns.map { columnName =>
+          columnDataTypeMapper
+            .get(columnName)
+            .map(col(columnName).cast)
+            .getOrElse(col(columnName))
+        }: _*
+      )
+
   }
 
 }
