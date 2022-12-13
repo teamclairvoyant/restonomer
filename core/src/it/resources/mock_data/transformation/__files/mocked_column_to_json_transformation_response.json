@@ -1,0 +1,9 @@
+{
+  "col_A": 1,
+  "col_B": [
+    {
+      "Zipcode": 704,
+      "ZipCodeType": "STANDARD"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.functions.lit
+import org.apache.spark.sql.functions.{col, lit, to_json}
 
 object DataFrameTransformerImplicits {
 
@@ -19,6 +19,10 @@ object DataFrameTransformerImplicits {
     def dropColumns(
         columnNames: Set[String]
     ): DataFrame = df.drop(columnNames.toList: _*)
+
+    def colToJson(
+        columnName: String
+    ): DataFrame = df.withColumn(columnName, to_json(col(columnName)))
 
   }
 
