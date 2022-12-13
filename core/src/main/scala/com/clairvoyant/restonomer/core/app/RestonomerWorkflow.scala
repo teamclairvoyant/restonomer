@@ -30,7 +30,6 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
       retryConfig = checkpointConfig.response.retry
     )
 
-
     val restonomerResponseDF = restonomerResponse.body
       .map(ResponseToDataFrameConverter(checkpointConfig.response.body.format).convertResponseToDataFrame)
 
@@ -52,7 +51,6 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
   private def persistRestonomerResponseDataFrame(
       restonomerResponseDF: Future[DataFrame],
-
       restonomerPersistence: RestonomerPersistence
   ): Future[Unit] = {
     val dataFrameWriter =
@@ -88,6 +86,5 @@ private object RestonomerWorkflow {
 
     new RestonomerWorkflow()
   }
-
 
 }
