@@ -1,10 +1,9 @@
 package com.clairvoyant.restonomer.core.transformation
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
 import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
-import org.apache.spark.sql.{AnalysisException, DataFrame}
+import org.apache.spark.sql.DataFrame
 
 class ConvertColumnToJsonTransformationSpec extends CoreSpec with DataFrameMatchers {
   import sparkSession.implicits._
