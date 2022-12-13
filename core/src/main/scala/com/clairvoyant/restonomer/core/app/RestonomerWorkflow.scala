@@ -9,23 +9,29 @@ import com.clairvoyant.restonomer.core.transformation.RestonomerTransformation
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import sttp.client3.SttpBackend
+
 
 class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
-    val restonomerRequest = buildRestonomerRequest(checkpointConfig.request)
+/*  val restonomerRequest = buildRestonomerRequest(checkpointConfig.request) */
+    val restonomerRequest = RestonomerRequest.builder(checkpointConfig.request).build
 
-    val restonomerResponse = getRestonomerResponse(
+/*    val restonomerResponse = getRestonomerResponse(
       restonomerRequest = restonomerRequest,
       httpBackendType = checkpointConfig.httpBackendType
     )
 
-    val restonomerResponseBody = getRestonomerResponseBody(restonomerResponse)
-
-    val restonomerResponseDF = convertRestonomerResponseBodyToDataFrame(
-      restonomerResponseBody = restonomerResponseBody,
-      restonomerResponseBodyFormat = checkpointConfig.response.body.format
+    val restonomerResponse = RestonomerResponse.fetchFromRequest(
+      restonomerRequest = restonomerRequest,
+      retryConfig = checkpointConfig.response.retry
     )
+
+   val restonomerResponseBody = getRestonomerResponseBody(restonomerResponse)
+
+    val restonomerResponseDF = restonomerResponse.body
+      .map(ResponseToDataFrameConverter(checkpointConfig.response.body.format).convertResponseToDataFrame)
 
     val restonomerResponseTransformedDF = transformRestonomerResponseDataFrame(
       restonomerResponseDF = restonomerResponseDF,
@@ -56,14 +62,14 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
       case Right(responseBody) =>
         responseBody
     }
-
-  private def convertRestonomerResponseBodyToDataFrame(
+*/
+  def convertRestonomerResponseBodyToDataFrame(
       restonomerResponseBody: String,
       restonomerResponseBodyFormat: String
   ): DataFrame =
     ResponseToDataFrameConverter(restonomerResponseBodyFormat).convertResponseToDataFrame(restonomerResponseBody)
 
-  private def transformRestonomerResponseDataFrame(
+  def transformRestonomerResponseDataFrame(
       restonomerResponseDF: DataFrame,
       restonomerTransformations: List[RestonomerTransformation]
   ): DataFrame =
@@ -71,7 +77,7 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
       restonomerTransformation.transform(restonomerResponseDF)
     }
 
-  private def persistRestonomerResponseDataFrame(
+  def persistRestonomerResponseDataFrame(
       restonomerResponseDF: DataFrame,
       restonomerPersistence: RestonomerPersistence
   ): Unit = {
@@ -108,5 +114,6 @@ object RestonomerWorkflow {
 
     new RestonomerWorkflow()
   }
+
 
 }
