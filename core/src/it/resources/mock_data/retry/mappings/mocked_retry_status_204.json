@@ -1,0 +1,8 @@
+{
+  "request": {
+    "url": "/retry-status-204"
+  },
+  "response": {
+    "status": 204
+  }
+}

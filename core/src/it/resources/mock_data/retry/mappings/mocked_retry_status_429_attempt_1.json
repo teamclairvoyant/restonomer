@@ -1,0 +1,15 @@
+{
+  "priority": 1,
+  "request": {
+    "url": "/retry-status-429",
+    "headers": {
+      "retry-attempt": {
+        "matches": "1"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_retry_status_429_response.json"
+  }
+}

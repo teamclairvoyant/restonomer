@@ -51,10 +51,10 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
   }
 
   private def persistRestonomerResponseDataFrame(
-                                                  restonomerResponseDF: Future[DataFrame],
+      restonomerResponseDF: Future[DataFrame],
 
-                                                  restonomerPersistence: RestonomerPersistence
-                                                ): Future[Unit] = {
+      restonomerPersistence: RestonomerPersistence
+  ): Future[Unit] = {
     val dataFrameWriter =
       restonomerPersistence match {
         case FileSystem(fileFormat, filePath) =>

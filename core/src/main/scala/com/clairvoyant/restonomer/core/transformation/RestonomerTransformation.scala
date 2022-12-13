@@ -1,21 +1,64 @@
 package com.clairvoyant.restonomer.core.transformation
 
+import com.clairvoyant.restonomer.spark.utils.transformer.DataFrameTransformerImplicits._
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.functions.lit
 
 sealed trait RestonomerTransformation {
   def transform(restonomerResponseDF: DataFrame): DataFrame
 }
 
-case class AddColumn(
+case class AddLiteralColumn(
     columnName: String,
     columnValue: String,
     columnDataType: Option[String]
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    columnDataType
-      .map(dataType => restonomerResponseDF.withColumn(columnName, lit(columnValue).cast(dataType)))
-      .getOrElse(restonomerResponseDF.withColumn(columnName, lit(columnValue)))
+    restonomerResponseDF.addColumn(
+      columnName = columnName,
+      columnValue = columnValue,
+      columnDataType = columnDataType
+    )
+
+}
+
+case class DeleteColumns(
+    columnNames: Set[String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.drop(columnNames)
+
+}
+
+case class ExplodeColumn(
+    columnName: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.explode(columnName)
+
+}
+
+case class CastNestedColumn(
+    columnName: String,
+    ddl: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.castNestedColumn(columnName, ddl)
+
+}
+
+case class FlattenSchema() extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.flattenSchema
+
+}
+
+case class CastColumns(
+    columnDataTypeMapper: Map[String, String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.castColumns(columnDataTypeMapper)
 
 }
