@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/explode-column-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_explode_column_transformation_response.json"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/cast-nested-column-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_cast_nested_column_transformation_response.json"
+  }
+}

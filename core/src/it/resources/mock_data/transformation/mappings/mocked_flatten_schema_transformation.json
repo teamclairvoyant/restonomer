@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/flatten-schema-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_flatten_schema_transformation_response.json"
+  }
+}
