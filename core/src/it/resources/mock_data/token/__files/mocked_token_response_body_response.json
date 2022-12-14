@@ -1,3 +1,5 @@
 {
-  "bearer_token": "bearer_123"
+  "data": {
+    "bearer_token": "bearer_123"
+  }
 }
