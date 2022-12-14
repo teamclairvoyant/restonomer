@@ -21,7 +21,7 @@ class CustomHeadersIntegrationTest extends IntegrationTestDependencies {
 
     val outputDF = readOutputJSON("blank_custom_headers")
 
-    val expectedDF = readExpectedMockJSON("expected_custom_body.json")
+    val expectedDF = readExpectedMockJSON("expected_blank_custom_headers.json")
 
     outputDF should matchExpectedDataFrame(expectedDF)
   }
