@@ -35,7 +35,7 @@ object TokenRequestHandler {
               case Right(responseBody) =>
                 responseBody
             },
-            s"$$.$tokenJsonPath"
+            tokenJsonPath
           )
 
       case RESPONSE_HEADERS =>
