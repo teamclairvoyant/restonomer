@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/json-response-converter"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "sample_json_response_body.json"
+  }
+}

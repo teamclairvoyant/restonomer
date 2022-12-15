@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/basic-auth-token",
+    "headers": {
+      "Authorization": {
+        "matches": "Basic abcd1234"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_basic_authentication_token_response.json"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/blank-custom-headers"
+  },
+  "response": {
+    "bodyFileName": "mocked_blank_custom_headers_response.json"
+  }
+}

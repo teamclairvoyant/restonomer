@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/api-key-auth-request-header",
+    "headers": {
+      "test_api_key_name": {
+        "matches": "test_api_key_value"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_api_key_authentication_request_header_response.json"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/bearer-auth",
+    "headers": {
+      "Authorization": {
+        "matches": "Bearer abcd1234"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_bearer_authentication_response.json"
+  }
+}

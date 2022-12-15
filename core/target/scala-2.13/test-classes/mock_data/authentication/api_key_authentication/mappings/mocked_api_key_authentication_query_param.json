@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/api-key-auth-query-param?test_api_key_name=test_api_key_value"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_api_key_authentication_query_param_response.json"
+  }
+}

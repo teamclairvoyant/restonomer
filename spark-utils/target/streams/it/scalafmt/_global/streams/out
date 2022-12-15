@@ -1,0 +1,11 @@
+[0m[[0m[0mdebug[0m] [0m[0mscalafmt: Adding repositories [https://repo1.maven.org/maven2/][0m
+[0m[[0m[0mdebug[0m] [0m[0mscalafmt: parsed config (v3.0.2): C:\Users\Mamata Gupta\restonomer\.scalafmt.conf[0m
+[0m[[0m[0mdebug[0m] [0m[0mscalafmt: considering all files (no git)[0m
+[0m[[0m[0mdebug[0m] [0m[0mscalafmt: Change report:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Checked: C:\Users\Mamata Gupta\restonomer\spark-utils\src\test\scala\com\clairvoyant\restonomer\spark\utils\DataFrameMatchers.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Modified: C:\Users\Mamata Gupta\restonomer\spark-utils\src\test\scala\com\clairvoyant\restonomer\spark\utils\DataFrameMatchers.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Unmodified: [0m
+[0m[[0m[0mdebug[0m] [0m[0m	Added: [0m
+[0m[[0m[0mdebug[0m] [0m[0m	Removed: [0m
+[0m[[0m[0minfo[0m] [0m[0mscalafmt: Formatting 1 Scala sources (C:\Users\Mamata Gupta\restonomer\spark-utils)...[0m
+[0m[[0m[0mdebug[0m] [0m[0mscalafmt: Unchanged 1 Scala sources[0m

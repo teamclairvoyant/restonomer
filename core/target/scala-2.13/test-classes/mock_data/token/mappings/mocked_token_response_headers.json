@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/token-response-headers",
+    "headers": {
+      "Authorization": {
+        "matches": "Bearer test_token_123"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "basic_token": "basic_123"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/empty-custom-headers"
+  },
+  "response": {
+    "bodyFileName": "mocked_empty_custom_headers_response.json"
+  }
+}
