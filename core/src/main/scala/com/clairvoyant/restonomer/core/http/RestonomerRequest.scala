@@ -15,7 +15,7 @@ object RestonomerRequest {
     RestonomerRequestBuilder(
       basicRequest.method(
         method = requestConfig.method,
-        uri = requestConfig.url
+        uri = requestConfig.url.withParams(requestConfig.queryParams)
       )
     )
       .withAuthentication(requestConfig.authentication)

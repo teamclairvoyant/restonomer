@@ -6,6 +6,7 @@ import sttp.model.{Method, Uri}
 case class RequestConfig(
     method: Method = Method.GET,
     url: Uri,
+    queryParams: Map[String, String] = Map.empty,
     authentication: Option[RestonomerAuthentication] = None,
     headers: Map[String, String] = Map.empty
 )
