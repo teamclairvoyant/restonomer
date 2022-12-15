@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/col-to-json-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_column_to_json_transformation_response.json"
+  }
+}

@@ -62,3 +62,13 @@ case class CastColumns(
     restonomerResponseDF.castColumns(columnDataTypeMapper)
 
 }
+
+case class ConvertColumnToJson(
+    columnName: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF
+      .colToJson(columnName)
+
+}
