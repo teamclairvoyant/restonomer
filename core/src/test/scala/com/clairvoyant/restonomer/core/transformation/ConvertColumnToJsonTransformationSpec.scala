@@ -24,12 +24,12 @@ class ConvertColumnToJsonTransformationSpec extends CoreSpec with DataFrameMatch
           |}""".stripMargin
     ).read
 
-  "transform() - with valid column name" should "transform the column" in {
+  "transform() - with valid column name" should "transform the column to json" in {
     val restonomerTransformation = ConvertColumnToJson(
       columnName = "col_B"
     )
 
-    val expectedRestonomerResponseTransformedDF = Seq(("1", "[{\"ZipCodeType\":\"STANDARD\",\"Zipcode\":704}]"))
+    val expectedRestonomerResponseTransformedDF = Seq(("1", """[{"ZipCodeType":"STANDARD","Zipcode":704}]"""))
       .toDF("col_A", "col_B")
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)

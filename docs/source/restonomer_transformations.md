@@ -254,8 +254,13 @@ For example, consider we have below restonomer response in json:
 
 ```json
 {
-  "col_A": 5,
-  "col_B": [Zipcode -> 704, ZipCodeType -> STANDARD, City -> PARC PARQUE, State -> PR]
+  "col_A": "1",
+  "col_B": [
+    {
+      "Zipcode": 704,
+      "ZipCodeType": "STANDARD"
+    }
+  ]
 }
 ```
 
@@ -275,6 +280,6 @@ The transformed response will now have the columns with the desired data types:
 ```json
 {
   "col_A": 5,
-  "col_B": {"Zipcode":"704","ZipCodeType":"STANDARD","City":"PARC PARQUE","State":"PR"}
+  "col_B": "[{'ZipCodeType':'STANDARD','Zipcode':704}]"
 }
 ```

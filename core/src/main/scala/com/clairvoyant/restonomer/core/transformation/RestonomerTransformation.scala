@@ -67,8 +67,6 @@ case class ConvertColumnToJson(
     columnName: String
 ) extends RestonomerTransformation {
 
-  override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF
-      .colToJson(columnName)
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.colToJson(columnName)
 
 }
