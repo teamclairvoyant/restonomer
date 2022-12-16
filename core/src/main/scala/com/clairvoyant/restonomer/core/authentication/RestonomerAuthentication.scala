@@ -151,3 +151,33 @@ case class JWTAuthentication(
   }
 
 }
+
+case class DigestAuthentication(
+                                 override val token: Option[TokenConfig] = None,
+                                 userName: String,
+                                 password: String
+                               ) extends RestonomerAuthentication(token) {
+
+  override def validateCredentials(): Unit = {
+    if (userName.isBlank && password.isBlank)
+      throw new RestonomerException(
+        "The provided credentials are invalid. The credentials should contain both user-name & password."
+      )
+    else if (userName.isBlank)
+      throw new RestonomerException(
+        "The provided credentials are invalid. The credentials should contain valid user-name."
+      )
+    else if (password.isBlank)
+      throw new RestonomerException(
+        "The provided credentials are invalid. The credentials should contain valid password."
+      )
+  }
+
+  override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
+    httpRequest.auth.digest(
+      user = userName,
+      password = password
+    )
+  }
+
+}

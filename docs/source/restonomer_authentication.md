@@ -25,6 +25,7 @@ The restonomer framework supports below authentication mechanisms:
 * Bearer Authentication
 * API Key Authentication
 * JWT Authentication
+* Digest Authentication
 
 ## Basic Authentication
 
@@ -188,3 +189,26 @@ token[X]
 * In case of `ResponseHeaders`, the attribute `X` must be a token header name.
 
 **_The token request follows the same structure as the main data request._**
+The token request follows the same structure as the main data request.
+
+## Digest Authentication
+
+The digest authentication in restonomer framework is represented by class `DigestAuthentication`:
+
+```scala
+case class DigestAuthentication(
+    override val token: Option[TokenConfig] = None,
+    userName: String,
+    password: String
+) extends RestonomerAuthentication(token)
+```
+
+For digest authentication user needs to provide username and password for authentication:
+
+```hocon
+authentication = {
+ type = "digest-authentication"
+ user-name = "test_user"
+ password = "test_password"
+}
+```
