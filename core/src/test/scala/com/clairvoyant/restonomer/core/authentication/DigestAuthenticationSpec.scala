@@ -30,4 +30,5 @@ class DigestAuthenticationSpec extends CoreSpec {
     val authentication = DigestAuthentication(userName = "test_user", password = "test_password")
     noException should be thrownBy authentication.validateCredentials()
   }
+
 }
