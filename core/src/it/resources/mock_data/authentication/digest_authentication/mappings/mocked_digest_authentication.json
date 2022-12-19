@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/digest-auth"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_digest_authentication_response.json"
+  }
+}
