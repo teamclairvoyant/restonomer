@@ -4,6 +4,6 @@
     "url": "/body"
   },
   "response": {
-    "bodyFileName": "mocked_custom_body.json"
+    "bodyFileName": "mocked_custom_body_response.json"
   }
 }
