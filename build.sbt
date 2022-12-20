@@ -24,6 +24,7 @@ val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.1.2"
 val sparkVersion = "3.3.0"
 val catsVersion = "2.9.0"
+val jsonPathVersion = "2.7.0"
 
 lazy val scalacOptions = Seq("-Wunused")
 
@@ -51,6 +52,8 @@ val sparkDependencies = Seq(
 
 val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
 
+val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVersion)
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val coreDependencies =
@@ -58,6 +61,7 @@ val coreDependencies =
     sttpDependencies ++
     akkaBackendDependencies ++
     jwtDependencies ++
+    jsonPathDependencies ++
     scalaTestDependencies.map(_ % "it,test") ++
     wireMockDependencies
 

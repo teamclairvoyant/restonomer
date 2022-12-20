@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/query-params?query_param_name_1=query_param_value_1&query_param_name_2=query_param_value_2"
+  },
+  "response": {
+    "bodyFileName": "mocked_query_params_response.json"
+  }
+}

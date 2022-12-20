@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.authentication.TokenRequestHandler.getTokensMap
+import com.clairvoyant.restonomer.core.authentication.TokenRequestHandler.getToken
 import com.clairvoyant.restonomer.core.authentication._
 import sttp.client3.{Request, SttpBackend}
 
@@ -16,7 +16,7 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
         .map { restonomerAuthentication =>
           restonomerAuthentication.token
             .map { tokenConfig =>
-              val credentialsWithTokenSubstitutor = CredentialsWithTokenSubstitutor(getTokensMap(tokenConfig))
+              val credentialsWithTokenSubstitutor = CredentialsWithTokenSubstitutor(getToken(tokenConfig))
 
               restonomerAuthentication match {
                 case basicAuthentication @ BasicAuthentication(_, basicToken, userName, password) =>

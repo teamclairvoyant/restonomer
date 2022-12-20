@@ -55,6 +55,7 @@ The basic http request configurations are represented by `RequestConfig` class:
 case class RequestConfig(
     method: Method = Method.GET,
     url: String,
+    queryParams: Map[String, String] = Map.empty,
     authentication: Option[RestonomerAuthentication] = None,
     headers: Map[String, String] = Map[String, String]().empty
 )
@@ -66,6 +67,7 @@ The request configuration contains below configs options to be provided by the u
 |:---------------|:---------:|:-------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | method         |    No     |     `GET`     | Http request method                                                                                                                                                                     |
 | url            |    Yes    |       -       | Url for the REST API request                                                                                                                                                            |
+| query-params   |    No     |       -       | The map of query parameters                                                                                                                                                             |
 | authentication |    Yes    |       -       | The type of authentication mechanism supported by Http Request<br/>Restonomer supports: `basic-authentication`, `bearer-authentication`, `api-key-authentication`, `jwt-authentication` |
 | headers        |    No     |       -       | List of headers to provided as a part of Http request in the form of key-value pairs                                                                                                    |
 
@@ -77,6 +79,11 @@ request = {
  
   url = "http://localhost:8080/custom-headers"
 
+  query-params = {
+   "query_param_name_1" = "query_param_value_1",
+   "query_param_name_2" = "query_param_value_2"
+  }
+ 
   authentication = {
     type = "basic-authentication"
     user-name = "test_user"

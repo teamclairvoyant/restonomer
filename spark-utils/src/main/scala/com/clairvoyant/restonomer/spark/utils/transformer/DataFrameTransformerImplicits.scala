@@ -59,6 +59,8 @@ object DataFrameTransformerImplicits {
         }: _*
       )
 
+    def colToJson(columnName: String): DataFrame = df.withColumn(columnName, to_json(col(columnName)))
+
   }
 
 }

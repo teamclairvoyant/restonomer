@@ -5,8 +5,7 @@ import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.RestonomerRequest
 import com.clairvoyant.restonomer.core.model.TokenConfig
-import org.json4s.DefaultFormats
-import org.json4s.jackson.JsonMethods
+import com.jayway.jsonpath.JsonPath
 import sttp.client3.SttpBackend
 
 import scala.concurrent.duration.Duration
@@ -14,9 +13,9 @@ import scala.concurrent.{Await, Future}
 
 object TokenRequestHandler {
 
-  def getTokensMap(
+  def getToken(
       tokenConfig: TokenConfig
-  )(implicit akkaHttpBackend: SttpBackend[Future, Any]): Map[String, String] = {
+  )(implicit akkaHttpBackend: SttpBackend[Future, Any]): String => String = {
     val tokenHttpResponse = Await.result(
       RestonomerRequest
         .builder(tokenConfig.tokenRequest)
@@ -28,21 +27,26 @@ object TokenRequestHandler {
 
     TokenResponsePlaceholders(tokenConfig.tokenResponse.placeholder) match {
       case RESPONSE_BODY =>
-        implicit val formats: DefaultFormats.type = org.json4s.DefaultFormats
-
-        JsonMethods
-          .parse(
+        tokenJsonPath =>
+          JsonPath.read[String](
             tokenHttpResponse.body match {
               case Left(errorMessage) =>
                 throw new RestonomerException(errorMessage)
               case Right(responseBody) =>
                 responseBody
-            }
+            },
+            tokenJsonPath
           )
-          .extract[Map[String, String]]
 
       case RESPONSE_HEADERS =>
-        tokenHttpResponse.headers.map(header => header.name -> header.value).toMap
+        tokenName =>
+          tokenHttpResponse.headers
+            .find(_.name == tokenName) match {
+            case Some(header) =>
+              header.value
+            case None =>
+              throw new RestonomerException(s"Could not find the value of $tokenName in the token response.")
+          }
     }
   }
 
