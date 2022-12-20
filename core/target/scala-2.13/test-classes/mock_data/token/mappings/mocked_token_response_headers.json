@@ -11,7 +11,7 @@
   "response": {
     "status": 200,
     "headers": {
-      "basic_token": "basic_123"
+      "bearer_token": "bearer_123"
     }
   }
 }

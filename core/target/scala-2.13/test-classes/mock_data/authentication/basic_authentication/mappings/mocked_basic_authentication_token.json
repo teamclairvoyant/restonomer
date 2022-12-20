@@ -1,12 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/basic-auth-token",
-    "headers": {
-      "Authorization": {
-        "matches": "Basic abcd1234"
-      }
-    }
+    "url": "/basic-auth-token"
   },
   "response": {
     "status": 200,

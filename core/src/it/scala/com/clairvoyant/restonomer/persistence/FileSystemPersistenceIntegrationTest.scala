@@ -7,7 +7,7 @@ class FileSystemPersistenceIntegrationTest extends IntegrationTestDependencies {
   override val mappingsDirectory: String = "persistence/file_system"
 
   it should "persist the restonomer response dataframe in the file system in the desired format at the desired path" in {
-    runCheckpoint(checkpointFileName = "checkpoint_file_system_persistence.conf")
+    runCheckpoint(checkpointFileName = "checkpoint_add_custom_body.conf")
 
     val outputDF = readOutputJSON()
 
