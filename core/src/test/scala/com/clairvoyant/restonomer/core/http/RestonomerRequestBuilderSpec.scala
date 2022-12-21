@@ -1,14 +1,12 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.authentication.{BasicAuthentication, BearerAuthentication}
+import com.clairvoyant.restonomer.core.authentication.BasicAuthentication
 import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
-import com.clairvoyant.restonomer.core.model.{RequestConfig, TokenConfig, TokenResponseConfig}
-import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlPathEqualTo}
-import sttp.client3.UriContext
 import sttp.model.Header
-import sttp.model.HeaderNames.Authorization
 
 class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
+
+  implicit val tokenFunction: Option[String => String] = None
 
   "withAuthentication - without authenticationConfig" should "return RestonomerRequestBuilder object with the same httpRequest" in {
     val authentication = None
@@ -30,40 +28,6 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
     restonomerRequestBuilder
       .withAuthentication(authentication)
       .httpRequest shouldNot be theSameInstanceAs restonomerRequestBuilder.httpRequest
-  }
-
-  "withAuthentication - with token request" should "return RestonomerRequestBuilder object with the new authenticated httpRequest" in {
-    val token = Some(
-      TokenConfig(
-        tokenRequest = RequestConfig(
-          url = uri"$uri",
-          authentication = Some(BearerAuthentication(bearerToken = "bearer_token_123"))
-        ),
-        tokenResponse = TokenResponseConfig(placeholder = "ResponseBody")
-      )
-    )
-
-    val tokenRequestResponseBody =
-      """
-        |{
-        |  "basic_token": "token_xyz"
-        |}
-        |""".stripMargin
-
-    val authentication = Some(
-      BasicAuthentication(
-        token = token,
-        basicToken = Some("token[basic_token]")
-      )
-    )
-
-    stubFor(get(urlPathEqualTo(url)).willReturn(aResponse().withBody(tokenRequestResponseBody)))
-
-    RestonomerRequestBuilder(basicHttpRequest)
-      .withAuthentication(authentication)
-      .httpRequest
-      .headers
-      .exists(header => header.name == Authorization && header.value == "Basic token_xyz") shouldBe true
   }
 
   "withHeaders - with custom headers" should "be added to the request" in {

@@ -3,14 +3,13 @@ package com.clairvoyant.restonomer.core.authentication
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders._
 import com.clairvoyant.restonomer.core.common._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import com.clairvoyant.restonomer.core.model.TokenConfig
 import pdi.jwt._
 import pdi.jwt.algorithms.JwtUnknownAlgorithm
 import sttp.client3.{Identity, Request}
 
 import java.time.Clock
 
-sealed abstract class RestonomerAuthentication(val token: Option[TokenConfig]) {
+sealed trait RestonomerAuthentication {
 
   def validateCredentials(): Unit
 
@@ -26,11 +25,10 @@ sealed abstract class RestonomerAuthentication(val token: Option[TokenConfig]) {
 }
 
 case class BasicAuthentication(
-    override val token: Option[TokenConfig] = None,
     basicToken: Option[String] = None,
     userName: Option[String] = None,
     password: Option[String] = None
-) extends RestonomerAuthentication(token) {
+) extends RestonomerAuthentication {
 
   override def validateCredentials(): Unit = {
     if (basicToken.isEmpty && userName.isEmpty && password.isEmpty)
@@ -61,9 +59,8 @@ case class BasicAuthentication(
 }
 
 case class BearerAuthentication(
-    override val token: Option[TokenConfig] = None,
     bearerToken: String
-) extends RestonomerAuthentication(token) {
+) extends RestonomerAuthentication {
 
   override def validateCredentials(): Unit = {
     if (bearerToken.isBlank)
@@ -79,11 +76,10 @@ case class BearerAuthentication(
 }
 
 case class APIKeyAuthentication(
-    override val token: Option[TokenConfig] = None,
     apiKeyName: String,
     apiKeyValue: String,
     placeholder: String
-) extends RestonomerAuthentication(token) {
+) extends RestonomerAuthentication {
 
   override def validateCredentials(): Unit = {
     if (apiKeyName.isBlank)
@@ -118,12 +114,11 @@ case class APIKeyAuthentication(
 }
 
 case class JWTAuthentication(
-    override val token: Option[TokenConfig] = None,
     subject: String,
     secretKey: String,
     algorithm: String = JwtAlgorithm.HS256.name,
     tokenExpiresIn: Long = 1800
-) extends RestonomerAuthentication(token) {
+) extends RestonomerAuthentication {
 
   implicit val clock: Clock = Clock.systemDefaultZone()
 

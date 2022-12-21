@@ -1,15 +1,19 @@
 package com.clairvoyant.restonomer.core.app
 
 import akka.actor.ActorSystem
+import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders
+import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders.{RESPONSE_BODY, RESPONSE_HEADERS}
 import com.clairvoyant.restonomer.core.converter.ResponseToDataFrameConverter
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.{RestonomerRequest, RestonomerResponse}
 import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
 import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersistence}
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
+import com.jayway.jsonpath.JsonPath
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import sttp.client3.SttpBackend
 import sttp.client3.akkahttp.AkkaHttpBackend
+import sttp.client3.{Response, SttpBackend}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -21,18 +25,34 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
     implicit val actorSystem: ActorSystem = ActorSystem(checkpointConfig.name)
     implicit val akkaHttpBackend: SttpBackend[Future, Any] = AkkaHttpBackend.usingActorSystem(actorSystem)
 
-    val restonomerRequest = RestonomerRequest.builder(checkpointConfig.request).build
+    val tokenFunction = checkpointConfig.token
+      .map { tokenConfig =>
+        getTokenFunction(
+          tokenHttpResponse = Await.result(
+            RestonomerRequest
+              .builder(tokenConfig.tokenRequest)
+              .build
+              .httpRequest
+              .send(akkaHttpBackend),
+            Duration.Inf
+          ),
+          tokenResponsePlaceholder = tokenConfig.tokenResponsePlaceholder
+        )
+      }
 
-    val restonomerResponse = RestonomerResponse.fetchFromRequest(
-      restonomerRequest = restonomerRequest,
-      retryConfig = checkpointConfig.response.retry
+    val dataRestonomerResponse = RestonomerResponse.fetchFromRequest(
+      restonomerRequest =
+        RestonomerRequest
+          .builder(checkpointConfig.data.dataRequest)(tokenFunction)
+          .build,
+      retryConfig = checkpointConfig.data.dataRequest.retry
     )
 
-    val restonomerResponseDF = restonomerResponse.body
-      .map(ResponseToDataFrameConverter(checkpointConfig.response.body.format).convertResponseToDataFrame)
+    val restonomerResponseDF = dataRestonomerResponse.body
+      .map(ResponseToDataFrameConverter(checkpointConfig.data.dataResponse.bodyFormat).convertResponseToDataFrame)
 
     val restonomerResponseTransformedDF = restonomerResponseDF.map { df =>
-      checkpointConfig.response.transformations
+      checkpointConfig.data.dataResponse.transformations
         .foldLeft(df) { case (df, restonomerTransformation) =>
           restonomerTransformation.transform(df)
         }
@@ -40,12 +60,40 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
     val persistedRestonomerResponseDF = persistRestonomerResponseDataFrame(
       restonomerResponseDF = restonomerResponseTransformedDF,
-      restonomerPersistence = checkpointConfig.response.persistence
+      restonomerPersistence = checkpointConfig.data.dataResponse.persistence
     )
 
     Await.result(persistedRestonomerResponseDF, Duration.Inf)
     Await.result(actorSystem.terminate(), Duration.Inf)
   }
+
+  private def getTokenFunction(
+      tokenHttpResponse: Response[Either[String, String]],
+      tokenResponsePlaceholder: String
+  ): String => String =
+    TokenResponsePlaceholders(tokenResponsePlaceholder) match {
+      case RESPONSE_BODY =>
+        tokenJsonPath =>
+          JsonPath.read[String](
+            tokenHttpResponse.body match {
+              case Left(errorMessage) =>
+                throw new RestonomerException(errorMessage)
+              case Right(responseBody) =>
+                responseBody
+            },
+            tokenJsonPath
+          )
+
+      case RESPONSE_HEADERS =>
+        tokenName =>
+          tokenHttpResponse.headers
+            .find(_.name == tokenName) match {
+            case Some(header) =>
+              header.value
+            case None =>
+              throw new RestonomerException(s"Could not find the value of $tokenName in the token response.")
+          }
+    }
 
   private def persistRestonomerResponseDataFrame(
       restonomerResponseDF: Future[DataFrame],
