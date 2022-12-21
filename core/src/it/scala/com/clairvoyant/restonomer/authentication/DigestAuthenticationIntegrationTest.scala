@@ -10,8 +10,7 @@ class DigestAuthenticationIntegrationTest extends IntegrationTestDependencies {
     runCheckpoint(checkpointFileName = "checkpoint_digest_authentication.conf")
 
     val outputDF = readOutputJSON()
-
-    val expectedDF = readExpectedMockJSON("expected_digest_authentication.json")
+    val expectedDF = readExpectedMockJSON(fileName = "expected_digest_authentication.json")
 
     outputDF should matchExpectedDataFrame(expectedDF)
   }

@@ -10,7 +10,7 @@ class QueryParamsIntegrationTest extends IntegrationTestDependencies {
     runCheckpoint(checkpointFileName = "checkpoint_add_query_params.conf")
 
     val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON("expected_query_params.json")
+    val expectedDF = readExpectedMockJSON(fileName = "expected_query_params.json")
 
     outputDF should matchExpectedDataFrame(expectedDF)
   }

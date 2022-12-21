@@ -5,6 +5,6 @@
   },
   "response": {
     "status": 200,
-    "body": "{'token': '12njkenj4jnrey=='}"
+    "bodyFileName": "mocked_jwt_authentication_response.json"
   }
 }

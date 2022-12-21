@@ -9,8 +9,7 @@ class JSONResponseToDataFrameConverterIntegrationTest extends IntegrationTestDep
     runCheckpoint(checkpointFileName = "checkpoint_json_response_dataframe_converter.conf")
 
     val outputDF = readOutputJSON()
-
-    val expectedDF = readExpectedMockJSON("expected_json_response.json")
+    val expectedDF = readExpectedMockJSON(fileName = "expected_json_response.json")
 
     outputDF should matchExpectedDataFrame(expectedDF)
   }

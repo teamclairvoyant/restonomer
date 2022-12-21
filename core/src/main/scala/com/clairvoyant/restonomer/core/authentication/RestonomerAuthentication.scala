@@ -148,10 +148,9 @@ case class JWTAuthentication(
 }
 
 case class DigestAuthentication(
-    override val token: Option[TokenConfig] = None,
     userName: String,
     password: String
-) extends RestonomerAuthentication(token) {
+) extends RestonomerAuthentication {
 
   override def validateCredentials(): Unit = {
     if (userName.isBlank && password.isBlank)
