@@ -9,5 +9,6 @@ case class RequestConfig(
     queryParams: Map[String, String] = Map.empty,
     authentication: Option[RestonomerAuthentication] = None,
     headers: Map[String, String] = Map.empty,
+    body: Option[String] = None,
     retry: RetryConfig = RetryConfig()
 )
