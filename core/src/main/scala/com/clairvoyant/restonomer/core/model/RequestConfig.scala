@@ -8,5 +8,6 @@ case class RequestConfig(
     url: Uri,
     queryParams: Map[String, String] = Map.empty,
     authentication: Option[RestonomerAuthentication] = None,
-    headers: Map[String, String] = Map.empty
+    headers: Map[String, String] = Map.empty,
+    body: Option[String] = None
 )
