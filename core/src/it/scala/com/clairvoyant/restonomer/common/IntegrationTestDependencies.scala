@@ -26,9 +26,9 @@ trait IntegrationTestDependencies
     RestonomerContext(s"$resourcesDirectoryPath/restonomer_context")
       .runCheckpoint(checkpointFilePath = s"$mappingsDirectory/$checkpointFileName")
 
-  lazy val outputDF: DataFrame = sparkSession.read.json(s"/tmp/$mappingsDirectory")
+  def outputDF: DataFrame = sparkSession.read.json(s"/tmp/$mappingsDirectory")
 
-  val expectedDF: String => DataFrame =
+  def expectedDF: String => DataFrame =
     fileName =>
       sparkSession.read
         .option("multiline", value = true)
