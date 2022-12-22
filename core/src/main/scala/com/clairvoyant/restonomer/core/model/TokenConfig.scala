@@ -2,7 +2,5 @@ package com.clairvoyant.restonomer.core.model
 
 case class TokenConfig(
     tokenRequest: RequestConfig,
-    tokenResponse: TokenResponseConfig
+    tokenResponsePlaceholder: String
 )
-
-case class TokenResponseConfig(placeholder: String)

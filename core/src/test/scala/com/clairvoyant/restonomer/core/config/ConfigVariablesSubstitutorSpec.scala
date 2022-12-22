@@ -12,24 +12,24 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val expectedConfigString =
         """name = "sample-checkpoint-conf-variable"
           |
-          |request = {
-          |  url = "http://test-domain.com"
+          |data = {
+          |  data-request = {
+          |    url = "http://test-domain.com"
           |
-          |  authentication = {
-          |    type = "basic-authentication"
-          |    basic-token = ${BASIC_AUTH_TOKEN}
-          |  }
-          |}
-          |
-          |response = {
-          |  body = {
-          |    format = "JSON"
+          |    authentication = {
+          |      type = "basic-authentication"
+          |      basic-token = ${BASIC_AUTH_TOKEN}
+          |    }
           |  }
           |
-          |  persistence = {
-          |    type = "file-system"
-          |    file-format = "json"
-          |    file-path = "/tmp"
+          |  data-response = {
+          |    body-format = "JSON"
+          |
+          |    persistence = {
+          |      type = "file-system"
+          |      file-format = "json"
+          |      file-path = "/tmp"
+          |    }
           |  }
           |}
           |""".stripMargin
@@ -47,24 +47,24 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val expectedConfigString =
         """name = "sample-checkpoint-conf-variable"
           |
-          |request = {
-          |  url = "http://test-domain.com"
+          |data = {
+          |  data-request = {
+          |    url = "http://test-domain.com"
           |
-          |  authentication = {
-          |    type = "basic-authentication"
-          |    basic-token = "efgh5678"
-          |  }
-          |}
-          |
-          |response = {
-          |  body = {
-          |    format = "JSON"
+          |    authentication = {
+          |      type = "basic-authentication"
+          |      basic-token = "efgh5678"
+          |    }
           |  }
           |
-          |  persistence = {
-          |    type = "file-system"
-          |    file-format = "json"
-          |    file-path = "/tmp"
+          |  data-response = {
+          |    body-format = "JSON"
+          |
+          |    persistence = {
+          |      type = "file-system"
+          |      file-format = "json"
+          |      file-path = "/tmp"
+          |    }
           |  }
           |}
           |""".stripMargin
@@ -82,24 +82,24 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val expectedConfigString =
         """name = "sample-checkpoint-conf-variable"
           |
-          |request = {
-          |  url = "http://test-domain.com"
+          |data = {
+          |  data-request = {
+          |    url = "http://test-domain.com"
           |
-          |  authentication = {
-          |    type = "basic-authentication"
-          |    basic-token = "abcd1234"
-          |  }
-          |}
-          |
-          |response = {
-          |  body = {
-          |    format = "JSON"
+          |    authentication = {
+          |      type = "basic-authentication"
+          |      basic-token = "abcd1234"
+          |    }
           |  }
           |
-          |  persistence = {
-          |    type = "file-system"
-          |    file-format = "json"
-          |    file-path = "/tmp"
+          |  data-response = {
+          |    body-format = "JSON"
+          |
+          |    persistence = {
+          |      type = "file-system"
+          |      file-format = "json"
+          |      file-path = "/tmp"
+          |    }
           |  }
           |}
           |""".stripMargin
@@ -117,24 +117,24 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val expectedConfigString =
         """name = "sample-checkpoint-conf-variable"
           |
-          |request = {
-          |  url = "http://test-domain.com"
+          |data = {
+          |  data-request = {
+          |    url = "http://test-domain.com"
           |
-          |  authentication = {
-          |    type = "basic-authentication"
-          |    basic-token = "efgh5678"
-          |  }
-          |}
-          |
-          |response = {
-          |  body = {
-          |    format = "JSON"
+          |    authentication = {
+          |      type = "basic-authentication"
+          |      basic-token = "efgh5678"
+          |    }
           |  }
           |
-          |  persistence = {
-          |    type = "file-system"
-          |    file-format = "json"
-          |    file-path = "/tmp"
+          |  data-response = {
+          |    body-format = "JSON"
+          |
+          |    persistence = {
+          |      type = "file-system"
+          |      file-format = "json"
+          |      file-path = "/tmp"
+          |    }
           |  }
           |}
           |""".stripMargin
@@ -153,24 +153,24 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val expectedConfigString =
         """name = "sample-checkpoint-conf-variable"
           |
-          |request = {
-          |  url = "http://test-domain.com"
+          |data = {
+          |  data-request = {
+          |    url = "http://test-domain.com"
           |
-          |  authentication = {
-          |    type = "basic-authentication"
-          |    basic-token = "abcd1234"
-          |  }
-          |}
-          |
-          |response = {
-          |  body = {
-          |    format = "JSON"
+          |    authentication = {
+          |      type = "basic-authentication"
+          |      basic-token = "abcd1234"
+          |    }
           |  }
           |
-          |  persistence = {
-          |    type = "file-system"
-          |    file-format = "json"
-          |    file-path = "/tmp"
+          |  data-response = {
+          |    body-format = "JSON"
+          |
+          |    persistence = {
+          |      type = "file-system"
+          |      file-format = "json"
+          |      file-path = "/tmp"
+          |    }
           |  }
           |}
           |""".stripMargin

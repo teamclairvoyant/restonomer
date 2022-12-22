@@ -26,13 +26,13 @@ trait IntegrationTestDependencies
     RestonomerContext(s"$resourcesDirectoryPath/restonomer_context")
       .runCheckpoint(checkpointFilePath = s"$mappingsDirectory/$checkpointFileName")
 
-  def readOutputJSON(outputDirectoryName: String = ""): DataFrame =
-    sparkSession.read.json(s"/tmp/$mappingsDirectory/$outputDirectoryName")
+  def outputDF: DataFrame = sparkSession.read.json(s"/tmp/$mappingsDirectory")
 
-  def readExpectedMockJSON(fileName: String): DataFrame =
-    sparkSession.read
-      .option("multiline", value = true)
-      .json(s"$mockDataRootDirectoryPath/$mappingsDirectory/$fileName")
+  def expectedDF: String => DataFrame =
+    fileName =>
+      sparkSession.read
+        .option("multiline", value = true)
+        .json(s"$mockDataRootDirectoryPath/$mappingsDirectory/$fileName")
 
   override def afterEach(): Unit = {
     FileUtils.deleteDirectory(new File(s"/tmp/$mappingsDirectory"))

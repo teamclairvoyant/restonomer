@@ -8,11 +8,7 @@ class ExplodeColumnTransformationIntegrationTest extends IntegrationTestDependen
 
   it should "explode mentioned column from the restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_explode_column_transformation.conf")
-
-    val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_explode_column_transformation.json")
-
-    outputDF should matchExpectedDataFrame(expectedDF)
+    outputDF should matchExpectedDataFrame(expectedDF("expected_explode_column_transformation.json"))
   }
 
 }

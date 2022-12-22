@@ -2,7 +2,7 @@
 
 The restonomer context directory is a base location for keeping all checkpoints.
 
-You would need to provide the restonomer context directory path in order to instantiate the `RestonomerContext` object.
+User would need to provide the restonomer context directory path in order to instantiate the `RestonomerContext` object.
 
 ```scala
 import com.clairvoyant.restonomer.core.app.RestonomerContext
@@ -26,36 +26,47 @@ restonomer_context
 A checkpoint is the main entry point for any request trigger via restonomer.
 A checkpoint is a configuration that you need to provide in the HOCON format to the restonomer application.
 
-A checkpoint configuration is basically represented using the case class `CheckpointConfig`:
+A checkpoint configuration is basically represented using the case class `CheckpointConfig`.
 
-```scala
-case class CheckpointConfig(
-    name: String,
-    request: RequestConfig,
-    response: ResponseConfig,
-    httpBackendType: Option[String]
-)
-```
+User would need to write a checkpoint configuration in a file and keep it in `checkpoints` directory under restonomer context directory.
 
-You would need to write a checkpoint configuration in a file and keep it in `checkpoints` directory under restonomer context directory.
 Below is the sample checkpoint configuration file:
 
 ```hocon
 name = "sample_postman_checkpoint"
 
-request = {
-  url = "https://postman-echo.com/basic-auth"
-  
-  authentication = {
-    type = "basic-authentication"
-    user-name = "postman"
-    password = "password"
+token = {
+  token-request = {
+    url = "http://localhost:8080/token-response-body"
+
+    authentication = {
+      type = "bearer-authentication"
+      bearer-token = "test_token_123"
+    }
   }
+
+  token-response-placeholder = "ResponseBody"
 }
 
-response = {
-  body = {
-    format = "JSON"
+data = {
+  data-request = {
+    url = "https://postman-echo.com/basic-auth"
+
+    authentication = {
+      type = "basic-authentication"
+      user-name = "postman"
+      password = "token[$.secret]"
+    }
+  }
+
+  data-response = {
+    body-format = "JSON"
+
+    persistence = {
+      type = "file-system"
+      file-format = "json"
+      file-path = "./rest-output/"
+    }
   }
 }
 ```
@@ -88,13 +99,7 @@ This kind of hierarchical structure helps user to categorise their checkpoints b
 
 Application configurations are high level configs that application requires in order to behave in a specific way.
 
-Application configurations are represented by a case class `ApplicationConfig` :
-
-```scala
-case class ApplicationConfig(
-    sparkConfigs: Option[Map[String, String]]
-)
-```
+Application configurations are represented by a case class `ApplicationConfig`.
 
 Application configurations are provided in a file `application.conf` that is kept under restonomer context directory.
 
@@ -123,18 +128,38 @@ Below is the sample checkpoint configuration using config variables:
 ```hocon
 name = "sample_postman_checkpoint"
 
-request = {
-  url = "https://postman-echo.com/basic-auth"
-  
-  authentication = {
-    type = "basic-authentication"
-    basic-token = ${BASIC_AUTH_TOKEN}
+token = {
+  token-request = {
+    url = "http://localhost:8080/token-response-body"
+
+    authentication = {
+      type = "bearer-authentication"
+      bearer-token = "test_token_123"
+    }
   }
+
+  token-response-placeholder = "ResponseBody"
 }
 
-response = {
-  body = {
-    format = "JSON"
+data = {
+  data-request = {
+    url = "https://postman-echo.com/basic-auth"
+
+    authentication = {
+      type = "basic-authentication"
+      user-name = "postman"
+      password = ${BASIC_AUTH_TOKEN}
+    }
+  }
+
+  data-response = {
+    body-format = "JSON"
+
+    persistence = {
+      type = "file-system"
+      file-format = "json"
+      file-path = "./rest-output/"
+    }
   }
 }
 ```
