@@ -279,7 +279,48 @@ The transformed response will now have the columns with the desired data types:
 
 ```json
 {
-  "col_A": 5,
+  "col_A": 1,
   "col_B": "[{'ZipCodeType':'STANDARD','Zipcode':704}]"
+}
+```
+
+## ChangeColumnCase
+
+It lets the user change the case of column names.
+
+This transformation expects user to provide below inputs:
+
+| Input Arguments | Mandatory | Default Value | Description                                      |
+|:----------------|:---------:|:-------------:|:-------------------------------------------------|
+| column-name     |    Yes    |       -       | Name of the column which needs to be transformed |
+| case-type       |    Yes    |       -       | Case to which the column needs to transformed    |
+
+For example, consider we have below restonomer response in json:
+
+```json
+{
+  "col_a": "1",
+  "COL_B": "2"
+}
+```
+
+Now, suppose the requirement is to transform case of COL_B to lowercase:
+
+Then, user can configure the `ChangeColumnCase` transformation in the below manner:
+
+```hocon
+{
+  type = "change-column-case"
+  column-name = "COL_B"
+  case-type = "lower"
+}
+```
+
+The transformed response will now have the columns with the desired case type:
+
+```json
+{
+  "col_a": "1",
+  "col_b": "2"
 }
 ```

@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
-import org.apache.spark.sql.functions.{col, from_json, lit, to_json}
+import org.apache.spark.sql.functions.{col, from_json, lit, lower, to_json, upper}
 import org.apache.spark.sql.types.{DataType, StructType}
 import org.apache.spark.sql.{Column, DataFrame}
 
@@ -60,6 +60,18 @@ object DataFrameTransformerImplicits {
       )
 
     def colToJson(columnName: String): DataFrame = df.withColumn(columnName, to_json(col(columnName)))
+
+    def changeColCase(columnName: String, caseType: String): DataFrame = {
+      caseType match {
+        case "upper" =>
+          df.withColumnRenamed(columnName, columnName.toUpperCase())
+        case "lower" =>
+          df.withColumnRenamed(columnName, columnName.toLowerCase())
+        case _ =>
+          df
+      }
+
+    }
 
   }
 
