@@ -1,8 +1,8 @@
 {
   "request": {
     "method": "GET",
-    "url": "/custom-body",
-    "body": "Hello, world!"
+    "url": "/custom-body"
+    
   },
   "response": {
     "bodyFileName": "mocked_custom_body_response.json"
