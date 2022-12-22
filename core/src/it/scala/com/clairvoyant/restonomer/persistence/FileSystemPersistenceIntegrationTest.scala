@@ -8,11 +8,7 @@ class FileSystemPersistenceIntegrationTest extends IntegrationTestDependencies {
 
   it should "persist the restonomer response dataframe in the file system in the desired format at the desired path" in {
     runCheckpoint(checkpointFileName = "checkpoint_file_system_persistence.conf")
-
-    val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_file_system_persistence.json")
-
-    outputDF should matchExpectedDataFrame(expectedDF)
+    outputDF should matchExpectedDataFrame(expectedDF("expected_file_system_persistence.json"))
   }
 
 }

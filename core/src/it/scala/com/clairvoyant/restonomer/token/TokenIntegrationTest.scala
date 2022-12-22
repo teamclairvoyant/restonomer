@@ -8,20 +8,12 @@ class TokenIntegrationTest extends IntegrationTestDependencies {
 
   it should "trigger the token request and get the required credential from the token response body" in {
     runCheckpoint(checkpointFileName = "checkpoint_token_response_body.conf")
-
-    val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_test_token_response_body.json")
-
-    outputDF should matchExpectedDataFrame(expectedDF)
+    outputDF should matchExpectedDataFrame(expectedDF("expected_test_token_response_body.json"))
   }
 
   it should "trigger the token request and get the required credential from the token response headers" in {
     runCheckpoint(checkpointFileName = "checkpoint_token_response_headers.conf")
-
-    val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_test_token_response_headers.json")
-
-    outputDF should matchExpectedDataFrame(expectedDF)
+    outputDF should matchExpectedDataFrame(expectedDF("expected_test_token_response_headers.json"))
   }
 
 }

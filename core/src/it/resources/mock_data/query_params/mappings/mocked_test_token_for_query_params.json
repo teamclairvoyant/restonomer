@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/test-token-for-query-params?token=bearer_123&query_param_name_1=query_param_value_1"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_test_token_for_query_params_response.json"
+  }
+}

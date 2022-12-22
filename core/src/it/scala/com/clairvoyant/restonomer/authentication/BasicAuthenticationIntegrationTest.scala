@@ -8,20 +8,12 @@ class BasicAuthenticationIntegrationTest extends IntegrationTestDependencies {
 
   it should "authenticate request with basic authentication using token" in {
     runCheckpoint(checkpointFileName = "checkpoint_basic_authentication_token.conf")
-
-    val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_basic_authentication_token.json")
-
-    outputDF should matchExpectedDataFrame(expectedDF)
+    outputDF should matchExpectedDataFrame(expectedDF("expected_basic_authentication_token.json"))
   }
 
   it should "authenticate request with basic authentication using username and password" in {
     runCheckpoint(checkpointFileName = "checkpoint_basic_authentication_up.conf")
-
-    val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_basic_authentication_up.json")
-
-    outputDF should matchExpectedDataFrame(expectedDF)
+    outputDF should matchExpectedDataFrame(expectedDF("expected_basic_authentication_up.json"))
   }
 
 }

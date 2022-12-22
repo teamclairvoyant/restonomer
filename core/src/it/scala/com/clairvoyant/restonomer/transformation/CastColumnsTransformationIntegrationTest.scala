@@ -8,11 +8,7 @@ class CastColumnsTransformationIntegrationTest extends IntegrationTestDependenci
 
   it should "cast the columns of restonomer response dataframe as specified in the transformation mapper" in {
     runCheckpoint(checkpointFileName = "checkpoint_cast_columns_transformation.conf")
-
-    val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_cast_columns_transformation.json")
-
-    outputDF should matchExpectedDataFrame(expectedDF)
+    outputDF should matchExpectedDataFrame(expectedDF("expected_cast_columns_transformation.json"))
   }
 
 }

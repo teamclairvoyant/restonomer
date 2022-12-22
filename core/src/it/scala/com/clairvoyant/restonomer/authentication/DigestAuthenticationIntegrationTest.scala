@@ -8,11 +8,7 @@ class DigestAuthenticationIntegrationTest extends IntegrationTestDependencies {
 
   it should "authenticate request with digest authentication using token" in {
     runCheckpoint(checkpointFileName = "checkpoint_digest_authentication.conf")
-
-    val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_digest_authentication.json")
-
-    outputDF should matchExpectedDataFrame(expectedDF)
+    outputDF should matchExpectedDataFrame(expectedDF("expected_digest_authentication.json"))
   }
 
 }

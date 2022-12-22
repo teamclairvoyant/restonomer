@@ -8,11 +8,7 @@ class BearerAuthenticationIntegrationTest extends IntegrationTestDependencies {
 
   it should "authenticate request with bearer authentication using token" in {
     runCheckpoint(checkpointFileName = "checkpoint_bearer_authentication.conf")
-
-    val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_bearer_authentication.json")
-
-    outputDF should matchExpectedDataFrame(expectedDF)
+    outputDF should matchExpectedDataFrame(expectedDF("expected_bearer_authentication.json"))
   }
 
 }

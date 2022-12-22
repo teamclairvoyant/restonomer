@@ -8,11 +8,7 @@ class JwtAuthenticationIntegrationTest extends IntegrationTestDependencies {
 
   it should "authenticate request with subject and secret-key" in {
     runCheckpoint(checkpointFileName = "checkpoint_jwt_authentication.conf")
-
-    val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_jwt_authentication.json")
-
-    outputDF should matchExpectedDataFrame(expectedDF)
+    outputDF should matchExpectedDataFrame(expectedDF("expected_jwt_authentication.json"))
   }
 
 }
