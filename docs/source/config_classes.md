@@ -1,165 +1,136 @@
-# Checkpoint Config
+# CheckpointConfig
 
 The checkpoint configuration is the entry point for the restonomer framework.
-The restonomer framework expects you to provide checkpoint configurations to the restonomer context instance in order to trigger a checkpoint.
+The restonomer framework expects you to provide checkpoint configurations to the restonomer context instance in order to
+trigger a checkpoint.
 
-The checkpoint configuration is represented by `CheckpointConfig` class:
+The checkpoint configuration contains below config options to be provided by the user:
 
-```scala
-case class CheckpointConfig(
-    name: String,
-    request: RequestConfig,
-    response: ResponseConfig,
-    httpBackendType: String = HttpBackendTypes.HTTP_CLIENT_SYNC_BACKEND.toString
-)
-```
-
-The checkpoint configuration contains below configs options to be provided by the user:
-
-| Config Name     | Mandatory |      Default Value      | Description                                                                                                       |
-|:----------------|:---------:|:-----------------------:|:------------------------------------------------------------------------------------------------------------------|
-| name            |    Yes    |            -            | Unique name for your checkpoint                                                                                   |
-| request         |    Yes    |            -            | Request configuration represented by `RequestConfig`                                                              |
-| response        |    Yes    |            -            | Response configuration represented by `ResponseConfig`                                                            |
- | httpBackendType |    No     | `HttpClientSyncBackend` | Synchronous/Asynchronous backend that take care of managing connections, sending requests and receiving responses |
+| Config Name | Mandatory | Default Value | Description                                                       |
+|:------------|:---------:|:-------------:|:------------------------------------------------------------------|
+| name        |    Yes    |       -       | Unique name for your checkpoint                                   |
+| token       |    No     |       -       | Token request configuration represented by `TokenConfig` class    |
+| data        |    Yes    |       -       | Main data request configuration represented by `DataConfig` class |
 
 User can provide checkpoint configuration file in HOCON format in the below format:
 
 ```hocon
 name = "sample_postman_checkpoint"
 
-request = {
-  url = "https://postman-echo.com/basic-auth"
-  
-  authentication = {
-    type = "basic-authentication"
-    user-name = "postman"
-    password = "password"
+token = {
+  token-request = {
+    url = "http://localhost:8080/token-response-body"
+
+    authentication = {
+      type = "bearer-authentication"
+      bearer-token = "test_token_123"
+    }
   }
+
+  token-response-placeholder = "ResponseBody"
 }
 
-response = {
-  body = {
-    format = "JSON"
+data = {
+  data-request = {
+    url = "https://postman-echo.com/basic-auth"
+
+    authentication = {
+      type = "basic-authentication"
+      user-name = "postman"
+      password = "token[$.secret]"
+    }
+  }
+
+  data-response = {
+    body-format = "JSON"
+
+    persistence = {
+      type = "file-system"
+      file-format = "json"
+      file-path = "./rest-output/"
+    }
   }
 }
-
-http-backend-type = "HttpClientSyncBackend"
 ```
 
-# Request Config
+# TokenConfig
 
-The basic http request configurations are represented by `RequestConfig` class:
+The configurations related to the token request are represented by `TokenConfig` class:
 
-```scala
-case class RequestConfig(
-    method: Method = Method.GET,
-    url: String,
-    queryParams: Map[String, String] = Map.empty,
-    authentication: Option[RestonomerAuthentication] = None,
-    headers: Map[String, String] = Map[String, String]().empty
-)
+User need to provide below configs for `TokenConfig`:
+
+| Config Name                | Mandatory | Default Value | Description                                                                                                                              |
+|:---------------------------|:---------:|:-------------:|:-----------------------------------------------------------------------------------------------------------------------------------------|
+| token-request              |    Yes    |       -       | The configuration for the token request to be triggered. It follows the same structure as `RequestConfig` class.                         |
+| token-response-placeholder |    Yes    |       -       | The place holder where the token response will have the credentials. <br/>It can contain 2 values: `ResponseBody` and `ResponseHeaders`. |
+
+The token config are provided in the checkpoint file in the below manner:
+
+```hocon
+token = {
+  token-request = {
+    url = "http://localhost:8080/token-response-body"
+
+    authentication = {
+      type = "bearer-authentication"
+      bearer-token = "test_token_123"
+    }
+  }
+
+  token-response-placeholder = "ResponseBody"
+}
 ```
 
-The request configuration contains below configs options to be provided by the user:
+# RequestConfig
 
-| Config Name    | Mandatory | Default Value | Description                                                                                                                                                                             |
-|:---------------|:---------:|:-------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| method         |    No     |     `GET`     | Http request method                                                                                                                                                                     |
-| url            |    Yes    |       -       | Url for the REST API request                                                                                                                                                            |
-| query-params   |    No     |       -       | The map of query parameters                                                                                                                                                             |
-| authentication |    Yes    |       -       | The type of authentication mechanism supported by Http Request<br/>Restonomer supports: `basic-authentication`, `bearer-authentication`, `api-key-authentication`, `jwt-authentication` |
-| headers        |    No     |       -       | List of headers to provided as a part of Http request in the form of key-value pairs                                                                                                    |
+The basic http request configurations are represented by `RequestConfig` class.
+
+The request configuration contains below config options to be provided by the user:
+
+| Config Name    | Mandatory | Default Value | Description                                                                                                    |
+|:---------------|:---------:|:-------------:|:---------------------------------------------------------------------------------------------------------------|
+| method         |    No     |     `GET`     | Http request method                                                                                            |
+| url            |    Yes    |       -       | Url for the REST API request                                                                                   |
+| query-params   |    No     |       -       | The map of query parameters                                                                                    |
+| authentication |    No     |       -       | The type of authentication mechanism supported by Http Request represented by `RestonomerAuthentication` class |
+| headers        |    No     |       -       | List of headers to provided as a part of Http request in the form of key-value pairs                           |
+| retry          |    No     |       -       | The auto retry configuration represented by `RetryConfig` class                                                |
 
 The request configuration can be represented in the checkpoint file in below manner:
 
 ```hocon
-request = {
+data-request = {
   method = "GET"
- 
+
   url = "http://localhost:8080/custom-headers"
 
   query-params = {
-   "query_param_name_1" = "query_param_value_1",
-   "query_param_name_2" = "query_param_value_2"
+    "query_param_name_1" = "query_param_value_1",
+    "query_param_name_2" = "query_param_value_2"
   }
- 
+
   authentication = {
     type = "basic-authentication"
     user-name = "test_user"
     password = "test_password"
   }
- 
+
   headers = {
     "header_key_1" = "header_value_1",
     "header_key_2" = "header_value_2"
   }
-}
-```
 
-# Response Config
-
-In restonomer framework, the details about the http response (like response body format) are captured via class 
-`ResponseConfig`:
-
-```scala
-case class ResponseConfig(
-     retry: RetryConfig = RetryConfig(),
-     body: ResponseBodyConfig,
-     transformations: Option[List[RestonomerTransformation]] = None,
-     persistence: RestonomerPersistence
-)
-```
-
-User need to provide below configs for Response Configuration:
-
-| Config Name     | Mandatory | Default Value | Description                                                                                         |
-|:----------------|:---------:|:-------------:|:----------------------------------------------------------------------------------------------------|
-| retry           |    No     |       -       | The auto retry configuration                                                                        |
-| body            |    Yes    |       -       | The body of the http response represented by `ResponseBodyConfig`                                   |
-| transformations |    No     |  Empty List   | List of transformations to be applied on the restonomer response dataframe                          |
-| persistence     |    Yes    |       -       | The persistence attribute that tells where to persist the transformed restonomer response dataframe |
-
-The response configurations are provided in the checkpoint file in the below manner:
-
-```hocon
-response = {
   retry = {
-    max-retries = 5
-    status-codes-to-retry = [429, 301]
+    max-retries = 10
+    status-codes-to-retry = [429]
   }
- 
-  body = {
-    format = "JSON"
-  }
-
-  transformations = [
-    {
-      type = "add-column"
-      column-name = "col_D"
-      column-value = "val_D"
-      column-data-type = "string"
-    }
-  ]
-
-  persistence = {
-    type = "file-system"
-    file-format = "json"
-    file-path = "./rest-output/"
- }
 }
 ```
 
-# Retry Config
+# RetryConfig
 
-The configurations related to the auto retry mechanism of Restonomer are represented by class `RetryConfig`:
+The configurations related to the auto retry mechanism are represented by `RetryConfig` class.
 
-```scala
-case class RetryConfig(
-    maxRetries: Int = 20,
-    statusCodesToRetry: List[Int] = List(403, 429, 502, 401, 500, 504, 503, 408)
-)
-```
 User need to provide below configs for Retry Configuration:
 
 | Config Name           | Mandatory |              Default Value               | Description                                                                                                                      |
@@ -176,85 +147,74 @@ retry = {
 }
 ```
 
-# Response Body Config
+# DataConfig
 
-The configurations related to the body of the http response are represented by class `ResponseBodyConfig`:
+The configurations related to the main data request and response are represented by `DataConfig` class.
 
-```scala
-case class ResponseBodyConfig(
-    format: String
-)
+User needs to provide below configs for data configuration:
+
+| Config Name   | Mandatory | Default Value | Description                                                                                                                                            |
+|:--------------|:---------:|:-------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| data-request  |    Yes    |       -       | The configuration for the main data request to be triggered. It follows the same structure as `RequestConfig` class.                                   |
+| data-response |    Yes    |       -       | The configuration for defining the main data response like format, transformations, persistence, etc. It is represented by `DataResponseConfig` class. |
+
+The data config is represented in checkpoint file in below format:
+
+```hocon
+data = {
+  data-request = {
+    url = "https://postman-echo.com/basic-auth"
+
+    authentication = {
+      type = "basic-authentication"
+      user-name = "postman"
+      password = "password"
+    }
+  }
+
+  data-response = {
+    body-format = "JSON"
+
+    persistence = {
+      type = "file-system"
+      file-format = "json"
+      file-path = "./rest-output/"
+    }
+  }
+}
 ```
 
-User need to provide below configs for Response Body Configuration:
+# DataResponseConfig
 
-| Config Name | Mandatory | Default Value | Description                                                                                                                                                                                      |
-|:------------|:---------:|:-------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| format      |    Yes    |       -       | The format of the body of the http response<br/>Restonomer framework supports handling formats like `JSON`<br/>Restonomer uses this information internally to convert response body to dataframe |
+In restonomer framework, the details about the http response (like response body format, transformations, persistence) are captured via `DataResponseConfig` class.
+
+User need to provide below configs for Data Response Configuration:
+
+| Config Name     | Mandatory | Default Value | Description                                                                                                                                                                                      |
+|:----------------|:---------:|:-------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| body-format     |    Yes    |       -       | The format of the body of the http response<br/>Restonomer framework supports handling formats like `JSON`<br/>Restonomer uses this information internally to convert response body to dataframe |
+| transformations |    No     |       -       | List of transformations to be applied on the restonomer response dataframe                                                                                                                       |
+| persistence     |    Yes    |       -       | The persistence attribute that tells where to persist the transformed restonomer response dataframe                                                                                              |
 
 The response configurations are provided in the checkpoint file in the below manner:
 
 ```hocon
-body = {
-  format = "JSON"
-}
-```
+data-response = {
+  body-format = "JSON"
 
-# Token Config
-
-The configurations related to the token request for authentication are represented by class `TokenConfig`:
-
-```scala
-case class TokenConfig(
-    tokenRequest: RequestConfig,
-    tokenResponse: TokenResponseConfig
-)
-```
-
-User need to provide below configs for TokenConfig:
-
-| Config Name   | Mandatory | Default Value | Description                                                                                                |
-|:--------------|:---------:|:-------------:|:-----------------------------------------------------------------------------------------------------------|
-| tokenRequest  |    Yes    |       -       | The configuration for the token request to be triggered. It follows the same structure as `RequestConfig`. |
-| tokenResponse |    Yes    |       -       | The configuration for the token response received from the token request.                                  |
-
-The token config are provided in the checkpoint file in the below manner:
-
-```hocon
-token = {
-    token-request = {
-        url = "http://localhost:8080/token-response-body"
-
-        authentication = {
-          type = "bearer-authentication"
-          bearer-token = "test_token_123"
-        }
-      }
-
-      token-response = {
-        placeholder = "ResponseBody"
-      }
+  transformations = [
+    {
+      type = "add-column"
+      column-name = "col_D"
+      column-value = "val_D"
+      column-data-type = "string"
     }
-```
-
-# Token Response Config
-
-The configurations related to the token response for authentication are represented by class `TokenResponseConfig`:
-
-```scala
-case class TokenResponseConfig(placeholder: String)
-```
-
-User need to provide below configs for TokenResponseConfig:
-
-| Config Name | Mandatory | Default Value | Description                                                                                                                              |
-|:------------|:---------:|:-------------:|:-----------------------------------------------------------------------------------------------------------------------------------------|
-| placeholder |    Yes    |       -       | The place holder where the token response will have the credentials. <br/>It can contain 2 values: `ResponseBody` and `ResponseHeaders`. |
-
-The token response config are provided in the checkpoint file in the below manner:
-
-```hocon
-token-response = {
-    placeholder = "ResponseBody"
+  ]
+  
+  persistence = {
+    type = "file-system"
+    file-format = "json"
+    file-path = "./rest-output/"
+  }
 }
 ```
