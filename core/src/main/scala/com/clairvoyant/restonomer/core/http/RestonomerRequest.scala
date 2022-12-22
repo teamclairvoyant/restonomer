@@ -19,5 +19,6 @@ object RestonomerRequest {
       .withQueryParams(requestConfig.queryParams)
       .withAuthentication(requestConfig.authentication)
       .withHeaders(requestConfig.headers)
+      .withBody(requestConfig.body)
 
 }
