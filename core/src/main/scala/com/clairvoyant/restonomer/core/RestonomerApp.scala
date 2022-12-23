@@ -7,12 +7,6 @@ import com.clairvoyant.restonomer.core.transformation.AddLiteralColumn
 
 object RestonomerApp extends App {
 
-  private val restonomerContext = RestonomerContext()
-
-  // restonomerContext.runCheckpoint(checkpointFilePath = "checkpoint_no_authentication.conf")
-  // restonomerContext.runCheckpointsUnderDirectory(checkpointsDirectoryPath = "category-1")
-  restonomerContext.runAllCheckpoints()
-
   val checkpointConfig = CheckpointConfig(
     name = "test_checkpoint",
     data = DataConfig(
@@ -35,5 +29,17 @@ object RestonomerApp extends App {
     )
   )
 
+  val restonomerContextDirectoryPath = "./restonomer_context"
+  val configVariablesFromApplicationArgs = Map("BASIC_AUTH_TOKEN" -> "abcxyz")
+
+  private val restonomerContext = RestonomerContext(
+    restonomerContextDirectoryPath = restonomerContextDirectoryPath,
+    configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
+  )
+
+  restonomerContext.runCheckpoint(checkpointFilePath = "checkpoint_no_authentication.conf")
   restonomerContext.runCheckpoint(checkpointConfig)
+  restonomerContext.runCheckpointsUnderDirectory(checkpointsDirectoryPath = "category-1")
+  // restonomerContext.runAllCheckpoints()
+
 }
