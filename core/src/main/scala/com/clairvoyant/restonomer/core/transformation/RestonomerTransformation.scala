@@ -10,7 +10,7 @@ sealed trait RestonomerTransformation {
 case class AddLiteralColumn(
     columnName: String,
     columnValue: String,
-    columnDataType: Option[String]
+    columnDataType: Option[String] = None
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
