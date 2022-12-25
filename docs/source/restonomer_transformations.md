@@ -291,7 +291,6 @@ This transformation expects user to provide below inputs:
 
 | Input Arguments | Mandatory | Default Value | Description                                      |
 |:----------------|:---------:|:-------------:|:-------------------------------------------------|
-| column-name     |    Yes    |       -       | Name of the column which needs to be transformed |
 | case-type       |    Yes    |       -       | Case to which the column needs to transformed    |
 
 For example, consider we have below restonomer response in json:
@@ -310,7 +309,6 @@ Then, user can configure the `ChangeColumnCase` transformation in the below mann
 ```hocon
 {
   type = "change-column-case"
-  column-name = "COL_B"
   case-type = "lower"
 }
 ```

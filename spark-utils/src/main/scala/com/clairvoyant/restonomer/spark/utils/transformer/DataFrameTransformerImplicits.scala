@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
 import org.apache.spark.sql.functions.{col, from_json, lit, to_json}
-import org.apache.spark.sql.types.{DataType, StructType}
+import org.apache.spark.sql.types.{ArrayType, DataType, StructField, StructType}
 import org.apache.spark.sql.{Column, DataFrame}
 
 object DataFrameTransformerImplicits {
@@ -61,16 +61,29 @@ object DataFrameTransformerImplicits {
 
     def colToJson(columnName: String): DataFrame = df.withColumn(columnName, to_json(col(columnName)))
 
-    def changeColCase(columnName: String, caseType: String): DataFrame = {
-      caseType match {
-        case "upper" =>
-          df.withColumnRenamed(columnName, columnName.toUpperCase())
-        case "lower" =>
-          df.withColumnRenamed(columnName, columnName.toLowerCase())
-        case _ =>
-          df
-      }
+    def changeColCase(caseType: String): DataFrame = {
 
+      def changeColCaseFunc(colName: String, caseType: String): String =
+        caseType match {
+          case "upper" =>
+            colName.toUpperCase
+          case "lower" =>
+            colName.toLowerCase
+        }
+
+      def parseNestedCol(schema: StructType, caseType: String): StructType = {
+        def recurChngCase(schema: StructType): Seq[StructField] =
+          schema.fields.map {
+            case StructField(name, dtype: StructType, nullable, meta) =>
+              StructField(changeColCaseFunc(name, caseType), StructType(recurChngCase(dtype)), nullable, meta)
+            case StructField(name, dtype, nullable, meta) =>
+              StructField(changeColCaseFunc(name, caseType), dtype, nullable, meta)
+          }
+
+        StructType(recurChngCase(schema))
+      }
+      println(parseNestedCol(df.schema,caseType))
+      df.sparkSession.createDataFrame(df.rdd,parseNestedCol(df.schema,caseType))
     }
 
   }
