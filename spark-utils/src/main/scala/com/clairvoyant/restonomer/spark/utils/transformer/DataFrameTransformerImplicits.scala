@@ -69,6 +69,8 @@ object DataFrameTransformerImplicits {
             colName.toUpperCase
           case "lower" =>
             colName.toLowerCase
+          case _ =>
+            colName
         }
 
       def parseNestedCol(schema: StructType, caseType: String): StructType = {

@@ -22,7 +22,6 @@ class ConvertColumnCaseTransformationSpec extends CoreSpec with DataFrameMatcher
 
   "transform() - with valid column name and case type" should "transform the column case" in {
     val restonomerTransformation = ChangeColumnCase(
-      columnName = "COL_B",
       caseType = "lower"
     )
 
@@ -38,7 +37,6 @@ class ConvertColumnCaseTransformationSpec extends CoreSpec with DataFrameMatcher
 
   "transform() - with invalid case type" should "should return the original dataframe" in {
     val restonomerTransformation = ChangeColumnCase(
-      columnName = "COL_B",
       caseType = "low"
     )
 
