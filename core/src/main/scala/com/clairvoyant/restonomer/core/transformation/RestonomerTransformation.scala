@@ -76,7 +76,7 @@ case class ChangeColumnCase(
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame = {
-    restonomerResponseDF.changeColCase( caseType)
+    restonomerResponseDF.changeColCase(caseType)
   }
 
 }

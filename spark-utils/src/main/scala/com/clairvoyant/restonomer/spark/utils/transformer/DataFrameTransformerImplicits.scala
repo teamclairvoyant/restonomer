@@ -82,8 +82,8 @@ object DataFrameTransformerImplicits {
 
         StructType(recurChngCase(schema))
       }
-      println(parseNestedCol(df.schema,caseType))
-      df.sparkSession.createDataFrame(df.rdd,parseNestedCol(df.schema,caseType))
+      println(parseNestedCol(df.schema, caseType))
+      df.sparkSession.createDataFrame(df.rdd, parseNestedCol(df.schema, caseType))
     }
 
   }
