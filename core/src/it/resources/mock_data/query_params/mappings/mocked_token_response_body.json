@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/token-for-query-params"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_token_for_query_params_response.json"
+  }
+}

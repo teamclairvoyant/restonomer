@@ -1,46 +1,57 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.authentication.TokenRequestHandler.getToken
 import com.clairvoyant.restonomer.core.authentication._
-import sttp.client3.{Request, SttpBackend}
-
-import scala.concurrent.Future
+import sttp.client3.Request
 
 case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {
 
+  def withQueryParams(queryParams: Map[String, String])(
+      implicit tokenFunction: Option[String => String]
+  ): RestonomerRequestBuilder =
+    copy(httpRequest =
+      httpRequest.method(
+        method = httpRequest.method,
+        uri = httpRequest.uri.withParams(
+          tokenFunction
+            .map(f => queryParams.view.mapValues(TokenSubstitutor(f).substitute).toMap)
+            .getOrElse(queryParams)
+        )
+      )
+    )
+
   def withAuthentication(
       authenticationConfig: Option[RestonomerAuthentication]
-  )(implicit akkaHttpBackend: SttpBackend[Future, Any]): RestonomerRequestBuilder = {
+  )(implicit tokenFunction: Option[String => String]): RestonomerRequestBuilder =
     copy(httpRequest =
       authenticationConfig
         .map { restonomerAuthentication =>
-          restonomerAuthentication.token
-            .map { tokenConfig =>
-              val credentialsWithTokenSubstitutor = CredentialsWithTokenSubstitutor(getToken(tokenConfig))
+          tokenFunction
+            .map { f =>
+              val tokenSubstitutor = TokenSubstitutor(f)
 
               restonomerAuthentication match {
-                case basicAuthentication @ BasicAuthentication(_, basicToken, userName, password) =>
+                case basicAuthentication @ BasicAuthentication(basicToken, userName, password) =>
                   basicAuthentication.copy(
-                    basicToken = basicToken.map(credentialsWithTokenSubstitutor.substituteCredentialWithToken),
-                    userName = userName.map(credentialsWithTokenSubstitutor.substituteCredentialWithToken),
-                    password = password.map(credentialsWithTokenSubstitutor.substituteCredentialWithToken)
+                    basicToken = basicToken.map(tokenSubstitutor.substitute),
+                    userName = userName.map(tokenSubstitutor.substitute),
+                    password = password.map(tokenSubstitutor.substitute)
                   )
 
-                case bearerAuthentication @ BearerAuthentication(_, bearerToken) =>
+                case bearerAuthentication @ BearerAuthentication(bearerToken) =>
                   bearerAuthentication.copy(
-                    bearerToken = credentialsWithTokenSubstitutor.substituteCredentialWithToken(bearerToken)
+                    bearerToken = tokenSubstitutor.substitute(bearerToken)
                   )
 
-                case apiKeyAuthentication @ APIKeyAuthentication(_, apiKeyName, apiKeyValue, _) =>
+                case apiKeyAuthentication @ APIKeyAuthentication(apiKeyName, apiKeyValue, _) =>
                   apiKeyAuthentication.copy(
-                    apiKeyName = credentialsWithTokenSubstitutor.substituteCredentialWithToken(apiKeyName),
-                    apiKeyValue = credentialsWithTokenSubstitutor.substituteCredentialWithToken(apiKeyValue)
+                    apiKeyName = tokenSubstitutor.substitute(apiKeyName),
+                    apiKeyValue = tokenSubstitutor.substitute(apiKeyValue)
                   )
 
-                case jwtAuthentication @ JWTAuthentication(_, subject, secretKey, _, _) =>
+                case jwtAuthentication @ JWTAuthentication(subject, secretKey, _, _) =>
                   jwtAuthentication.copy(
-                    subject = credentialsWithTokenSubstitutor.substituteCredentialWithToken(subject),
-                    secretKey = credentialsWithTokenSubstitutor.substituteCredentialWithToken(secretKey)
+                    subject = tokenSubstitutor.substitute(subject),
+                    secretKey = tokenSubstitutor.substitute(secretKey)
                   )
               }
 
@@ -50,10 +61,12 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
         }
         .getOrElse(httpRequest)
     )
-  }
 
   def withHeaders(headers: Map[String, String]): RestonomerRequestBuilder =
     copy(httpRequest = httpRequest.headers(headers))
+
+  def withBody(body: Option[String] = None): RestonomerRequestBuilder =
+    copy(httpRequest = body.map(httpRequest.body(_)).getOrElse(httpRequest))
 
   def build: RestonomerRequest = new RestonomerRequest(httpRequest)
 }

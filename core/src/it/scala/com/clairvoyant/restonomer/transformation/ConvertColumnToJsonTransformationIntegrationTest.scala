@@ -8,11 +8,7 @@ class ConvertColumnToJsonTransformationIntegrationTest extends IntegrationTestDe
 
   it should "transform mentioned column from the restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_column_to_json_transformation.conf")
-
-    val outputDF = readOutputJSON()
-    val expectedDF = readExpectedMockJSON(fileName = "expected_column_to_json_transformation.json")
-
-    outputDF should matchExpectedDataFrame(expectedDF)
+    outputDF should matchExpectedDataFrame(expectedDF("expected_column_to_json_transformation.json"))
   }
 
 }

@@ -5,10 +5,7 @@ import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
-import pureconfig.ConfigReader
 import pureconfig.generic.auto._
-import sttp.client3.UriContext
-import sttp.model.Uri
 
 import java.io.FileNotFoundException
 
@@ -33,8 +30,6 @@ class RestonomerContext(
     val restonomerContextDirectoryPath: String,
     val configVariablesFromApplicationArgs: Map[String, String]
 ) {
-  implicit val urlReader: ConfigReader[Uri] = ConfigReader[String].map(url => uri"$url")
-
   private val CONFIG_VARIABLES_FILE_PATH = s"$restonomerContextDirectoryPath/uncommitted/config_variables.conf"
   private val APPLICATION_CONFIG_FILE_PATH = s"$restonomerContextDirectoryPath/application.conf"
   private val CHECKPOINTS_CONFIG_DIRECTORY_PATH = s"$restonomerContextDirectoryPath/checkpoints"
@@ -100,7 +95,7 @@ class RestonomerContext(
       println("\n=====================================================\n")
     }
 
-  private def runCheckpoint(checkpointConfig: CheckpointConfig): Unit =
+  def runCheckpoint(checkpointConfig: CheckpointConfig): Unit =
     RestonomerWorkflow(applicationConfig).run(checkpointConfig)
 
 }
