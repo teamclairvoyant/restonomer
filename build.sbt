@@ -11,8 +11,7 @@ Global / excludeLintKeys += Keys.parallelExecution
 
 // ----- VARIABLES ----- //
 
-val organizationName = "com.clairvoyant"
-val applicationName = "restonomer"
+val organizationName = "com.clairvoyant.restonomer"
 val releaseVersion = "1.0"
 
 val pureConfigVersion = "0.17.2"
@@ -56,7 +55,7 @@ val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVer
 
 // ----- MODULE DEPENDENCIES ----- //
 
-val coreDependencies =
+val restonomerCoreDependencies =
   pureConfigDependencies ++
     sttpDependencies ++
     akkaBackendDependencies ++
@@ -65,7 +64,7 @@ val coreDependencies =
     scalaTestDependencies.map(_ % "it,test") ++
     wireMockDependencies
 
-val sparkUtilsDependencies =
+val restonomerSparkUtilsDependencies =
   sparkDependencies ++
     catsDependencies ++
     scalaTestDependencies.map(_ % "test")
@@ -73,39 +72,36 @@ val sparkUtilsDependencies =
 // ----- SETTINGS ----- //
 
 val commonSettings = Seq(
+  organization := organizationName,
+  version := releaseVersion,
   Keys.scalacOptions ++= scalacOptions
 )
 
-val rootSettings =
+val restonomerCoreSettings =
   commonSettings ++ Seq(
-    organization := organizationName,
-    name := applicationName,
-    version := releaseVersion
-  )
-
-val coreSettings =
-  commonSettings ++ Seq(
-    libraryDependencies ++= coreDependencies,
+    libraryDependencies ++= restonomerCoreDependencies,
     Test / parallelExecution := false,
     IntegrationTest / parallelExecution := false
   ) ++ Defaults.itSettings
 
-val sparkUtilsSettings =
+val restonomerSparkUtilsSettings =
   commonSettings ++ Seq(
-    libraryDependencies ++= sparkUtilsDependencies
+    libraryDependencies ++= restonomerSparkUtilsDependencies
   )
 
 // ----- PROJECTS ----- //
 
 lazy val restonomer = (project in file("."))
-  .settings(rootSettings)
-  .aggregate(core, `spark-utils`)
+  .settings(commonSettings)
+  .aggregate(`restonomer-core`, `restonomer-spark-utils`)
 
-lazy val core = (project in file("core"))
+lazy val `restonomer-core` = (project in file("restonomer-core"))
   .configs(IntegrationTest)
-  .settings(coreSettings)
-  .dependsOn(`spark-utils` % "compile->compile;test->test;it->it;test->it")
+  .settings(restonomerCoreSettings)
+  .dependsOn(`restonomer-spark-utils` % "compile->compile;test->test;it->it;test->it")
 
-lazy val `spark-utils` = (project in file("spark-utils"))
+lazy val `restonomer-docs` = project in file("restonomer-docs")
+
+lazy val `restonomer-spark-utils` = (project in file("restonomer-spark-utils"))
   .configs(IntegrationTest.extend(Test))
-  .settings(sparkUtilsSettings)
+  .settings(restonomerSparkUtilsSettings)
