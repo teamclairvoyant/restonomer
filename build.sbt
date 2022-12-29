@@ -95,13 +95,13 @@ lazy val restonomer = (project in file("."))
   .settings(commonSettings)
   .aggregate(`restonomer-core`, `restonomer-spark-utils`)
 
-lazy val `restonomer-core` = (project in file("restonomer-core"))
+lazy val `restonomer-core` = project
   .configs(IntegrationTest)
   .settings(restonomerCoreSettings)
   .dependsOn(`restonomer-spark-utils` % "compile->compile;test->test;it->it;test->it")
 
-lazy val `restonomer-docs` = project in file("restonomer-docs")
+lazy val `restonomer-docs` = project
 
-lazy val `restonomer-spark-utils` = (project in file("restonomer-spark-utils"))
+lazy val `restonomer-spark-utils` = project
   .configs(IntegrationTest.extend(Test))
   .settings(restonomerSparkUtilsSettings)
