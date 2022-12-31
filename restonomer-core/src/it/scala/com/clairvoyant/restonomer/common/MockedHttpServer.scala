@@ -7,7 +7,7 @@ import org.scalatest.{BeforeAndAfterAll, Suite}
 trait MockedHttpServer extends BeforeAndAfterAll {
   this: Suite =>
 
-  val resourcesDirectoryPath = "core/src/it/resources"
+  val resourcesDirectoryPath = "restonomer-core/src/it/resources"
   val mockDataRootDirectoryPath: String = s"$resourcesDirectoryPath/mock_data"
 
   val mappingsDirectory: String

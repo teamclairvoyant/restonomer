@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.core.http
 
-import akka.actor.ActorSystem
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.RetryConfig
+import odelay.Delay
 import sttp.client3._
 import sttp.model.HeaderNames.Location
 import sttp.model.{Header, StatusCode}
@@ -20,8 +20,7 @@ object RestonomerResponse {
   private val random: Random.type = scala.util.Random
 
   def fetchFromRequest(restonomerRequest: RestonomerRequest, retryConfig: RetryConfig)(
-      implicit actorSystem: ActorSystem,
-      akkaHttpBackend: SttpBackend[Future, Any]
+      implicit sttpBackend: SttpBackend[Future, Any]
   ): RestonomerResponse = {
     val httpResponseBody = getBody(
       restonomerRequest = restonomerRequest,
@@ -32,16 +31,16 @@ object RestonomerResponse {
     RestonomerResponse(body = httpResponseBody)
   }
 
-  private def sleepTimeInSeconds: Int = 10 + random.nextInt(20 - 10) + 1
+  private def sleepTimeInSeconds: Int = 10 + random.nextInt(10) + 1
 
   private def getBody(
       restonomerRequest: RestonomerRequest,
       statusCodesToRetry: List[StatusCode],
       maxRetries: Int,
       currentRetryAttemptNumber: Int = 0
-  )(implicit actorSystem: ActorSystem, akkaHttpBackend: SttpBackend[Future, Any]): Future[String] = {
+  )(implicit sttpBackend: SttpBackend[Future, Any]): Future[String] = {
     restonomerRequest.httpRequest
-      .send(akkaHttpBackend)
+      .send(sttpBackend)
       .flatMap {
         case Response(body, StatusCode.Ok, _, _, _, _) =>
           Future(body.toSeq.head)
@@ -100,7 +99,7 @@ object RestonomerResponse {
       maxRetries: Int,
       currentRetryAttemptNumber: Int,
       headers: Seq[Header] = Seq.empty
-  )(implicit actorSystem: ActorSystem): Future[T] = {
+  ): Future[T] = {
     val retryAfterInSeconds =
       headers
         .find(_.name.toLowerCase == "retry-after")
@@ -117,11 +116,7 @@ object RestonomerResponse {
          |""".stripMargin
     )
 
-    akka.pattern.after(
-      duration = retryAfterInSeconds,
-      using = actorSystem.scheduler
-    )(whatToRetry)
-
+    Delay(retryAfterInSeconds)(whatToRetry).future.flatMap(identity)
   }
 
 }

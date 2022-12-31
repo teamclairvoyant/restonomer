@@ -1,6 +1,5 @@
 package com.clairvoyant.restonomer.core.app
 
-import akka.actor.ActorSystem
 import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders
 import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders.{RESPONSE_BODY, RESPONSE_HEADERS}
 import com.clairvoyant.restonomer.core.converter.ResponseToDataFrameConverter
@@ -12,8 +11,7 @@ import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import com.jayway.jsonpath.JsonPath
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import sttp.client3.akkahttp.AkkaHttpBackend
-import sttp.client3.{Response, SttpBackend}
+import sttp.client3.{HttpClientFutureBackend, Response, SttpBackend}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -22,8 +20,7 @@ import scala.concurrent.{Await, Future}
 class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
-    implicit val actorSystem: ActorSystem = ActorSystem(checkpointConfig.name)
-    implicit val akkaHttpBackend: SttpBackend[Future, Any] = AkkaHttpBackend.usingActorSystem(actorSystem)
+    implicit val sttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
 
     val tokenFunction = checkpointConfig.token
       .map { tokenConfig =>
@@ -33,7 +30,7 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
               .builder(tokenConfig.tokenRequest)
               .build
               .httpRequest
-              .send(akkaHttpBackend),
+              .send(sttpBackend),
             Duration.Inf
           ),
           tokenResponsePlaceholder = tokenConfig.tokenResponsePlaceholder
@@ -64,7 +61,6 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
     )
 
     Await.result(persistedRestonomerResponseDF, Duration.Inf)
-    Await.result(actorSystem.terminate(), Duration.Inf)
   }
 
   private def getTokenFunction(
