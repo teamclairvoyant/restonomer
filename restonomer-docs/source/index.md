@@ -34,6 +34,12 @@ Restonomer, at a high level, aims at providing users with a fault-tolerant and s
 ```eval_rst
 .. toctree::
    :maxdepth: 2
+   :caption: Getting Started
+   
+   restonomer_getting_started
+   
+.. toctree::
+   :maxdepth: 2
    :caption: Restonomer Context
    
    restonomer_context
