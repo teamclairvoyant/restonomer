@@ -93,6 +93,7 @@ The request configuration contains below config options to be provided by the us
 | url            |    Yes    |       -       | Url for the REST API request                                                                                   |
 | query-params   |    No     |       -       | The map of query parameters                                                                                    |
 | authentication |    No     |       -       | The type of authentication mechanism supported by Http Request represented by `RestonomerAuthentication` class |
+| body           |    No     |       -       | The raw string body to be send along with the request                                                          |
 | headers        |    No     |       -       | List of headers to provided as a part of Http request in the form of key-value pairs                           |
 | retry          |    No     |       -       | The auto retry configuration represented by `RetryConfig` class                                                |
 
@@ -115,6 +116,8 @@ data-request = {
     password = "test_password"
   }
 
+  body = "Sample request body"
+  
   headers = {
     "header_key_1" = "header_value_1",
     "header_key_2" = "header_value_2"
