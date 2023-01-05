@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
-import org.apache.spark.sql.functions.{col, from_json, lit, to_json}
+import org.apache.spark.sql.functions.{col, from_json, lit, to_json,regexp_replace }
 import org.apache.spark.sql.types.{DataType, StructType}
 import org.apache.spark.sql.{Column, DataFrame}
 
@@ -61,6 +61,10 @@ object DataFrameTransformerImplicits {
 
     def colToJson(columnName: String): DataFrame = df.withColumn(columnName, to_json(col(columnName)))
 
-  }
+    def replaceString(
+        columnName: String,
+        columnValue: String,
+        columnReplaceValue: String
+        ): DataFrame = df.withColumn(columnName, regexp_replace(col(columnName), columnValue,columnReplaceValue))
 
 }
