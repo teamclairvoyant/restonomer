@@ -71,12 +71,10 @@ case class ConvertColumnToJson(
 
 }
 
-case class ReplaceStringInColumnValue(
-    columnName: String,
-    columnValue: String,
-    columnReplaceValue: String ) extends RestonomerTransformation{
+case class ReplaceStringInColumnValue(columnName: String, columnValue: String, columnReplaceValue: String)
+    extends RestonomerTransformation {
 
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.replaceString(columnName,columnValue,columnReplaceValue)
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.replaceString(columnName, columnValue, columnReplaceValue)
 
 }
-
