@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaCompilerConfiguration">
+    <profile name="sbt 1" modules="restonomer_8209" />
+    <profile name="sbt 2" modules="restonomer">
+      <parameters>
+        <parameter value="-Wunused" />
+        <parameter value="-Yrangepos" />
+        <parameter value="-P:semanticdb:targetroot:C:\Users\Mamata Gupta\restonomer\target\scala-2.13\meta" />
+      </parameters>
+      <plugins>
+        <plugin path="C:\Users\Mamata Gupta\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\scalameta\semanticdb-scalac_2.13.8\4.4.32\semanticdb-scalac_2.13.8-4.4.32.jar" />
+      </plugins>
+    </profile>
+    <profile name="sbt 3" modules="restonomer-core">
+      <parameters>
+        <parameter value="-Wunused" />
+        <parameter value="-Yrangepos" />
+        <parameter value="-P:semanticdb:targetroot:C:\Users\Mamata Gupta\restonomer\restonomer-core\target\scala-2.13\meta" />
+      </parameters>
+      <plugins>
+        <plugin path="C:\Users\Mamata Gupta\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\scalameta\semanticdb-scalac_2.13.8\4.4.32\semanticdb-scalac_2.13.8-4.4.32.jar" />
+      </plugins>
+    </profile>
+    <profile name="sbt 4" modules="restonomer-docs">
+      <parameters>
+        <parameter value="-Yrangepos" />
+        <parameter value="-P:semanticdb:targetroot:C:\Users\Mamata Gupta\restonomer\restonomer-docs\target\scala-2.13\meta" />
+      </parameters>
+      <plugins>
+        <plugin path="C:\Users\Mamata Gupta\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\scalameta\semanticdb-scalac_2.13.8\4.4.32\semanticdb-scalac_2.13.8-4.4.32.jar" />
+      </plugins>
+    </profile>
+    <profile name="sbt 5" modules="restonomer-spark-utils">
+      <parameters>
+        <parameter value="-Wunused" />
+        <parameter value="-Yrangepos" />
+        <parameter value="-P:semanticdb:targetroot:C:\Users\Mamata Gupta\restonomer\restonomer-spark-utils\target\scala-2.13\meta" />
+      </parameters>
+      <plugins>
+        <plugin path="C:\Users\Mamata Gupta\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\scalameta\semanticdb-scalac_2.13.8\4.4.32\semanticdb-scalac_2.13.8-4.4.32.jar" />
+      </plugins>
+    </profile>
+  </component>
+</project>
