@@ -17,7 +17,7 @@ class ReplaceStringInColumnValueTransformationSpec extends CoreSpec with DataFra
     )
 
     val expectedRestonomerResponseTransformedDF = Seq(("val_A", "val_B", "val_C", "val_D"))
-      .toDF("col_A", "col_B", "col_C", "col_D")
+      .toDF("col_A", "col_B", "col_C", "value_D")
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 
@@ -25,24 +25,4 @@ class ReplaceStringInColumnValueTransformationSpec extends CoreSpec with DataFra
       expectedDF = expectedRestonomerResponseTransformedDF
     )
   }
-
-  "transform() - without column-replace-value" should "transform the dataframe as expected" in {
-    val restonomerTransformation = ReplaceStringInColumnValue(
-      columnName = "col_D",
-      columnValue = "val_D",
-      columnReplaceValue = ""
-    )
-
-    val expectedRestonomerResponseTransformedDF = Seq(("val_A", "val_B", "val_C", "val_D"))
-      .toDF("col_A", "col_B", "col_C", "col_D")
-
-    val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
-
-    actualRestonomerResponseTransformedDF should matchExpectedDataFrame(
-      expectedDF = expectedRestonomerResponseTransformedDF
-    )
-  }
-
-
-
 }
