@@ -1,0 +1,9 @@
+
+"request": {
+"url": "/replace-stringValue-transformation"
+},
+"response": {
+"status": 200,
+"bodyFileName": "mocked_replace_StringValue_transformation_response.json"
+}
+}
