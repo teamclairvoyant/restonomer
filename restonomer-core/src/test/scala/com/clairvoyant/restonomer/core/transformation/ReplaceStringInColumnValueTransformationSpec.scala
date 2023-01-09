@@ -21,8 +21,8 @@ class ReplaceStringInColumnValueTransformationSpec extends CoreSpec with DataFra
       columnReplaceValue = "value_D"
     )
 
-    val expectedRestonomerResponseTransformedDF = Seq(("val_A", "val_B", "val_C", "val_D"))
-      .toDF("col_A", "col_B", "col_C", "value_D")
+    val expectedRestonomerResponseTransformedDF = Seq(("val_A", "val_B", "val_C", "value_D"))
+      .toDF("col_A", "col_B", "col_C", "col_D")
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 
