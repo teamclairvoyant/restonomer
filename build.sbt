@@ -11,20 +11,18 @@ Global / excludeLintKeys += Keys.parallelExecution
 
 // ----- VARIABLES ----- //
 
-val organizationName = "com.clairvoyant"
-val applicationName = "restonomer"
+val organizationName = "com.clairvoyant.restonomer"
 val releaseVersion = "1.0"
 
 val pureConfigVersion = "0.17.2"
 val sttpVersion = "3.8.5"
-val akkaBackendVersion = "3.8.5"
-val akkaStreamVersion = "2.8.0-M1"
 val scalaTestVersion = "3.2.14"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.1.2"
 val sparkVersion = "3.3.0"
 val catsVersion = "2.9.0"
 val jsonPathVersion = "2.7.0"
+val odelayVersion = "0.4.0"
 
 lazy val scalacOptions = Seq("-Wunused")
 
@@ -33,11 +31,6 @@ lazy val scalacOptions = Seq("-Wunused")
 val pureConfigDependencies = Seq("com.github.pureconfig" %% "pureconfig" % pureConfigVersion)
 
 val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
-
-val akkaBackendDependencies = Seq(
-  "com.softwaremill.sttp.client3" %% "akka-http-backend" % akkaBackendVersion,
-  "com.typesafe.akka" %% "akka-stream" % akkaStreamVersion
-)
 
 val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion)
 
@@ -54,18 +47,20 @@ val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
 
 val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVersion)
 
+val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
+
 // ----- MODULE DEPENDENCIES ----- //
 
-val coreDependencies =
+val restonomerCoreDependencies =
   pureConfigDependencies ++
     sttpDependencies ++
-    akkaBackendDependencies ++
     jwtDependencies ++
     jsonPathDependencies ++
     scalaTestDependencies.map(_ % "it,test") ++
-    wireMockDependencies
+    wireMockDependencies ++
+    odelayDependencies
 
-val sparkUtilsDependencies =
+val restonomerSparkUtilsDependencies =
   sparkDependencies ++
     catsDependencies ++
     scalaTestDependencies.map(_ % "test")
@@ -73,39 +68,36 @@ val sparkUtilsDependencies =
 // ----- SETTINGS ----- //
 
 val commonSettings = Seq(
+  organization := organizationName,
+  version := releaseVersion,
   Keys.scalacOptions ++= scalacOptions
 )
 
-val rootSettings =
+val restonomerCoreSettings =
   commonSettings ++ Seq(
-    organization := organizationName,
-    name := applicationName,
-    version := releaseVersion
-  )
-
-val coreSettings =
-  commonSettings ++ Seq(
-    libraryDependencies ++= coreDependencies,
+    libraryDependencies ++= restonomerCoreDependencies,
     Test / parallelExecution := false,
     IntegrationTest / parallelExecution := false
   ) ++ Defaults.itSettings
 
-val sparkUtilsSettings =
+val restonomerSparkUtilsSettings =
   commonSettings ++ Seq(
-    libraryDependencies ++= sparkUtilsDependencies
+    libraryDependencies ++= restonomerSparkUtilsDependencies
   )
 
 // ----- PROJECTS ----- //
 
 lazy val restonomer = (project in file("."))
-  .settings(rootSettings)
-  .aggregate(core, `spark-utils`)
+  .settings(commonSettings)
+  .aggregate(`restonomer-core`, `restonomer-spark-utils`)
 
-lazy val core = (project in file("core"))
+lazy val `restonomer-core` = project
   .configs(IntegrationTest)
-  .settings(coreSettings)
-  .dependsOn(`spark-utils` % "compile->compile;test->test;it->it;test->it")
+  .settings(restonomerCoreSettings)
+  .dependsOn(`restonomer-spark-utils` % "compile->compile;test->test;it->it;test->it")
 
-lazy val `spark-utils` = (project in file("spark-utils"))
+lazy val `restonomer-docs` = project
+
+lazy val `restonomer-spark-utils` = project
   .configs(IntegrationTest.extend(Test))
-  .settings(sparkUtilsSettings)
+  .settings(restonomerSparkUtilsSettings)
