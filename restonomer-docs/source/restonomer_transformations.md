@@ -282,3 +282,56 @@ The transformed response will now have the columns with the desired data types:
   "col_B": "[{'ZipCodeType':'STANDARD','Zipcode':704}]"
 }
 ```
+## ReplaceStringInColumnValue
+
+It lets the user cast the data type of multiple columns to the desired different types at once.
+
+This transformation expects user to provide below inputs:
+
+| Input Arguments | Mandatory | Default Value | Description                          |
+|:----------------|:---------:|:-------------:|:-------------------------------------|
+| column-Name     |    Yes    |       -       | It is the column name                |
+| pattern         |    Yes    |       -       | The values that needs to be replaced |
+| replacement     |    Yes    |       -       | The value that replaces the pattern  | 
+
+
+
+For example, consider we have below restonomer response in json:
+
+```json
+{
+  "col_A": 5,
+  "col_B": 4,
+  "col_C": 3.4678
+}
+```
+
+Now, suppose the requirement is to replace the col_A column values :
+
+```text
+col_A -> "abc"
+col_B -> 4
+col_C -> 3.4678
+```
+
+Then, user can configure the `replaceStringInColumnValue` transformation in the below manner:
+
+```hocon
+{
+  type = "replace-string-in-column-value"
+  column-name = "col_A"
+  pattern = 5
+  replacement = "abc"
+  }
+}
+```
+
+The transformed response will now have the columns with the desired data types:
+
+```json
+{
+  "col_A": "abc",
+  "col_B": 4,
+  "col_C": 3.4678
+}
+```
