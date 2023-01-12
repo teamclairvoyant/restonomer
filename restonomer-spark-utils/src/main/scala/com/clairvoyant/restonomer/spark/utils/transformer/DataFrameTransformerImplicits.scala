@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
-import org.apache.spark.sql.functions.{col, from_json, lit, to_json, regexp_replace}
+import org.apache.spark.sql.functions.{col, from_json, lit, regexp_replace, to_json}
 import org.apache.spark.sql.types.{DataType, StructType}
 import org.apache.spark.sql.{Column, DataFrame}
 
@@ -9,10 +9,10 @@ object DataFrameTransformerImplicits {
   implicit class DataFrameWrapper(df: DataFrame) {
 
     def addColumn(
-                   columnName: String,
-                   columnValue: String,
-                   columnDataType: Option[String]
-                 ): DataFrame =
+        columnName: String,
+        columnValue: String,
+        columnDataType: Option[String]
+    ): DataFrame =
       columnDataType
         .map(dataType => df.withColumn(columnName, lit(columnValue).cast(dataType)))
         .getOrElse(df.withColumn(columnName, lit(columnValue)))
@@ -23,15 +23,15 @@ object DataFrameTransformerImplicits {
       df.withColumn(columnName, org.apache.spark.sql.functions.explode(col(columnName)))
 
     def castNestedColumn(
-                          columnName: String,
-                          ddl: String
-                        ): DataFrame = df.withColumn(columnName, from_json(to_json(col(columnName)), DataType.fromDDL(ddl)))
+        columnName: String,
+        ddl: String
+    ): DataFrame = df.withColumn(columnName, from_json(to_json(col(columnName)), DataType.fromDDL(ddl)))
 
     def flattenSchema: DataFrame = {
       def flattenSchemaFromStructType(
-                                       schema: StructType,
-                                       prefix: Option[String] = None
-                                     ): Array[Column] =
+          schema: StructType,
+          prefix: Option[String] = None
+      ): Array[Column] =
         schema.fields.flatMap { field =>
           val newColName = prefix.map(p => s"$p.${field.name}").getOrElse(field.name)
 
@@ -63,5 +63,7 @@ object DataFrameTransformerImplicits {
 
     def replaceString(columnName: String, pattern: String, replacement: String): DataFrame =
       df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
+
   }
+
 }
