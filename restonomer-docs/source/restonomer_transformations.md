@@ -284,13 +284,13 @@ The transformed response will now have the columns with the desired data types:
 ```
 ## ReplaceStringInColumnValue
 
-It lets the user cast the data type of multiple columns to the desired different types at once.
+It lets the user replace the pattern in the column specified by user.
 
 This transformation expects user to provide below inputs:
 
 | Input Arguments | Mandatory | Default Value | Description                          |
 |:----------------|:---------:|:-------------:|:-------------------------------------|
-| column-Name     |    Yes    |       -       | It is the column name                |
+| column-name     |    Yes    |       -       | It is the column name                |
 | pattern         |    Yes    |       -       | The values that needs to be replaced |
 | replacement     |    Yes    |       -       | The value that replaces the pattern  | 
 
@@ -323,10 +323,9 @@ Then, user can configure the `replaceStringInColumnValue` transformation in the 
   pattern = 5
   replacement = "abc"
   }
-}
 ```
 
-The transformed response will now have the columns with the desired data types:
+The transformed response will have the replaced value or pattern in the desired column as shown below.
 
 ```json
 {
