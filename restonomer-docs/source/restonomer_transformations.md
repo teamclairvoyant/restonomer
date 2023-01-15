@@ -289,9 +289,9 @@ It lets the user change the case of column names.
 
 This transformation expects user to provide below inputs:
 
-| Input Arguments | Mandatory | Default Value | Description                                      |
-|:----------------|:---------:|:-------------:|:-------------------------------------------------|
-| case-type       |    Yes    |       -       | Case to which the column needs to transformed    |
+| Input Arguments | Mandatory | Default Value | Description                        |
+|:----------------|:---------:|:-------------:|:-----------------------------------|
+| case-type       |    Yes    |       -       | Supported case types (lower,upper) |
 
 For example, consider we have below restonomer response in json:
 
@@ -302,7 +302,7 @@ For example, consider we have below restonomer response in json:
 }
 ```
 
-Now, suppose the requirement is to transform case of COL_B to lowercase:
+Now, suppose the requirement is to transform case of all columns to lowercase:
 
 Then, user can configure the `ChangeColumnCase` transformation in the below manner:
 

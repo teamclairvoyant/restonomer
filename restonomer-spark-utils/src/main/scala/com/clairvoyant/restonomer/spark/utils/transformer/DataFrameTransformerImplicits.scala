@@ -70,7 +70,7 @@ object DataFrameTransformerImplicits {
           case "lower" =>
             colName.toLowerCase
           case _ =>
-            colName
+            throw new Exception("Given caseConversion not supported")
         }
 
       def parseNestedCol(schema: StructType, caseType: String): StructType = {
@@ -84,7 +84,6 @@ object DataFrameTransformerImplicits {
 
         StructType(recurChngCase(schema))
       }
-      println(parseNestedCol(df.schema, caseType))
       df.sparkSession.createDataFrame(df.rdd, parseNestedCol(df.schema, caseType))
     }
 
