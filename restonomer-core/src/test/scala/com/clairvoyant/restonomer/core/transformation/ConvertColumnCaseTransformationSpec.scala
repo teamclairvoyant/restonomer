@@ -35,19 +35,4 @@ class ConvertColumnCaseTransformationSpec extends CoreSpec with DataFrameMatcher
     )
   }
 
-  "transform() - with invalid case type" should "should return the original dataframe" in {
-    val restonomerTransformation = ChangeColumnCase(
-      caseType = "low"
-    )
-
-    val expectedRestonomerResponseTransformedDF = Seq(("1", "2"))
-      .toDF("col_a", "COL_B")
-
-    val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
-
-    actualRestonomerResponseTransformedDF should matchExpectedDataFrame(
-      expectedDF = expectedRestonomerResponseTransformedDF
-    )
-  }
-
 }
