@@ -334,3 +334,32 @@ The transformed response will have the replaced value or pattern in the desired 
   "col_C": 3.4678
 }
 ```
+## renameColumns
+
+It lets the user rename existing column(s).
+
+This transformation needs below inputs from the user:
+
+| Input Arguments      | Mandatory | Default Value | Description                                                |
+|:---------------------|:---------:|:-------------:|:-----------------------------------------------------------|
+| rename-column-mapper |    Yes    |       -       | It defines the mapping of existing and desired column name |
+
+User can configure the `renameColumns` transformation in the below manner:
+
+```hocon
+{
+    type = "rename-columns"
+    rename-column-mapper = {
+        "col_A" = "test_col_A"
+        "col_B" = "COL_b"
+        "col_C" = "my_Column"
+    }
+}
+```
+
+The transformed response will have the respective columns renamed as shown below.
+```
+col_A -> test_col_A
+col_B -> COL_b
+col_C -> my_Column
+```

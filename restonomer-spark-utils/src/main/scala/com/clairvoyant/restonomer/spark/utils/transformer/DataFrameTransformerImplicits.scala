@@ -64,6 +64,11 @@ object DataFrameTransformerImplicits {
     def replaceString(columnName: String, pattern: String, replacement: String): DataFrame =
       df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
 
+    def renameCols(renameColumnMapper: Map[String, String]): DataFrame =
+      df.select(
+        df.columns.map(columnName => df(columnName).alias(renameColumnMapper.getOrElse(columnName, columnName))): _*
+      )
+
   }
 
 }
