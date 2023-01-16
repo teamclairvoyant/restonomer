@@ -64,6 +64,8 @@ object DataFrameTransformerImplicits {
     def replaceString(columnName: String, pattern: String, replacement: String): DataFrame =
       df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
 
+    def selectColumn(columnNames: List[String]): DataFrame = df.select(columnNames.map(col): _*)
+
   }
 
 }

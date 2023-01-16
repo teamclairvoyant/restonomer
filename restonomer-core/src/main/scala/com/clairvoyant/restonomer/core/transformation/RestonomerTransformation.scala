@@ -81,3 +81,11 @@ case class ReplaceStringInColumnValue(
     restonomerResponseDF.replaceString(columnName, pattern, replacement)
 
 }
+
+case class SelectColumns(
+    columnNames: List[String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.selectColumn(columnNames)
+
+}
