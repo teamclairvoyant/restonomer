@@ -14,7 +14,7 @@ case class AddLiteralColumn(
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.addColumn(
+    restonomerResponseDF.addLiteralColumn(
       columnName = columnName,
       columnValue = columnValue,
       columnDataType = columnDataType
@@ -23,10 +23,10 @@ case class AddLiteralColumn(
 }
 
 case class DeleteColumns(
-    columnNames: Set[String]
+    columnNames: List[String]
 ) extends RestonomerTransformation {
 
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.drop(columnNames)
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.deleteColumns(columnNames)
 
 }
 
@@ -34,7 +34,7 @@ case class ExplodeColumn(
     columnName: String
 ) extends RestonomerTransformation {
 
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.explode(columnName)
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.explodeColumn(columnName)
 
 }
 
@@ -67,7 +67,7 @@ case class ConvertColumnToJson(
     columnName: String
 ) extends RestonomerTransformation {
 
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.colToJson(columnName)
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.convertColumnToJson(columnName)
 
 }
 
@@ -78,6 +78,6 @@ case class ReplaceStringInColumnValue(
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.replaceString(columnName, pattern, replacement)
+    restonomerResponseDF.replaceStringInColumnValue(columnName, pattern, replacement)
 
 }

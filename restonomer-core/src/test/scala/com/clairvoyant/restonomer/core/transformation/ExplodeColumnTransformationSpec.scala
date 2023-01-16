@@ -21,7 +21,7 @@ class ExplodeColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
           |""".stripMargin
     ).read
 
-  "transform() - with valid column name" should "explode the column into multiple rows" in {
+  "transform() - with valid column name" should "explodeColumn the column into multiple rows" in {
     val restonomerTransformation = ExplodeColumn(
       columnName = "col_B"
     )
