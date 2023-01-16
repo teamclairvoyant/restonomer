@@ -16,13 +16,11 @@ case class PaginationMechanismA(
 ) extends RestonomerPagination {
 
   override def getNextPageToken(responseBody: String): Option[(String, String)] = {
-    val totalNumberOfRecords = JsonPath.read[Long](responseBody, totalNumberOfRecordsAttribute)
     val currentPageNumber = JsonPath.read[Long](responseBody, currentPageNumberAttribute)
 
-    if (totalNumberOfRecords > currentPageNumber * maxRecordsPerPage) {
-      val nextPageNumber = currentPageNumber + 1
-      Some(pageTokenName -> nextPageNumber.toString)
-    } else
+    if (JsonPath.read[Long](responseBody, totalNumberOfRecordsAttribute) > currentPageNumber * maxRecordsPerPage)
+      Some(pageTokenName -> (currentPageNumber + 1).toString)
+    else
       None
   }
 
