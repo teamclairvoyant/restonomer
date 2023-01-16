@@ -10,15 +10,16 @@ sealed trait RestonomerPagination {
 
 case class PaginationMechanismA(
     totalNumberOfRecordsAttribute: String,
-    maxRecordsPerPage: Long,
     currentPageNumberAttribute: String,
+    maxRecordsPerPage: Long,
     pageTokenName: String
 ) extends RestonomerPagination {
 
   override def getNextPageToken(responseBody: String): Option[(String, String)] = {
+    val totalNumberOfRecords = JsonPath.read[Long](responseBody, totalNumberOfRecordsAttribute)
     val currentPageNumber = JsonPath.read[Long](responseBody, currentPageNumberAttribute)
 
-    if (JsonPath.read[Long](responseBody, totalNumberOfRecordsAttribute) > currentPageNumber * maxRecordsPerPage)
+    if (totalNumberOfRecords > currentPageNumber * maxRecordsPerPage)
       Some(pageTokenName -> (currentPageNumber + 1).toString)
     else
       None
