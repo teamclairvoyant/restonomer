@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/rename-columns-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_rename_columns_transformation_response.json"
+  }
+}
