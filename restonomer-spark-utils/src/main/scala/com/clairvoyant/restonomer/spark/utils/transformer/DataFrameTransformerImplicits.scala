@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
-import org.apache.spark.sql.functions.{col, from_json, lit, to_json}
+import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{DataType, StructField, StructType}
 import org.apache.spark.sql.{Column, DataFrame}
 
@@ -8,7 +8,7 @@ object DataFrameTransformerImplicits {
 
   implicit class DataFrameWrapper(df: DataFrame) {
 
-    def addColumn(
+    def addLiteralColumn(
         columnName: String,
         columnValue: String,
         columnDataType: Option[String]
@@ -17,10 +17,9 @@ object DataFrameTransformerImplicits {
         .map(dataType => df.withColumn(columnName, lit(columnValue).cast(dataType)))
         .getOrElse(df.withColumn(columnName, lit(columnValue)))
 
-    def drop(columnNames: Set[String]): DataFrame = df.drop(columnNames.toList: _*)
+    def deleteColumns(columnNames: List[String]): DataFrame = df.drop(columnNames: _*)
 
-    def explode(columnName: String): DataFrame =
-      df.withColumn(columnName, org.apache.spark.sql.functions.explode(col(columnName)))
+    def explodeColumn(columnName: String): DataFrame = df.withColumn(columnName, explode(col(columnName)))
 
     def castNestedColumn(
         columnName: String,
@@ -59,7 +58,10 @@ object DataFrameTransformerImplicits {
         }: _*
       )
 
-    def colToJson(columnName: String): DataFrame = df.withColumn(columnName, to_json(col(columnName)))
+    def convertColumnToJson(columnName: String): DataFrame = df.withColumn(columnName, to_json(col(columnName)))
+
+    def replaceStringInColumnValue(columnName: String, pattern: String, replacement: String): DataFrame =
+      df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
 
     def changeColCase(caseType: String): DataFrame = {
 

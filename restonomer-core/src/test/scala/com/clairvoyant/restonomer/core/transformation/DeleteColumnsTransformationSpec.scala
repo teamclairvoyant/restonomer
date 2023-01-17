@@ -9,9 +9,9 @@ class DeleteColumnsTransformationSpec extends CoreSpec with DataFrameMatchers {
 
   val restonomerResponseDF: DataFrame = Seq(("val_A", "val_B", "val_C")).toDF("col_A", "col_B", "col_C")
 
-  "transform() - with valid column names" should "drop the columns" in {
+  "transform() - with valid column names" should "deleteColumns the columns" in {
     val restonomerTransformation = DeleteColumns(
-      columnNames = Set("col_B", "col_C")
+      columnNames = List("col_B", "col_C")
     )
 
     val expectedRestonomerResponseTransformedDF = Seq("val_A")
@@ -26,7 +26,7 @@ class DeleteColumnsTransformationSpec extends CoreSpec with DataFrameMatchers {
 
   "transform() - with invalid column names" should "not throw any exception and return the dataframe" in {
     val restonomerTransformation = DeleteColumns(
-      columnNames = Set("col_D")
+      columnNames = List("col_D")
     )
 
     val expectedRestonomerResponseTransformedDF = restonomerResponseDF
@@ -40,7 +40,7 @@ class DeleteColumnsTransformationSpec extends CoreSpec with DataFrameMatchers {
 
   "transform() - with empty column names" should "not throw any exception and return the dataframe" in {
     val restonomerTransformation = DeleteColumns(
-      columnNames = Set()
+      columnNames = List()
     )
 
     val expectedRestonomerResponseTransformedDF = restonomerResponseDF
