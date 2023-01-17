@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.converter
 
 import com.clairvoyant.restonomer.core.common.ResponseBodyFormatTypes
-import com.clairvoyant.restonomer.core.common.ResponseBodyFormatTypes.JSON
+import com.clairvoyant.restonomer.core.common.ResponseBodyFormatTypes.{JSON,CSV}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 trait ResponseToDataFrameConverter {
@@ -16,6 +16,8 @@ object ResponseToDataFrameConverter {
     ResponseBodyFormatTypes(responseBodyFormat) match {
       case JSON =>
         new JSONResponseToDataFrameConverter()
+      case CSV =>
+        new CSVResponseToDataFrameConverter()
     }
   }
 
