@@ -12,4 +12,3 @@ class SelectColumnsTransformationIntegrationTest extends IntegrationTestDependen
   }
 
 }
-
