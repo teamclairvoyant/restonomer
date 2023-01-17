@@ -63,6 +63,25 @@ object DataFrameTransformerImplicits {
     def replaceStringInColumnValue(columnName: String, pattern: String, replacement: String): DataFrame =
       df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
 
+    def addSuffixToColNames(suffix: String, columnNames: List[String]): DataFrame = {
+
+      if (columnNames == null || columnNames.isEmpty)
+        df.select(
+          df.columns.map(columnName => df(columnName).alias(columnName + suffix)): _*
+        )
+      else
+        df.select(
+          df.columns.map { columnName =>
+            df(columnName).alias(
+              if (columnNames.contains(columnName))
+                columnName + suffix
+              else
+                columnName
+            )
+          }: _*
+        )
+    }
+
   }
 
 }

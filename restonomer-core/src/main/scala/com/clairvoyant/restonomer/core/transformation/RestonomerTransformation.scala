@@ -82,3 +82,13 @@ case class ReplaceStringInColumnValue(
     restonomerResponseDF.replaceStringInColumnValue(columnName, pattern, replacement)
 
 }
+
+case class AddSuffixToColumnNames(
+    suffix: String,
+    columnNames: List[String] = null
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.addSuffixToColNames(suffix, columnNames)
+
+}
