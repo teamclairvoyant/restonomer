@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/add-prefix-to-column-names-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_add_prefix_to_column_names_transformation_response.json"
+  }
+}
