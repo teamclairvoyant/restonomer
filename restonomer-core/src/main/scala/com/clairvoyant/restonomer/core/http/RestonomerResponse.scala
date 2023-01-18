@@ -25,24 +25,29 @@ object RestonomerResponse {
       retryConfig: RetryConfig,
       restonomerPagination: Option[RestonomerPagination]
   )(implicit sttpBackend: SttpBackend[Future, Any]): RestonomerResponse = {
-
-    def getPages(restonomerRequest: RestonomerRequest, httpResponseBody: Future[Seq[String]]): Future[Seq[String]] = {
+    def getPages(
+        restonomerRequest: RestonomerRequest,
+        httpResponseBody: Future[Seq[String]]
+    ): Future[Seq[String]] = {
       restonomerPagination
         .map { pagination =>
           httpResponseBody.flatMap { httpResponseBodySeq =>
             pagination
               .getNextPageToken(httpResponseBodySeq.last)
               .map { nextPageToken =>
-                getBody(
-                  restonomerRequest = restonomerRequest.copy(httpRequest =
-                    restonomerRequest.httpRequest.method(
-                      method = restonomerRequest.httpRequest.method,
-                      uri = restonomerRequest.httpRequest.uri.withParams(nextPageToken)
-                    )
-                  ),
-                  statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
-                  maxRetries = retryConfig.maxRetries
-                ).map(httpResponseBodySeq ++ _)
+                getPages(
+                  restonomerRequest = restonomerRequest,
+                  httpResponseBody = getBody(
+                    restonomerRequest = restonomerRequest.copy(httpRequest =
+                      restonomerRequest.httpRequest.method(
+                        method = restonomerRequest.httpRequest.method,
+                        uri = restonomerRequest.httpRequest.uri.withParams(nextPageToken)
+                      )
+                    ),
+                    statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
+                    maxRetries = retryConfig.maxRetries
+                  ).map(httpResponseBodySeq ++ _)
+                )
               }
               .getOrElse(httpResponseBody)
           }
@@ -50,7 +55,7 @@ object RestonomerResponse {
         .getOrElse(httpResponseBody)
     }
 
-    RestonomerResponse(
+    RestonomerResponse {
       getPages(
         restonomerRequest = restonomerRequest,
         httpResponseBody = getBody(
@@ -59,7 +64,7 @@ object RestonomerResponse {
           maxRetries = retryConfig.maxRetries
         )
       )
-    )
+    }
   }
 
   private def sleepTimeInSeconds: Int = 10 + random.nextInt(10) + 1
