@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/pagination-mechanism-1?page=2"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_pagination_mechanism_1_2_response.json"
+  }
+}
