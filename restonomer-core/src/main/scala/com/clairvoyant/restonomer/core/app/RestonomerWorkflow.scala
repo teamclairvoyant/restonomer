@@ -37,16 +37,22 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
         )
       }
 
+    val dataRestonomerRequest =
+      RestonomerRequest
+        .builder(checkpointConfig.data.dataRequest)(tokenFunction)
+        .build
+
     val dataRestonomerResponse = RestonomerResponse.fetchFromRequest(
-      restonomerRequest =
-        RestonomerRequest
-          .builder(checkpointConfig.data.dataRequest)(tokenFunction)
-          .build,
-      retryConfig = checkpointConfig.data.dataRequest.retry
+      restonomerRequest = dataRestonomerRequest,
+      retryConfig = checkpointConfig.data.dataRequest.retry,
+      restonomerPagination = checkpointConfig.data.dataResponse.pagination
     )
 
     val restonomerResponseDF = dataRestonomerResponse.body
-      .map(ResponseToDataFrameConverter(checkpointConfig.data.dataResponse.bodyFormat).convertResponseToDataFrame)
+      .map(httpResponseBody =>
+        ResponseToDataFrameConverter(checkpointConfig.data.dataResponse.bodyFormat)
+          .convertResponseToDataFrame(httpResponseBody.toSeq)
+      )
 
     val restonomerResponseTransformedDF = restonomerResponseDF.map { df =>
       checkpointConfig.data.dataResponse.transformations

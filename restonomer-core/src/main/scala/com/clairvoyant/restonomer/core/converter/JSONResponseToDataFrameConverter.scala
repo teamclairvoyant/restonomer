@@ -6,7 +6,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 class JSONResponseToDataFrameConverter extends ResponseToDataFrameConverter {
 
   def convertResponseToDataFrame(
-      restonomerResponseBody: String
+      restonomerResponseBody: Seq[String]
   )(implicit sparkSession: SparkSession): DataFrame =
     new JSONTextToDataFrameReader(
       sparkSession = sparkSession,

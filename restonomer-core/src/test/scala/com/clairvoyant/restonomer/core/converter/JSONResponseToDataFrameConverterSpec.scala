@@ -14,7 +14,7 @@ class JSONResponseToDataFrameConverterSpec extends CoreSpec {
 
     val expectedSchema = "struct<affiliate_network_id:string,time_of_event:string,transaction_id:string>"
 
-    val df = new JSONResponseToDataFrameConverter().convertResponseToDataFrame(responseBody)
+    val df = new JSONResponseToDataFrameConverter().convertResponseToDataFrame(Seq(responseBody))
 
     df.count() shouldBe 1
     df.schema.simpleString shouldBe expectedSchema
