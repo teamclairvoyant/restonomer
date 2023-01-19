@@ -2,15 +2,14 @@ package com.clairvoyant.restonomer.core.app
 
 import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders
 import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders.{RESPONSE_BODY, RESPONSE_HEADERS}
-import com.clairvoyant.restonomer.core.converter.ResponseToDataFrameConverter
+import com.clairvoyant.restonomer.core.converter.JSONResponseToDataFrameConverter
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.{RestonomerRequest, RestonomerResponse}
-import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
+import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig, JSON}
 import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersistence}
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import com.jayway.jsonpath.JsonPath
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.functions.{col, explode}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import sttp.client3.{HttpClientFutureBackend, Response, SttpBackend}
 
@@ -51,16 +50,10 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
     val restonomerResponseDF = dataRestonomerResponse.body
       .map { httpResponseBody =>
-        val responseDF = ResponseToDataFrameConverter(checkpointConfig.data.dataResponse.bodyFormat)
-          .convertResponseToDataFrame(httpResponseBody.toSeq)
-
-        checkpointConfig.data.dataResponse.dataColumn
-          .map { dataColumn =>
-            responseDF
-              .select(explode(col(dataColumn)).as("records"))
-              .select("records.*")
-          }
-          .getOrElse(responseDF)
+        (checkpointConfig.data.dataResponse.body match {
+          case JSON(dataColumnName) =>
+            new JSONResponseToDataFrameConverter(dataColumnName)
+        }).convertResponseToDataFrame(httpResponseBody.toSeq)
       }
 
     val restonomerResponseTransformedDF = restonomerResponseDF.map { df =>

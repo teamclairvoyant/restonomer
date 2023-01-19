@@ -5,8 +5,7 @@ import com.clairvoyant.restonomer.core.persistence.RestonomerPersistence
 import com.clairvoyant.restonomer.core.transformation.RestonomerTransformation
 
 case class DataResponseConfig(
-    bodyFormat: String,
-    dataColumn: Option[String] = None,
+    body: DataResponseBodyConfig,
     pagination: Option[RestonomerPagination] = None,
     transformations: List[RestonomerTransformation] = List.empty,
     persistence: RestonomerPersistence
