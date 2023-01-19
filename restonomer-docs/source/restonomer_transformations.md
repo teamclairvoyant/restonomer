@@ -367,7 +367,7 @@ Then, user can configure the `SelectColumns` transformation in the below manner:
 
 ```hocon
 {
-  type = "replace-string-in-column-value"
+  type = "select-columns"
   column-names= ["col_B", "col_C"]
   }
 ```
