@@ -63,7 +63,6 @@ object DataFrameTransformerImplicits {
     def replaceStringInColumnValue(columnName: String, pattern: String, replacement: String): DataFrame =
       df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
 
- 
     def changeColCase(caseType: String): DataFrame = {
 
       def changeColCaseFunc(colName: String, caseType: String): String =
@@ -89,6 +88,8 @@ object DataFrameTransformerImplicits {
       }
       df.sparkSession.createDataFrame(df.rdd, parseNestedCol(df.schema, caseType))
     }
+
+    def selectColumns(columnNames: List[String]): DataFrame = df.select(columnNames.map(col): _*)
 
   }
 
