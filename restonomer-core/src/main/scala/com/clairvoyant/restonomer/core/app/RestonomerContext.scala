@@ -4,7 +4,10 @@ import com.clairvoyant.restonomer.core.config.ConfigVariablesSubstitutor
 import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
+import com.clairvoyant.restonomer.core.transformation.SelectColumns
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
+import pureconfig.{ConfigFieldMapping, KebabCase, PascalCase}
+import pureconfig.generic.FieldCoproductHint
 import pureconfig.generic.auto._
 
 import java.io.FileNotFoundException
