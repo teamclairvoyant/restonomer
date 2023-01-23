@@ -8,9 +8,7 @@ import scala.annotation.tailrec
 
 object RestonomerConfigurationsLoader {
 
-  def loadConfigFromFile[C](
-      configFilePath: String
-  )(
+  def loadConfigFromFile[C](configFilePath: String)(
       implicit configVariablesSubstitutor: ConfigVariablesSubstitutor,
       reader: ConfigReader[C]
   ): C =
