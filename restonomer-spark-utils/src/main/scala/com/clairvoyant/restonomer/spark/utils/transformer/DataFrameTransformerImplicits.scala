@@ -89,6 +89,8 @@ object DataFrameTransformerImplicits {
       df.sparkSession.createDataFrame(df.rdd, parseNestedCol(df.schema, caseType))
     }
 
+    def selectColumns(columnNames: List[String]): DataFrame = df.select(columnNames.map(col): _*)
+
   }
 
 }
