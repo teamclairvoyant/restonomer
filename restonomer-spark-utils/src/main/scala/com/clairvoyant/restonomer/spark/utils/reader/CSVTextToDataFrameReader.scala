@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.spark.utils.reader
 
-import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 class CSVTextToDataFrameReader(
     override val sparkSession: SparkSession,
