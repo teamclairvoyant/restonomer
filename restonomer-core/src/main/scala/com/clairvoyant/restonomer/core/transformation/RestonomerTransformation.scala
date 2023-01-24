@@ -90,5 +90,21 @@ case class AddPrefixToColumnNames(
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
     restonomerResponseDF.addPrefixToColNames(prefix, columnNames)
+    
+}
+
+case class ChangeColumnCase(
+    caseType: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.changeColCase(caseType)
+
+}
+
+case class SelectColumns(
+    columnNames: List[String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.selectColumns(columnNames)
 
 }

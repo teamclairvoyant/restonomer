@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.{DataType, StructType}
+import org.apache.spark.sql.types.{DataType, StructField, StructType}
 import org.apache.spark.sql.{Column, DataFrame}
 
 object DataFrameTransformerImplicits {
@@ -81,6 +81,34 @@ object DataFrameTransformerImplicits {
           }: _*
         )
     }
+
+    def changeColCase(caseType: String): DataFrame = {
+
+      def changeColCaseFunc(colName: String, caseType: String): String =
+        caseType match {
+          case "upper" =>
+            colName.toUpperCase
+          case "lower" =>
+            colName.toLowerCase
+          case _ =>
+            throw new Exception("Given caseConversion not supported")
+        }
+
+      def parseNestedCol(schema: StructType, caseType: String): StructType = {
+        def recurChngCase(schema: StructType): Seq[StructField] =
+          schema.fields.map {
+            case StructField(name, dtype: StructType, nullable, meta) =>
+              StructField(changeColCaseFunc(name, caseType), StructType(recurChngCase(dtype)), nullable, meta)
+            case StructField(name, dtype, nullable, meta) =>
+              StructField(changeColCaseFunc(name, caseType), dtype, nullable, meta)
+          }
+
+        StructType(recurChngCase(schema))
+      }
+      df.sparkSession.createDataFrame(df.rdd, parseNestedCol(df.schema, caseType))
+    }
+
+    def selectColumns(columnNames: List[String]): DataFrame = df.select(columnNames.map(col): _*)
 
   }
 
