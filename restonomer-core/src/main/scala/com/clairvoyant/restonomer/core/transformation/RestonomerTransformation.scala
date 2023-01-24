@@ -90,7 +90,7 @@ case class AddPrefixToColumnNames(
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
     restonomerResponseDF.addPrefixToColNames(prefix, columnNames)
-    
+
 }
 
 case class ChangeColumnCase(
