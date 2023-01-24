@@ -85,7 +85,7 @@ case class ReplaceStringInColumnValue(
 
 case class AddPrefixToColumnNames(
     prefix: String,
-    columnNames: List[String] = null
+    columnNames: List[String] = List[String]()
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =

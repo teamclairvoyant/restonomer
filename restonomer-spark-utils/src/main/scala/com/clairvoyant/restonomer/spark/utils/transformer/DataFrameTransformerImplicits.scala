@@ -65,16 +65,16 @@ object DataFrameTransformerImplicits {
 
     def addPrefixToColNames(prefix: String, columnNames: List[String]): DataFrame = {
 
-      if (columnNames == null || columnNames.isEmpty)
+      if (columnNames.isEmpty)
         df.select(
-          df.columns.map(columnName => df(columnName).alias(prefix + columnName)): _*
+          df.columns.map(columnName => df(columnName).alias(prefix + "_" + columnName)): _*
         )
       else
         df.select(
           df.columns.map { columnName =>
             df(columnName).alias(
               if (columnNames.contains(columnName))
-                prefix + columnName
+                prefix + "_" + columnName
               else
                 columnName
             )

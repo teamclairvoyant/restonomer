@@ -12,7 +12,7 @@ class AddPrefixToColumnNamesTransformationSpec extends CoreSpec with DataFrameMa
 
   "transform() - with nonempty prefix and column list" should "transform the dataframe as expected" in {
     val restonomerTransformation = AddPrefixToColumnNames(
-      prefix = "test_",
+      prefix = "test",
       columnNames = List("col_A", "col_B")
     )
 
@@ -28,7 +28,7 @@ class AddPrefixToColumnNamesTransformationSpec extends CoreSpec with DataFrameMa
 
   "transform() - with nonempty prefix and empty column list" should "transform all the columns of the dataframe as expected" in {
     val restonomerTransformation = AddPrefixToColumnNames(
-      prefix = "test_"
+      prefix = "test"
     )
 
     val expectedRestonomerResponseTransformedDF = Seq(("val_A", "val_B", "val_C"))
@@ -58,7 +58,7 @@ class AddPrefixToColumnNamesTransformationSpec extends CoreSpec with DataFrameMa
 
   "transform() - with nonempty prefix but with few valid and invalid column names" should "ignore invalid columns and alter the valid ones from the dataframe" in {
     val restonomerTransformation = AddPrefixToColumnNames(
-      prefix = "test_",
+      prefix = "test",
       columnNames = List("col_A", "fake_col")
     )
 

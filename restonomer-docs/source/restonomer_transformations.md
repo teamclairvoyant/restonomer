@@ -368,12 +368,13 @@ Then, user can configure the `AddPrefixToColumnNames` transformation in the belo
 ```hocon
 {
   type = "add-prefix-to-column-names"
-  suffix = "test_"
+  suffix = "test"
   column-names = ["col_A", "col_B"]
 }
 ```
 
-The transformed response will now have the columns with the desired suffix:
+The transformed response will now have the columns with the desired suffix like below.
+Note that, underscore character (_) will get added automatically separating prefix and column name part.
 
 ```json
 {
