@@ -10,9 +10,9 @@ class AddSuffixToColumnNamesTransformationSpec extends CoreSpec with DataFrameMa
 
   val restonomerResponseDF: DataFrame = Seq(("val_A", "val_B", "val_C")).toDF("col_A", "col_B", "col_C")
 
-  "transform() - with nonempty suffix and column list" should "transform the dataframe as expected" in {
+  "transform() - with suffix and column list" should "transform the dataframe as expected" in {
     val restonomerTransformation = AddSuffixToColumnNames(
-      suffix = "_old",
+      suffix = "old",
       columnNames = List("col_A", "col_B")
     )
 
@@ -26,9 +26,9 @@ class AddSuffixToColumnNamesTransformationSpec extends CoreSpec with DataFrameMa
     )
   }
 
-  "transform() - with nonempty suffix and empty column list" should "transform all the columns of the dataframe as expected" in {
+  "transform() - with suffix and empty column list" should "transform all the columns of the dataframe as expected" in {
     val restonomerTransformation = AddSuffixToColumnNames(
-      suffix = "_old"
+      suffix = "old"
     )
 
     val expectedRestonomerResponseTransformedDF = Seq(("val_A", "val_B", "val_C"))
@@ -41,24 +41,9 @@ class AddSuffixToColumnNamesTransformationSpec extends CoreSpec with DataFrameMa
     )
   }
 
-  "transform() - with empty suffix" should "not alter the dataframe" in {
+  "transform() - with suffix but with few valid and invalid column names" should "ignore invalid columns and alter the valid ones from the dataframe" in {
     val restonomerTransformation = AddSuffixToColumnNames(
-      suffix = ""
-    )
-
-    val expectedRestonomerResponseTransformedDF = Seq(("val_A", "val_B", "val_C"))
-      .toDF("col_A", "col_B", "col_C")
-
-    val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
-
-    actualRestonomerResponseTransformedDF should matchExpectedDataFrame(
-      expectedDF = expectedRestonomerResponseTransformedDF
-    )
-  }
-
-  "transform() - with nonempty suffix but with few valid and invalid column names" should "ignore invalid columns and alter the valid ones from the dataframe" in {
-    val restonomerTransformation = AddSuffixToColumnNames(
-      suffix = "_old",
+      suffix = "old",
       columnNames = List("col_A", "fake_col")
     )
 

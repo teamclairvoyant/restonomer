@@ -65,16 +65,16 @@ object DataFrameTransformerImplicits {
 
     def addSuffixToColNames(suffix: String, columnNames: List[String]): DataFrame = {
 
-      if (columnNames == null || columnNames.isEmpty)
+      if (columnNames.isEmpty)
         df.select(
-          df.columns.map(columnName => df(columnName).alias(columnName + suffix)): _*
+          df.columns.map(columnName => df(columnName).alias(columnName + "_" + suffix)): _*
         )
       else
         df.select(
           df.columns.map { columnName =>
             df(columnName).alias(
               if (columnNames.contains(columnName))
-                columnName + suffix
+                columnName + "_" + suffix
               else
                 columnName
             )
