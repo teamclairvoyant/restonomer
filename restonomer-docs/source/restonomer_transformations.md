@@ -278,10 +278,51 @@ The transformed response will now have the columns with the desired data types:
 
 ```json
 {
-  "col_A": 5,
+  "col_A": 1,
   "col_B": "[{'ZipCodeType':'STANDARD','Zipcode':704}]"
 }
 ```
+
+## ChangeColumnCase
+
+It lets the user change the case of column names.
+
+This transformation expects user to provide below inputs:
+
+| Input Arguments | Mandatory | Default Value | Description                        |
+|:----------------|:---------:|:-------------:|:-----------------------------------|
+| case-type       |    Yes    |       -       | Supported case types (lower,upper) |
+
+For example, consider we have below restonomer response in json:
+
+ ```json
+ {
+   "col_a": "1",
+   "COL_B": "2"
+ }
+ ```
+
+Now, suppose the requirement is to transform case of all columns to lowercase:
+
+Then, user can configure the `ChangeColumnCase` transformation in the below manner:
+
+ ```hocon
+ {
+   type = "change-column-case"
+   case-type = "lower"
+ }
+ ```
+
+The transformed response will now have the columns with the desired case type:
+
+ ```json
+ {
+   "col_a": "1",
+   "col_b": "2"
+ }
+ ```
+
+
 ## ReplaceStringInColumnValue
 
 It lets the user replace the pattern in the column specified by user.
@@ -368,17 +409,64 @@ Then, user can configure the `AddSuffixToColumnNames` transformation in the belo
 ```hocon
 {
   type = "add-suffix-to-column-names"
-  suffix = "_old"
+  suffix = "old"
   column-names = ["col_A", "col_B"]
 }
 ```
 
-The transformed response will now have the columns with the desired suffix:
+The transformed response will now have the columns with the desired suffix like below.
+Note that, underscore character ('_') will get added automatically, separating suffi and the column name.
 
 ```json
 {
   "col_A_old": 5,
   "col_B_old": 4,
   "col_C": 3
+
+
+## SelectColumns
+
+It lets the user select a list of columns from the dataframe.
+
+This transformation expects user to provide below inputs:
+
+| Input Arguments | Mandatory | Default Value | Description                                |
+|:----------------|:---------:|:-------------:|:-------------------------------------------|
+| column-names    |    Yes    |       -       | It is the list of columns required by user |
+
+For example, consider we have below restonomer response in json:
+
+```json
+{
+  "col_A": 5,
+  "col_B": 4,
+  "col_C": 3.4678
+}
+```
+
+Now, suppose the requirement is to select 2 columns from dataframe :
+
+```text
+
+  "col_B": 4,
+  "col_C": 3.4678
+
+```
+
+Then, user can configure the `SelectColumns` transformation in the below manner:
+
+```hocon
+{
+  type = "select-columns"
+  column-names= ["col_B", "col_C"]
+  }
+```
+
+The transformed response will select the desired column from dataframe as shown below.
+
+```json
+{
+  "col_B": 4,
+  "col_C": 3.4678
 }
 ```
