@@ -378,7 +378,7 @@ The transformed response will have the replaced value or pattern in the desired 
 
 ## RenameColumns
 
-It lets the user rename one or multiple dataframe column(s) at once.
+It lets the user rename one or multiple column(s) at once.
 
 This transformation expects user to provide below inputs:
 
@@ -415,6 +415,7 @@ The transformed response will now have the columns with the desired name:
   "COL_b": 4,
   "my_column": 3.4678
 }
+```
 
 ## SelectColumns
 
