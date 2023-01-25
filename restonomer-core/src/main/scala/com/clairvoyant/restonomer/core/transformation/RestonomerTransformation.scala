@@ -89,5 +89,20 @@ case class RenameColumns(
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
     restonomerResponseDF.renameCols(renameColumnMapper)
+}
+
+case class ChangeColumnCase(
+    caseType: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.changeColCase(caseType)
+
+}
+
+case class SelectColumns(
+    columnNames: List[String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.selectColumns(columnNames)
 
 }
