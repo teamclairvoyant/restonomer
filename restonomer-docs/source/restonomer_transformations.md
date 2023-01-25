@@ -397,7 +397,7 @@ For example, consider we have below restonomer response in json:
 }
 ```
 
-Now, suppose the requirement is to add suffix to few of the columns like below:
+Now, suppose the requirement is to add suffix to the few of the columns like below:
 
 ```text
 col_A -> col_A_old
@@ -415,14 +415,15 @@ Then, user can configure the `AddSuffixToColumnNames` transformation in the belo
 ```
 
 The transformed response will now have the columns with the desired suffix like below.
-Note that, underscore character ('_') will get added automatically, separating suffi and the column name.
+Note that, underscore character ('_') will get added automatically, separating suffix and the column name.
 
 ```json
 {
   "col_A_old": 5,
   "col_B_old": 4,
   "col_C": 3
-
+}
+```
 
 ## SelectColumns
 
