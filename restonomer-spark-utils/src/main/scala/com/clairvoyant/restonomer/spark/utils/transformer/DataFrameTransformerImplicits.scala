@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.{DataType, StructField, StructType}
+import org.apache.spark.sql.types.{ArrayType, DataType, StructField, StructType}
 import org.apache.spark.sql.{Column, DataFrame}
 
 object DataFrameTransformerImplicits {
@@ -63,36 +63,78 @@ object DataFrameTransformerImplicits {
     def replaceStringInColumnValue(columnName: String, pattern: String, replacement: String): DataFrame =
       df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
 
-    def renameCols(renameColumnMapper: Map[String, String]): DataFrame =
-      df.select(
-        df.columns.map(columnName => df(columnName).alias(renameColumnMapper.getOrElse(columnName, columnName))): _*
+    private def applyChangeNameFunctionRecursively(
+        schema: StructType,
+        changeNameFunction: String => String
+    ): StructType =
+      StructType(
+        schema.flatMap {
+          case sf @ StructField(
+                name,
+                ArrayType(arrayNestedType: StructType, containsNull),
+                nullable,
+                metadata
+              ) =>
+            StructType(
+              Seq(
+                sf.copy(
+                  changeNameFunction(name),
+                  dataType = ArrayType(
+                    applyChangeNameFunctionRecursively(arrayNestedType, changeNameFunction),
+                    containsNull
+                  ),
+                  nullable,
+                  metadata
+                )
+              )
+            )
+          case sf @ StructField(name, structType: StructType, nullable, metadata) =>
+            StructType(
+              Seq(
+                sf.copy(
+                  changeNameFunction(name),
+                  dataType = applyChangeNameFunctionRecursively(structType, changeNameFunction),
+                  nullable,
+                  metadata
+                )
+              )
+            )
+
+          case sf @ StructField(name, _, _, _) =>
+            StructType(
+              Seq(
+                sf.copy(name = changeNameFunction(name))
+              )
+            )
+        }
       )
 
-    def changeColCase(caseType: String): DataFrame = {
+    def renameColumns(renameColumnMapper: Map[String, String]): DataFrame =
+      df.sparkSession.createDataFrame(
+        rowRDD = df.rdd,
+        schema = applyChangeNameFunctionRecursively(
+          schema = df.schema,
+          changeNameFunction = (columnName: String) => renameColumnMapper.getOrElse(columnName, columnName)
+        )
+      )
 
-      def changeColCaseFunc(colName: String, caseType: String): String =
-        caseType match {
-          case "upper" =>
-            colName.toUpperCase
-          case "lower" =>
-            colName.toLowerCase
-          case _ =>
-            throw new Exception("Given caseConversion not supported")
-        }
-
-      def parseNestedCol(schema: StructType, caseType: String): StructType = {
-        def recurChngCase(schema: StructType): Seq[StructField] =
-          schema.fields.map {
-            case StructField(name, dtype: StructType, nullable, meta) =>
-              StructField(changeColCaseFunc(name, caseType), StructType(recurChngCase(dtype)), nullable, meta)
-            case StructField(name, dtype, nullable, meta) =>
-              StructField(changeColCaseFunc(name, caseType), dtype, nullable, meta)
-          }
-
-        StructType(recurChngCase(schema))
-      }
-      df.sparkSession.createDataFrame(df.rdd, parseNestedCol(df.schema, caseType))
-    }
+    def changeCaseOfColumnNames(caseType: String): DataFrame =
+      df.sparkSession.createDataFrame(
+        rowRDD = df.rdd,
+        schema = applyChangeNameFunctionRecursively(
+          schema = df.schema,
+          changeNameFunction =
+            (columnName: String) =>
+              caseType.toLowerCase() match {
+                case "upper" =>
+                  columnName.toUpperCase
+                case "lower" =>
+                  columnName.toLowerCase
+                case _ =>
+                  throw new Exception(s"The provided caseType: $caseType is not supported.")
+              }
+        )
+      )
 
     def selectColumns(columnNames: List[String]): DataFrame = df.select(columnNames.map(col): _*)
 
