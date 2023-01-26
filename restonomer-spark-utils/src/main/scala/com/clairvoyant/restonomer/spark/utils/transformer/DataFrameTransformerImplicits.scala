@@ -82,6 +82,12 @@ object DataFrameTransformerImplicits {
         )
     }
 
+    def renameCols(renameColumnMapper: Map[String, String]): DataFrame =
+      df.select(
+        df.columns.map(columnName => df(columnName).alias(renameColumnMapper.getOrElse(columnName, columnName))): _*
+      )
+
+
     def changeColCase(caseType: String): DataFrame = {
 
       def changeColCaseFunc(colName: String, caseType: String): String =
