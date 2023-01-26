@@ -83,6 +83,15 @@ case class ReplaceStringInColumnValue(
 
 }
 
+case class RenameColumns(
+    renameColumnMapper: Map[String, String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.renameCols(renameColumnMapper)
+
+}
+
 case class ChangeColumnCase(
     caseType: String
 ) extends RestonomerTransformation {
