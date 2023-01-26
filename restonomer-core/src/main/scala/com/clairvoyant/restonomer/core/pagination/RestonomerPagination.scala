@@ -8,7 +8,7 @@ sealed trait RestonomerPagination {
 
 }
 
-case class PaginationMechanism1(
+case class PageNumberBasedPagination(
     totalNumberOfRecordsAttribute: String,
     currentPageNumberAttribute: String,
     maxRecordsPerPage: Int,

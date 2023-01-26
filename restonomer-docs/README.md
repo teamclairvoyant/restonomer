@@ -5,7 +5,7 @@
 ```text
    python -m venv .venv
    source .venv/bin/activate
-   python -m pip install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org -r docs/requirements.txt
+   python -m pip install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org -r restonomer-docs/requirements.txt
    sphinx-build -b html restonomer-docs/source/ restonomer-docs/build/html
 ```
 * The `build` folder should be created inside `restonomer-docs` folder.
