@@ -4,6 +4,8 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{ArrayType, DataType, StructField, StructType}
 import org.apache.spark.sql.{Column, DataFrame}
 
+import scala.collection.Seq
+
 object DataFrameTransformerImplicits {
 
   implicit class DataFrameWrapper(df: DataFrame) {
@@ -75,17 +77,17 @@ object DataFrameTransformerImplicits {
       )
 
     private def applyChangeNameFunctionRecursively(
-        schema: StructType,
-        changeNameFunction: String => String
-    ): StructType =
+                                                    schema: StructType,
+                                                    changeNameFunction: String => String
+                                                  ): StructType =
       StructType(
         schema.flatMap {
-          case sf @ StructField(
-                name,
-                ArrayType(arrayNestedType: StructType, containsNull),
-                nullable,
-                metadata
-              ) =>
+          case sf@StructField(
+          name,
+          ArrayType(arrayNestedType: StructType, containsNull),
+          nullable,
+          metadata
+          ) =>
             StructType(
               Seq(
                 sf.copy(
@@ -99,7 +101,7 @@ object DataFrameTransformerImplicits {
                 )
               )
             )
-          case sf @ StructField(name, structType: StructType, nullable, metadata) =>
+          case sf@StructField(name, structType: StructType, nullable, metadata) =>
             StructType(
               Seq(
                 sf.copy(
@@ -111,7 +113,7 @@ object DataFrameTransformerImplicits {
               )
             )
 
-          case sf @ StructField(name, _, _, _) =>
+          case sf@StructField(name, _, _, _) =>
             StructType(
               Seq(
                 sf.copy(name = changeNameFunction(name))
@@ -137,6 +139,25 @@ object DataFrameTransformerImplicits {
               }
         )
       )
+
+    def addPrefixToColNames(prefix: String, columnNames: List[String]): DataFrame = {
+
+      if (columnNames.isEmpty)
+        df.select(
+          df.columns.map(columnName => df(columnName).alias(prefix + "_" + columnName)): _*
+        )
+      else
+        df.select(
+          df.columns.map { columnName =>
+            df(columnName).alias(
+              if (columnNames.contains(columnName))
+                prefix + "_" + columnName
+              else
+                columnName
+            )
+          }: _*
+        )
+    }
 
     def addSuffixToColumnNames(suffix: String, columnNames: List[String]): DataFrame =
       if (columnNames.isEmpty)
