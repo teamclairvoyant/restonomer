@@ -63,6 +63,25 @@ object DataFrameTransformerImplicits {
     def replaceStringInColumnValue(columnName: String, pattern: String, replacement: String): DataFrame =
       df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
 
+    def addPrefixToColNames(prefix: String, columnNames: List[String]): DataFrame = {
+
+      if (columnNames.isEmpty)
+        df.select(
+          df.columns.map(columnName => df(columnName).alias(prefix + "_" + columnName)): _*
+        )
+      else
+        df.select(
+          df.columns.map { columnName =>
+            df(columnName).alias(
+              if (columnNames.contains(columnName))
+                prefix + "_" + columnName
+              else
+                columnName
+            )
+          }: _*
+        )
+    }
+
     def renameCols(renameColumnMapper: Map[String, String]): DataFrame =
       df.select(
         df.columns.map(columnName => df(columnName).alias(renameColumnMapper.getOrElse(columnName, columnName))): _*
