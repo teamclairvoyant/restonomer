@@ -68,6 +68,25 @@ object DataFrameTransformerImplicits {
         df.columns.map(columnName => df(columnName).alias(renameColumnMapper.getOrElse(columnName, columnName))): _*
       )
 
+    def addSuffixToColNames(suffix: String, columnNames: List[String]): DataFrame = {
+
+      if (columnNames.isEmpty)
+        df.select(
+          df.columns.map(columnName => df(columnName).alias(columnName + "_" + suffix)): _*
+        )
+      else
+        df.select(
+          df.columns.map { columnName =>
+            df(columnName).alias(
+              if (columnNames.contains(columnName))
+                columnName + "_" + suffix
+              else
+                columnName
+            )
+          }: _*
+        )
+    }
+
     def changeColCase(caseType: String): DataFrame = {
 
       def changeColCaseFunc(colName: String, caseType: String): String =
