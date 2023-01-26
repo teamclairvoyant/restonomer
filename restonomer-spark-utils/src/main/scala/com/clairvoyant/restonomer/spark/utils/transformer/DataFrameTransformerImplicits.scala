@@ -1,10 +1,8 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.{DataType, StructField, StructType}
+import org.apache.spark.sql.types.{ArrayType, DataType, StructField, StructType}
 import org.apache.spark.sql.{Column, DataFrame}
-
-import scala.collection.Seq
 
 object DataFrameTransformerImplicits {
 
@@ -65,18 +63,29 @@ object DataFrameTransformerImplicits {
     def replaceStringInColumnValue(columnName: String, pattern: String, replacement: String): DataFrame =
       df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
 
+    def renameColumns(renameColumnMapper: Map[String, String]): DataFrame =
+      df.select(
+        df.columns
+          .map(columnName =>
+            renameColumnMapper
+              .get(columnName)
+              .map(col(columnName).name)
+              .getOrElse(col(columnName))
+          ): _*
+      )
+
     private def applyChangeNameFunctionRecursively(
-                                                    schema: StructType,
-                                                    changeNameFunction: String => String
-                                                  ): StructType =
+        schema: StructType,
+        changeNameFunction: String => String
+    ): StructType =
       StructType(
         schema.flatMap {
-          case sf@StructField(
-          name,
-          ArrayType(arrayNestedType: StructType, containsNull),
-          nullable,
-          metadata
-          ) =>
+          case sf @ StructField(
+                name,
+                ArrayType(arrayNestedType: StructType, containsNull),
+                nullable,
+                metadata
+              ) =>
             StructType(
               Seq(
                 sf.copy(
@@ -90,7 +99,7 @@ object DataFrameTransformerImplicits {
                 )
               )
             )
-          case sf@StructField(name, structType: StructType, nullable, metadata) =>
+          case sf @ StructField(name, structType: StructType, nullable, metadata) =>
             StructType(
               Seq(
                 sf.copy(
@@ -102,22 +111,13 @@ object DataFrameTransformerImplicits {
               )
             )
 
-          case sf@StructField(name, _, _, _) =>
+          case sf @ StructField(name, _, _, _) =>
             StructType(
               Seq(
                 sf.copy(name = changeNameFunction(name))
               )
             )
         }
-      )
-
-    def renameColumns(renameColumnMapper: Map[String, String]): DataFrame =
-      df.sparkSession.createDataFrame(
-        rowRDD = df.rdd,
-        schema = applyChangeNameFunctionRecursively(
-          schema = df.schema,
-          changeNameFunction = (columnName: String) => renameColumnMapper.getOrElse(columnName, columnName)
-        )
       )
 
     def changeCaseOfColumnNames(caseType: String): DataFrame =
@@ -138,24 +138,22 @@ object DataFrameTransformerImplicits {
         )
       )
 
-    def addSuffixToColNames(suffix: String, columnNames: List[String]): DataFrame = {
-
+    def addSuffixToColumnNames(suffix: String, columnNames: List[String]): DataFrame =
       if (columnNames.isEmpty)
-        df.select(
-          df.columns.map(columnName => df(columnName).alias(columnName + "_" + suffix)): _*
+        df.renameColumns(
+          df.columns
+            .map(columnName => columnName -> s"${columnName}_$suffix")
+            .toMap
         )
       else
-        df.select(
+        df.renameColumns(
           df.columns.map { columnName =>
-            df(columnName).alias(
-              if (columnNames.contains(columnName))
-                columnName + "_" + suffix
-              else
-                columnName
-            )
-          }: _*
+            if (columnNames.contains(columnName))
+              columnName -> s"${columnName}_$suffix"
+            else
+              columnName -> columnName
+          }.toMap
         )
-    }
 
     def selectColumns(columnNames: List[String]): DataFrame = df.select(columnNames.map(col): _*)
 

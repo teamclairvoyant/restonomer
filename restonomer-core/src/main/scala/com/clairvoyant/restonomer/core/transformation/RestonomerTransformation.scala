@@ -94,11 +94,11 @@ case class RenameColumns(
 
 case class AddSuffixToColumnNames(
     suffix: String,
-    columnNames: List[String] = List[String]()
+    columnNames: List[String] = List()
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.addSuffixToColNames(suffix, columnNames)
+    restonomerResponseDF.addSuffixToColumnNames(suffix, columnNames)
 
 }
 
