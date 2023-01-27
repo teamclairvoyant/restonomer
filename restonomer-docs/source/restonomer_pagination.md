@@ -1,4 +1,16 @@
-# Page Number Based Pagination
+# What is Restonomer Pagination ?
+
+Restonomer provides support for pagination while fetching huge datasets from the REST API.
+Some APIs are not able to provide the complete data in a single request, and hence they make use of pagination to load 
+the data in consecutive pages. 
+A separate http request gets created for each page.
+
+Each API has its own custom pagination scheme, and Restonomer internally implements the solution to deal with the same.
+The users just need to provide few configurations without letting themselves know about the internal details of the implementation.
+
+# Types of Restonomer Pagination
+
+## Page Number Based Pagination
 
 In this pagination mechanism, the huge datasets are split into multiple pages.
 
@@ -54,6 +66,8 @@ Then, the pagination details can be captured in the checkpoint file in the below
       page-token-name = "page"
     }
 ```
+
+The `total-number-of-records-attribute` and `current-page-number-attribute` are represented as [JsonPath](https://support.smartbear.com/alertsite/docs/monitors/api/endpoint/jsonpath.html).
 
 The complete example of checkpoint file including pagination is:
 

@@ -60,7 +60,9 @@ data = {
   }
 
   data-response = {
-    body-format = "JSON"
+    body = {
+      type = "json"
+    }
 
     persistence = {
       type = "file-system"
@@ -153,7 +155,9 @@ data = {
   }
 
   data-response = {
-    body-format = "JSON"
+    body = {
+      type = "json"
+    }
 
     persistence = {
       type = "file-system"
