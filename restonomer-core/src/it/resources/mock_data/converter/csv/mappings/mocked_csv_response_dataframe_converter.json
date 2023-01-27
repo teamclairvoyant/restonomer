@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/csv-response-converter"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "sample_csv_response_body.csv"
+  }
+}

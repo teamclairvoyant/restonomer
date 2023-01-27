@@ -93,6 +93,8 @@ case class AddPrefixToColumnNames(
 
 }
 
+}
+
 case class RenameColumns(
     renameColumnMapper: Map[String, String]
 ) extends RestonomerTransformation {
