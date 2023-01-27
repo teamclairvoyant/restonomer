@@ -10,6 +10,9 @@ class CSVTextToDataFrameReader(
   import sparkSession.implicits._
 
   override def read: DataFrame =
-    sparkSession.read.option("header", "true").option("sep", ",").csv(text.split("\\n").toSeq.toDS())
+    sparkSession.read
+      .option("header", "true")
+      .option("sep", ",")
+      .csv(text.split("\\n").toSeq.toDS())
 
 }

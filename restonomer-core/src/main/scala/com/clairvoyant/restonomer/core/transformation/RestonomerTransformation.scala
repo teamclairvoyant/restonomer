@@ -89,7 +89,7 @@ case class AddPrefixToColumnNames(
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.addPrefixToColNames(prefix, columnNames)
+    restonomerResponseDF.addPrefixToColumnNames(prefix, columnNames)
 
 }
 
@@ -98,17 +98,17 @@ case class RenameColumns(
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.renameCols(renameColumnMapper)
+    restonomerResponseDF.renameColumns(renameColumnMapper)
 
 }
 
 case class AddSuffixToColumnNames(
     suffix: String,
-    columnNames: List[String] = List[String]()
+    columnNames: List[String] = List()
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.addSuffixToColNames(suffix, columnNames)
+    restonomerResponseDF.addSuffixToColumnNames(suffix, columnNames)
 
 }
 
@@ -116,7 +116,8 @@ case class ChangeColumnCase(
     caseType: String
 ) extends RestonomerTransformation {
 
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.changeColCase(caseType)
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.changeCaseOfColumnNames(caseType)
 
 }
 

@@ -27,7 +27,9 @@ data = {
   }
 
   data-response = {
-    body-format = "JSON"
+    body = {
+      type = "json"
+    }
 
     transformations = [
       {

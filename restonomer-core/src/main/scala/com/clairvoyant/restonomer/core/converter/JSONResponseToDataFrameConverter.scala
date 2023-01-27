@@ -1,16 +1,27 @@
 package com.clairvoyant.restonomer.core.converter
 
 import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
+import org.apache.spark.sql.functions.{col, explode}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-class JSONResponseToDataFrameConverter extends ResponseToDataFrameConverter {
+class JSONResponseToDataFrameConverter(dataColumnName: Option[String] = None) extends ResponseToDataFrameConverter {
 
   def convertResponseToDataFrame(
-      restonomerResponseBody: String
-  )(implicit sparkSession: SparkSession): DataFrame =
-    new JSONTextToDataFrameReader(
-      sparkSession = sparkSession,
-      text = restonomerResponseBody
-    ).read
+      restonomerResponseBody: Seq[String]
+  )(implicit sparkSession: SparkSession): DataFrame = {
+    val responseDF =
+      new JSONTextToDataFrameReader(
+        sparkSession = sparkSession,
+        text = s"[${restonomerResponseBody.mkString(",")}]"
+      ).read
+
+    dataColumnName
+      .map { dataColumn =>
+        responseDF
+          .select(explode(col(dataColumn)).as("records"))
+          .select("records.*")
+      }
+      .getOrElse(responseDF)
+  }
 
 }

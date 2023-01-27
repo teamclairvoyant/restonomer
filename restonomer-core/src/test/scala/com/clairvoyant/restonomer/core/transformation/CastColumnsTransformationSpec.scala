@@ -1,12 +1,11 @@
 package com.clairvoyant.restonomer.core.transformation
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
 import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.types.{DecimalType, DoubleType, LongType, StringType}
 
-class CastColumnsTransformationSpec extends CoreSpec with DataFrameMatchers {
+class CastColumnsTransformationSpec extends CoreSpec {
 
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(

@@ -2,6 +2,7 @@ package com.clairvoyant.restonomer.core.http
 
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.RetryConfig
+import com.clairvoyant.restonomer.core.pagination.RestonomerPagination
 import odelay.Delay
 import sttp.client3._
 import sttp.model.HeaderNames.Location
@@ -13,22 +14,57 @@ import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 import scala.util.Random
 
-case class RestonomerResponse(body: Future[String])
+case class RestonomerResponse(body: Future[Seq[String]])
 
 object RestonomerResponse {
 
   private val random: Random.type = scala.util.Random
 
-  def fetchFromRequest(restonomerRequest: RestonomerRequest, retryConfig: RetryConfig)(
-      implicit sttpBackend: SttpBackend[Future, Any]
-  ): RestonomerResponse = {
-    val httpResponseBody = getBody(
-      restonomerRequest = restonomerRequest,
-      statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
-      maxRetries = retryConfig.maxRetries
-    )
+  def fetchFromRequest(
+      restonomerRequest: RestonomerRequest,
+      retryConfig: RetryConfig,
+      restonomerPagination: Option[RestonomerPagination]
+  )(implicit sttpBackend: SttpBackend[Future, Any]): RestonomerResponse = {
+    def getPages(
+        restonomerRequest: RestonomerRequest,
+        httpResponseBody: Future[Seq[String]]
+    ): Future[Seq[String]] = {
+      restonomerPagination
+        .map { pagination =>
+          httpResponseBody.flatMap { httpResponseBodySeq =>
+            pagination
+              .getNextPageToken(httpResponseBodySeq.last)
+              .map { nextPageToken =>
+                getPages(
+                  restonomerRequest = restonomerRequest,
+                  httpResponseBody = getBody(
+                    restonomerRequest = restonomerRequest.copy(httpRequest =
+                      restonomerRequest.httpRequest.method(
+                        method = restonomerRequest.httpRequest.method,
+                        uri = restonomerRequest.httpRequest.uri.withParams(nextPageToken)
+                      )
+                    ),
+                    statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
+                    maxRetries = retryConfig.maxRetries
+                  ).map(httpResponseBodySeq ++ _)
+                )
+              }
+              .getOrElse(httpResponseBody)
+          }
+        }
+        .getOrElse(httpResponseBody)
+    }
 
-    RestonomerResponse(body = httpResponseBody)
+    RestonomerResponse {
+      getPages(
+        restonomerRequest = restonomerRequest,
+        httpResponseBody = getBody(
+          restonomerRequest = restonomerRequest,
+          statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
+          maxRetries = retryConfig.maxRetries
+        )
+      )
+    }
   }
 
   private def sleepTimeInSeconds: Int = 10 + random.nextInt(10) + 1
@@ -38,12 +74,12 @@ object RestonomerResponse {
       statusCodesToRetry: List[StatusCode],
       maxRetries: Int,
       currentRetryAttemptNumber: Int = 0
-  )(implicit sttpBackend: SttpBackend[Future, Any]): Future[String] = {
+  )(implicit sttpBackend: SttpBackend[Future, Any]): Future[Seq[String]] = {
     restonomerRequest.httpRequest
       .send(sttpBackend)
       .flatMap {
         case Response(body, StatusCode.Ok, _, _, _, _) =>
-          Future(body.toSeq.head)
+          Future(body.toSeq)
 
         case response @ Response(_, statusCode, _, headers, _, _)
             if statusCodesToRetry.contains(statusCode) && currentRetryAttemptNumber < maxRetries =>

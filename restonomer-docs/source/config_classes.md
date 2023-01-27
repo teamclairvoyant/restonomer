@@ -42,7 +42,9 @@ data = {
   }
 
   data-response = {
-    body-format = "JSON"
+    body = {
+      type = "json"
+    }
 
     persistence = {
       type = "file-system"
@@ -176,7 +178,9 @@ data = {
   }
 
   data-response = {
-    body-format = "JSON"
+    body = {
+      type = "json"
+    }
 
     persistence = {
       type = "file-system"
@@ -193,17 +197,19 @@ In restonomer framework, the details about the http response (like response body
 
 User need to provide below configs for Data Response Configuration:
 
-| Config Name     | Mandatory | Default Value | Description                                                                                                                                                                                      |
-|:----------------|:---------:|:-------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| body-format     |    Yes    |       -       | The format of the body of the http response<br/>Restonomer framework supports handling formats like `JSON`<br/>Restonomer uses this information internally to convert response body to dataframe |
-| transformations |    No     |       -       | List of transformations to be applied on the restonomer response dataframe                                                                                                                       |
-| persistence     |    Yes    |       -       | The persistence attribute that tells where to persist the transformed restonomer response dataframe                                                                                              |
+| Config Name     | Mandatory | Default Value | Description                                                                                         |
+|:----------------|:---------:|:-------------:|:----------------------------------------------------------------------------------------------------|
+| body            |    Yes    |       -       | The body config represented by `DataResponseBodyConfig`                                             |
+| transformations |    No     |       -       | List of transformations to be applied on the restonomer response dataframe                          |
+| persistence     |    Yes    |       -       | The persistence attribute that tells where to persist the transformed restonomer response dataframe |
 
 The response configurations are provided in the checkpoint file in the below manner:
 
 ```hocon
 data-response = {
-  body-format = "JSON"
+  body = {
+    type = "json"
+  }
 
   transformations = [
     {
@@ -219,5 +225,25 @@ data-response = {
     file-format = "json"
     file-path = "./rest-output/"
   }
+}
+```
+
+# DataResponseBodyConfig
+
+In restonomer framework, the details about the http response body are captured via `DataResponseBodyConfig` class.
+
+User need to provide below configs for Data Response Body Configuration:
+
+| Config Name | Mandatory | Default Value | Description                                                                                                                               |
+|:------------|:---------:|:-------------:|:------------------------------------------------------------------------------------------------------------------------------------------|
+| type        |    Yes    |       -       | The response body format returned by the rest api. It can hold values like `json`, `csv` and `xml`.                                       |
+| data-column |    No     |       -       | This is used in case the response is of json format and the dataset is not present at the root level but in some other attribute of json. |
+
+The response body configurations are provided in the checkpoint file in the below manner:
+
+```hocon
+body = {
+  type = "json"
+  data-column = "data.items"
 }
 ```

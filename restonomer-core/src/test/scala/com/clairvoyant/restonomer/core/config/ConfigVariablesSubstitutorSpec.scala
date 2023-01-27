@@ -23,7 +23,9 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |  }
           |
           |  data-response = {
-          |    body-format = "JSON"
+          |    body = {
+          |      type = "json"
+          |    }
           |
           |    persistence = {
           |      type = "file-system"
@@ -58,7 +60,9 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |  }
           |
           |  data-response = {
-          |    body-format = "JSON"
+          |    body = {
+          |      type = "json"
+          |    }
           |
           |    persistence = {
           |      type = "file-system"
@@ -93,7 +97,9 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |  }
           |
           |  data-response = {
-          |    body-format = "JSON"
+          |    body = {
+          |      type = "json"
+          |    }
           |
           |    persistence = {
           |      type = "file-system"
@@ -128,7 +134,9 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |  }
           |
           |  data-response = {
-          |    body-format = "JSON"
+          |    body = {
+          |      type = "json"
+          |    }
           |
           |    persistence = {
           |      type = "file-system"
@@ -164,7 +172,9 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |  }
           |
           |  data-response = {
-          |    body-format = "JSON"
+          |    body = {
+          |      type = "json"
+          |    }
           |
           |    persistence = {
           |      type = "file-system"

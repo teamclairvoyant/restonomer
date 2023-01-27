@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.{DataType, StructField, StructType}
+import org.apache.spark.sql.types.{ArrayType, DataType, StructField, StructType}
 import org.apache.spark.sql.{Column, DataFrame}
 
 object DataFrameTransformerImplicits {
@@ -63,74 +63,114 @@ object DataFrameTransformerImplicits {
     def replaceStringInColumnValue(columnName: String, pattern: String, replacement: String): DataFrame =
       df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
 
-    def addPrefixToColNames(prefix: String, columnNames: List[String]): DataFrame = {
-
-      if (columnNames.isEmpty)
-        df.select(
-          df.columns.map(columnName => df(columnName).alias(prefix + "_" + columnName)): _*
-        )
-      else
-        df.select(
-          df.columns.map { columnName =>
-            df(columnName).alias(
-              if (columnNames.contains(columnName))
-                prefix + "_" + columnName
-              else
-                columnName
-            )
-          }: _*
-        )
-    }
-
-    def renameCols(renameColumnMapper: Map[String, String]): DataFrame =
+    def renameColumns(renameColumnMapper: Map[String, String]): DataFrame =
       df.select(
-        df.columns.map(columnName => df(columnName).alias(renameColumnMapper.getOrElse(columnName, columnName))): _*
+        df.columns
+          .map(columnName =>
+            renameColumnMapper
+              .get(columnName)
+              .map(col(columnName).name)
+              .getOrElse(col(columnName))
+          ): _*
       )
 
-    def addSuffixToColNames(suffix: String, columnNames: List[String]): DataFrame = {
+    private def applyChangeNameFunctionRecursively(
+        schema: StructType,
+        changeNameFunction: String => String
+    ): StructType =
+      StructType(
+        schema.flatMap {
+          case sf @ StructField(
+                name,
+                ArrayType(arrayNestedType: StructType, containsNull),
+                nullable,
+                metadata
+              ) =>
+            StructType(
+              Seq(
+                sf.copy(
+                  changeNameFunction(name),
+                  dataType = ArrayType(
+                    applyChangeNameFunctionRecursively(arrayNestedType, changeNameFunction),
+                    containsNull
+                  ),
+                  nullable,
+                  metadata
+                )
+              )
+            )
+          case sf @ StructField(name, structType: StructType, nullable, metadata) =>
+            StructType(
+              Seq(
+                sf.copy(
+                  changeNameFunction(name),
+                  dataType = applyChangeNameFunctionRecursively(structType, changeNameFunction),
+                  nullable,
+                  metadata
+                )
+              )
+            )
 
+          case sf @ StructField(name, _, _, _) =>
+            StructType(
+              Seq(
+                sf.copy(name = changeNameFunction(name))
+              )
+            )
+        }
+      )
+
+    def changeCaseOfColumnNames(caseType: String): DataFrame =
+      df.sparkSession.createDataFrame(
+        rowRDD = df.rdd,
+        schema = applyChangeNameFunctionRecursively(
+          schema = df.schema,
+          changeNameFunction =
+            (columnName: String) =>
+              caseType.toLowerCase() match {
+                case "upper" =>
+                  columnName.toUpperCase
+                case "lower" =>
+                  columnName.toLowerCase
+                case _ =>
+                  throw new Exception(s"The provided caseType: $caseType is not supported.")
+              }
+        )
+      )
+
+    def addPrefixToColumnNames(prefix: String, columnNames: List[String]): DataFrame =
       if (columnNames.isEmpty)
-        df.select(
-          df.columns.map(columnName => df(columnName).alias(columnName + "_" + suffix)): _*
+        df.renameColumns(
+          df.columns
+            .map(columnName => columnName -> s"${prefix}_$columnName")
+            .toMap
         )
       else
-        df.select(
+        df.renameColumns(
           df.columns.map { columnName =>
-            df(columnName).alias(
-              if (columnNames.contains(columnName))
-                columnName + "_" + suffix
-              else
-                columnName
-            )
-          }: _*
+            if (columnNames.contains(columnName))
+              columnName -> s"${prefix}_$columnName"
+            else
+              columnName -> columnName
+          }.toMap
         )
-    }
 
-    def changeColCase(caseType: String): DataFrame = {
-
-      def changeColCaseFunc(colName: String, caseType: String): String =
-        caseType match {
-          case "upper" =>
-            colName.toUpperCase
-          case "lower" =>
-            colName.toLowerCase
-          case _ =>
-            throw new Exception("Given caseConversion not supported")
-        }
-
-      def parseNestedCol(schema: StructType, caseType: String): StructType = {
-        def recurChngCase(schema: StructType): Seq[StructField] =
-          schema.fields.map {
-            case StructField(name, dtype: StructType, nullable, meta) =>
-              StructField(changeColCaseFunc(name, caseType), StructType(recurChngCase(dtype)), nullable, meta)
-            case StructField(name, dtype, nullable, meta) =>
-              StructField(changeColCaseFunc(name, caseType), dtype, nullable, meta)
-          }
-
-        StructType(recurChngCase(schema))
-      }
-      df.sparkSession.createDataFrame(df.rdd, parseNestedCol(df.schema, caseType))
-    }
+    def addSuffixToColumnNames(suffix: String, columnNames: List[String]): DataFrame =
+      if (columnNames.isEmpty)
+        df.renameColumns(
+          df.columns
+            .map(columnName => columnName -> s"${columnName}_$suffix")
+            .toMap
+        )
+      else
+        df.renameColumns(
+          df.columns.map { columnName =>
+            if (columnNames.contains(columnName))
+              columnName -> s"${columnName}_$suffix"
+            else
+              columnName -> columnName
+          }.toMap
+        )
 
     def selectColumns(columnNames: List[String]): DataFrame = df.select(columnNames.map(col): _*)
 

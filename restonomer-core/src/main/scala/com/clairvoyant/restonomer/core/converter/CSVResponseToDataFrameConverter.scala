@@ -6,11 +6,11 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 class CSVResponseToDataFrameConverter extends ResponseToDataFrameConverter {
 
   def convertResponseToDataFrame(
-      restonomerResponseBody: String
+      restonomerResponseBody: Seq[String]
   )(implicit sparkSession: SparkSession): DataFrame =
     new CSVTextToDataFrameReader(
       sparkSession = sparkSession,
-      text = restonomerResponseBody
+      text = restonomerResponseBody.mkString
     ).read
 
 }

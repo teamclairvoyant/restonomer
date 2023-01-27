@@ -1,11 +1,11 @@
 package com.clairvoyant.restonomer.core.app
 
 import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders
-import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders.{RESPONSE_BODY, RESPONSE_HEADERS}
-import com.clairvoyant.restonomer.core.converter.ResponseToDataFrameConverter
+import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders._
+import com.clairvoyant.restonomer.core.converter._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.{RestonomerRequest, RestonomerResponse}
-import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
+import com.clairvoyant.restonomer.core.model._
 import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersistence}
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import com.jayway.jsonpath.JsonPath
@@ -37,16 +37,26 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
         )
       }
 
+    val dataRestonomerRequest =
+      RestonomerRequest
+        .builder(checkpointConfig.data.dataRequest)(tokenFunction)
+        .build
+
     val dataRestonomerResponse = RestonomerResponse.fetchFromRequest(
-      restonomerRequest =
-        RestonomerRequest
-          .builder(checkpointConfig.data.dataRequest)(tokenFunction)
-          .build,
-      retryConfig = checkpointConfig.data.dataRequest.retry
+      restonomerRequest = dataRestonomerRequest,
+      retryConfig = checkpointConfig.data.dataRequest.retry,
+      restonomerPagination = checkpointConfig.data.dataResponse.pagination
     )
 
     val restonomerResponseDF = dataRestonomerResponse.body
-      .map(ResponseToDataFrameConverter(checkpointConfig.data.dataResponse.bodyFormat).convertResponseToDataFrame)
+      .map { httpResponseBody =>
+        (checkpointConfig.data.dataResponse.body match {
+          case JSON(dataColumnName) =>
+            new JSONResponseToDataFrameConverter(dataColumnName)
+          case CSV() =>
+            new CSVResponseToDataFrameConverter
+        }).convertResponseToDataFrame(httpResponseBody.toSeq)
+      }
 
     val restonomerResponseTransformedDF = restonomerResponseDF.map { df =>
       checkpointConfig.data.dataResponse.transformations
