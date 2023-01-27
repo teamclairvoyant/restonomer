@@ -15,7 +15,7 @@ val organizationName = "com.clairvoyant.restonomer"
 val releaseVersion = "1.0"
 
 val pureConfigVersion = "0.17.2"
-val sttpVersion = "3.8.8"
+val sttpVersion = "3.8.9"
 val scalaTestVersion = "3.2.15"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.1.2"
