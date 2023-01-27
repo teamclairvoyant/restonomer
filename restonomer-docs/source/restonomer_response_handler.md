@@ -6,23 +6,21 @@ Below are some types along with a sample config.
 The user needs to specify the data type as JSON in the body-format section in data-response.
 
 ```hocon
-name = "checkpoint_json_handler"
+name = "checkpoint_json_response_dataframe_converter"
 
 data = {
   data-request = {
-    url = "http://localhost:8080/add-column-transformation"
+    url = "http://localhost:8080/json-response-converter"
   }
 
   data-response = {
     body-format = "JSON"
 
-    transformations = [
-      {
-        type = "add-literal-column"
-        column-name = "col_D"
-        column-value = "val_D"
-        column-data-type = "string"
-      }]
+    persistence = {
+      type = "file-system"
+      file-format = "json"
+      file-path = "/tmp/converter/json"
+    }
   }
 }
 ```
@@ -32,23 +30,21 @@ data = {
 The user needs to specify the data type as CSV in the body-format section in data-response.
 
 ```hocon
-name = "checkpoint_csv_handler"
+name = "checkpoint_csv_response_dataframe_converter"
 
 data = {
   data-request = {
-    url = "http://localhost:8080/add-column-transformation"
+    url = "http://localhost:8080/csv-response-converter"
   }
 
   data-response = {
     body-format = "CSV"
 
-    transformations = [
-      {
-        type = "add-literal-column"
-        column-name = "col_D"
-        column-value = "val_D"
-        column-data-type = "string"
-      }]
+    persistence = {
+      type = "file-system"
+      file-format = "csv"
+      file-path = "/tmp/converter/csv"
+    }
   }
 }
 ```

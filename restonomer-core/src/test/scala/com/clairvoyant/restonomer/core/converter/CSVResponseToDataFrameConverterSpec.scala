@@ -13,7 +13,7 @@ class CSVResponseToDataFrameConverterSpec extends CoreSpec {
     val expectedSchema = "struct<col1:string,col2:string>"
 
     val df = new CSVResponseToDataFrameConverter().convertResponseToDataFrame(responseBody)
-    df.show()
+
     df.count() shouldBe 2
     df.schema.simpleString shouldBe expectedSchema
   }
