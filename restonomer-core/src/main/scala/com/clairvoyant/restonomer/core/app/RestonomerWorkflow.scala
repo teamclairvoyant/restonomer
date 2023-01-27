@@ -1,11 +1,11 @@
 package com.clairvoyant.restonomer.core.app
 
 import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders
-import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders.{RESPONSE_BODY, RESPONSE_HEADERS}
-import com.clairvoyant.restonomer.core.converter.JSONResponseToDataFrameConverter
+import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders._
+import com.clairvoyant.restonomer.core.converter._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.{RestonomerRequest, RestonomerResponse}
-import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig, JSON}
+import com.clairvoyant.restonomer.core.model._
 import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersistence}
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import com.jayway.jsonpath.JsonPath
@@ -53,6 +53,8 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
         (checkpointConfig.data.dataResponse.body match {
           case JSON(dataColumnName) =>
             new JSONResponseToDataFrameConverter(dataColumnName)
+          case CSV() =>
+            new CSVResponseToDataFrameConverter
         }).convertResponseToDataFrame(httpResponseBody.toSeq)
       }
 

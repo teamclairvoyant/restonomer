@@ -3,7 +3,7 @@ package com.clairvoyant.restonomer.converter
 import com.clairvoyant.restonomer.common.IntegrationTestDependencies
 
 class CSVResponseToDataFrameConverterIntegrationTest extends IntegrationTestDependencies {
-  override val mappingsDirectory: String = "converter/csv"
+  override val mappingsDirectory: String = "converter"
 
   it should "convert the CSV response body into a dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_csv_response_dataframe_converter.conf")
