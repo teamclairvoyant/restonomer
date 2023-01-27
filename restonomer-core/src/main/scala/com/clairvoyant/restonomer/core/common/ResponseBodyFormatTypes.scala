@@ -5,6 +5,7 @@ import com.clairvoyant.restonomer.core.exception.RestonomerException
 object ResponseBodyFormatTypes extends Enumeration {
 
   val JSON: ResponseBodyFormatTypes.Value = Value("JSON")
+  val CSV: ResponseBodyFormatTypes.Value = Value("CSV")
 
   def apply(responseBodyFormat: String): ResponseBodyFormatTypes.Value = {
     if (isValidResponseBodyFormat(responseBodyFormat))
