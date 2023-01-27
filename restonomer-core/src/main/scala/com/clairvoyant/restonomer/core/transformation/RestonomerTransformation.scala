@@ -83,6 +83,34 @@ case class ReplaceStringInColumnValue(
 
 }
 
+
+case class AddPrefixToColumnNames(
+    prefix: String,
+    columnNames: List[String] = List[String]()
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.addPrefixToColNames(prefix, columnNames)
+
+case class RenameColumns(
+    renameColumnMapper: Map[String, String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.renameCols(renameColumnMapper)
+
+}
+
+case class AddSuffixToColumnNames(
+    suffix: String,
+    columnNames: List[String] = List[String]()
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.addSuffixToColNames(suffix, columnNames)
+
+}
+
 case class ChangeColumnCase(
     caseType: String
 ) extends RestonomerTransformation {

@@ -63,6 +63,49 @@ object DataFrameTransformerImplicits {
     def replaceStringInColumnValue(columnName: String, pattern: String, replacement: String): DataFrame =
       df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
 
+    def addPrefixToColNames(prefix: String, columnNames: List[String]): DataFrame = {
+
+      if (columnNames.isEmpty)
+        df.select(
+          df.columns.map(columnName => df(columnName).alias(prefix + "_" + columnName)): _*
+        )
+      else
+        df.select(
+          df.columns.map { columnName =>
+            df(columnName).alias(
+              if (columnNames.contains(columnName))
+                prefix + "_" + columnName
+              else
+                columnName
+            )
+          }: _*
+        )
+    }
+
+    def renameCols(renameColumnMapper: Map[String, String]): DataFrame =
+      df.select(
+        df.columns.map(columnName => df(columnName).alias(renameColumnMapper.getOrElse(columnName, columnName))): _*
+      )
+
+    def addSuffixToColNames(suffix: String, columnNames: List[String]): DataFrame = {
+
+      if (columnNames.isEmpty)
+        df.select(
+          df.columns.map(columnName => df(columnName).alias(columnName + "_" + suffix)): _*
+        )
+      else
+        df.select(
+          df.columns.map { columnName =>
+            df(columnName).alias(
+              if (columnNames.contains(columnName))
+                columnName + "_" + suffix
+              else
+                columnName
+            )
+          }: _*
+        )
+    }
+
     def changeColCase(caseType: String): DataFrame = {
 
       def changeColCaseFunc(colName: String, caseType: String): String =
