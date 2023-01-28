@@ -174,6 +174,9 @@ object DataFrameTransformerImplicits {
 
     def selectColumns(columnNames: List[String]): DataFrame = df.select(columnNames.map(col): _*)
 
+    def castColumnsBasedOnPrefix(columnNames: List[String], dataTypeToCast: String): DataFrame =
+      df.select(columnNames.map(f => col(f).cast(dataTypeToCast)): _*)
+
   }
 
 }
