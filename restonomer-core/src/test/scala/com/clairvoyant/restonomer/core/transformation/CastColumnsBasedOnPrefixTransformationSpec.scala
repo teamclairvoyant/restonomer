@@ -11,7 +11,7 @@ class CastColumnsBasedOnPrefixTransformationSpec extends CoreSpec with DataFrame
 
   "transform() - with column-data-type" should "transform the dataframe as expected" in {
     val restonomerTransformation = CastColumnsBasedOnPrefix(
-      columnNames = List("col_A","col_B", "col_C"),
+      columnNames = List("col_A", "col_B", "col_C"),
       dataTypeToCast = "String"
     )
 
