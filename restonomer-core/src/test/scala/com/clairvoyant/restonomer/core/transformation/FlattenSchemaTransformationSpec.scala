@@ -9,7 +9,8 @@ class FlattenSchemaTransformationSpec extends CoreSpec with DataFrameMatchers {
 
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
-      sparkSession = sparkSession,
+      sparkSession = sparkSession
+    ).read(
       text = Seq(
         """
           |{
@@ -20,7 +21,7 @@ class FlattenSchemaTransformationSpec extends CoreSpec with DataFrameMatchers {
           |}
           |""".stripMargin
       )
-    ).read
+    )
 
   "transform()" should "flatten the response dataframe" in {
     val restonomerTransformation = FlattenSchema()
@@ -29,8 +30,9 @@ class FlattenSchemaTransformationSpec extends CoreSpec with DataFrameMatchers {
 
     val expectedRestonomerResponseTransformedDF: DataFrame =
       new JSONTextToDataFrameReader(
-        sparkSession = sparkSession,
-        text = Seq(
+        sparkSession = sparkSession
+      ).read(text =
+        Seq(
           """
             |{
             |  "rewardApprovedMonthPeriod_from": "2021-09",
@@ -38,7 +40,7 @@ class FlattenSchemaTransformationSpec extends CoreSpec with DataFrameMatchers {
             |}
             |""".stripMargin
         )
-      ).read
+      )
 
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(expectedRestonomerResponseTransformedDF)
   }

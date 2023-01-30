@@ -11,9 +11,8 @@ class JSONResponseToDataFrameConverter(dataColumnName: Option[String] = None) ex
   )(implicit sparkSession: SparkSession): DataFrame = {
     val responseDF =
       new JSONTextToDataFrameReader(
-        sparkSession = sparkSession,
-        text = restonomerResponseBody
-      ).read
+        sparkSession = sparkSession
+      ).read(restonomerResponseBody)
 
     dataColumnName
       .map { dataColumn =>

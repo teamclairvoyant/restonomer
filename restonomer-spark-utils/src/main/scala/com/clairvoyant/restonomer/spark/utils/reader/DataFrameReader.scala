@@ -6,6 +6,6 @@ trait DataFrameReader {
 
   val sparkSession: SparkSession
 
-  def read: DataFrame
+  def read(text: Seq[String]): DataFrame
 
 }
