@@ -4,11 +4,11 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 
 class JSONTextToDataFrameReader(
     override val sparkSession: SparkSession,
-    val text: String
+    val text: Seq[String]
 ) extends DataFrameReader {
 
   import sparkSession.implicits._
 
-  override def read: DataFrame = sparkSession.read.json(Seq(text).toDS())
+  override def read: DataFrame = sparkSession.read.json(text.toDS())
 
 }

@@ -12,12 +12,13 @@ class ConvertColumnCaseTransformationSpec extends CoreSpec with DataFrameMatcher
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
       sparkSession = sparkSession,
-      text =
+      text = Seq(
         """
           |{
           |    "col_a": "1",
           |    "COL_B": "2"
           |}""".stripMargin
+      )
     ).read
 
   "transform() - with valid column name and case type" should "transform the column case" in {
