@@ -12,7 +12,7 @@ class JSONResponseToDataFrameConverter(dataColumnName: Option[String] = None) ex
     val responseDF =
       new JSONTextToDataFrameReader(
         sparkSession = sparkSession,
-        text = s"[${restonomerResponseBody.mkString(",")}]"
+        text = restonomerResponseBody
       ).read
 
     dataColumnName

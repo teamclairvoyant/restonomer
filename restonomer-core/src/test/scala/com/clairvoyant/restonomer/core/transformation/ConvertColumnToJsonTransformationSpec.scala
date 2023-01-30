@@ -11,7 +11,7 @@ class ConvertColumnToJsonTransformationSpec extends CoreSpec with DataFrameMatch
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
       sparkSession = sparkSession,
-      text =
+      text = Seq(
         """
           |{
           |    "col_A": "1",
@@ -22,6 +22,7 @@ class ConvertColumnToJsonTransformationSpec extends CoreSpec with DataFrameMatch
           |        }
           |    ]
           |}""".stripMargin
+      )
     ).read
 
   "transform() - with valid column name" should "transform the column to json" in {

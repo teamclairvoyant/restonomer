@@ -12,13 +12,14 @@ class ExplodeColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
       sparkSession = sparkSession,
-      text =
+      text = Seq(
         """
           |{
           |  "col_A": "val_A",
           |  "col_B": ["val_1", "val_2", "val_3"]
           |}
           |""".stripMargin
+      )
     ).read
 
   "transform() - with valid column name" should "explodeColumn the column into multiple rows" in {
