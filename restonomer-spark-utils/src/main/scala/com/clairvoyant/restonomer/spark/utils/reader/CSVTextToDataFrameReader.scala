@@ -4,15 +4,14 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 
 class CSVTextToDataFrameReader(
     override val sparkSession: SparkSession,
-    val text: String
+    containsHeader: Boolean = true
 ) extends DataFrameReader {
 
   import sparkSession.implicits._
 
-  override def read: DataFrame =
+  override def read(text: Seq[String]): DataFrame =
     sparkSession.read
-      .option("header", "true")
-      .option("sep", ",")
-      .csv(text.split("\\n").toSeq.toDS())
+      .option("header", containsHeader.toString)
+      .csv(text.toDS())
 
 }

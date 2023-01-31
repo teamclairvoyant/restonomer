@@ -9,8 +9,9 @@ class CastColumnsTransformationSpec extends CoreSpec {
 
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
-      sparkSession = sparkSession,
-      text =
+      sparkSession = sparkSession
+    ).read(text =
+      Seq(
         """
           |{
           |  "col_A": 5,
@@ -18,7 +19,8 @@ class CastColumnsTransformationSpec extends CoreSpec {
           |  "col_C": 3.4678
           |}
           |""".stripMargin
-    ).read
+      )
+    )
 
   "transform() - with columnDataTypeMapper" should "cast columns as specified in the mapper" in {
     restonomerResponseDF.schema.fields

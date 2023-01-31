@@ -9,8 +9,9 @@ class CastNestedColumnTransformationSpec extends CoreSpec with DataFrameMatchers
 
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
-      sparkSession = sparkSession,
-      text =
+      sparkSession = sparkSession
+    ).read(text =
+      Seq(
         """
           |{
           |  "col_A": "val_A",
@@ -20,7 +21,8 @@ class CastNestedColumnTransformationSpec extends CoreSpec with DataFrameMatchers
           |  }
           |}
           |""".stripMargin
-    ).read
+      )
+    )
 
   "transform() - with valid column name and ddl" should "cast the nested column" in {
     restonomerResponseDF.schema.fields
