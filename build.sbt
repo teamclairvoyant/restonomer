@@ -70,7 +70,10 @@ val restonomerSparkUtilsDependencies =
 val commonSettings = Seq(
   organization := organizationName,
   version := releaseVersion,
-  Keys.scalacOptions ++= scalacOptions
+  Keys.scalacOptions ++= scalacOptions,
+  githubOwner := "teamclairvoyant",
+  githubRepository := "restonomer",
+  githubTokenSource := TokenSource.GitConfig("github.token")
 )
 
 val restonomerCoreSettings =
@@ -79,6 +82,8 @@ val restonomerCoreSettings =
     Test / parallelExecution := false,
     IntegrationTest / parallelExecution := false
   ) ++ Defaults.itSettings
+
+val restonomerDocsSettings = commonSettings
 
 val restonomerSparkUtilsSettings =
   commonSettings ++ Seq(
@@ -97,6 +102,7 @@ lazy val `restonomer-core` = project
   .dependsOn(`restonomer-spark-utils` % "compile->compile;test->test;it->it;test->it")
 
 lazy val `restonomer-docs` = project
+  .settings(restonomerDocsSettings)
 
 lazy val `restonomer-spark-utils` = project
   .configs(IntegrationTest.extend(Test))
