@@ -174,6 +174,8 @@ object DataFrameTransformerImplicits {
 
     def selectColumns(columnNames: List[String]): DataFrame = df.select(columnNames.map(col): _*)
 
+    def filterRecords(filterCondition: String): DataFrame = df.filter(filterCondition)
+
   }
 
 }

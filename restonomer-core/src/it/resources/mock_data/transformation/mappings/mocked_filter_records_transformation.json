@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/filter-records-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_filter_records_transformation_response.json"
+  }
+}
