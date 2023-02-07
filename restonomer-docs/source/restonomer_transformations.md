@@ -567,7 +567,7 @@ The transformed response will select the desired column from dataframe as shown 
 
 ## FilterRecords
 
-It lets the user filter records from the response.
+It lets the user filter records from the response based on a provided filter condition.
 
 This transformation expects user to provide below inputs:
 
@@ -596,15 +596,17 @@ Then, user can configure the `FilterRecords` transformation in the below manner:
 ```hocon
 {
   type = "filter-records"
-  filter-condition= "marks > 20"
+  filter-condition = "marks > 20"
   }
 ```
 
 The transformed response will have filtered records as desired:
 
 ```json
-{
-  "student_name": "Bob",
-  "marks": 30
-}
+[
+  {
+    "student_name": "Bob",
+    "marks": 30
+  }
+]
 ```

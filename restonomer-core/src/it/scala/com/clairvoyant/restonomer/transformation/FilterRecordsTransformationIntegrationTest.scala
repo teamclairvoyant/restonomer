@@ -6,7 +6,7 @@ class FilterRecordsTransformationIntegrationTest extends IntegrationTestDependen
 
   override val mappingsDirectory: String = "transformation"
 
-  it should "filter records from restonomer response dataframe as specified in the transformation mapper" in {
+  it should "filter records from restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_filter_records_transformation.conf")
     outputDF should matchExpectedDataFrame(expectedDF("expected_filter_records_transformation.json"))
   }
