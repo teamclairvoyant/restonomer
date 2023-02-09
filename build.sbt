@@ -15,7 +15,7 @@ val organizationName = "com.clairvoyant.restonomer"
 val releaseVersion = "1.0"
 
 val pureConfigVersion = "0.17.2"
-val sttpVersion = "3.8.9"
+val sttpVersion = "3.8.11"
 val scalaTestVersion = "3.2.15"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.1.2"
@@ -89,7 +89,7 @@ val restonomerSparkUtilsSettings =
 
 lazy val restonomer = (project in file("."))
   .settings(commonSettings)
-  .aggregate(`restonomer-core`, `restonomer-spark-utils`)
+  .aggregate(`restonomer-core`, `restonomer-docs`, `restonomer-spark-utils`)
 
 lazy val `restonomer-core` = project
   .configs(IntegrationTest)
