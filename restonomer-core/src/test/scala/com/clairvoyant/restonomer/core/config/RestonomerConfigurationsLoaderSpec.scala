@@ -3,7 +3,6 @@ package com.clairvoyant.restonomer.core.config
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
-import pureconfig.generic.auto._
 
 import java.io.FileNotFoundException
 

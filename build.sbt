@@ -14,12 +14,12 @@ Global / excludeLintKeys += Keys.parallelExecution
 val organizationName = "com.clairvoyant.restonomer"
 val releaseVersion = "1.0"
 
-val pureConfigVersion = "0.17.2"
+val zioConfigVersion = "3.0.7"
 val sttpVersion = "3.8.11"
 val scalaTestVersion = "3.2.15"
 val wireMockVersion = "2.27.2"
-val jwtCoreVersion = "9.1.2"
-val sparkVersion = "3.3.0"
+val jwtCoreVersion = "9.2.0"
+val sparkVersion = "3.3.2"
 val catsVersion = "2.9.0"
 val jsonPathVersion = "2.7.0"
 val odelayVersion = "0.4.0"
@@ -28,7 +28,11 @@ lazy val scalacOptions = Seq("-Wunused")
 
 // ----- TOOL DEPENDENCIES ----- //
 
-val pureConfigDependencies = Seq("com.github.pureconfig" %% "pureconfig" % pureConfigVersion)
+val zioConfigDependencies = Seq(
+  "dev.zio" %% "zio-config" % zioConfigVersion,
+  "dev.zio" %% "zio-config-magnolia" % zioConfigVersion,
+  "dev.zio" %% "zio-config-typesafe" % zioConfigVersion
+)
 
 val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
 
@@ -52,7 +56,7 @@ val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelay
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
-  pureConfigDependencies ++
+  zioConfigDependencies ++
     sttpDependencies ++
     jwtDependencies ++
     jsonPathDependencies ++

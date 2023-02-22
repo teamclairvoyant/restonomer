@@ -5,7 +5,8 @@ import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
-import pureconfig.generic.auto._
+import zio.config._
+import zio.config.magnolia._
 
 import java.io.FileNotFoundException
 
@@ -35,6 +36,8 @@ class RestonomerContext(
   private val CHECKPOINTS_CONFIG_DIRECTORY_PATH = s"$restonomerContextDirectoryPath/checkpoints"
 
   private val configVariablesFromFile = {
+    implicit val configVariablesDescriptor: ConfigDescriptor[Map[String, String]] = descriptor[Map[String, String]]
+
     implicit val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
       configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
     )
