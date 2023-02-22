@@ -7,7 +7,8 @@ case class ApplicationConfig(sparkConfigs: Option[Map[String, String]])
 
 object ApplicationConfig {
 
-  implicit val applicationConfigDescriptor: ConfigDescriptor[ApplicationConfig] = descriptor[ApplicationConfig]
-    .mapKey(toKebabCase)
+  implicit val applicationConfigDescriptor: ConfigDescriptor[ApplicationConfig] =
+    descriptorForPureConfig[ApplicationConfig]
+      .mapKey(toKebabCase)
 
 }
