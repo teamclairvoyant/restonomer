@@ -1,9 +1,7 @@
 package com.clairvoyant.restonomer.core.config
 
-import zio.Runtime.default
-import zio.Unsafe
-import zio.config._
 import zio.config.typesafe._
+import zio.{ConfigProvider, _}
 
 import java.io.File
 import scala.annotation.tailrec
@@ -11,23 +9,23 @@ import scala.annotation.tailrec
 object RestonomerConfigurationsLoader {
 
   def loadConfigFromFile[C](configFilePath: String)(
-      implicit configDescriptor: ConfigDescriptor[C],
+      implicit config: Config[C],
       configVariablesSubstitutor: ConfigVariablesSubstitutor
   ): C =
     Unsafe.unsafe(implicit u => {
-      default.unsafe
+      zio.Runtime.default.unsafe
         .run(
-          read(
-            configDescriptor from ConfigSource.fromHoconString(
+          ConfigProvider
+            .fromHoconString(
               configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath))
             )
-          )
+            .load(config)
         )
         .getOrThrowFiberFailure()
     })
 
   def loadConfigsFromDirectory[C](configDirectoryPath: String)(
-      implicit configDescriptor: ConfigDescriptor[C],
+      implicit config: Config[C],
       configVariablesSubstitutor: ConfigVariablesSubstitutor
   ): List[C] = {
     @tailrec
