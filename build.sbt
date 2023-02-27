@@ -1,4 +1,4 @@
-ThisBuild / scalaVersion := "2.13.8"
+ThisBuild / scalaVersion := "3.2.2"
 
 inThisBuild(
   List(
@@ -24,8 +24,6 @@ val catsVersion = "2.9.0"
 val jsonPathVersion = "2.7.0"
 val odelayVersion = "0.4.0"
 
-lazy val scalacOptions = Seq("-Wunused")
-
 // ----- TOOL DEPENDENCIES ----- //
 
 val zioConfigDependencies = Seq(
@@ -46,6 +44,8 @@ val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion
 )
+  .map(_ excludeAll ("org.scala-lang.modules", "scala-xml"))
+  .map(_.cross(CrossVersion.for3Use2_13))
 
 val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
 
@@ -73,8 +73,7 @@ val restonomerSparkUtilsDependencies =
 
 val commonSettings = Seq(
   organization := organizationName,
-  version := releaseVersion,
-  Keys.scalacOptions ++= scalacOptions
+  version := releaseVersion
 )
 
 val restonomerCoreSettings =
