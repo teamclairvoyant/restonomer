@@ -176,6 +176,18 @@ object DataFrameTransformerImplicits {
 
     def filterRecords(filterCondition: String): DataFrame = df.filter(filterCondition)
 
+    def splitColumn(
+        fromColumn: String,
+        delimeter: String,
+        toColumns: Map[String, Int]
+    ): DataFrame =
+      toColumns.foldLeft(df) { (df, columnNamePositionPair) =>
+        df.withColumn(
+          columnNamePositionPair._1,
+          split(col(fromColumn), delimeter).getItem(columnNamePositionPair._2)
+        )
+      }
+
   }
 
 }

@@ -53,6 +53,12 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
                     subject = tokenSubstitutor.substitute(subject),
                     secretKey = tokenSubstitutor.substitute(secretKey)
                   )
+
+                case digestAuthentication @ DigestAuthentication(userName, password) =>
+                  digestAuthentication.copy(
+                    userName = tokenSubstitutor.substitute(userName),
+                    password = tokenSubstitutor.substitute(password)
+                  )
               }
 
             }

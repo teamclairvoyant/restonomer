@@ -43,6 +43,53 @@ data = {
 
 # Types of restonomer transformations
 
+## SelectColumns
+
+It lets the user select a list of columns from the dataframe.
+
+This transformation expects user to provide below inputs:
+
+| Input Arguments | Mandatory | Default Value | Description                                |
+|:----------------|:---------:|:-------------:|:-------------------------------------------|
+| column-names    |    Yes    |       -       | It is the list of columns required by user |
+
+For example, consider we have below restonomer response in json:
+
+```json
+{
+  "col_A": 5,
+  "col_B": 4,
+  "col_C": 3.4678
+}
+```
+
+Now, suppose the requirement is to select 2 columns from dataframe :
+
+```text
+
+  "col_B": 4,
+  "col_C": 3.4678
+
+```
+
+Then, user can configure the `SelectColumns` transformation in the below manner:
+
+```hocon
+{
+  type = "select-columns"
+  column-names= ["col_B", "col_C"]
+  }
+```
+
+The transformed response will select the desired column from dataframe as shown below.
+
+```json
+{
+  "col_B": 4,
+  "col_C": 3.4678
+}
+```
+
 ## AddLiteralColumn
 
 It lets the user add a new column with a literal value of the desired data type.
@@ -102,6 +149,57 @@ User can configure the `ExplodeColumn` transformation in the below manner:
 {
   type = "explode-column"
   column-name = "col_A"
+}
+```
+
+## CastColumns
+
+It lets the user cast the data type of multiple columns to the desired different types at once.
+
+This transformation expects user to provide below inputs:
+
+| Input Arguments         | Mandatory | Default Value | Description                                               |
+|:------------------------|:---------:|:-------------:|:----------------------------------------------------------|
+| column-data-type-mapper |    Yes    |       -       | It defines the mapping of column to its desired data type |
+
+For example, consider we have below restonomer response in json:
+
+```json
+{
+  "col_A": 5,
+  "col_B": 4,
+  "col_C": 3.4678
+}
+```
+
+Now, suppose the requirement is to cast above columns into below data types:
+
+```text
+col_A -> string
+col_B -> double
+col_C -> decimal type with precision 19 and scale 2
+```
+
+Then, user can configure the `CastColumns` transformation in the below manner:
+
+```hocon
+{
+  type = "cast-columns"
+  column-data-type-mapper = {
+    "col_A" = "string"
+    "col_B" = "double"
+    "col_C" = "decimal(19,2)"
+  }
+}
+```
+
+The transformed response will now have the columns with the desired data types:
+
+```json
+{
+  "col_A": "5",
+  "col_B": 4.0,
+  "col_C": 3.47
 }
 ```
 
@@ -187,57 +285,6 @@ The transformed response will now have the flat schema as below:
 {
   "rewardApprovedMonthPeriod_from": "2021-09",
   "rewardApprovedMonthPeriod_to": "2021-10"
-}
-```
-
-## CastColumns
-
-It lets the user cast the data type of multiple columns to the desired different types at once.
-
-This transformation expects user to provide below inputs:
-
-| Input Arguments         | Mandatory | Default Value | Description                                               |
-|:------------------------|:---------:|:-------------:|:----------------------------------------------------------|
-| column-data-type-mapper |    Yes    |       -       | It defines the mapping of column to its desired data type |
-
-For example, consider we have below restonomer response in json:
-
-```json
-{
-  "col_A": 5,
-  "col_B": 4,
-  "col_C": 3.4678
-}
-```
-
-Now, suppose the requirement is to cast above columns into below data types:
-
-```text
-col_A -> string
-col_B -> double
-col_C -> decimal type with precision 19 and scale 2
-```
-
-Then, user can configure the `CastColumns` transformation in the below manner:
-
-```hocon
-{
-  type = "cast-columns"
-  column-data-type-mapper = {
-    "col_A" = "string"
-    "col_B" = "double"
-    "col_C" = "decimal(19,2)"
-  }
-}
-```
-
-The transformed response will now have the columns with the desired data types:
-
-```json
-{
-  "col_A": "5",
-  "col_B": 4.0,
-  "col_C": 3.47
 }
 ```
 
@@ -378,6 +425,47 @@ The transformed response will have the replaced value or pattern in the desired 
 }
 ```
 
+## RenameColumns
+
+It lets the user rename one or multiple column(s) at once.
+
+This transformation expects user to provide below inputs:
+
+| Input Arguments      | Mandatory | Default Value | Description                                                    |
+|:---------------------|:---------:|:-------------:|:---------------------------------------------------------------|
+| rename-column-mapper |    Yes    |       -       | It defines the mapping of the existing and desired column name |
+
+Now, suppose the requirement is to rename above columns like below:
+
+```text
+col_A -> test_col_A
+col_B -> COL_b
+col_C -> my_column
+```
+
+Then, user can configure the `RenameColumns` transformation in the below manner:
+
+```hocon
+{
+  type = "rename-columns"
+  rename-column-mapper = {
+    "col_A" = "test_col_A"
+    "col_B" = "COL_b"
+    "col_C" = "my_column"
+  }
+}
+```
+
+The transformed response will now have the columns with the desired name:
+
+```json
+{
+  "test_col_A": 5,
+  "COL_b": 4,
+  "my_column": 3.4678
+}
+```
+
 ## AddPrefixToColumnNames
 
 It lets the user add a desired prefix to select/all column names.
@@ -426,47 +514,6 @@ Note that, underscore character (_) will get added automatically, separating pre
   "test_col_B": 4,
   "col_C": 3
  }
-```
-
-## RenameColumns
-
-It lets the user rename one or multiple column(s) at once.
-
-This transformation expects user to provide below inputs:
-
-| Input Arguments      | Mandatory | Default Value | Description                                                    |
-|:---------------------|:---------:|:-------------:|:---------------------------------------------------------------|
-| rename-column-mapper |    Yes    |       -       | It defines the mapping of the existing and desired column name |
-
-Now, suppose the requirement is to rename above columns like below:
-
-```text
-col_A -> test_col_A
-col_B -> COL_b
-col_C -> my_column
-```
-
-Then, user can configure the `RenameColumns` transformation in the below manner:
-
-```hocon
-{
-  type = "rename-columns"
-  rename-column-mapper = {
-    "col_A" = "test_col_A"
-    "col_B" = "COL_b"
-    "col_C" = "my_column"
-  }
-}
-```
-
-The transformed response will now have the columns with the desired name:
-
-```json
-{
-  "test_col_A": 5,
-  "COL_b": 4,
-  "my_column": 3.4678
-}
 ```
 
 ## AddSuffixToColumnNames
@@ -518,53 +565,6 @@ Note that, underscore character ('_') will get added automatically, separating s
 }
 ```
 
-## SelectColumns
-
-It lets the user select a list of columns from the dataframe.
-
-This transformation expects user to provide below inputs:
-
-| Input Arguments | Mandatory | Default Value | Description                                |
-|:----------------|:---------:|:-------------:|:-------------------------------------------|
-| column-names    |    Yes    |       -       | It is the list of columns required by user |
-
-For example, consider we have below restonomer response in json:
-
-```json
-{
-  "col_A": 5,
-  "col_B": 4,
-  "col_C": 3.4678
-}
-```
-
-Now, suppose the requirement is to select 2 columns from dataframe :
-
-```text
-
-  "col_B": 4,
-  "col_C": 3.4678
-
-```
-
-Then, user can configure the `SelectColumns` transformation in the below manner:
-
-```hocon
-{
-  type = "select-columns"
-  column-names= ["col_B", "col_C"]
-  }
-```
-
-The transformed response will select the desired column from dataframe as shown below.
-
-```json
-{
-  "col_B": 4,
-  "col_C": 3.4678
-}
-```
-
 ## FilterRecords
 
 It lets the user filter records from the response based on a provided filter condition.
@@ -609,4 +609,66 @@ The transformed response will have filtered records as desired:
     "marks": 30
   }
 ]
+```
+
+## SplitColumn
+
+This transformation allows user to create new columns using the value of another column that is a delimeter separated 
+string.
+
+This transformation expects user to provide below inputs:
+
+| Input Arguments | Mandatory | Default Value | Description                                                                                                         |
+|:----------------|:---------:|:-------------:|:--------------------------------------------------------------------------------------------------------------------|
+| from-column     |    Yes    |       -       | Name of the source column having delimeter separated string as a value from which new columns need to be created    |
+| delimeter       |    Yes    |       -       | The delimeter by which a string is separated                                                                        |
+| to-columns      |    Yes    |       -       | It is a map of new column name against the position of the value that is needed from the delimeter separated string |
+
+
+For example, consider we have below restonomer response in json:
+
+```json
+{
+  "address": "Apt-123,XYZ Building,Pune,Maharashtra"
+}
+```
+
+Now, suppose the requirement is to create new columns `apt_number`, `society_name`, `city` and `state` from the `address` 
+column as shown below:
+
+```json
+{
+ "apt_number": "Apt-123",
+ "society_name": "XYZ Building",
+ "city": "Pune",
+ "state": "Maharashtra"
+}
+```
+
+Then, user can configure the `SplitColumn` transformation in the below manner:
+
+```hocon
+{
+  type = "split-column"
+  from-column = "address"
+  delimeter = ","
+  to-columns = {
+    "apt_number" = 0
+    "society_name" = 1
+    "city" = 2
+    "state" = 3
+  }
+}
+```
+
+The transformed response will have filtered records as desired:
+
+```json
+{
+  "address": "Apt-123,XYZ Building,Pune,Maharashtra",
+  "apt_number": "Apt-123",
+  "society_name": "XYZ Building",
+  "city": "Pune",
+  "state": "Maharashtra"
+}
 ```
