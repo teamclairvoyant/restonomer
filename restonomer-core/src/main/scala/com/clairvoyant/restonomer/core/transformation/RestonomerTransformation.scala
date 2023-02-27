@@ -130,11 +130,11 @@ case class SelectColumns(
 }
 
 case class CastColumnsBasedOnPrefix(
-    columnNames: List[String],
+    prefixList: List[String],
     dataTypeToCast: String
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.castColumnsBasedOnPrefix(columnNames, dataTypeToCast)
+    restonomerResponseDF.castColumnsBasedOnPrefix(prefixList, dataTypeToCast)
 
 }
