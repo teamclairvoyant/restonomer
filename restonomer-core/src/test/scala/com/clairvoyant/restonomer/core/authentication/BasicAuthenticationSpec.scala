@@ -9,22 +9,29 @@ class BasicAuthenticationSpec extends CoreSpec {
   "validateCredentials - with empty credentials" should "throw RestonomerException" in {
     val authentication = BasicAuthentication()
 
-    the[RestonomerException] thrownBy authentication.validateCredentials() should have message
+    val thrown = the[RestonomerException] thrownBy authentication.validateCredentials()
+
+    thrown.getMessage should equal(
       "The provided credentials are invalid. The credentials should contain either basic-token or both user-name & password."
+    )
   }
 
   "validateCredentials - with only user-name" should "throw RestonomerException" in {
     val authentication = BasicAuthentication(userName = Some("test_user"))
 
-    the[RestonomerException] thrownBy authentication.validateCredentials() should have message
-      "The provided credentials are invalid. The credentials should contain the password."
+    val thrown = the[RestonomerException] thrownBy authentication.validateCredentials()
+
+    thrown.getMessage should equal("The provided credentials are invalid. The credentials should contain the password.")
   }
 
   "validateCredentials - with only password" should "throw RestonomerException" in {
     val authentication = BasicAuthentication(password = Some("test_password"))
 
-    the[RestonomerException] thrownBy authentication.validateCredentials() should have message
+    val thrown = the[RestonomerException] thrownBy authentication.validateCredentials()
+
+    thrown.getMessage should equal(
       "The provided credentials are invalid. The credentials should contain the user-name."
+    )
   }
 
   "validateCredentials - with only basic-token" should "not throw RestonomerException" in {

@@ -9,8 +9,11 @@ class BearerAuthenticationSpec extends CoreSpec {
   "validateCredentials - with empty credentials" should "throw RestonomerException" in {
     val authentication = BearerAuthentication(bearerToken = "")
 
-    the[RestonomerException] thrownBy authentication.validateCredentials() should have message
+    val thrown = the[RestonomerException] thrownBy authentication.validateCredentials()
+
+    thrown.getMessage should equal(
       "The provided credentials are invalid. The credentials should contain valid bearer-token."
+    )
   }
 
   "validateCredentials - with bearer-token" should "not throw RestonomerException" in {
