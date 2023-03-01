@@ -122,7 +122,7 @@ case class JWTAuthentication(
     tokenExpiresIn: Long = 1800
 ) extends RestonomerAuthentication {
 
-  implicit val clock: Clock = Clock.systemDefaultZone()
+  given clock: Clock = Clock.systemDefaultZone()
 
   override def validateCredentials(): Unit = {
     if (subject.isBlank || secretKey.isBlank)

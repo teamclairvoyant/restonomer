@@ -6,7 +6,7 @@ import sttp.client3.Request
 case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {
 
   def withQueryParams(queryParams: Map[String, String])(
-      implicit tokenFunction: Option[String => String]
+      using tokenFunction: Option[String => String]
   ): RestonomerRequestBuilder =
     copy(httpRequest =
       httpRequest.method(
@@ -21,7 +21,7 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
 
   def withAuthentication(
       authenticationConfig: Option[RestonomerAuthentication]
-  )(implicit tokenFunction: Option[String => String]): RestonomerRequestBuilder =
+  )(using tokenFunction: Option[String => String]): RestonomerRequestBuilder =
     copy(httpRequest =
       authenticationConfig
         .map { restonomerAuthentication =>

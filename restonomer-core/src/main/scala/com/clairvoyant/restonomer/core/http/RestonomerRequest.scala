@@ -10,7 +10,7 @@ object RestonomerRequest {
 
   def builder(
       requestConfig: RequestConfig
-  )(implicit tokenFunction: Option[String => String] = None): RestonomerRequestBuilder =
+  )(using tokenFunction: Option[String => String] = None): RestonomerRequestBuilder =
     RestonomerRequestBuilder(
       basicRequest.method(
         method = Method(requestConfig.method),

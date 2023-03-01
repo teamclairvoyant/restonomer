@@ -1,12 +1,12 @@
 package com.clairvoyant.restonomer.core.app
 
 import com.clairvoyant.restonomer.core.config.ConfigVariablesSubstitutor
-import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
+import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader.*
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
 import zio.Config
-import zio.config.magnolia._
+import zio.config.magnolia.*
 
 import java.io.FileNotFoundException
 
@@ -35,10 +35,11 @@ class RestonomerContext(
   private val APPLICATION_CONFIG_FILE_PATH = s"$restonomerContextDirectoryPath/application.conf"
   private val CHECKPOINTS_CONFIG_DIRECTORY_PATH = s"$restonomerContextDirectoryPath/checkpoints"
 
-  private val configVariablesFromFile = {
-    implicit val configVariablesConfig: Config[Map[String, String]] = deriveConfig[Map[String, String]]
+  private val configVariablesFromFile =
 
-    implicit val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
+    given configVariablesConfig: Config[Map[String, String]] = deriveConfig[Map[String, String]]
+
+    given configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
       configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
     )
 
@@ -46,9 +47,11 @@ class RestonomerContext(
       loadConfigFromFile[Map[String, String]](CONFIG_VARIABLES_FILE_PATH)
     else
       Map[String, String]()
-  }
 
-  implicit private val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
+  end configVariablesFromFile
+
+
+  given configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
     configVariablesFromFile = configVariablesFromFile,
     configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
   )

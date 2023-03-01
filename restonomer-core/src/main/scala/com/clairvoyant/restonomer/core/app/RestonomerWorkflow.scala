@@ -1,11 +1,11 @@
 package com.clairvoyant.restonomer.core.app
 
 import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders
-import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders._
-import com.clairvoyant.restonomer.core.converter._
+import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders.*
+import com.clairvoyant.restonomer.core.converter.*
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.{RestonomerRequest, RestonomerResponse}
-import com.clairvoyant.restonomer.core.model._
+import com.clairvoyant.restonomer.core.model.*
 import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersistence}
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import com.jayway.jsonpath.JsonPath
@@ -20,7 +20,7 @@ import scala.concurrent.{Await, Future}
 class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
-    implicit val sttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
+    given sttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
 
     val tokenFunction = checkpointConfig.token
       .map { tokenConfig =>
@@ -39,7 +39,7 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
     val dataRestonomerRequest =
       RestonomerRequest
-        .builder(checkpointConfig.data.dataRequest)(tokenFunction)
+        .builder(checkpointConfig.data.dataRequest)(using tokenFunction)
         .build
 
     val dataRestonomerResponse = RestonomerResponse.fetchFromRequest(
@@ -123,7 +123,7 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 private object RestonomerWorkflow {
 
   def apply(applicationConfig: ApplicationConfig): RestonomerWorkflow = {
-    implicit val sparkSession: SparkSession = SparkSession
+    given sparkSession: SparkSession = SparkSession
       .builder()
       .config(
         applicationConfig.sparkConfigs

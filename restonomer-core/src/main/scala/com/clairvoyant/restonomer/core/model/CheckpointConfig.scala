@@ -1,11 +1,11 @@
 package com.clairvoyant.restonomer.core.model
 
 import zio.Config
-import zio.config._
-import zio.config.magnolia._
+import zio.config.*
+import zio.config.magnolia.*
 
 object CheckpointConfig {
-  implicit val config: Config[CheckpointConfig] = deriveConfig[CheckpointConfig].mapKey(toKebabCase)
+  given config: Config[CheckpointConfig] = deriveConfig[CheckpointConfig].mapKey(toKebabCase)
 }
 
 case class CheckpointConfig(

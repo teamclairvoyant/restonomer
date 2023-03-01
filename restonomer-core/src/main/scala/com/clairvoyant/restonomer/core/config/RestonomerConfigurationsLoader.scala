@@ -9,7 +9,7 @@ import scala.annotation.tailrec
 object RestonomerConfigurationsLoader {
 
   def loadConfigFromFile[C](configFilePath: String)(
-      implicit config: Config[C],
+      using config: Config[C],
       configVariablesSubstitutor: ConfigVariablesSubstitutor
   ): C =
     Unsafe.unsafe(implicit u => {
@@ -25,7 +25,7 @@ object RestonomerConfigurationsLoader {
     })
 
   def loadConfigsFromDirectory[C](configDirectoryPath: String)(
-      implicit config: Config[C],
+      using config: Config[C],
       configVariablesSubstitutor: ConfigVariablesSubstitutor
   ): List[C] = {
     @tailrec

@@ -24,7 +24,7 @@ object RestonomerResponse {
       restonomerRequest: RestonomerRequest,
       retryConfig: RetryConfig,
       restonomerPagination: Option[RestonomerPagination]
-  )(implicit sttpBackend: SttpBackend[Future, Any]): RestonomerResponse = {
+  )(using sttpBackend: SttpBackend[Future, Any]): RestonomerResponse = {
     def getPages(
         restonomerRequest: RestonomerRequest,
         httpResponseBody: Future[Seq[String]]
@@ -74,7 +74,7 @@ object RestonomerResponse {
       statusCodesToRetry: List[StatusCode],
       maxRetries: Int,
       currentRetryAttemptNumber: Int = 0
-  )(implicit sttpBackend: SttpBackend[Future, Any]): Future[Seq[String]] = {
+  )(using sttpBackend: SttpBackend[Future, Any]): Future[Seq[String]] = {
     restonomerRequest.httpRequest
       .send(sttpBackend)
       .flatMap {
