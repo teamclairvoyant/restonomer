@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.config
 
-import zio.config.typesafe._
-import zio.{ConfigProvider, _}
+import zio.config.typesafe.*
+import zio.{ConfigProvider, *}
 
 import java.io.File
 import scala.annotation.tailrec
