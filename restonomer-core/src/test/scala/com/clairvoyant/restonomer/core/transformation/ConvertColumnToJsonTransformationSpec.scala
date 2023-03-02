@@ -6,7 +6,6 @@ import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import org.apache.spark.sql.DataFrame
 
 class ConvertColumnToJsonTransformationSpec extends CoreSpec with DataFrameMatchers {
-  import sparkSession.implicits._
 
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
@@ -31,8 +30,18 @@ class ConvertColumnToJsonTransformationSpec extends CoreSpec with DataFrameMatch
       columnName = "col_B"
     )
 
-    val expectedRestonomerResponseTransformedDF = Seq(("1", """[{"ZipCodeType":"STANDARD","Zipcode":704}]"""))
-      .toDF("col_A", "col_B")
+    val expectedRestonomerResponseTransformedDF: DataFrame =
+      new JSONTextToDataFrameReader(
+        sparkSession = sparkSession
+      ).read(text =
+        Seq(
+          """
+            |{
+            |    "col_A": "1",
+            |    "col_B": "[{"ZipCodeType":"STANDARD","Zipcode":704}]"
+            |}""".stripMargin
+        )
+      )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 

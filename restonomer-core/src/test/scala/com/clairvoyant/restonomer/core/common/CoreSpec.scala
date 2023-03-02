@@ -10,7 +10,7 @@ import sttp.model.Method
 
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
 
-  implicit lazy val sparkSession: SparkSession = SparkSession
+  given sparkSession: SparkSession = SparkSession
     .builder()
     .master("local[*]")
     .getOrCreate()
