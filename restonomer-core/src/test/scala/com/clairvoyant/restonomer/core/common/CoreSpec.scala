@@ -10,10 +10,11 @@ import sttp.model.Method
 
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
 
-  given sparkSession: SparkSession = SparkSession
-    .builder()
-    .master("local[*]")
-    .getOrCreate()
+  given sparkSession: SparkSession =
+    SparkSession
+      .builder()
+      .master("local[*]")
+      .getOrCreate()
 
   val resourcesPath = "restonomer-core/src/test/resources"
   val url = "/test_url"

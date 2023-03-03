@@ -32,24 +32,24 @@ class FileSystemPersistenceSpec extends CoreSpec {
 
   "persist() - with proper format and path" should
     "save the dataframe to the file in the desired format at the desired path" in {
-    val fileSystemPersistence = FileSystem(
-      fileFormat = "JSON",
-      filePath = dataFrameToFileSystemWriterOutputDirPath
-    )
-
-    fileSystemPersistence.persist(
-      restonomerResponseDF,
-      new DataFrameToFileSystemWriter(
-        sparkSession = sparkSession,
-        fileFormat = fileSystemPersistence.fileFormat,
-        filePath = fileSystemPersistence.filePath
+      val fileSystemPersistence = FileSystem(
+        fileFormat = "JSON",
+        filePath = dataFrameToFileSystemWriterOutputDirPath
       )
-    )
 
-    sparkSession.read.json(dataFrameToFileSystemWriterOutputDirPath) should matchExpectedDataFrame(
-      restonomerResponseDF
-    )
-  }
+      fileSystemPersistence.persist(
+        restonomerResponseDF,
+        new DataFrameToFileSystemWriter(
+          sparkSession = sparkSession,
+          fileFormat = fileSystemPersistence.fileFormat,
+          filePath = fileSystemPersistence.filePath
+        )
+      )
+
+      sparkSession.read.json(dataFrameToFileSystemWriterOutputDirPath) should matchExpectedDataFrame(
+        restonomerResponseDF
+      )
+    }
 
   override def afterAll(): Unit = FileUtils.deleteDirectory(new File(dataFrameToFileSystemWriterOutputDirPath))
 

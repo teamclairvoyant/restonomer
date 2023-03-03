@@ -38,9 +38,10 @@ class RestonomerContext(
   private val configVariablesFromFile = {
     given configVariablesConfig: Config[Map[String, String]] = deriveConfig[Map[String, String]]
 
-    given configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
-      configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
-    )
+    given configVariablesSubstitutor: ConfigVariablesSubstitutor =
+      ConfigVariablesSubstitutor(
+        configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
+      )
 
     if (fileExists(CONFIG_VARIABLES_FILE_PATH))
       loadConfigFromFile[Map[String, String]](CONFIG_VARIABLES_FILE_PATH)
@@ -48,10 +49,11 @@ class RestonomerContext(
       Map[String, String]()
   }
 
-  given configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
-    configVariablesFromFile = configVariablesFromFile,
-    configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
-  )
+  given configVariablesSubstitutor: ConfigVariablesSubstitutor =
+    ConfigVariablesSubstitutor(
+      configVariablesFromFile = configVariablesFromFile,
+      configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
+    )
 
   private val applicationConfig =
     if (fileExists(APPLICATION_CONFIG_FILE_PATH))

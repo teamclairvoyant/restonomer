@@ -82,7 +82,7 @@ class AddPrefixToColumnNamesTransformationSpec extends CoreSpec with DataFrameMa
       prefix = "test",
       columnNames = List("col_A", "fake_col")
     )
-    
+
     val expectedRestonomerResponseTransformedDF: DataFrame =
       new JSONTextToDataFrameReader(
         sparkSession = sparkSession
