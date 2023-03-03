@@ -86,7 +86,7 @@ class AddLiteralColumnTransformationSpec extends CoreSpec with DataFrameMatchers
     val restonomerTransformation = AddLiteralColumn(
       columnName = "col_D",
       columnValue = "1",
-      columnDataType = Some("int")
+      columnDataType = Some("long")
     )
 
     val expectedRestonomerResponseTransformedDF: DataFrame =

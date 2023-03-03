@@ -38,7 +38,7 @@ class ConvertColumnToJsonTransformationSpec extends CoreSpec with DataFrameMatch
           """
             |{
             |    "col_A": "1",
-            |    "col_B": "[{"ZipCodeType":"STANDARD","Zipcode":704}]"
+            |    "col_B": "[{\"ZipCodeType\":\"STANDARD\",\"Zipcode\":704}]"
             |}""".stripMargin
         )
       )

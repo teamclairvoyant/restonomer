@@ -145,7 +145,7 @@ class RenameColumnsTransformationSpec extends CoreSpec with DataFrameMatchers {
             |{
             |  "COL_a": "val_A",
             |  "COL_b": "val_B",
-            |  "col_C": "val_C"
+            |  "col_c": "val_C"
             |}
             |""".stripMargin
         )
