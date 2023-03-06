@@ -88,6 +88,8 @@ val restonomerSparkUtilsSettings =
     libraryDependencies ++= restonomerSparkUtilsDependencies
   )
 
+`restonomer-core` / Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.ScalaLibrary
+
 // ----- PROJECTS ----- //
 
 lazy val restonomer = (project in file("."))
