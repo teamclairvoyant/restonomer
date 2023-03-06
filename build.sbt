@@ -1,12 +1,5 @@
 ThisBuild / scalaVersion := "3.2.2"
 
-inThisBuild(
-  List(
-    semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision
-  )
-)
-
 Global / excludeLintKeys += Keys.parallelExecution
 
 // ----- VARIABLES ----- //
@@ -80,7 +73,6 @@ val restonomerCoreSettings =
   commonSettings ++ Seq(
     libraryDependencies ++= restonomerCoreDependencies,
     Test / parallelExecution := false,
-    Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Flat,
     IntegrationTest / parallelExecution := false
   ) ++ Defaults.itSettings
 
