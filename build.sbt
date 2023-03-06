@@ -80,6 +80,7 @@ val restonomerCoreSettings =
   commonSettings ++ Seq(
     libraryDependencies ++= restonomerCoreDependencies,
     Test / parallelExecution := false,
+    Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Flat,
     IntegrationTest / parallelExecution := false
   ) ++ Defaults.itSettings
 
@@ -87,8 +88,6 @@ val restonomerSparkUtilsSettings =
   commonSettings ++ Seq(
     libraryDependencies ++= restonomerSparkUtilsDependencies
   )
-
-`restonomer-core` / Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.ScalaLibrary
 
 // ----- PROJECTS ----- //
 
