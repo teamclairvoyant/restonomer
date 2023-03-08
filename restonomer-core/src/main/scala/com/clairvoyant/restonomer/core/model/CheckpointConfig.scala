@@ -11,5 +11,5 @@ case class CheckpointConfig(
 )
 
 object CheckpointConfig {
-  implicit val config: Config[CheckpointConfig] = deriveConfig[CheckpointConfig].mapKey(toKebabCase)
+  implicit val config: Config[CheckpointConfig] = deriveConfig[CheckpointConfig].toKebabCase
 }
