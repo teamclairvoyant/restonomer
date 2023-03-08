@@ -2,7 +2,9 @@ package com.clairvoyant.restonomer.core.persistence
 
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameWriter
 import org.apache.spark.sql.DataFrame
+import zio.config.derivation._
 
+@nameWithLabel
 sealed trait RestonomerPersistence {
 
   def persist(restonomerResponseDF: DataFrame, dataFrameWriter: DataFrameWriter): Unit =

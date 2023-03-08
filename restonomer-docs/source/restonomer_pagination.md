@@ -59,7 +59,7 @@ Then, the pagination details can be captured in the checkpoint file in the below
 
 ```hocon
     pagination = {
-      type = "page-number-based-pagination"
+      type = "PageNumberBasedPagination"
       total-number-of-records-attribute = "$.data.total.numberItems"
       current-page-number-attribute = "$.data.page"
       max-records-per-page = 1
@@ -81,12 +81,12 @@ data = {
 
   data-response = {
     body = {
-      type = "json"
+      type = "JSON"
       data-column-name = "data.items"
     }
 
     pagination = {
-      type = "page-number-based-pagination"
+      type = "PageNumberBasedPagination"
       total-number-of-records-attribute = "$.data.total.numberItems"
       current-page-number-attribute = "$.data.page"
       max-records-per-page = 1
@@ -94,8 +94,8 @@ data = {
     }
 
     persistence = {
-      type = "file-system"
-      file-format = "json"
+      type = "FileSystem"
+      file-format = "JSON"
       file-path = "/tmp/pagination"
     }
   }

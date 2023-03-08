@@ -5,15 +5,15 @@ import org.apache.spark.sql.SparkSession
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import pureconfig.ConfigReader
 import sttp.client3._
-import sttp.model.{Method, Uri}
-
-import scala.concurrent.Future
+import sttp.model.Method
 
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
 
-  implicit val urlReader: ConfigReader[Uri] = ConfigReader[String].map(url => uri"$url")
+  implicit lazy val sparkSession: SparkSession = SparkSession
+    .builder()
+    .master("local[*]")
+    .getOrCreate()
 
   val resourcesPath = "restonomer-core/src/test/resources"
   val url = "/test_url"
@@ -23,12 +23,5 @@ trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with Dat
     method = Method.GET,
     uri = uri"$uri"
   )
-
-  implicit lazy val sparkSession: SparkSession = SparkSession
-    .builder()
-    .master("local[*]")
-    .getOrCreate()
-
-  implicit val sttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
 
 }

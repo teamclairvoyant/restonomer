@@ -6,9 +6,11 @@ import com.clairvoyant.restonomer.core.exception.RestonomerException
 import pdi.jwt._
 import pdi.jwt.algorithms.JwtUnknownAlgorithm
 import sttp.client3.{Identity, Request}
+import zio.config.derivation.nameWithLabel
 
 import java.time.Clock
 
+@nameWithLabel
 sealed trait RestonomerAuthentication {
 
   def validateCredentials(): Unit

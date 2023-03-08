@@ -19,7 +19,7 @@ class FileSystemPersistenceSpec extends CoreSpec {
   "persist() - with proper format and path" should
     "save the dataframe to the file in the desired format at the desired path" in {
       val fileSystemPersistence = FileSystem(
-        fileFormat = "json",
+        fileFormat = "JSON",
         filePath = dataFrameToFileSystemWriterOutputDirPath
       )
 

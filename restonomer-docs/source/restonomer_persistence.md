@@ -10,8 +10,8 @@ For example, consider the below FileSystem persistence:
 
 ```hocon
   persistence = {
-    type = "file-system"
-    file-format = "json"
+    type = "FileSystem"
+    file-format = "JSON"
     file-path = "./rest-output/"
   }
 ```
@@ -28,12 +28,12 @@ data = {
 
   data-response = {
     body = {
-      type = "json"
+      type = "JSON"
     }
 
     transformations = [
       {
-        type = "add-column"
+        type = "AddColumn"
         column-name = "test_column_1"
         column-value = "test_value_1"
         column-data-type = "string"
@@ -41,8 +41,8 @@ data = {
     ]
 
     persistence = {
-      type = "file-system"
-      file-format = "json"
+      type = "FileSystem"
+      file-format = "JSON"
       file-path = "./rest-output/"
     }
   }
@@ -67,8 +67,8 @@ User can configure the FileSystem persistence in the below manner:
 
 ```hocon
 persistence = {
-  type = "file-system"
-  file-format = "json"
+  type = "FileSystem"
+  file-format = "JSON"
   file-path = "./rest-output/"
 }
 ```

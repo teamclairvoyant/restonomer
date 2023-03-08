@@ -27,12 +27,12 @@ data = {
 
   data-response = {
     body = {
-      type = "json"
+      type = "JSON"
     }
 
     persistence = {
-      type = "file-system"
-      file-format = "json"
+      type = "FileSystem"
+      file-format = "JSON"
       file-path = "/tmp/converter"
     }
   }
@@ -62,7 +62,7 @@ Then body can be configured in below manner:
 
 ```hocon
 body = {
-  type = "json"
+  type = "JSON"
   data-column = "data.items"
 }
 ```
@@ -94,7 +94,7 @@ data = {
     }
 
     persistence = {
-      type = "file-system"
+      type = "FileSystem"
       file-format = "csv"
       file-path = "/tmp/converter"
     }

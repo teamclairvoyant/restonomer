@@ -17,19 +17,19 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    url = "http://test-domain.com"
           |
           |    authentication = {
-          |      type = "basic-authentication"
+          |      type = "BasicAuthentication"
           |      basic-token = ${BASIC_AUTH_TOKEN}
           |    }
           |  }
           |
           |  data-response = {
           |    body = {
-          |      type = "json"
+          |      type = "JSON"
           |    }
           |
           |    persistence = {
-          |      type = "file-system"
-          |      file-format = "json"
+          |      type = "FileSystem"
+          |      file-format = "JSON"
           |      file-path = "/tmp"
           |    }
           |  }
@@ -54,19 +54,19 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    url = "http://test-domain.com"
           |
           |    authentication = {
-          |      type = "basic-authentication"
+          |      type = "BasicAuthentication"
           |      basic-token = "efgh5678"
           |    }
           |  }
           |
           |  data-response = {
           |    body = {
-          |      type = "json"
+          |      type = "JSON"
           |    }
           |
           |    persistence = {
-          |      type = "file-system"
-          |      file-format = "json"
+          |      type = "FileSystem"
+          |      file-format = "JSON"
           |      file-path = "/tmp"
           |    }
           |  }
@@ -91,19 +91,19 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    url = "http://test-domain.com"
           |
           |    authentication = {
-          |      type = "basic-authentication"
+          |      type = "BasicAuthentication"
           |      basic-token = "abcd1234"
           |    }
           |  }
           |
           |  data-response = {
           |    body = {
-          |      type = "json"
+          |      type = "JSON"
           |    }
           |
           |    persistence = {
-          |      type = "file-system"
-          |      file-format = "json"
+          |      type = "FileSystem"
+          |      file-format = "JSON"
           |      file-path = "/tmp"
           |    }
           |  }
@@ -128,19 +128,19 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    url = "http://test-domain.com"
           |
           |    authentication = {
-          |      type = "basic-authentication"
+          |      type = "BasicAuthentication"
           |      basic-token = "efgh5678"
           |    }
           |  }
           |
           |  data-response = {
           |    body = {
-          |      type = "json"
+          |      type = "JSON"
           |    }
           |
           |    persistence = {
-          |      type = "file-system"
-          |      file-format = "json"
+          |      type = "FileSystem"
+          |      file-format = "JSON"
           |      file-path = "/tmp"
           |    }
           |  }
@@ -166,19 +166,19 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    url = "http://test-domain.com"
           |
           |    authentication = {
-          |      type = "basic-authentication"
+          |      type = "BasicAuthentication"
           |      basic-token = "abcd1234"
           |    }
           |  }
           |
           |  data-response = {
           |    body = {
-          |      type = "json"
+          |      type = "JSON"
           |    }
           |
           |    persistence = {
-          |      type = "file-system"
-          |      file-format = "json"
+          |      type = "FileSystem"
+          |      file-format = "JSON"
           |      file-path = "/tmp"
           |    }
           |  }
