@@ -22,7 +22,7 @@ token = {
     url = "http://localhost:8080/token-response-body"
 
     authentication = {
-      type = "bearer-authentication"
+      type = "BearerAuthentication"
       bearer-token = "test_token_123"
     }
   }
@@ -35,7 +35,7 @@ data = {
     url = "https://postman-echo.com/basic-auth"
 
     authentication = {
-      type = "basic-authentication"
+      type = "BasicAuthentication"
       user-name = "postman"
       password = "token[$.secret]"
     }
@@ -43,12 +43,12 @@ data = {
 
   data-response = {
     body = {
-      type = "json"
+      type = "JSON"
     }
 
     persistence = {
-      type = "file-system"
-      file-format = "json"
+      type = "FileSystem"
+      file-format = "JSON"
       file-path = "./rest-output/"
     }
   }
@@ -74,7 +74,7 @@ token = {
     url = "http://localhost:8080/token-response-body"
 
     authentication = {
-      type = "bearer-authentication"
+      type = "BearerAuthentication"
       bearer-token = "test_token_123"
     }
   }
@@ -113,7 +113,7 @@ data-request = {
   }
 
   authentication = {
-    type = "basic-authentication"
+    type = "BasicAuthentication"
     user-name = "test_user"
     password = "test_password"
   }
@@ -171,7 +171,7 @@ data = {
     url = "https://postman-echo.com/basic-auth"
 
     authentication = {
-      type = "basic-authentication"
+      type = "BasicAuthentication"
       user-name = "postman"
       password = "password"
     }
@@ -179,12 +179,12 @@ data = {
 
   data-response = {
     body = {
-      type = "json"
+      type = "JSON"
     }
 
     persistence = {
-      type = "file-system"
-      file-format = "json"
+      type = "FileSystem"
+      file-format = "JSON"
       file-path = "./rest-output/"
     }
   }
@@ -208,12 +208,12 @@ The response configurations are provided in the checkpoint file in the below man
 ```hocon
 data-response = {
   body = {
-    type = "json"
+    type = "JSON"
   }
 
   transformations = [
     {
-      type = "add-column"
+      type = "AddColumn"
       column-name = "col_D"
       column-value = "val_D"
       column-data-type = "string"
@@ -221,8 +221,8 @@ data-response = {
   ]
   
   persistence = {
-    type = "file-system"
-    file-format = "json"
+    type = "FileSystem"
+    file-format = "JSON"
     file-path = "./rest-output/"
   }
 }
@@ -243,7 +243,7 @@ The response body configurations are provided in the checkpoint file in the belo
 
 ```hocon
 body = {
-  type = "json"
+  type = "JSON"
   data-column = "data.items"
 }
 ```
