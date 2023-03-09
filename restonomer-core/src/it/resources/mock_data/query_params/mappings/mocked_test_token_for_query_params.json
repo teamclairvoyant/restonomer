@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/test-token-for-query-params?query_param_name_1=query_param_value_1&token=bearer_123"
+    "url": "/test-token-for-query-params?token=bearer_123&query_param_name_1=query_param_value_1"
   },
   "response": {
     "status": 200,
