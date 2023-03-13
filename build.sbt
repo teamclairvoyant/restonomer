@@ -7,7 +7,7 @@ Global / excludeLintKeys += Keys.parallelExecution
 val organizationName = "com.clairvoyant.restonomer"
 val releaseVersion = "1.0"
 
-val zioConfigVersion = "4.0.0-RC12"
+val zioConfigVersion = "4.0.0-RC13"
 val sttpVersion = "3.8.12"
 val scalaTestVersion = "3.2.15"
 val wireMockVersion = "2.27.2"
