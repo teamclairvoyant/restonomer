@@ -3,12 +3,16 @@ package com.clairvoyant.restonomer.core.authentication
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders._
 import com.clairvoyant.restonomer.core.common._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
+import com.clairvoyant.restonomer.core.sttpBackend
+import com.jayway.jsonpath.JsonPath
 import pdi.jwt._
 import pdi.jwt.algorithms.JwtUnknownAlgorithm
-import sttp.client3.{Identity, Request}
+import sttp.client3._
 import zio.config.derivation.nameWithLabel
 
 import java.time.Clock
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 @nameWithLabel
 sealed trait RestonomerAuthentication {
@@ -47,7 +51,9 @@ case class BasicAuthentication(
       )
   }
 
-  override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
+  override def authenticate(
+      httpRequest: Request[Either[String, String], Any]
+  ): Request[Either[String, String], Any] = {
     basicToken
       .map(httpRequest.auth.basicToken)
       .getOrElse(
@@ -71,9 +77,9 @@ case class BearerAuthentication(
       )
   }
 
-  override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
-    httpRequest.auth.bearer(bearerToken)
-  }
+  override def authenticate(
+      httpRequest: Request[Either[String, String], Any]
+  ): Request[Either[String, String], Any] = httpRequest.auth.bearer(bearerToken)
 
 }
 
@@ -137,7 +143,9 @@ case class JWTAuthentication(
     }
   }
 
-  override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
+  override def authenticate(
+      httpRequest: Request[Either[String, String], Any]
+  ): Request[Either[String, String], Any] = {
     httpRequest.auth.bearer(
       Jwt.encode(
         claim = JwtClaim(subject = Option(subject)).issuedNow.expiresIn(tokenExpiresIn),
@@ -169,11 +177,73 @@ case class DigestAuthentication(
       )
   }
 
-  override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] = {
+  override def authenticate(
+      httpRequest: Request[Either[String, String], Any]
+  ): Request[Either[String, String], Any] = {
     httpRequest.auth.digest(
       user = userName,
       password = password
     )
   }
+
+}
+
+case class OAuth2Authentication(
+    grantType: OAuth2AuthenticationGrantType
+) extends RestonomerAuthentication {
+
+  override def validateCredentials(): Unit = grantType.validateCredentials()
+
+  override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] =
+    httpRequest.auth.bearer(grantType.getAccessToken)
+
+}
+
+@nameWithLabel(keyName = "name")
+sealed trait OAuth2AuthenticationGrantType {
+  def validateCredentials(): Unit
+  def getAccessToken: String
+}
+
+case class ClientCredentials(
+    tokenUrl: String,
+    clientId: String,
+    clientSecret: String
+) extends OAuth2AuthenticationGrantType {
+
+  override def validateCredentials(): Unit =
+    if (tokenUrl.isBlank)
+      throw new RestonomerException(
+        "The provided credentials are invalid. Please provide token-url."
+      )
+    else if (clientId.isBlank)
+      throw new RestonomerException(
+        "The provided credentials are invalid. The credentials should contain valid client-id."
+      )
+    else if (clientSecret.isBlank)
+      throw new RestonomerException(
+        "The provided credentials are invalid. The credentials should contain valid client-secret."
+      )
+
+  override def getAccessToken: String =
+    JsonPath.read[String](
+      Await
+        .result(
+          basicRequest
+            .post(uri"$tokenUrl")
+            .auth
+            .basic(clientId, clientSecret)
+            .body(Map("grant_type" -> "client_credentials"))
+            .send(sttpBackend),
+          Duration.Inf
+        )
+        .body match {
+        case Left(errorMessage) =>
+          throw new RestonomerException(errorMessage)
+        case Right(responseBody) =>
+          responseBody
+      },
+      "$.access_token"
+    )
 
 }

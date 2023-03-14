@@ -8,7 +8,11 @@ import org.scalatest.matchers.should.Matchers
 import sttp.client3._
 import sttp.model.Method
 
+import scala.concurrent.Future
+
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
+
+  implicit val sttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
 
   implicit lazy val sparkSession: SparkSession = SparkSession
     .builder()
