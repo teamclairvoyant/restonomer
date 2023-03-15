@@ -7,11 +7,12 @@ import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.http.{RestonomerRequest, RestonomerResponse}
 import com.clairvoyant.restonomer.core.model._
 import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersistence}
+import com.clairvoyant.restonomer.core.sttpBackend
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import com.jayway.jsonpath.JsonPath
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import sttp.client3.{HttpClientFutureBackend, Response, SttpBackend}
+import sttp.client3.Response
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -20,8 +21,6 @@ import scala.concurrent.{Await, Future}
 class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
-    implicit val sttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
-
     val tokenFunction = checkpointConfig.token
       .map { tokenConfig =>
         getTokenFunction(

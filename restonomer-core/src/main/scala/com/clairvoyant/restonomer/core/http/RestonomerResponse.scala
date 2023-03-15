@@ -3,12 +3,12 @@ package com.clairvoyant.restonomer.core.http
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.RetryConfig
 import com.clairvoyant.restonomer.core.pagination.RestonomerPagination
+import com.clairvoyant.restonomer.core.sttpBackend
 import odelay.Delay
 import sttp.client3._
 import sttp.model.HeaderNames.Location
 import sttp.model.{Header, StatusCode}
 
-import scala.collection.Seq
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
@@ -24,7 +24,7 @@ object RestonomerResponse {
       restonomerRequest: RestonomerRequest,
       retryConfig: RetryConfig,
       restonomerPagination: Option[RestonomerPagination]
-  )(implicit sttpBackend: SttpBackend[Future, Any]): RestonomerResponse = {
+  ): RestonomerResponse = {
     def getPages(
         restonomerRequest: RestonomerRequest,
         httpResponseBody: Future[Seq[String]]
@@ -74,7 +74,7 @@ object RestonomerResponse {
       statusCodesToRetry: List[StatusCode],
       maxRetries: Int,
       currentRetryAttemptNumber: Int = 0
-  )(implicit sttpBackend: SttpBackend[Future, Any]): Future[Seq[String]] = {
+  ): Future[Seq[String]] = {
     restonomerRequest.httpRequest
       .send(sttpBackend)
       .flatMap {

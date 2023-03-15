@@ -1,0 +1,70 @@
+package com.clairvoyant.restonomer.core.authentication
+
+import com.clairvoyant.restonomer.core.common.CoreSpec
+import com.clairvoyant.restonomer.core.exception.RestonomerException
+import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, stubFor, urlEqualTo}
+
+class OAuth2AuthenticationSpec extends CoreSpec {
+
+  override def beforeAll(): Unit = mockedHttpServer.start()
+
+  "ClientCredentials - validateCredentials - with empty tokenUrl" should "throw RestonomerException" in {
+    val clientCredentials = ClientCredentials(
+      tokenUrl = "",
+      clientId = "testClientID",
+      clientSecret = "testClientSecret"
+    )
+
+    the[RestonomerException] thrownBy clientCredentials.validateCredentials() should have message
+      "The provided credentials are invalid. Please provide token-url."
+  }
+
+  "ClientCredentials - validateCredentials - with empty clientId" should "throw RestonomerException" in {
+    val clientCredentials = ClientCredentials(
+      tokenUrl = "https://localhost:8080/token",
+      clientId = "",
+      clientSecret = "testClientSecret"
+    )
+
+    the[RestonomerException] thrownBy clientCredentials.validateCredentials() should have message
+      "The provided credentials are invalid. The credentials should contain valid client-id."
+  }
+
+  "ClientCredentials - validateCredentials - with empty clientSecret" should "throw RestonomerException" in {
+    val clientCredentials = ClientCredentials(
+      tokenUrl = "https://localhost:8080/token",
+      clientId = "testClientID",
+      clientSecret = ""
+    )
+
+    the[RestonomerException] thrownBy clientCredentials.validateCredentials() should have message
+      "The provided credentials are invalid. The credentials should contain valid client-secret."
+  }
+
+  "ClientCredentials - getAccessToken" should "return the mocked access token" in {
+    val clientCredentials = ClientCredentials(
+      tokenUrl = "http://localhost:8080/token",
+      clientId = "testClientID",
+      clientSecret = "testClientSecret"
+    )
+
+    stubFor(
+      WireMock
+        .post(urlEqualTo("/token"))
+        .willReturn(
+          aResponse()
+            .withBody("""
+                        |{
+                        |  "access_token": "test_token"
+                        |}
+                        |""".stripMargin)
+        )
+    )
+
+    clientCredentials.getAccessToken shouldBe "test_token"
+  }
+
+  override def afterAll(): Unit = mockedHttpServer.stop()
+
+}
