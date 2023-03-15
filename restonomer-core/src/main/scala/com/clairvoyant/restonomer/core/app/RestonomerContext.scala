@@ -36,7 +36,8 @@ class RestonomerContext(
   private val CHECKPOINTS_CONFIG_DIRECTORY_PATH = s"$restonomerContextDirectoryPath/checkpoints"
 
   private val configVariablesFromFile = {
-    implicit val configVariablesConfig: Config[Map[String, String]] = deriveConfig[Map[String, String]]
+    lazy val rawConfig: Config[Map[String, String]] = deriveConfig[Map[String, String]]
+    implicit val configVariablesConfig: Config[Map[String, String]] = rawConfig
 
     implicit val configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor(
       configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
