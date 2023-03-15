@@ -8,9 +8,8 @@ import scala.annotation.tailrec
 
 object RestonomerConfigurationsLoader {
 
-  def loadConfigFromFile[C](configFilePath: String)(
-      using config: Config[C],
-      configVariablesSubstitutor: ConfigVariablesSubstitutor
+  def loadConfigFromFile[C](configFilePath: String, config: Config[C])(
+      using configVariablesSubstitutor: ConfigVariablesSubstitutor
   ): C =
     Unsafe.unsafe(implicit u => {
       zio.Runtime.default.unsafe
@@ -24,9 +23,8 @@ object RestonomerConfigurationsLoader {
         .getOrThrowFiberFailure()
     })
 
-  def loadConfigsFromDirectory[C](configDirectoryPath: String)(
-      using config: Config[C],
-      configVariablesSubstitutor: ConfigVariablesSubstitutor
+  def loadConfigsFromDirectory[C](configDirectoryPath: String, config: Config[C])(
+      using configVariablesSubstitutor: ConfigVariablesSubstitutor
   ): List[C] = {
     @tailrec
     def loadConfigsFromDirectoryHelper(remainingConfigFiles: List[File], configs: List[C]): List[C] = {
@@ -39,7 +37,7 @@ object RestonomerConfigurationsLoader {
         else
           loadConfigsFromDirectoryHelper(
             remainingConfigFiles.tail,
-            loadConfigFromFile(configFile.getPath) :: configs
+            loadConfigFromFile(configFile.getPath, config) :: configs
           )
       }
     }

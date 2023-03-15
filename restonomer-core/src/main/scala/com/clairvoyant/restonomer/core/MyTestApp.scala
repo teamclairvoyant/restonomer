@@ -7,6 +7,6 @@ object MyTestApp extends App {
   private val restonomerContextDirectoryPath = "./my_restonomer_context"
   private val restonomerContext = RestonomerContext(restonomerContextDirectoryPath)
 
-  restonomerContext.runAllCheckpoints()
+  restonomerContext.runCheckpoint("checkpoint_no_authentication.conf")
 
 }
