@@ -7,5 +7,6 @@ import zio.config.magnolia._
 case class ApplicationConfig(sparkConfigs: Option[Map[String, String]])
 
 object ApplicationConfig {
-  implicit val config: Config[ApplicationConfig] = deriveConfig[ApplicationConfig].toKebabCase
+  lazy val rawConfig: Config[ApplicationConfig] = deriveConfig[ApplicationConfig]
+  implicit val config: Config[ApplicationConfig] = rawConfig.toKebabCase
 }
