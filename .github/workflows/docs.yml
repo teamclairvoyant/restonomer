@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload entire repository
-          path: './restonomer-docs/source/'
+          path: './restonomer-docs/source/build/'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
