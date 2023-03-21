@@ -4,11 +4,11 @@ import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders
 import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders._
 import com.clairvoyant.restonomer.core.converter._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import com.clairvoyant.restonomer.core.http.{RestonomerRequest, RestonomerResponse}
+import com.clairvoyant.restonomer.core.http._
 import com.clairvoyant.restonomer.core.model._
-import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersistence}
+import com.clairvoyant.restonomer.core.persistence._
 import com.clairvoyant.restonomer.core.sttpBackend
-import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
+import com.clairvoyant.restonomer.spark.utils.writer._
 import com.jayway.jsonpath.JsonPath
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -108,9 +108,27 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
       restonomerPersistence match {
         case FileSystem(fileFormat, filePath) =>
           new DataFrameToFileSystemWriter(
-            sparkSession = sparkSession,
             fileFormat = fileFormat,
             filePath = filePath
+          )
+
+        case S3Bucket(
+              bucketName,
+              path,
+              fileFormat,
+              saveMode,
+              writeOptions,
+              numberOfPartitions,
+              partitionColumns
+            ) =>
+          new DataFrameToS3BucketWriter(
+            bucketName = bucketName,
+            path = path,
+            fileFormat = fileFormat,
+            saveMode = saveMode,
+            writeOptions = writeOptions,
+            numberOfPartitions = numberOfPartitions,
+            partitionColumns = partitionColumns
           )
       }
 

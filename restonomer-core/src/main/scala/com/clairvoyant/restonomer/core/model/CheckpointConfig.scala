@@ -12,5 +12,5 @@ case class CheckpointConfig(
 
 object CheckpointConfig {
   lazy val rawConfig: Config[CheckpointConfig] = deriveConfig[CheckpointConfig]
-  implicit val config: Config[CheckpointConfig] = rawConfig.toKebabCase
+  implicit val config: Config[CheckpointConfig] = deriveConfig[CheckpointConfig].toKebabCase
 }
