@@ -613,16 +613,16 @@ The transformed response will have filtered records as desired:
 
 ## SplitColumn
 
-This transformation allows user to create new columns using the value of another column that is a delimeter separated 
+This transformation allows user to create new columns using the value of another column that is a delimiter separated 
 string.
 
 This transformation expects user to provide below inputs:
 
 | Input Arguments | Mandatory | Default Value | Description                                                                                                         |
 |:----------------|:---------:|:-------------:|:--------------------------------------------------------------------------------------------------------------------|
-| from-column     |    Yes    |       -       | Name of the source column having delimeter separated string as a value from which new columns need to be created    |
+| from-column     |    Yes    |       -       | Name of the source column having delimiter separated string as a value from which new columns need to be created    |
 | delimiter       |    Yes    |       -       | The delimiter by which a string is separated                                                                        |
-| to-columns      |    Yes    |       -       | It is a map of new column name against the position of the value that is needed from the delimeter separated string |
+| to-columns      |    Yes    |       -       | It is a map of new column name against the position of the value that is needed from the delimiter separated string |
 
 
 For example, consider we have below restonomer response in json:
