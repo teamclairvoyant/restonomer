@@ -178,13 +178,13 @@ object DataFrameTransformerImplicits {
 
     def splitColumn(
         fromColumn: String,
-        delimeter: String,
+        delimiter: String,
         toColumns: Map[String, Int]
     ): DataFrame =
       toColumns.foldLeft(df) { (df, columnNamePositionPair) =>
         df.withColumn(
           columnNamePositionPair._1,
-          split(col(fromColumn), delimeter).getItem(columnNamePositionPair._2)
+          split(col(fromColumn), delimiter).getItem(columnNamePositionPair._2)
         )
       }
 
