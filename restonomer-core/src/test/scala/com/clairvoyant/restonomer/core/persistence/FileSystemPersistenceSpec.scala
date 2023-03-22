@@ -3,7 +3,7 @@ package com.clairvoyant.restonomer.core.persistence
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.commons.io.FileUtils
-import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.{DataFrame, SaveMode}
 
 import java.io.File
 
@@ -26,9 +26,9 @@ class FileSystemPersistenceSpec extends CoreSpec {
       fileSystemPersistence.persist(
         restonomerResponseDF,
         new DataFrameToFileSystemWriter(
-          sparkSession = sparkSession,
           fileFormat = fileSystemPersistence.fileFormat,
-          filePath = fileSystemPersistence.filePath
+          filePath = fileSystemPersistence.filePath,
+          saveMode = SaveMode.ErrorIfExists
         )
       )
 

@@ -106,29 +106,19 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
   ): Future[Unit] = {
     val dataFrameWriter =
       restonomerPersistence match {
-        case FileSystem(fileFormat, filePath) =>
+        case FileSystem(fileFormat, filePath, saveMode) =>
           new DataFrameToFileSystemWriter(
             fileFormat = fileFormat,
-            filePath = filePath
+            filePath = filePath,
+            saveMode = saveMode
           )
 
-        case S3Bucket(
-              bucketName,
-              path,
-              fileFormat,
-              saveMode,
-              writeOptions,
-              numberOfPartitions,
-              partitionColumns
-            ) =>
+        case S3Bucket(bucketName, fileFormat, filePath, saveMode) =>
           new DataFrameToS3BucketWriter(
             bucketName = bucketName,
-            path = path,
             fileFormat = fileFormat,
-            saveMode = saveMode,
-            writeOptions = writeOptions,
-            numberOfPartitions = numberOfPartitions,
-            partitionColumns = partitionColumns
+            filePath = filePath,
+            saveMode = saveMode
           )
       }
 

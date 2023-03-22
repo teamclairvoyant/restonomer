@@ -14,15 +14,13 @@ sealed trait RestonomerPersistence {
 
 case class FileSystem(
     fileFormat: String,
-    filePath: String
+    filePath: String,
+    saveMode: SaveMode = SaveMode.ErrorIfExists
 ) extends RestonomerPersistence
 
 case class S3Bucket(
     bucketName: String,
     fileFormat: String,
     filePath: String,
-    saveMode: SaveMode,
-    writeOptions: Map[String, String],
-    numberOfPartitions: Option[Int],
-    partitionColumns: Seq[String]
+    saveMode: SaveMode = SaveMode.ErrorIfExists
 ) extends RestonomerPersistence

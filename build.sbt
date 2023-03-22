@@ -45,7 +45,8 @@ val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
-  "org.apache.spark" %% "spark-sql" % sparkVersion
+  "org.apache.spark" %% "spark-sql" % sparkVersion,
+  "org.apache.spark" %% "spark-hadoop-cloud" % sparkVersion
 )
 
 val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)

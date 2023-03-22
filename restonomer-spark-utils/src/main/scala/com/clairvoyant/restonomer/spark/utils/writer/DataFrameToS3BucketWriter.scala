@@ -4,27 +4,16 @@ import org.apache.spark.sql.{DataFrame, SaveMode}
 
 class DataFrameToS3BucketWriter(
     bucketName: String,
-    path: String,
     fileFormat: String,
-    saveMode: SaveMode = SaveMode.ErrorIfExists,
-    writeOptions: Map[String, String],
-    numberOfPartitions: Option[Int] = None,
-    partitionColumns: Seq[String]
+    filePath: String,
+    saveMode: SaveMode
 ) extends DataFrameWriter {
 
-  override def write(dataFrame: DataFrame): Unit =
-    writeOptions
-      .foldLeft(
-        numberOfPartitions
-          .map(dataFrame.repartition)
-          .getOrElse(dataFrame)
-          .write
-          .mode(saveMode)
-      ) { case (writer, key -> value) =>
-        writer.option(key, value)
-      }
-      .partitionBy(partitionColumns: _*)
+  override def write(dataFrame: DataFrame): Unit = {
+    dataFrame.write
+      .mode(saveMode)
       .format(fileFormat)
-      .save(s"s3a://$bucketName/$path")
+      .save(s"s3a://$bucketName/$filePath")
+  }
 
 }
