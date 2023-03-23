@@ -1,7 +1,8 @@
 package com.clairvoyant.restonomer.core.common
 
-import com.amazonaws.auth.{AWSStaticCredentialsProvider, AnonymousAWSCredentials}
+import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials}
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
+import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.{AmazonS3, AmazonS3ClientBuilder}
 import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
 import com.github.tomakehurst.wiremock.WireMockServer
@@ -21,9 +22,18 @@ trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with Dat
 
   implicit val sttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
 
-  val sparkConf = new SparkConf()
-  sparkConf.set("spark.hadoop.fs.s3a.access.key", "test")
-  sparkConf.set("spark.hadoop.fs.s3a.secret.key", "test")
+  val mockAWSAccessKey = "test_access_key"
+  val mockAWSSecretKey = "test_secret_key"
+
+  val s3MockPort: Int = 8081
+  val s3MockEndpoint: String = s"http://localhost:$s3MockPort"
+
+  val sparkConf: SparkConf = new SparkConf()
+    .set("spark.hadoop.fs.s3a.endpoint", s3MockEndpoint)
+    .set("spark.hadoop.fs.s3a.path.style.access", "true")
+    .set("spark.hadoop.fs.s3a.access.key", mockAWSAccessKey)
+    .set("spark.hadoop.fs.s3a.secret.key", mockAWSSecretKey)
+    .set("spark.hadoop.fs.s3a.change.detection.version.required", "false")
 
   implicit lazy val sparkSession: SparkSession = SparkSession
     .builder()
@@ -46,16 +56,17 @@ trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with Dat
         .port(8080)
     )
 
-  val s3Mock: S3Mock = S3Mock(port = 8081)
+  val mockS3BucketName = "test-bucket"
 
-  val awsClientEndpoint = new EndpointConfiguration("http://localhost:8081", "us-west-2")
+  val s3Mock: S3Mock = S3Mock(port = s3MockPort)
 
   lazy val s3Client: AmazonS3 =
     AmazonS3ClientBuilder
       .standard()
+      .disableChunkedEncoding
       .withPathStyleAccessEnabled(true)
-      .withEndpointConfiguration(awsClientEndpoint)
-      .withCredentials(new AWSStaticCredentialsProvider(new AnonymousAWSCredentials()))
+      .withEndpointConfiguration(new EndpointConfiguration(s3MockEndpoint, Regions.US_EAST_1.getName))
+      .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(mockAWSAccessKey, mockAWSSecretKey)))
       .build
 
 }

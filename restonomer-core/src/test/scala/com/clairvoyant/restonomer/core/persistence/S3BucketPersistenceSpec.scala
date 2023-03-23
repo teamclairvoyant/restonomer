@@ -23,13 +23,10 @@ class S3BucketPersistenceSpec extends CoreSpec {
     )
 
   "persist()" should "save the dataframe to the files in the s3 bucket" in {
-    val bucketName = "test-bucket"
     val filePath = "test-output-dir"
 
-    s3Client.createBucket(bucketName)
-
     val s3BucketPersistence = S3Bucket(
-      bucketName = "test-bucket",
+      bucketName = mockS3BucketName,
       fileFormat = "JSON",
       filePath = filePath
     )
@@ -43,9 +40,15 @@ class S3BucketPersistenceSpec extends CoreSpec {
         saveMode = s3BucketPersistence.saveMode
       )
     )
+
+    sparkSession.read.json(s"s3a://$mockS3BucketName/$filePath") should matchExpectedDataFrame(restonomerResponseDF)
   }
 
-  override def beforeAll(): Unit = s3Mock.start
-  override def afterAll(): Unit = s3Mock.stop
+  override def beforeAll(): Unit = {
+    s3Mock.start
+    s3Client.createBucket(mockS3BucketName)
+  }
+
+  override def afterAll(): Unit = s3Mock.shutdown
 
 }
