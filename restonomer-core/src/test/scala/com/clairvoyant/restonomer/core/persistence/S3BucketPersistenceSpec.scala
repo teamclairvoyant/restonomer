@@ -1,11 +1,12 @@
 package com.clairvoyant.restonomer.core.persistence
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
+import com.clairvoyant.restonomer.core.common.S3MockSpec.s3MockBucketName
+import com.clairvoyant.restonomer.core.common.{CoreSpec, S3MockSpec}
 import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToS3BucketWriter
 import org.apache.spark.sql.DataFrame
 
-class S3BucketPersistenceSpec extends CoreSpec {
+class S3BucketPersistenceSpec extends CoreSpec with S3MockSpec {
 
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
@@ -26,7 +27,7 @@ class S3BucketPersistenceSpec extends CoreSpec {
     val filePath = "test-output-dir"
 
     val s3BucketPersistence = S3Bucket(
-      bucketName = mockS3BucketName,
+      bucketName = s3MockBucketName,
       fileFormat = "JSON",
       filePath = filePath
     )
@@ -41,14 +42,7 @@ class S3BucketPersistenceSpec extends CoreSpec {
       )
     )
 
-    sparkSession.read.json(s"s3a://$mockS3BucketName/$filePath") should matchExpectedDataFrame(restonomerResponseDF)
+    sparkSession.read.json(s"s3a://$s3MockBucketName/$filePath") should matchExpectedDataFrame(restonomerResponseDF)
   }
-
-  override def beforeAll(): Unit = {
-    s3Mock.start
-    s3Client.createBucket(mockS3BucketName)
-  }
-
-  override def afterAll(): Unit = s3Mock.shutdown
 
 }
