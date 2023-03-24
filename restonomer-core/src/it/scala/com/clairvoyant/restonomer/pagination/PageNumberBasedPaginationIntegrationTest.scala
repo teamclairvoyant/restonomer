@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.pagination
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
-class PageNumberBasedPaginationIntegrationTest extends IntegrationTestDependencies {
+class PageNumberBasedPaginationIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
   override val mappingsDirectory: String = "pagination"
 

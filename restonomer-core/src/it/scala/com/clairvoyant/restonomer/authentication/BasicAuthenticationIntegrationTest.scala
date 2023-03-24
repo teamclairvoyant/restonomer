@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.authentication
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
-class BasicAuthenticationIntegrationTest extends IntegrationTestDependencies {
+class BasicAuthenticationIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
   override val mappingsDirectory: String = "authentication/basic_authentication"
 

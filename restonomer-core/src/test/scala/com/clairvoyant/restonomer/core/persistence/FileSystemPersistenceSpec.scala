@@ -11,10 +11,10 @@ class FileSystemPersistenceSpec extends CoreSpec {
 
   import sparkSession.implicits._
 
+  lazy val dataFrameToFileSystemWriterOutputDirPath = s"out_${System.currentTimeMillis()}"
+
   val restonomerResponseDF: DataFrame = Seq(("val_A", "val_B", "val_C", "val_D"))
     .toDF("col_A", "col_B", "col_C", "col_D")
-
-  lazy val dataFrameToFileSystemWriterOutputDirPath = s"out_${System.currentTimeMillis()}"
 
   "persist() - with proper format and path" should
     "save the dataframe to the file in the desired format at the desired path" in {

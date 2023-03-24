@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.transformation
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
-class DeleteColumnsTransformationIntegrationTest extends IntegrationTestDependencies {
+class DeleteColumnsTransformationIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
   override val mappingsDirectory: String = "transformation"
 

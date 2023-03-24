@@ -8,22 +8,6 @@ import scala.annotation.tailrec
 
 object RestonomerConfigurationsLoader {
 
-  def loadConfigFromFile[C](configFilePath: String)(
-      implicit config: Config[C],
-      configVariablesSubstitutor: ConfigVariablesSubstitutor
-  ): C =
-    Unsafe.unsafe(implicit u => {
-      zio.Runtime.default.unsafe
-        .run(
-          ConfigProvider
-            .fromHoconString(
-              configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath))
-            )
-            .load(config)
-        )
-        .getOrThrowFiberFailure()
-    })
-
   def loadConfigsFromDirectory[C](configDirectoryPath: String)(
       implicit config: Config[C],
       configVariablesSubstitutor: ConfigVariablesSubstitutor
@@ -47,5 +31,21 @@ object RestonomerConfigurationsLoader {
 
     loadConfigsFromDirectoryHelper(new File(configDirectoryPath).listFiles().toList, List())
   }
+
+  def loadConfigFromFile[C](configFilePath: String)(
+      implicit config: Config[C],
+      configVariablesSubstitutor: ConfigVariablesSubstitutor
+  ): C =
+    Unsafe.unsafe(implicit u => {
+      zio.Runtime.default.unsafe
+        .run(
+          ConfigProvider
+            .fromHoconString(
+              configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath))
+            )
+            .load(config)
+        )
+        .getOrThrowFiberFailure()
+    })
 
 }

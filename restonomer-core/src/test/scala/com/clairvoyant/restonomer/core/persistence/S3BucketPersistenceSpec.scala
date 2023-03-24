@@ -1,12 +1,21 @@
 package com.clairvoyant.restonomer.core.persistence
 
-import com.clairvoyant.restonomer.core.common.S3MockSpec.s3MockBucketName
+import com.clairvoyant.restonomer.core.common.S3MockSpec._
 import com.clairvoyant.restonomer.core.common.{CoreSpec, S3MockSpec}
 import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToS3BucketWriter
+import org.apache.hadoop.conf.Configuration
 import org.apache.spark.sql.DataFrame
 
 class S3BucketPersistenceSpec extends CoreSpec with S3MockSpec {
+
+  val hadoopConfigurations: Configuration = sparkSession.sparkContext.hadoopConfiguration
+
+  hadoopConfigurations.set("fs.s3a.endpoint", s3MockEndpoint)
+  hadoopConfigurations.set("fs.s3a.access.key", s3MockAWSAccessKey)
+  hadoopConfigurations.set("fs.s3a.secret.key", s3MockAWSSecretKey)
+  hadoopConfigurations.set("fs.s3a.path.style.access", "true")
+  hadoopConfigurations.set("fs.s3a.change.detection.version.required", "false")
 
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
@@ -24,13 +33,13 @@ class S3BucketPersistenceSpec extends CoreSpec with S3MockSpec {
     )
 
   "persist()" should "save the dataframe to the files in the s3 bucket" in {
-    val filePath = "test-output-dir"
-
     val s3BucketPersistence = S3Bucket(
-      bucketName = s3MockBucketName,
+      bucketName = "test-bucket",
       fileFormat = "JSON",
-      filePath = filePath
+      filePath = "test-output-dir"
     )
+
+    s3Client.createBucket(s3BucketPersistence.bucketName)
 
     s3BucketPersistence.persist(
       restonomerResponseDF,
@@ -42,7 +51,9 @@ class S3BucketPersistenceSpec extends CoreSpec with S3MockSpec {
       )
     )
 
-    sparkSession.read.json(s"s3a://$s3MockBucketName/$filePath") should matchExpectedDataFrame(restonomerResponseDF)
+    sparkSession.read.json(
+      s"s3a://${s3BucketPersistence.bucketName}/${s3BucketPersistence.filePath}"
+    ) should matchExpectedDataFrame(restonomerResponseDF)
   }
 
 }

@@ -1,21 +1,21 @@
-package com.clairvoyant.restonomer.core.common
+package com.clairvoyant.restonomer.common
 
 import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials}
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.{AmazonS3, AmazonS3ClientBuilder}
-import com.clairvoyant.restonomer.core.common.S3MockSpec._
+import com.clairvoyant.restonomer.common.MockS3Server._
 import io.findify.s3mock.S3Mock
 import org.scalatest.{BeforeAndAfterAll, Suite}
 
-object S3MockSpec {
+object MockS3Server {
   val s3MockAWSAccessKey = "test_access_key"
   val s3MockAWSSecretKey = "test_secret_key"
   val s3MockPort: Int = 8082
   val s3MockEndpoint: String = s"http://localhost:$s3MockPort"
 }
 
-trait S3MockSpec extends BeforeAndAfterAll {
+trait MockS3Server extends BeforeAndAfterAll {
   this: Suite =>
 
   lazy val s3Client: AmazonS3 =
