@@ -56,7 +56,7 @@ val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVer
 
 val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
 
-val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % Test)
+val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test")
 
 // ----- MODULE DEPENDENCIES ----- //
 

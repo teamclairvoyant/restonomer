@@ -15,6 +15,6 @@ trait MockFileSystemPersistence extends BeforeAndAfterEach {
 
   def outputDF(implicit sparkSession: SparkSession): DataFrame = sparkSession.read.json(outputPath)
 
-  override def afterEach: Unit = FileUtils.deleteDirectory(new File(outputPath))
+  override def afterEach(): Unit = FileUtils.deleteDirectory(new File(outputPath))
 
 }
