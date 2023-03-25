@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.authentication
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
-class OAuth2AuthenticationIntegrationTest extends IntegrationTestDependencies {
+class OAuth2AuthenticationIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
   override val mappingsDirectory: String = "authentication/oauth2_authentication"
 

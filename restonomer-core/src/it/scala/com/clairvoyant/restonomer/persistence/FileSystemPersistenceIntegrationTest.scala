@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.persistence
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
-class FileSystemPersistenceIntegrationTest extends IntegrationTestDependencies {
+class FileSystemPersistenceIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
   override val mappingsDirectory: String = "persistence"
 

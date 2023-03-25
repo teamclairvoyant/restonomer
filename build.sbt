@@ -14,8 +14,8 @@ Global / excludeLintKeys += Keys.parallelExecution
 val organizationName = "com.clairvoyant.restonomer"
 val releaseVersion = "1.0"
 
-val zioConfigVersion = "4.0.0-RC13"
-val sttpVersion = "3.8.11"
+val zioConfigVersion = "4.0.0-RC14"
+val sttpVersion = "3.8.13"
 val sttpOauth2Version = "0.17.0-RC1"
 val scalaTestVersion = "3.2.15"
 val wireMockVersion = "2.27.2"
@@ -24,6 +24,7 @@ val sparkVersion = "3.3.2"
 val catsVersion = "2.9.0"
 val jsonPathVersion = "2.7.0"
 val odelayVersion = "0.4.0"
+val s3MockVersion = "0.2.6"
 
 lazy val scalacOptions = Seq("-Wunused")
 
@@ -45,7 +46,8 @@ val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
-  "org.apache.spark" %% "spark-sql" % sparkVersion
+  "org.apache.spark" %% "spark-sql" % sparkVersion,
+  "org.apache.spark" %% "spark-hadoop-cloud" % sparkVersion
 )
 
 val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
@@ -53,6 +55,8 @@ val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
 val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVersion)
 
 val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
+
+val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test")
 
 // ----- MODULE DEPENDENCIES ----- //
 
@@ -63,6 +67,7 @@ val restonomerCoreDependencies =
     jsonPathDependencies ++
     scalaTestDependencies.map(_ % "it,test") ++
     wireMockDependencies ++
+    s3MockDependencies ++
     odelayDependencies
 
 val restonomerSparkUtilsDependencies =

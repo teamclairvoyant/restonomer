@@ -1,8 +1,6 @@
 package com.clairvoyant.restonomer.core.common
 
 import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
-import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import org.apache.spark.sql.SparkSession
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
@@ -16,7 +14,7 @@ trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with Dat
 
   implicit val sttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
 
-  implicit lazy val sparkSession: SparkSession = SparkSession
+  implicit val sparkSession: SparkSession = SparkSession
     .builder()
     .master("local[*]")
     .getOrCreate()
@@ -29,11 +27,5 @@ trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with Dat
     method = Method.GET,
     uri = uri"$uri"
   )
-
-  lazy val mockedHttpServer: WireMockServer =
-    new WireMockServer(
-      wireMockConfig()
-        .port(8080)
-    )
 
 }
