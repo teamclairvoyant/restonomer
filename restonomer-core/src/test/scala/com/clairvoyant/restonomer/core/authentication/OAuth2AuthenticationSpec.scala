@@ -14,8 +14,9 @@ class OAuth2AuthenticationSpec extends CoreSpec with HttpMockSpec {
       clientSecret = "testClientSecret"
     )
 
-    the[RestonomerException] thrownBy clientCredentials.validateCredentials() should have message
-      "The provided credentials are invalid. Please provide token-url."
+    val thrown = the[RestonomerException] thrownBy clientCredentials.validateCredentials()
+
+    thrown.getMessage should equal("The provided credentials are invalid. Please provide token-url.")
   }
 
   "ClientCredentials - validateCredentials - with empty clientId" should "throw RestonomerException" in {
@@ -25,8 +26,11 @@ class OAuth2AuthenticationSpec extends CoreSpec with HttpMockSpec {
       clientSecret = "testClientSecret"
     )
 
-    the[RestonomerException] thrownBy clientCredentials.validateCredentials() should have message
+    val thrown = the[RestonomerException] thrownBy clientCredentials.validateCredentials()
+
+    thrown.getMessage should equal(
       "The provided credentials are invalid. The credentials should contain valid client-id."
+    )
   }
 
   "ClientCredentials - validateCredentials - with empty clientSecret" should "throw RestonomerException" in {
@@ -36,8 +40,11 @@ class OAuth2AuthenticationSpec extends CoreSpec with HttpMockSpec {
       clientSecret = ""
     )
 
-    the[RestonomerException] thrownBy clientCredentials.validateCredentials() should have message
+    val thrown = the[RestonomerException] thrownBy clientCredentials.validateCredentials()
+
+    thrown.getMessage should equal(
       "The provided credentials are invalid. The credentials should contain valid client-secret."
+    )
   }
 
   "ClientCredentials - getAccessToken" should "return the mocked access token" in {

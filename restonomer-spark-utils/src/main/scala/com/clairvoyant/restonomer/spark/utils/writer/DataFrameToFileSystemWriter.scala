@@ -5,7 +5,7 @@ import org.apache.spark.sql.{DataFrame, SaveMode}
 class DataFrameToFileSystemWriter(
     fileFormat: String,
     filePath: String,
-    saveMode: SaveMode
+    saveMode: String
 ) extends DataFrameWriter {
 
   override def write(dataFrame: DataFrame): Unit =

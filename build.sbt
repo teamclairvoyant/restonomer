@@ -8,7 +8,7 @@ val organizationName = "com.clairvoyant.restonomer"
 val releaseVersion = "1.0"
 
 val zioConfigVersion = "4.0.0-RC14"
-val sttpVersion = "3.8.12"
+val sttpVersion = "3.8.13"
 val scalaTestVersion = "3.2.15"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.2.0"
@@ -49,7 +49,8 @@ val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVer
 val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
 
 val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test")
-
+  .map(_ excludeAll("org.scala-lang.modules", "scala-collection-compat"))
+  .map(_.cross(CrossVersion.for3Use2_13))
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =

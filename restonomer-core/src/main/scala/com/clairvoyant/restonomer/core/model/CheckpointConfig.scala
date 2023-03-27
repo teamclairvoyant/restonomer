@@ -12,11 +12,6 @@ case class CheckpointConfig(
 )
 
 object CheckpointConfig {
-
-  implicit val saveModeConfig: DeriveConfig[SaveMode] = DeriveConfig[String].map(saveModeString =>
-    SaveMode.valueOf(saveModeString)
-  )
-
   lazy val rawConfig: Config[CheckpointConfig] = deriveConfig[CheckpointConfig]
   implicit val config: Config[CheckpointConfig] = rawConfig.toKebabCase
 }
