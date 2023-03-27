@@ -17,6 +17,8 @@ val catsVersion = "2.9.0"
 val jsonPathVersion = "2.7.0"
 val odelayVersion = "0.4.0"
 val s3MockVersion = "0.2.6"
+val scalaXmlVersion = "2.1.0"
+val scalaParserCombinatorsVersion = "2.2.0"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -34,9 +36,9 @@ val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" 
 
 val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 
-val scalaXmlDependencies = Seq("org.scala-lang.modules" %% "scala-xml" % "2.1.0")
+val scalaXmlDependencies = Seq("org.scala-lang.modules" %% "scala-xml" % scalaXmlVersion)
 
-val scalaParserCombinatorsDependencies = Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "2.2.0")
+val scalaParserCombinatorsDependencies = Seq("org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion)
 
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
