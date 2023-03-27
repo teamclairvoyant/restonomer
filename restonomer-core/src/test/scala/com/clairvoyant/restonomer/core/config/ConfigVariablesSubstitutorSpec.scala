@@ -1,6 +1,7 @@
 package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
+
 import java.io.File
 
 class ConfigVariablesSubstitutorSpec extends CoreSpec {

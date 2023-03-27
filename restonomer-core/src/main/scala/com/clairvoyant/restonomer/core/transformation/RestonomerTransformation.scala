@@ -142,11 +142,11 @@ case class FilterRecords(
 
 case class SplitColumn(
     fromColumn: String,
-    delimeter: String,
+    delimiter: String,
     toColumns: Map[String, Int]
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.splitColumn(fromColumn, delimeter, toColumns)
+    restonomerResponseDF.splitColumn(fromColumn, delimiter, toColumns)
 
 }

@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/s3-bucket-persistence"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_s3_bucket_persistence_response.json"
+  }
+}

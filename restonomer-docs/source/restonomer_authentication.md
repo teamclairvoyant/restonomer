@@ -20,7 +20,7 @@ Basic authentication can be achieved in restonomer using 2 ways:
 
 ```hocon
 authentication = {
- type = "basic-authentication"
+ type = "BasicAuthentication"
  user-name = "test_user"
  password = "test_password"
 }
@@ -30,7 +30,7 @@ authentication = {
 
 ```hocon
 authentication = {
- type = "basic-authentication"
+ type = "BasicAuthentication"
  basic-token = "abcd1234"
 }
 ```
@@ -43,7 +43,7 @@ User would need to provide just the bearer auth token to the `authentication` co
 
 ```hocon
 authentication = {
- type = "bearer-authentication"
+ type = "BearerAuthentication"
  bearer-token = "abcd1234"
 }
 ```
@@ -60,7 +60,7 @@ The API key authentication config expects user to provide below 3 details:
 
 ```hocon
 authentication = {
-  type = "api-key-authentication"
+  type = "APIKeyAuthentication"
   api-key-name = "test_api_key_name"
   api-key-value = "test_api_key_value"
   placeholder = "QueryParam"
@@ -75,7 +75,7 @@ User can configure JWT Authentication in the checkpoint file in the below format
 
 ```hocon
 authentication = {
-  type = "jwt-authentication"
+  type = "JWTAuthentication"
   subject = "test-authentication"
   secret-key = "abcd1234"
 }
@@ -89,8 +89,40 @@ For digest authentication, user needs to provide username and password for authe
 
 ```hocon
 authentication = {
- type = "digest-authentication"
+ type = "DigestAuthentication"
  user-name = "test_user"
  password = "test_password"
 }
 ```
+
+## OAuth2 Authentication
+
+The OAuth2 standard defines several grant types (or flows) to request and get an access token:
+
+*   Authorization Code
+*   Implicit
+*   Client Credentials
+
+Currently, Restonomer supports only `Client Credentials` grant type.
+
+In order to use OAuth2 authentication in checkpoint, user need to provide below parameters:
+
+*   Token URL
+*   Client ID
+*   Client Secret
+
+User can configure OAuth2 authentication in checkpoint file in below manner:
+
+```hocon
+authentication = {
+  type = "OAuth2Authentication"
+  grant-type = {
+    name = "ClientCredentials"
+    token-url = "http://localhost:8080/api/token"
+    client-id = "test_client_id"
+    client-secret = "test_client_secret"
+  }
+}
+```
+
+

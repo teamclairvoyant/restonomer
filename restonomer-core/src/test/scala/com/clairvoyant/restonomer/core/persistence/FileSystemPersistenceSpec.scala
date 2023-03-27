@@ -40,9 +40,9 @@ class FileSystemPersistenceSpec extends CoreSpec {
       fileSystemPersistence.persist(
         restonomerResponseDF,
         new DataFrameToFileSystemWriter(
-          sparkSession = sparkSession,
           fileFormat = fileSystemPersistence.fileFormat,
-          filePath = fileSystemPersistence.filePath
+          filePath = fileSystemPersistence.filePath,
+          saveMode = fileSystemPersistence.saveMode
         )
       )
 

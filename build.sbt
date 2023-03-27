@@ -16,6 +16,7 @@ val sparkVersion = "3.3.2"
 val catsVersion = "2.9.0"
 val jsonPathVersion = "2.7.0"
 val odelayVersion = "0.4.0"
+val s3MockVersion = "0.2.6"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -35,7 +36,8 @@ val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
-  "org.apache.spark" %% "spark-sql" % sparkVersion
+  "org.apache.spark" %% "spark-sql" % sparkVersion,
+  "org.apache.spark" %% "spark-hadoop-cloud" % sparkVersion
 )
   .map(_ excludeAll ("org.scala-lang.modules", "scala-xml"))
   .map(_.cross(CrossVersion.for3Use2_13))
@@ -46,6 +48,8 @@ val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVer
 
 val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
 
+val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test")
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
@@ -55,6 +59,7 @@ val restonomerCoreDependencies =
     jsonPathDependencies ++
     scalaTestDependencies.map(_ % "it,test") ++
     wireMockDependencies ++
+    s3MockDependencies ++
     odelayDependencies
 
 val restonomerSparkUtilsDependencies =

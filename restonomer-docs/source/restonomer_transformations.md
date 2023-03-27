@@ -20,18 +20,18 @@ data = {
 
   data-response = {
     body = {
-      type = "json"
+      type = "JSON"
     }
 
     transformations = [
       {
-        type = "add-literal-column"
+        type = "AddLiteralColumn"
         column-name = "col_D"
         column-value = "val_D"
         column-data-type = "string"
       },
       {
-        type = "add-literal-column"
+        type = "AddLiteralColumn"
         column-name = "col_E"
         column-value = "val_E"
         column-data-type = "string"
@@ -106,7 +106,7 @@ User can configure the `AddColumn` transformation in the below manner:
 
 ```hocon
 {
-  type = "add-literal-column"
+  type = "AddLiteralColumn"
   column-name = "col_D"
   column-value = "val_D"
   column-data-type = "string"
@@ -127,7 +127,7 @@ User can configure the `DeleteColumns` transformation in the below manner:
 
 ```hocon
 {
-  type = "delete-columns"
+  type = "DeleteColumns"
   column-names = ["col_A", "col_B"]
 }
 ```
@@ -147,7 +147,7 @@ User can configure the `ExplodeColumn` transformation in the below manner:
 
 ```hocon
 {
-  type = "explode-column"
+  type = "ExplodeColumn"
   column-name = "col_A"
 }
 ```
@@ -184,7 +184,7 @@ Then, user can configure the `CastColumns` transformation in the below manner:
 
 ```hocon
 {
-  type = "cast-columns"
+  type = "CastColumns"
   column-data-type-mapper = {
     "col_A" = "string"
     "col_B" = "double"
@@ -233,7 +233,7 @@ User can configure the `CastNestedColumn` transformation in the below manner:
 
 ```hocon
 {
-  type = "cast-nested-column"
+  type = "CastNestedColumn"
   column-name = "col_B"
   ddl = "col_C STRING, col_D STRING"
 }
@@ -275,7 +275,7 @@ User can configure the `FlattenSchema` transformation in the below manner:
 
 ```hocon
 {
-  type = "flatten-schema"
+  type = "FlattenSchema"
 }
 ```
 
@@ -318,7 +318,7 @@ Then, user can configure the `ConvertColumnToJson` transformation in the below m
 
 ```hocon
 {
-  type = "convert-column-to-json"
+  type = "ConvertColumnToJson"
   column-name = "col_B"
 }
 ```
@@ -357,7 +357,7 @@ Then, user can configure the `ChangeColumnCase` transformation in the below mann
 
  ```hocon
  {
-   type = "change-column-case"
+   type = "ChangeColumnCase"
    case-type = "lower"
  }
  ```
@@ -404,11 +404,11 @@ col_B -> 4
 col_C -> 3.4678
 ```
 
-Then, user can configure the `replaceStringInColumnValue` transformation in the below manner:
+Then, user can configure the `ReplaceStringInColumnValue` transformation in the below manner:
 
 ```hocon
 {
-  type = "replace-string-in-column-value"
+  type = "ReplaceStringInColumnValue"
   column-name = "col_A"
   pattern = 5
   replacement = "abc"
@@ -447,7 +447,7 @@ Then, user can configure the `RenameColumns` transformation in the below manner:
 
 ```hocon
 {
-  type = "rename-columns"
+  type = "RenameColumns"
   rename-column-mapper = {
     "col_A" = "test_col_A"
     "col_B" = "COL_b"
@@ -499,7 +499,7 @@ Then, user can configure the `AddPrefixToColumnNames` transformation in the belo
 
 ```hocon
 {
-  type = "add-prefix-to-column-names"
+  type = "AddPrefixToColumnNames"
   suffix = "test"
   column-names = ["col_A", "col_B"]
 }
@@ -548,7 +548,7 @@ Then, user can configure the `AddSuffixToColumnNames` transformation in the belo
 
 ```hocon
 {
-  type = "add-suffix-to-column-names"
+  type = "AddSuffixToColumnNames"
   suffix = "old"
   column-names = ["col_A", "col_B"]
 }
@@ -595,9 +595,9 @@ Then, user can configure the `FilterRecords` transformation in the below manner:
 
 ```hocon
 {
-  type = "filter-records"
+  type = "FilterRecords"
   filter-condition = "marks > 20"
-  }
+ }
 ```
 
 The transformed response will have filtered records as desired:
@@ -613,16 +613,16 @@ The transformed response will have filtered records as desired:
 
 ## SplitColumn
 
-This transformation allows user to create new columns using the value of another column that is a delimeter separated 
+This transformation allows user to create new columns using the value of another column that is a delimiter separated 
 string.
 
 This transformation expects user to provide below inputs:
 
 | Input Arguments | Mandatory | Default Value | Description                                                                                                         |
 |:----------------|:---------:|:-------------:|:--------------------------------------------------------------------------------------------------------------------|
-| from-column     |    Yes    |       -       | Name of the source column having delimeter separated string as a value from which new columns need to be created    |
-| delimeter       |    Yes    |       -       | The delimeter by which a string is separated                                                                        |
-| to-columns      |    Yes    |       -       | It is a map of new column name against the position of the value that is needed from the delimeter separated string |
+| from-column     |    Yes    |       -       | Name of the source column having delimiter separated string as a value from which new columns need to be created    |
+| delimiter       |    Yes    |       -       | The delimiter by which a string is separated                                                                        |
+| to-columns      |    Yes    |       -       | It is a map of new column name against the position of the value that is needed from the delimiter separated string |
 
 
 For example, consider we have below restonomer response in json:
@@ -649,9 +649,9 @@ Then, user can configure the `SplitColumn` transformation in the below manner:
 
 ```hocon
 {
-  type = "split-column"
+  type = "SplitColumn"
   from-column = "address"
-  delimeter = ","
+  delimiter = ","
   to-columns = {
     "apt_number" = 0
     "society_name" = 1

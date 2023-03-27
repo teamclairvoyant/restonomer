@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.body
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
-class CustomBodyIntegrationTest extends IntegrationTestDependencies {
+class CustomBodyIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
   override val mappingsDirectory: String = "body"
 

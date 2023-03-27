@@ -1,8 +1,11 @@
 package com.clairvoyant.restonomer.converter
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
-class JSONResponseToDataFrameConverterIntegrationTest extends IntegrationTestDependencies {
+class JSONResponseToDataFrameConverterIntegrationTest
+    extends IntegrationTestDependencies
+    with MockFileSystemPersistence {
+
   override val mappingsDirectory: String = "converter"
 
   it should "convert the JSON response body into a dataframe" in {

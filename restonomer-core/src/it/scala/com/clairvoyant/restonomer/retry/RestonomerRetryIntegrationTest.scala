@@ -1,9 +1,9 @@
 package com.clairvoyant.restonomer.retry
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 
-class RestonomerRetryIntegrationTest extends IntegrationTestDependencies {
+class RestonomerRetryIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
   override val mappingsDirectory: String = "retry"
 

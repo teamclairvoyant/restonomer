@@ -22,7 +22,7 @@ class SplitColumnTransformationSpec extends CoreSpec {
   "transform()" should "split the column and create new columns accordingly" in {
     val restonomerTransformation = SplitColumn(
       fromColumn = "address",
-      delimeter = ",",
+      delimiter = ",",
       toColumns = Map(
         "apt_number" -> 0,
         "society_name" -> 1,

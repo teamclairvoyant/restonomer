@@ -59,6 +59,9 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
                     userName = tokenSubstitutor.substitute(userName),
                     password = tokenSubstitutor.substitute(password)
                   )
+
+                case oAuth2Authentication @ OAuth2Authentication(_) =>
+                  oAuth2Authentication
               }
 
             }

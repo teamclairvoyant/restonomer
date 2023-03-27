@@ -5,10 +5,14 @@ import org.apache.spark.sql.SparkSession
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import sttp.client3._
+import sttp.client3.*
 import sttp.model.Method
 
+import scala.concurrent.Future
+
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
+
+  given sttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
 
   given sparkSession: SparkSession =
     SparkSession

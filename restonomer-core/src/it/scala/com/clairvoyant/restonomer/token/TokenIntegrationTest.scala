@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.token
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
-class TokenIntegrationTest extends IntegrationTestDependencies {
+class TokenIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
   override val mappingsDirectory: String = "token"
 

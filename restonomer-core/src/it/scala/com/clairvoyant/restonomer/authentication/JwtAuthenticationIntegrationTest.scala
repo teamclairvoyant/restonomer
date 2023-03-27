@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.authentication
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
-class JwtAuthenticationIntegrationTest extends IntegrationTestDependencies {
+class JwtAuthenticationIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
   override val mappingsDirectory: String = "authentication/jwt_authentication"
 

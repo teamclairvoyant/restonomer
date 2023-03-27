@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.query_params
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
-class QueryParamsIntegrationTest extends IntegrationTestDependencies {
+class QueryParamsIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
   override val mappingsDirectory: String = "query_params"
 
