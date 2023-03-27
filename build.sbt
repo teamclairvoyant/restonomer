@@ -2,10 +2,7 @@ ThisBuild / scalaVersion := "3.2.2"
 
 Global / excludeLintKeys += Keys.parallelExecution
 
-scalacOptions ++= Seq(
-  "-Xmax-inlines",
-  "50" // is declared as erased, but is in fact used
-)
+lazy val scalacOptions = Seq("-Xmax-inlines", "50")
 
 // ----- VARIABLES ----- //
 
@@ -86,7 +83,8 @@ val restonomerSparkUtilsDependencies =
 
 val commonSettings = Seq(
   organization := organizationName,
-  version := releaseVersion
+  version := releaseVersion,
+  Keys.scalacOptions ++= scalacOptions
 )
 
 val restonomerCoreSettings =
