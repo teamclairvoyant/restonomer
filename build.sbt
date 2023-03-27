@@ -34,6 +34,8 @@ val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" 
 
 val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 
+val scalaParserCombinatorsDependencies = Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "2.2.0")
+
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion,
@@ -49,13 +51,14 @@ val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVer
 val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
 
 val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test")
-  .map(_ excludeAll("org.scala-lang.modules", "scala-collection-compat"))
+  .map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
   .map(_.cross(CrossVersion.for3Use2_13))
 
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
   zioConfigDependencies ++
+    scalaParserCombinatorsDependencies ++
     sttpDependencies ++
     jwtDependencies ++
     jsonPathDependencies ++
