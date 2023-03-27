@@ -2,6 +2,11 @@ ThisBuild / scalaVersion := "3.2.2"
 
 Global / excludeLintKeys += Keys.parallelExecution
 
+scalacOptions ++= Seq(
+  "-Xmax-inlines",
+  "50" // is declared as erased, but is in fact used
+)
+
 // ----- VARIABLES ----- //
 
 val organizationName = "com.clairvoyant.restonomer"
