@@ -51,6 +51,7 @@ val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelay
 val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test")
   .map(_ excludeAll("org.scala-lang.modules", "scala-collection-compat"))
   .map(_.cross(CrossVersion.for3Use2_13))
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
