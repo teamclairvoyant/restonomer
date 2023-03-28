@@ -2,23 +2,54 @@ package com.clairvoyant.restonomer.core.transformation
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
+import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import org.apache.spark.sql.{AnalysisException, DataFrame}
 
 class FilterRecordsTransformationSpec extends CoreSpec with DataFrameMatchers {
 
-  import sparkSession.implicits._
-
-  val restonomerResponseDF: DataFrame = Seq(
-    ("10", "val_B1", "val_C1"),
-    ("20", "val_B2", "val_C2")
-  ).toDF(colNames = "col_A", "col_B", "col_C")
+  val restonomerResponseDF: DataFrame =
+    new JSONTextToDataFrameReader(
+      sparkSession = sparkSession
+    ).read(text =
+      Seq(
+        """
+          |[
+          |  {
+          |    "col_A": "10",
+          |    "col_B": "val_B1",
+          |    "col_C": "val_C1"
+          |  },
+          |  {
+          |    "col_A": "20",
+          |    "col_B": "val_B2",
+          |    "col_C": "val_C2"
+          |  }
+          |]
+          |""".stripMargin
+      )
+    )
 
   "transform() - with valid condition" should "filter the dataframe as expected" in {
     val restonomerTransformation = FilterRecords(
       filterCondition = "col_A > 10"
     )
 
-    val expectedRestonomerResponseTransformedDF = Seq(("20", "val_B2", "val_C2")).toDF("col_A", "col_B", "col_C")
+    val expectedRestonomerResponseTransformedDF =
+      new JSONTextToDataFrameReader(
+        sparkSession = sparkSession
+      ).read(text =
+        Seq(
+          """
+            |[
+            |  {
+            |    "col_A": "20",
+            |    "col_B": "val_B2",
+            |    "col_C": "val_C2"
+            |  }
+            |]
+            |""".stripMargin
+        )
+      )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 

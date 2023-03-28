@@ -38,7 +38,7 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
     val dataRestonomerRequest =
       RestonomerRequest
-        .builder(checkpointConfig.data.dataRequest)(tokenFunction)
+        .builder(checkpointConfig.data.dataRequest)(using tokenFunction)
         .build
 
     val dataRestonomerResponse = RestonomerResponse.fetchFromRequest(
@@ -130,18 +130,19 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 private object RestonomerWorkflow {
 
   def apply(applicationConfig: ApplicationConfig): RestonomerWorkflow = {
-    implicit val sparkSession: SparkSession = SparkSession
-      .builder()
-      .config(
-        applicationConfig.sparkConfigs
-          .map { sparkConfigs =>
-            sparkConfigs.foldLeft(new SparkConf()) { case (sparkConf, sparkConfig) =>
-              sparkConf.set(sparkConfig._1, sparkConfig._2)
+    given sparkSession: SparkSession =
+      SparkSession
+        .builder()
+        .config(
+          applicationConfig.sparkConfigs
+            .map { sparkConfigs =>
+              sparkConfigs.foldLeft(new SparkConf()) { case (sparkConf, sparkConfig) =>
+                sparkConf.set(sparkConfig._1, sparkConfig._2)
+              }
             }
-          }
-          .getOrElse(new SparkConf())
-      )
-      .getOrCreate()
+            .getOrElse(new SparkConf())
+        )
+        .getOrCreate()
 
     new RestonomerWorkflow()
   }

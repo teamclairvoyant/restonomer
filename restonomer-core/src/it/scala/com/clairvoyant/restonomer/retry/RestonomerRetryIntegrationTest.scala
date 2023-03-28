@@ -38,17 +38,18 @@ class RestonomerRetryIntegrationTest extends IntegrationTestDependencies with Mo
   // StatusCode.NoContent
 
   it should "throw an exception in case of status 204" in {
-    the[RestonomerException] thrownBy runCheckpoint(checkpointFileName =
-      "checkpoint_retry_status_204.conf"
-    ) should have message "No Content."
+    val thrown =
+      the[RestonomerException] thrownBy runCheckpoint(checkpointFileName = "checkpoint_retry_status_204.conf")
+
+    thrown.getMessage should equal("No Content.")
   }
 
   // Default Case
 
   it should "throw an exception in case of status 405" in {
-    the[RestonomerException] thrownBy runCheckpoint(checkpointFileName =
-      "checkpoint_retry_status_405.conf"
-    ) should have message "Something totally unexpected bad happened while calling the API 1 times."
+    val thrown =
+      the[RestonomerException] thrownBy runCheckpoint(checkpointFileName = "checkpoint_retry_status_405.conf")
+    thrown.getMessage should equal("Something totally unexpected bad happened while calling the API 1 times.")
   }
 
 }

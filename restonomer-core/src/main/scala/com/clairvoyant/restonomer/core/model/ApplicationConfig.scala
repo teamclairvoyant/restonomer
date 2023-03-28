@@ -1,12 +1,12 @@
 package com.clairvoyant.restonomer.core.model
 
 import zio.Config
-import zio.config._
-import zio.config.magnolia._
+import zio.config.*
+import zio.config.magnolia.*
 
 case class ApplicationConfig(sparkConfigs: Option[Map[String, String]])
 
 object ApplicationConfig {
-  lazy val rawConfig: Config[ApplicationConfig] = deriveConfig[ApplicationConfig]
-  implicit val config: Config[ApplicationConfig] = rawConfig.toKebabCase
+  private lazy val rawConfig = deriveConfig[ApplicationConfig]
+  val config: Config[ApplicationConfig] = rawConfig.toKebabCase
 }

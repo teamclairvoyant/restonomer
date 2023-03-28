@@ -18,22 +18,32 @@ class APIKeyAuthenticationSpec extends CoreSpec {
   "validateCredentials - with blank api-key-name" should "throw RestonomerException" in {
     val authentication = apiKeyAuthentication.copy(apiKeyName = "")
 
-    the[RestonomerException] thrownBy authentication.validateCredentials() should have message
+    val thrown = the[RestonomerException] thrownBy authentication.validateCredentials()
+
+    thrown.getMessage should equal(
       "The provided credentials are invalid. The credentials should contain valid api-key-name."
+    )
+
   }
 
   "validateCredentials - with blank api-key-value" should "throw RestonomerException" in {
     val authentication = apiKeyAuthentication.copy(apiKeyValue = "")
 
-    the[RestonomerException] thrownBy authentication.validateCredentials() should have message
+    val thrown = the[RestonomerException] thrownBy authentication.validateCredentials()
+
+    thrown.getMessage should equal(
       "The provided credentials are invalid. The credentials should contain valid api-key-value."
+    )
   }
 
   "validateCredentials - with invalid placeholder" should "throw RestonomerException" in {
     val authentication = apiKeyAuthentication.copy(placeholder = "InvalidPlaceholder")
 
-    the[RestonomerException] thrownBy authentication.validateCredentials() should have message
+    val thrown = the[RestonomerException] thrownBy authentication.validateCredentials()
+
+    thrown.getMessage should equal(
       "The provided credentials are invalid. The placeholder: InvalidPlaceholder is not supported."
+    )
   }
 
   "authenticate - with QUERY_PARAM as placeholder" should "return Request object with modified uri" in {

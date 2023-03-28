@@ -1,13 +1,8 @@
-ThisBuild / scalaVersion := "2.13.8"
-
-inThisBuild(
-  List(
-    semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision
-  )
-)
+ThisBuild / scalaVersion := "3.2.2"
 
 Global / excludeLintKeys += Keys.parallelExecution
+
+lazy val scalacOptions = Seq("-Xmax-inlines", "50")
 
 // ----- VARIABLES ----- //
 
@@ -16,7 +11,6 @@ val releaseVersion = "1.0"
 
 val zioConfigVersion = "4.0.0-RC14"
 val sttpVersion = "3.8.13"
-val sttpOauth2Version = "0.17.0-RC1"
 val scalaTestVersion = "3.2.15"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.2.0"
@@ -25,8 +19,8 @@ val catsVersion = "2.9.0"
 val jsonPathVersion = "2.7.0"
 val odelayVersion = "0.4.0"
 val s3MockVersion = "0.2.6"
-
-lazy val scalacOptions = Seq("-Wunused")
+val scalaXmlVersion = "2.1.0"
+val scalaParserCombinatorsVersion = "2.2.0"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -44,11 +38,17 @@ val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" 
 
 val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 
+val scalaXmlDependencies = Seq("org.scala-lang.modules" %% "scala-xml" % scalaXmlVersion)
+
+val scalaParserCombinatorsDependencies = Seq("org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion)
+
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion,
   "org.apache.spark" %% "spark-hadoop-cloud" % sparkVersion
 )
+  .map(_ excludeAll ("org.scala-lang.modules", "scala-xml"))
+  .map(_.cross(CrossVersion.for3Use2_13))
 
 val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
 
@@ -57,11 +57,15 @@ val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVer
 val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
 
 val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test")
+  .map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
+  .map(_.cross(CrossVersion.for3Use2_13))
 
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
   zioConfigDependencies ++
+    scalaXmlDependencies ++
+    scalaParserCombinatorsDependencies ++
     sttpDependencies ++
     jwtDependencies ++
     jsonPathDependencies ++

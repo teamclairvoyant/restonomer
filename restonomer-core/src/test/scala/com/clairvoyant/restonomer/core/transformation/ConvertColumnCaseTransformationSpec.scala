@@ -7,9 +7,7 @@ import org.apache.spark.sql.DataFrame
 
 class ConvertColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers {
 
-  import sparkSession.implicits._
-
-  val restonomerResponseDF: DataFrame =
+  val restonomerResponseDF =
     new JSONTextToDataFrameReader(
       sparkSession = sparkSession
     ).read(text =
@@ -27,8 +25,19 @@ class ConvertColumnCaseTransformationSpec extends CoreSpec with DataFrameMatcher
       caseType = "lower"
     )
 
-    val expectedRestonomerResponseTransformedDF = Seq(("1", "2"))
-      .toDF("col_a", "col_b")
+    val expectedRestonomerResponseTransformedDF =
+      new JSONTextToDataFrameReader(
+        sparkSession = sparkSession
+      ).read(text =
+        Seq(
+          """
+            |{
+            |  "col_a": "1",
+            |  "col_b": "2"
+            |}
+            |""".stripMargin
+        )
+      )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 

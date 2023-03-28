@@ -6,7 +6,7 @@ class DataFrameToS3BucketWriter(
     bucketName: String,
     fileFormat: String,
     filePath: String,
-    saveMode: SaveMode
+    saveMode: String
 ) extends DataFrameWriter {
 
   override def write(dataFrame: DataFrame): Unit = {

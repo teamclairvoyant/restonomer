@@ -3,18 +3,32 @@ package com.clairvoyant.restonomer.core.persistence
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.commons.io.FileUtils
-import org.apache.spark.sql.{DataFrame, SaveMode}
+import org.apache.spark.sql.DataFrame
 
 import java.io.File
+import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 
 class FileSystemPersistenceSpec extends CoreSpec {
 
   import sparkSession.implicits._
 
-  lazy val dataFrameToFileSystemWriterOutputDirPath = s"out_${System.currentTimeMillis()}"
+  val restonomerResponseDF: DataFrame =
+    new JSONTextToDataFrameReader(
+      sparkSession = sparkSession
+    ).read(text =
+      Seq(
+        """
+          |{
+          |  "col_A": "val_A",
+          |  "col_B": "val_B",
+          |  "col_C": "val_C",
+          |  "col_D": "val_D"
+          |}
+          |""".stripMargin
+      )
+    )
 
-  val restonomerResponseDF: DataFrame = Seq(("val_A", "val_B", "val_C", "val_D"))
-    .toDF("col_A", "col_B", "col_C", "col_D")
+  lazy val dataFrameToFileSystemWriterOutputDirPath = s"out_${System.currentTimeMillis()}"
 
   "persist() - with proper format and path" should
     "save the dataframe to the file in the desired format at the desired path" in {
@@ -28,7 +42,7 @@ class FileSystemPersistenceSpec extends CoreSpec {
         new DataFrameToFileSystemWriter(
           fileFormat = fileSystemPersistence.fileFormat,
           filePath = fileSystemPersistence.filePath,
-          saveMode = SaveMode.ErrorIfExists
+          saveMode = fileSystemPersistence.saveMode
         )
       )
 

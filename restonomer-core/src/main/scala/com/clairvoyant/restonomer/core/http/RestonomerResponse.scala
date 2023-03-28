@@ -5,7 +5,7 @@ import com.clairvoyant.restonomer.core.model.RetryConfig
 import com.clairvoyant.restonomer.core.pagination.RestonomerPagination
 import com.clairvoyant.restonomer.core.sttpBackend
 import odelay.Delay
-import sttp.client3._
+import sttp.client3.*
 import sttp.model.HeaderNames.Location
 import sttp.model.{Header, StatusCode}
 
