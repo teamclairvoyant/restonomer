@@ -64,37 +64,37 @@ Restonomer, at a high level, aims at providing users with a fault-tolerant and s
    
 .. toctree::
    :maxdepth: 2
-   :caption: Restonomer Authentication
+   :caption: Authentication
    
    restonomer_authentication
      
 .. toctree::
    :maxdepth: 2
-   :caption: Restonomer Transformations
+   :caption: Transformations
    
    restonomer_transformations
    
 .. toctree::
    :maxdepth: 2
-   :caption: Restonomer Persistence
+   :caption: Persistence
    
    restonomer_persistence
    
 .. toctree::
    :maxdepth: 2
-   :caption: Restonomer Request Retry Mechanism
+   :caption: Request Retry Mechanism
    
    restonomer_retry
    
 .. toctree::
    :maxdepth: 2
-   :caption: Restonomer Pagination
+   :caption: Pagination
    
    restonomer_pagination
    
 .. toctree::
    :maxdepth: 2
-   :caption: Restonomer Response Body Formats
+   :caption: Response Body Formats
    
    restonomer_response_body_formats
 ```
