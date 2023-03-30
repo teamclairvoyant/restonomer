@@ -18,7 +18,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-class RestonomerWorkflow(implicit sparkSession: SparkSession) {
+class RestonomerWorkflow(using sparkSession: SparkSession) {
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
     val tokenFunction = checkpointConfig.token

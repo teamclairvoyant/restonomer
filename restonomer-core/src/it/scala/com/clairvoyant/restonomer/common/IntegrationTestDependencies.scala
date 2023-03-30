@@ -14,7 +14,7 @@ trait IntegrationTestDependencies
     with DataFrameMatchers
     with BeforeAndAfterEach {
 
-  implicit val sparkSession: SparkSession = SparkSession
+  given sparkSession: SparkSession = SparkSession
     .builder()
     .master("local[*]")
     .getOrCreate()

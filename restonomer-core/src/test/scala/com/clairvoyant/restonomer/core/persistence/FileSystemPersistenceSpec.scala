@@ -1,17 +1,15 @@
 package com.clairvoyant.restonomer.core.persistence
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
+import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.commons.io.FileUtils
 import org.apache.spark.sql.DataFrame
 
 import java.io.File
-import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 
 class FileSystemPersistenceSpec extends CoreSpec {
-
-  import sparkSession.implicits._
-
+  
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
       sparkSession = sparkSession

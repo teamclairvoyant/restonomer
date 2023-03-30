@@ -13,7 +13,7 @@ trait MockFileSystemPersistence extends BeforeAndAfterEach {
 
   lazy val outputPath = s"/tmp/$mappingsDirectory"
 
-  def outputDF(implicit sparkSession: SparkSession): DataFrame = sparkSession.read.json(outputPath)
+  def outputDF(using sparkSession: SparkSession): DataFrame = sparkSession.read.json(outputPath)
 
   override def afterEach(): Unit = FileUtils.deleteDirectory(new File(outputPath))
 
