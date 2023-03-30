@@ -9,7 +9,7 @@ import org.apache.spark.sql.DataFrame
 import java.io.File
 
 class FileSystemPersistenceSpec extends CoreSpec {
-  
+
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
       sparkSession = sparkSession

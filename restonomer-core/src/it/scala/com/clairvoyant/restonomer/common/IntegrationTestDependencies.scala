@@ -14,10 +14,11 @@ trait IntegrationTestDependencies
     with DataFrameMatchers
     with BeforeAndAfterEach {
 
-  given sparkSession: SparkSession = SparkSession
-    .builder()
-    .master("local[*]")
-    .getOrCreate()
+  given sparkSession: SparkSession =
+    SparkSession
+      .builder()
+      .master("local[*]")
+      .getOrCreate()
 
   def runCheckpoint(checkpointFileName: String): Unit =
     RestonomerContext(s"$resourcesDirectoryPath/restonomer_context")
