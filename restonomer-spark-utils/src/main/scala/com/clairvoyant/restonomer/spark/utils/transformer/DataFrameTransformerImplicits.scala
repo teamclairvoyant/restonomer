@@ -1,12 +1,12 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
-import org.apache.spark.sql.functions._
+import org.apache.spark.sql.functions.*
 import org.apache.spark.sql.types.{ArrayType, DataType, StructField, StructType}
 import org.apache.spark.sql.{Column, DataFrame}
 
 object DataFrameTransformerImplicits {
 
-  implicit class DataFrameWrapper(df: DataFrame) {
+  extension (df: DataFrame) {
 
     def addLiteralColumn(
         columnName: String,
