@@ -12,8 +12,6 @@ import scala.concurrent.Future
 
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
 
-  given sttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
-
   given sparkSession: SparkSession =
     SparkSession
       .builder()
