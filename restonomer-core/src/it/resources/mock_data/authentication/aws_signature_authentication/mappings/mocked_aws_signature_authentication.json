@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://test-restonomer-bucket.s3.us-east-1.amazonaws.com/test-data.csv"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_aws_signature_authentication_response.json"
+  }
+}

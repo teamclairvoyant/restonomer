@@ -60,6 +60,11 @@ val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test
   .map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
   .map(_.cross(CrossVersion.for3Use2_13))
 
+val awsSdkDependencies = Seq(
+  "com.amazonaws" % "aws-java-sdk-s3" % "1.12.429",
+  "com.amazonaws" % "aws-java-sdk-core" % "1.12.429"
+)
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
