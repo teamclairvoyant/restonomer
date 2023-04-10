@@ -5,26 +5,36 @@ import zio.{ConfigProvider, *}
 
 import java.io.File
 import scala.annotation.tailrec
+import scala.io.Source
 
 object RestonomerConfigurationsLoader {
 
   def loadConfigFromFile[C](configFilePath: String, config: Config[C])(
-      using configVariablesSubstitutor: ConfigVariablesSubstitutor
-  ): C =
+      using configVariablesSubstitutor: Option[ConfigVariablesSubstitutor]
+  ): C = {
+    val configFileSource = Source.fromFile(new File(configFilePath))
+
+    val configString =
+      try configFileSource.mkString
+      finally configFileSource.close()
+
     Unsafe.unsafe(implicit u => {
       zio.Runtime.default.unsafe
         .run(
           ConfigProvider
             .fromHoconString(
-              configVariablesSubstitutor.substituteConfigVariables(new File(configFilePath))
+              configVariablesSubstitutor
+                .map(_.substituteConfigVariables(configString))
+                .getOrElse(configString)
             )
             .load(config)
         )
         .getOrThrowFiberFailure()
     })
+  }
 
   def loadConfigsFromDirectory[C](configDirectoryPath: String, config: Config[C])(
-      using configVariablesSubstitutor: ConfigVariablesSubstitutor
+      using configVariablesSubstitutor: Option[ConfigVariablesSubstitutor]
   ): List[C] = {
     @tailrec
     def loadConfigsFromDirectoryHelper(remainingConfigFiles: List[File], configs: List[C]): List[C] = {
