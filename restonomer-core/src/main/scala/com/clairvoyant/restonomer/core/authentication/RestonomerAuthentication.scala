@@ -293,30 +293,24 @@ case class AwsSignatureAuthentication(
     val emptyStringChecksum = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     val awsRequest = convertToAwsRequest(httpRequest)
 
-    println("=======================================================================================================")
-    println(httpRequest.uri.toString)
-    println(httpRequest.headers())
-    println("=======================================================================================================")
-
     val signer = new AWS4Signer()
     signer.setRegionName(region)
     signer.setServiceName(service)
     signer.sign(awsRequest, new BasicAWSCredentials(accessKey, secreteKey))
+
+    println(awsRequest.getHeaders)
+
     awsRequest.getHeaders.asScala
       .foldLeft(httpRequest) { (request, header) => request.header(header._1, header._2, replaceExisting = true) }
       .header("X-Amz-Content-Sha256", emptyStringChecksum, replaceExisting = true)
   }
 
   def convertToAwsRequest(request: Request[Either[String, String], Any]): DefaultRequest[AnyRef] = {
-    val endpoint = new URI(request.uri.toString)
-    val path = endpoint.getPath
-    val headers = request.headers
-
     val defaultRequest = new DefaultRequest[AnyRef]("AWS")
-    defaultRequest.setEndpoint(endpoint)
     defaultRequest.setHttpMethod(HttpMethodName.GET)
-    defaultRequest.setResourcePath(path)
-    headers.foreach(header => defaultRequest.addHeader(header.name, header.value))
+    defaultRequest.setEndpoint(new URI(request.uri.scheme.get + "://" + request.uri.host.get))
+    defaultRequest.setResourcePath(request.uri.path.mkString("/"))
+    request.headers.foreach(header => defaultRequest.addHeader(header.name, header.value))
     defaultRequest
   }
 
