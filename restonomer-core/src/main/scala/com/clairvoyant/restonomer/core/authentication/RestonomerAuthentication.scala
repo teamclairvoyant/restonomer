@@ -21,7 +21,8 @@ import java.time.Clock
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
+import sttp.client3.{Identity, Request => SttpRequest}
 
 @nameWithLabel
 sealed trait RestonomerAuthentication {
@@ -281,9 +282,6 @@ case class AwsSignatureAuthentication(
       throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain valid secrete key."
       )
-    else {
-      println("looks okay......................")
-    }
   }
 
   override def authenticate(
@@ -298,11 +296,18 @@ case class AwsSignatureAuthentication(
     signer.setServiceName(service)
     signer.sign(awsRequest, new BasicAWSCredentials(accessKey, secreteKey))
 
-    println(awsRequest.getHeaders)
+    println("=============================================================")
+    println(awsRequest.getEndpoint.toString + "/" + awsRequest.getResourcePath)
+    println(awsRequest.getHeaders.get("Authorization"))
+    println(awsRequest.getHeaders.get("Host"))
+    println(awsRequest.getHeaders.get("X-Amz-Date"))
+    println("=============================================================")
 
-    awsRequest.getHeaders.asScala
-      .foldLeft(httpRequest) { (request, header) => request.header(header._1, header._2, replaceExisting = true) }
-      .header("X-Amz-Content-Sha256", emptyStringChecksum, replaceExisting = true)
+    httpRequest
+      .header("Authorization", awsRequest.getHeaders.get("Authorization"))
+//      .header("Host", awsRequest.getHeaders.get("Host"))
+      .header("X-Amz-Date", awsRequest.getHeaders.get("X-Amz-Date"))
+      .header("X-Amz-Content-Sha256", emptyStringChecksum)
   }
 
   def convertToAwsRequest(request: Request[Either[String, String], Any]): DefaultRequest[AnyRef] = {
@@ -310,8 +315,6 @@ case class AwsSignatureAuthentication(
     defaultRequest.setHttpMethod(HttpMethodName.GET)
     defaultRequest.setEndpoint(new URI(request.uri.scheme.get + "://" + request.uri.host.get))
     defaultRequest.setResourcePath(request.uri.path.mkString("/"))
-    request.headers.foreach(header => defaultRequest.addHeader(header.name, header.value))
     defaultRequest
   }
-
 }
