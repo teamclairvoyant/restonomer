@@ -62,6 +62,12 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
 
                 case oAuth2Authentication @ OAuth2Authentication(_) =>
                   oAuth2Authentication
+
+                case awsSignatureAuthentication @ AwsSignatureAuthentication(_, accessKey, secretKey) =>
+                  awsSignatureAuthentication.copy(
+                    accessKey = tokenSubstitutor.substitute(accessKey),
+                    secretKey = tokenSubstitutor.substitute(secretKey)
+                  )
               }
 
             }
