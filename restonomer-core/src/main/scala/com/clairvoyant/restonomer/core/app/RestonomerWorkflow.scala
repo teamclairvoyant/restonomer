@@ -1,14 +1,14 @@
 package com.clairvoyant.restonomer.core.app
 
 import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders
-import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders._
-import com.clairvoyant.restonomer.core.converter._
+import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders.*
+import com.clairvoyant.restonomer.core.converter.*
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import com.clairvoyant.restonomer.core.http._
-import com.clairvoyant.restonomer.core.model._
-import com.clairvoyant.restonomer.core.persistence._
+import com.clairvoyant.restonomer.core.http.*
+import com.clairvoyant.restonomer.core.model.*
+import com.clairvoyant.restonomer.core.persistence.*
 import com.clairvoyant.restonomer.core.sttpBackend
-import com.clairvoyant.restonomer.spark.utils.writer._
+import com.clairvoyant.restonomer.spark.utils.writer.*
 import com.jayway.jsonpath.JsonPath
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
