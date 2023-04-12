@@ -6,9 +6,9 @@ import scala.io.Source
 import scala.util.matching.Regex
 
 class ConfigVariablesSubstitutor(
-    configVariablesFromFile: Map[String, String],
-    configVariablesFromApplicationArgs: Map[String, String],
-    environmentVariables: Map[String, String]
+    configVariablesFromFile: Map[String, String] = Map(),
+    configVariablesFromApplicationArgs: Map[String, String] = Map(),
+    environmentVariables: Map[String, String] = sys.env
 ) {
   private val CONFIG_VARIABLE_REGEX_PATTERN: Regex = """\$\{(\S*)}""".r
 
@@ -41,16 +41,5 @@ class ConfigVariablesSubstitutor(
       configString = configString
     )
   }
-
-}
-
-object ConfigVariablesSubstitutor {
-
-  def apply(
-      configVariablesFromFile: Map[String, String] = Map(),
-      configVariablesFromApplicationArgs: Map[String, String] = Map(),
-      environmentVariables: Map[String, String] = sys.env
-  ): ConfigVariablesSubstitutor =
-    new ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
 
 }

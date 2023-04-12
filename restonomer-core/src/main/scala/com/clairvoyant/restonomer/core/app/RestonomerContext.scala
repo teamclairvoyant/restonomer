@@ -56,12 +56,7 @@ class RestonomerContext(
   }
 
   given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] =
-    Some(
-      ConfigVariablesSubstitutor(
-        configVariablesFromFile = configVariablesFromFile,
-        configVariablesFromApplicationArgs = configVariablesFromApplicationArgs
-      )
-    )
+    Some(ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs))
 
   def runCheckpoint(checkpointFilePath: String): Unit = {
     val absoluteCheckpointFilePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointFilePath"
