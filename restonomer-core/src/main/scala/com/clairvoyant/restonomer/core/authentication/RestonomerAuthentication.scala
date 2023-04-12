@@ -1,10 +1,11 @@
 package com.clairvoyant.restonomer.core.authentication
 
 import com.amazonaws.DefaultRequest
+import com.amazonaws.auth.internal.SignerConstants.*
 import com.amazonaws.auth.{AWS4Signer, AWSCredentials, BasicAWSCredentials}
 import com.amazonaws.http.HttpMethodName
-import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.*
 import com.clairvoyant.restonomer.core.common.*
+import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.*
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.sttpBackend
 import com.jayway.jsonpath.JsonPath
@@ -14,15 +15,14 @@ import org.apache.http.util.EntityUtils
 import pdi.jwt.*
 import pdi.jwt.algorithms.JwtUnknownAlgorithm
 import sttp.client3.*
+import sttp.model.{Header, HeaderNames}
 import zio.config.derivation.nameWithLabel
 
 import java.net.URI
 import java.time.Clock
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
-
-import scala.jdk.CollectionConverters._
-import sttp.client3.{Identity, Request => SttpRequest}
+import scala.jdk.CollectionConverters.*
 
 @nameWithLabel
 sealed trait RestonomerAuthentication {
@@ -260,25 +260,16 @@ case class ClientCredentials(
 
 case class AwsSignatureAuthentication(
     service: String = "s3",
-    region: String,
     accessKey: String,
-    secreteKey: String
+    secretKey: String
 ) extends RestonomerAuthentication {
 
   override def validateCredentials(): Unit = {
-    if (region.isBlank && accessKey.isBlank && secreteKey.isBlank)
-      throw new RestonomerException(
-        "The provided credentials are invalid. The credentials should contain both region, access and secrete key."
-      )
-    else if (region.isBlank)
-      throw new RestonomerException(
-        "The provided credentials are invalid. The credentials should contain valid region."
-      )
-    else if (accessKey.isBlank)
+    if (accessKey.isBlank)
       throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain valid access key."
       )
-    else if (secreteKey.isBlank)
+    else if (secretKey.isBlank)
       throw new RestonomerException(
         "The provided credentials are invalid. The credentials should contain valid secrete key."
       )
@@ -287,34 +278,23 @@ case class AwsSignatureAuthentication(
   override def authenticate(
       httpRequest: Request[Either[String, String], Any]
   ): Request[Either[String, String], Any] = {
-
-    val emptyStringChecksum = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    val awsRequest = convertToAwsRequest(httpRequest)
+    val awsRequest = new DefaultRequest("AWS")
+    awsRequest.setHttpMethod(HttpMethodName.GET)
+    awsRequest.setEndpoint(new URI(s"${httpRequest.uri.scheme.get}://${httpRequest.uri.host.get}"))
+    awsRequest.setResourcePath(httpRequest.uri.path.mkString("/"))
 
     val signer = new AWS4Signer()
-    signer.setRegionName(region)
     signer.setServiceName(service)
-    signer.sign(awsRequest, new BasicAWSCredentials(accessKey, secreteKey))
-
-    println("=============================================================")
-    println(awsRequest.getEndpoint.toString + "/" + awsRequest.getResourcePath)
-    println(awsRequest.getHeaders.get("Authorization"))
-    println(awsRequest.getHeaders.get("Host"))
-    println(awsRequest.getHeaders.get("X-Amz-Date"))
-    println("=============================================================")
+    signer.sign(awsRequest, new BasicAWSCredentials(accessKey, secretKey))
 
     httpRequest
-      .header("Authorization", awsRequest.getHeaders.get("Authorization"))
-//      .header("Host", awsRequest.getHeaders.get("Host"))
-      .header("X-Amz-Date", awsRequest.getHeaders.get("X-Amz-Date"))
-      .header("X-Amz-Content-Sha256", emptyStringChecksum)
+      .headers(
+        Map(
+          AUTHORIZATION -> awsRequest.getHeaders.get(AUTHORIZATION),
+          X_AMZ_DATE -> awsRequest.getHeaders.get(X_AMZ_DATE),
+          X_AMZ_CONTENT_SHA256 -> "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        )
+      )
   }
 
-  def convertToAwsRequest(request: Request[Either[String, String], Any]): DefaultRequest[AnyRef] = {
-    val defaultRequest = new DefaultRequest[AnyRef]("AWS")
-    defaultRequest.setHttpMethod(HttpMethodName.GET)
-    defaultRequest.setEndpoint(new URI(request.uri.scheme.get + "://" + request.uri.host.get))
-    defaultRequest.setResourcePath(request.uri.path.mkString("/"))
-    defaultRequest
-  }
 }

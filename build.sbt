@@ -40,7 +40,9 @@ val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 
 val scalaXmlDependencies = Seq("org.scala-lang.modules" %% "scala-xml" % scalaXmlVersion)
 
-val scalaParserCombinatorsDependencies = Seq("org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion)
+val scalaParserCombinatorsDependencies = Seq(
+  "org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion
+)
 
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
@@ -59,11 +61,6 @@ val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelay
 val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test")
   .map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
   .map(_.cross(CrossVersion.for3Use2_13))
-
-val awsSdkDependencies = Seq(
-  "com.amazonaws" % "aws-java-sdk-s3" % "1.12.429",
-  "com.amazonaws" % "aws-java-sdk-core" % "1.12.429"
-)
 
 // ----- MODULE DEPENDENCIES ----- //
 
