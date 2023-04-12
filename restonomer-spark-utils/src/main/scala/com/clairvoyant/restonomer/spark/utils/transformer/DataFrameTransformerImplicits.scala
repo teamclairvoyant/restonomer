@@ -17,7 +17,7 @@ object DataFrameTransformerImplicits {
         .map(dataType => df.withColumn(columnName, lit(columnValue).cast(dataType)))
         .getOrElse(df.withColumn(columnName, lit(columnValue)))
 
-    def deleteColumns(columnNames: List[String]): DataFrame = df.drop(columnNames: _*)
+    def deleteColumns(columnNames: List[String]): DataFrame = df.drop(columnNames*)
 
     def explodeColumn(columnName: String): DataFrame = df.withColumn(columnName, explode(col(columnName)))
 
@@ -43,7 +43,7 @@ object DataFrameTransformerImplicits {
         }
 
       if (df.schema.exists(_.dataType.isInstanceOf[StructType]))
-        df.select(flattenSchemaFromStructType(df.schema): _*)
+        df.select(flattenSchemaFromStructType(df.schema)*)
       else
         df
     }
@@ -55,7 +55,7 @@ object DataFrameTransformerImplicits {
             .get(columnName)
             .map(col(columnName).cast)
             .getOrElse(col(columnName))
-        }: _*
+        }*
       )
 
     def convertColumnToJson(columnName: String): DataFrame = df.withColumn(columnName, to_json(col(columnName)))
@@ -71,7 +71,7 @@ object DataFrameTransformerImplicits {
               .get(columnName)
               .map(col(columnName).name)
               .getOrElse(col(columnName))
-          ): _*
+          )*
       )
 
     private def applyChangeNameFunctionRecursively(
@@ -172,7 +172,7 @@ object DataFrameTransformerImplicits {
           }.toMap
         )
 
-    def selectColumns(columnNames: List[String]): DataFrame = df.select(columnNames.map(col): _*)
+    def selectColumns(columnNames: List[String]): DataFrame = df.select(columnNames.map(col)*)
 
     def filterRecords(filterCondition: String): DataFrame = df.filter(filterCondition)
 

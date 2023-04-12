@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.authentication._
+import com.clairvoyant.restonomer.core.authentication.*
 import sttp.client3.Request
 
 case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {

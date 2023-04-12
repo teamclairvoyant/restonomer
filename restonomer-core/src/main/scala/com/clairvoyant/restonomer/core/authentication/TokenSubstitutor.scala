@@ -9,7 +9,3 @@ class TokenSubstitutor(token: String => String) {
       .getOrElse(credential)
 
 }
-
-object TokenSubstitutor {
-  def apply(token: String => String): TokenSubstitutor = new TokenSubstitutor(token)
-}

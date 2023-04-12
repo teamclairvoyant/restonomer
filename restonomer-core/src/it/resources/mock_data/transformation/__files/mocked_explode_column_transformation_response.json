@@ -1,4 +1,8 @@
 {
   "col_A": "val_A",
-  "col_B": ["val_1", "val_2", "val_3"]
+  "col_B": [
+    "val_1",
+    "val_2",
+    "val_3"
+  ]
 }

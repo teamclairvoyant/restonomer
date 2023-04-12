@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.restonomer.spark.utils.transformer.DataFrameTransformerImplicits._
+import com.clairvoyant.restonomer.spark.utils.transformer.DataFrameTransformerImplicits.*
 import org.apache.spark.sql.DataFrame
-import zio.config.derivation._
+import zio.config.derivation.*
 
 @nameWithLabel
 sealed trait RestonomerTransformation {

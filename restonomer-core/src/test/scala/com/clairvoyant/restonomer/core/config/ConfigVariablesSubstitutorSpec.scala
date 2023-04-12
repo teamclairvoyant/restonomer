@@ -6,7 +6,32 @@ import java.io.File
 
 class ConfigVariablesSubstitutorSpec extends CoreSpec {
 
-  val configFile = new File(s"$resourcesPath/sample-checkpoint-conf-variable.conf")
+  val configString: String =
+    """name = "sample-checkpoint-conf-variable"
+      |
+      |data = {
+      |  data-request = {
+      |    url = "http://test-domain.com"
+      |
+      |    authentication = {
+      |      type = "BasicAuthentication"
+      |      basic-token = ${BASIC_AUTH_TOKEN}
+      |    }
+      |  }
+      |
+      |  data-response = {
+      |    body = {
+      |      type = "JSON"
+      |    }
+      |
+      |    persistence = {
+      |      type = "FileSystem"
+      |      file-format = "JSON"
+      |      file-path = "/tmp"
+      |    }
+      |  }
+      |}
+      |""".stripMargin
 
   "substituteConfigVariables - with empty configVariablesFromFile, empty configVariablesFromApplicationArgs and " +
     "empty env variables" should "return same config string" in {
@@ -42,7 +67,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val environmentVariables = Map[String, String]()
 
       ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
-        .substituteConfigVariables(configFile) shouldBe expectedConfigString
+        .substituteConfigVariables(configString) shouldBe expectedConfigString
     }
 
   "substituteConfigVariables - with the config variable value present both in env variables and configVariablesFromFile" should
@@ -79,7 +104,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val environmentVariables = Map("BASIC_AUTH_TOKEN" -> "abcd1234")
 
       ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
-        .substituteConfigVariables(configFile) shouldBe expectedConfigString
+        .substituteConfigVariables(configString) shouldBe expectedConfigString
     }
 
   "substituteConfigVariables - with the config variable value present only in env variables" should
@@ -116,7 +141,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val environmentVariables = Map("BASIC_AUTH_TOKEN" -> "abcd1234")
 
       ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
-        .substituteConfigVariables(configFile) shouldBe expectedConfigString
+        .substituteConfigVariables(configString) shouldBe expectedConfigString
     }
 
   "substituteConfigVariables - with the config variable value present only in configVariablesFromApplicationArgs" should
@@ -153,7 +178,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val environmentVariables = Map[String, String]()
 
       ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
-        .substituteConfigVariables(configFile) shouldBe expectedConfigString
+        .substituteConfigVariables(configString) shouldBe expectedConfigString
     }
 
   "substituteConfigVariables - with the config variable value present in all " +
@@ -191,7 +216,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val environmentVariables = Map("BASIC_AUTH_TOKEN" -> "ijkl9876")
 
       ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
-        .substituteConfigVariables(configFile) shouldBe expectedConfigString
+        .substituteConfigVariables(configString) shouldBe expectedConfigString
     }
 
 }
