@@ -150,3 +150,33 @@ case class SplitColumn(
     restonomerResponseDF.splitColumn(fromColumn, delimiter, toColumns)
 
 }
+
+case class CastColumnsBasedOnPrefix(
+    prefixList: List[String],
+    dataTypeToCast: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.castColumnsBasedOnSubstring(prefixList, dataTypeToCast, "prefix")
+
+}
+
+case class CastColumnsBasedOnSuffix(
+    suffixList: List[String],
+    dataTypeToCast: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.castColumnsBasedOnSubstring(suffixList, dataTypeToCast, "suffix")
+
+}
+
+case class CastColumnsBasedOnSubstring(
+    substringList: List[String],
+    dataTypeToCast: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.castColumnsBasedOnSubstring(substringList, dataTypeToCast)
+
+}
