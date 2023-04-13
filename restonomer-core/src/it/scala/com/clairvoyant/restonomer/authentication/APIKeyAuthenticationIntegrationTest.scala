@@ -8,17 +8,17 @@ class APIKeyAuthenticationIntegrationTest extends IntegrationTestDependencies wi
 
   it should "authenticate request with api key authentication using query string" in {
     runCheckpoint(checkpointFileName = "checkpoint_api_key_authentication_query_param.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_api_key_authentication_query_param.json"))
+    outputDF should matchExpectedDataFrame("expected_api_key_authentication_query_param.json")
   }
 
   it should "authenticate request with api key authentication using request header" in {
     runCheckpoint(checkpointFileName = "checkpoint_api_key_authentication_request_header.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_api_key_authentication_request_header.json"))
+    outputDF should matchExpectedDataFrame("expected_api_key_authentication_request_header.json")
   }
 
   it should "authenticate request with api key authentication using cookie" in {
     runCheckpoint(checkpointFileName = "checkpoint_api_key_authentication_cookie.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_api_key_authentication_cookie.json"))
+    outputDF should matchExpectedDataFrame("expected_api_key_authentication_cookie.json")
   }
 
 }

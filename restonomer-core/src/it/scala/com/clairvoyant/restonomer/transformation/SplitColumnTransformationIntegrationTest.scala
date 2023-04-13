@@ -8,7 +8,7 @@ class SplitColumnTransformationIntegrationTest extends IntegrationTestDependenci
 
   it should "split the column and create new columns accordingly" in {
     runCheckpoint(checkpointFileName = "checkpoint_split_column_transformation.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_split_column_transformation.json"))
+    outputDF should matchExpectedDataFrame("expected_split_column_transformation.json")
   }
 
 }

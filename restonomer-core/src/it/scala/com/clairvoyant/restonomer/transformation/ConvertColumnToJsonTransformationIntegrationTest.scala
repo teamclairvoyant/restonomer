@@ -10,7 +10,7 @@ class ConvertColumnToJsonTransformationIntegrationTest
 
   it should "transform mentioned column from the restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_column_to_json_transformation.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_column_to_json_transformation.json"))
+    outputDF should matchExpectedDataFrame("expected_column_to_json_transformation.json")
   }
 
 }

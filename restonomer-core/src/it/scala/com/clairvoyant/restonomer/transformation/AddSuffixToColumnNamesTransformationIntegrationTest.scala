@@ -10,7 +10,7 @@ class AddSuffixToColumnNamesTransformationIntegrationTest
 
   it should "add suffix to the mentioned column names from the restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_add_suffix_to_column_names_transformation.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_add_suffix_to_column_names_transformation.json"))
+    outputDF should matchExpectedDataFrame("expected_add_suffix_to_column_names_transformation.json")
   }
 
 }

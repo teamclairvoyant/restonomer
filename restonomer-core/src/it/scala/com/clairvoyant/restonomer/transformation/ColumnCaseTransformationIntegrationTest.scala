@@ -7,7 +7,7 @@ class ColumnCaseTransformationIntegrationTest extends IntegrationTestDependencie
 
   it should "transform columns case from the restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_column_case_transformation.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_column_case_transformation.json"))
+    outputDF should matchExpectedDataFrame("expected_column_case_transformation.json")
   }
 
 }

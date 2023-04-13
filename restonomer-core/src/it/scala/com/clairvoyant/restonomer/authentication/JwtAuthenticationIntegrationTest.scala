@@ -8,7 +8,7 @@ class JwtAuthenticationIntegrationTest extends IntegrationTestDependencies with 
 
   it should "authenticate request with subject and secret-key" in {
     runCheckpoint(checkpointFileName = "checkpoint_jwt_authentication.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_jwt_authentication.json"))
+    outputDF should matchExpectedDataFrame("expected_jwt_authentication.json")
   }
 
 }

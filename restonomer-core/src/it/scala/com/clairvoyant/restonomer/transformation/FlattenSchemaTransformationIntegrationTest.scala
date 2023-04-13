@@ -8,7 +8,7 @@ class FlattenSchemaTransformationIntegrationTest extends IntegrationTestDependen
 
   it should "flatten the schema of the restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_flatten_schema_transformation.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_flatten_schema_transformation.json"))
+    outputDF should matchExpectedDataFrame("expected_flatten_schema_transformation.json")
   }
 
 }
