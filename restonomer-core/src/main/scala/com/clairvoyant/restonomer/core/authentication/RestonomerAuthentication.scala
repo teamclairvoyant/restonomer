@@ -1,13 +1,13 @@
 package com.clairvoyant.restonomer.core.authentication
 
-import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders._
-import com.clairvoyant.restonomer.core.common._
+import com.clairvoyant.restonomer.core.common.*
+import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.*
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.sttpBackend
 import com.jayway.jsonpath.JsonPath
-import pdi.jwt._
+import pdi.jwt.*
 import pdi.jwt.algorithms.JwtUnknownAlgorithm
-import sttp.client3._
+import sttp.client3.*
 import zio.config.derivation.nameWithLabel
 
 import java.time.Clock

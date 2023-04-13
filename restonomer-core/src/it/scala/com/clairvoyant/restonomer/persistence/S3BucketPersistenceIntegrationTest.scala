@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.persistence
 
-import com.clairvoyant.restonomer.common.MockS3Server._
+import com.clairvoyant.restonomer.common.MockS3Server.*
 import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockS3BucketPersistence, MockS3Server}
 import org.apache.hadoop.conf.Configuration
 
@@ -23,7 +23,7 @@ class S3BucketPersistenceIntegrationTest
     s3Client.createBucket(s3MockBucketName)
 
     runCheckpoint(checkpointFileName = "checkpoint_s3_bucket_persistence.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_s3_bucket_persistence.json"))
+    outputDF should matchExpectedDataFrame("expected_s3_bucket_persistence.json")
   }
 
   override def beforeAll(): Unit = {

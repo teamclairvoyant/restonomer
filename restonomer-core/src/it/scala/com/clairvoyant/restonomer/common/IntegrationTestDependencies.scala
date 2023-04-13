@@ -24,8 +24,9 @@ trait IntegrationTestDependencies
     RestonomerContext(s"$resourcesDirectoryPath/restonomer_context")
       .runCheckpoint(checkpointFilePath = s"$mappingsDirectory/$checkpointFileName")
 
-  def expectedDF: String => DataFrame =
-    fileName =>
+  given fileNameToDataFrameConversion: Conversion[String, DataFrame] with
+
+    override def apply(fileName: String): DataFrame =
       sparkSession.read
         .option("multiline", value = true)
         .json(s"$mockDataRootDirectoryPath/$mappingsDirectory/$fileName")

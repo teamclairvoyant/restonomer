@@ -8,7 +8,7 @@ import java.io.FileNotFoundException
 
 class RestonomerConfigurationsLoaderSpec extends CoreSpec {
 
-  given configVariablesSubstitutor: ConfigVariablesSubstitutor = ConfigVariablesSubstitutor()
+  given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = None
 
   "loadConfigFromFile - with non existing file" should "throw RestonomerException" in {
     val thrown =

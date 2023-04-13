@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.spark.utils
 
 import cats.data.{Validated, ValidatedNel}
-import cats.implicits._
+import cats.implicits.*
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, Row}
 import org.scalatest.matchers.should.Matchers
@@ -13,7 +13,7 @@ trait DataFrameMatchers {
   self: Matchers =>
 
   private def collectSorted(dataFrame: DataFrame, columnsToSortBy: List[String]): List[Row] =
-    dataFrame.sort(columnsToSortBy.head, columnsToSortBy.tail: _*).collectAsList().asScala.toList
+    dataFrame.sort(columnsToSortBy.head, columnsToSortBy.tail*).collectAsList().asScala.toList
 
   private def validateSize(actualDFRows: List[Row], expectedDFRows: List[Row]): ValidatedNel[String, Unit] =
     Validated.condNel(

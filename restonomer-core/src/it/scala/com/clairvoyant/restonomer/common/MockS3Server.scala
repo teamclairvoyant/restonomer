@@ -4,7 +4,7 @@ import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials}
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.{AmazonS3, AmazonS3ClientBuilder}
-import com.clairvoyant.restonomer.common.MockS3Server._
+import com.clairvoyant.restonomer.common.MockS3Server.*
 import io.findify.s3mock.S3Mock
 import org.scalatest.{BeforeAndAfterAll, Suite}
 

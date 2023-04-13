@@ -10,7 +10,7 @@ class CSVResponseToDataFrameConverterIntegrationTest
 
   it should "convert the CSV response body into a dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_csv_response_dataframe_converter.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_csv_response.json"))
+    outputDF should matchExpectedDataFrame("expected_csv_response.json")
   }
 
 }
