@@ -10,7 +10,7 @@ class CastColumnsBasedOnSuffixTransformationIntegrationTest
 
   it should "cast the columns of restonomer response dataframe as specified in the transformation mapper" in {
     runCheckpoint(checkpointFileName = "checkpoint_cast_columns_based_on_suffix_transformation.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_cast_columns_based_on_suffix_transformation.json"))
+    outputDF should matchExpectedDataFrame("expected_cast_columns_based_on_suffix_transformation.json")
   }
 
 }
