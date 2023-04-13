@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "https://test-restonomer-bucket.s3.us-east-1.amazonaws.com/test-data.csv"
+    "url": "/aws-signature-auth"
   },
   "response": {
     "status": 200,
