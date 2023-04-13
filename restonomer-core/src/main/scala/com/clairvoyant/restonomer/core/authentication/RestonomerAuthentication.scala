@@ -271,7 +271,7 @@ case class AwsSignatureAuthentication(
       )
     else if (secretKey.isBlank)
       throw new RestonomerException(
-        "The provided credentials are invalid. The credentials should contain valid secrete key."
+        "The provided credentials are invalid. The credentials should contain valid secret key."
       )
   }
 
