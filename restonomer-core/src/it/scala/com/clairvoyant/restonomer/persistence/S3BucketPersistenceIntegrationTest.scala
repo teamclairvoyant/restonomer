@@ -23,7 +23,7 @@ class S3BucketPersistenceIntegrationTest
     s3Client.createBucket(s3MockBucketName)
 
     runCheckpoint(checkpointFileName = "checkpoint_s3_bucket_persistence.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_s3_bucket_persistence.json"))
+    outputDF should matchExpectedDataFrame("expected_s3_bucket_persistence.json")
   }
 
   override def beforeAll(): Unit = {

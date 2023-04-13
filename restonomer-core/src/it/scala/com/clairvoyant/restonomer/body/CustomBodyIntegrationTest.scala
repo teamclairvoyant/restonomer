@@ -8,7 +8,7 @@ class CustomBodyIntegrationTest extends IntegrationTestDependencies with MockFil
 
   it should "add custom body when provided by user" in {
     runCheckpoint(checkpointFileName = "checkpoint_add_custom_body.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_custom_body.json"))
+    outputDF should matchExpectedDataFrame("expected_custom_body.json")
   }
 
 }

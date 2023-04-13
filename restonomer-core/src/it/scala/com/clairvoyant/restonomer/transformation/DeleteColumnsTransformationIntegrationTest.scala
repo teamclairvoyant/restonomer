@@ -8,7 +8,7 @@ class DeleteColumnsTransformationIntegrationTest extends IntegrationTestDependen
 
   it should "delete mentioned columns from the restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_delete_columns_transformation.conf")
-    outputDF should matchExpectedDataFrame(expectedDF("expected_delete_columns_transformation.json"))
+    outputDF should matchExpectedDataFrame("expected_delete_columns_transformation.json")
   }
 
 }
