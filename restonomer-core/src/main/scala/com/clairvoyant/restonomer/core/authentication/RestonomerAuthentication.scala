@@ -279,14 +279,6 @@ case class AwsSignatureAuthentication(
   override def authenticate(
       httpRequest: Request[Either[String, String], Any]
   ): Request[Either[String, String], Any] = {
-
-    // TODO: Fetch payload from the request
-    val payload = ""
-    val payloadChecksum = MessageDigest
-      .getInstance("SHA-256")
-      .digest(payload.getBytes("UTF-8"))
-    val hexPayloadChecksum = payloadChecksum.map("%02x".format(_)).mkString
-
     val awsRequest = new DefaultRequest("AWS")
     awsRequest.setHttpMethod(HttpMethodName.GET)
     awsRequest.setEndpoint(new URI(s"${httpRequest.uri.scheme.get}://${httpRequest.uri.host.get}"))
@@ -301,7 +293,11 @@ case class AwsSignatureAuthentication(
         Map(
           AUTHORIZATION -> awsRequest.getHeaders.get(AUTHORIZATION),
           X_AMZ_DATE -> awsRequest.getHeaders.get(X_AMZ_DATE),
-          X_AMZ_CONTENT_SHA256 -> hexPayloadChecksum
+          X_AMZ_CONTENT_SHA256 -> MessageDigest
+            .getInstance("SHA-256")
+            .digest("".getBytes("UTF-8"))
+            .map("%02x".format(_))
+            .mkString
         )
       )
   }
