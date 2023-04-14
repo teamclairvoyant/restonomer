@@ -191,19 +191,20 @@ object DataFrameTransformerImplicits {
     def castColumnsBasedOnSubstring(
         substringList: List[String],
         dataTypeToCast: String,
-        matchType: String = "any"
-    ): DataFrame = {
-      val columnsToSelect =
-        matchType match {
-          case "prefix" =>
-            df.columns.filter(c => substringList.exists(c.startsWith))
-          case "suffix" =>
-            df.columns.filter(c => substringList.exists(c.endsWith))
-          case _ =>
-            df.columns.filter(c => substringList.exists(c.contains))
+        matchType: String
+    ): DataFrame =
+      df.columns
+        .filter {
+          matchType match {
+            case "prefix" =>
+              c => substringList.exists(c.startsWith)
+            case "suffix" =>
+              c => substringList.exists(c.endsWith)
+            case "contains" =>
+              c => substringList.exists(c.contains)
+          }
         }
-      columnsToSelect.foldLeft(df) { (df, colName) => df.withColumn(colName, col(colName).cast(dataTypeToCast)) }
-    }
+        .foldLeft(df) { (df, colName) => df.withColumn(colName, col(colName).cast(dataTypeToCast)) }
 
   }
 

@@ -157,7 +157,11 @@ case class CastColumnsBasedOnPrefix(
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.castColumnsBasedOnSubstring(prefixList, dataTypeToCast, "prefix")
+    restonomerResponseDF.castColumnsBasedOnSubstring(
+      substringList = prefixList,
+      dataTypeToCast = dataTypeToCast,
+      matchType = "prefix"
+    )
 
 }
 
@@ -167,7 +171,11 @@ case class CastColumnsBasedOnSuffix(
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.castColumnsBasedOnSubstring(suffixList, dataTypeToCast, "suffix")
+    restonomerResponseDF.castColumnsBasedOnSubstring(
+      substringList = suffixList,
+      dataTypeToCast = dataTypeToCast,
+      matchType = "suffix"
+    )
 
 }
 
@@ -177,6 +185,10 @@ case class CastColumnsBasedOnSubstring(
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.castColumnsBasedOnSubstring(substringList, dataTypeToCast)
+    restonomerResponseDF.castColumnsBasedOnSubstring(
+      substringList = substringList,
+      dataTypeToCast = dataTypeToCast,
+      matchType = "contains"
+    )
 
 }
