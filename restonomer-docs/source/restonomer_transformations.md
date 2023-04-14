@@ -251,6 +251,138 @@ The transformed response will now have the data type of `col_D` as `String`:
 }
 ```
 
+## CastColumnsBasedOnPrefix
+
+It lets the user cast the data type of multiple columns to the desired different types at once based on the prefix of the columns.
+
+This transformation expects user to provide below inputs:
+
+| Input Arguments    | Mandatory | Default Value | Description                                                                                                       |
+|:-------------------|:---------:|:-------------:|:------------------------------------------------------------------------------------------------------------------|
+| prefix-list        |    Yes    |       -       | It defines the list of prefixes based on which given columns to be selected to cast them to the desired data type |
+| data-type-to-cast  |    Yes    |       -       | It defines the desired data type to which the columns have to be casted                                           |
+
+For example, consider we have below restonomer response in json:
+
+```json
+{
+  "name": "abc",
+  "price_in_india": 200,
+  "price_in_uk": 12,
+  "percentage_difference": 3.4678
+}
+```
+
+Now, suppose the requirement is to cast the columns containing "price" and "percent" prefix into decimal(19,2) data type.
+Then, user can configure the `CastColumnsBasedOnPrefix` transformation in the below manner:
+
+```hocon
+{
+ type = "CastColumnsBasedOnPrefix"
+ prefix-list = ["price", "percent"]
+ data-type-to-cast = "decimal(19,2)"
+}
+```
+
+The transformed response will now have the desired columns with the desired data types:
+
+```json
+{
+  "name": "abc",
+  "price_in_india": 200.00,
+  "price_in_uk": 12.00,
+  "percentage_difference": 3.47
+}
+```
+
+## CastColumnsBasedOnSuffix
+
+It lets the user cast the data type of multiple columns to the desired different types at once based on the suffix of the columns.
+
+This transformation expects user to provide below inputs:
+
+| Input Arguments   | Mandatory | Default Value | Description                                                                                                       |
+|:------------------|:---------:|:-------------:|:------------------------------------------------------------------------------------------------------------------|
+| suffix-list       |    Yes    |       -       | It defines the list of suffixes based on which given columns to be selected to cast them to the desired data type |
+| data-type-to-cast |    Yes    |       -       | It defines the desired data type to which the columns have to be casted                                           |
+
+For example, consider we have below restonomer response in json:
+
+```json
+{
+  "name": "abc",
+  "india_price": 200,
+  "US_price": 12,
+  "percentage_difference": 3.4678
+}
+```
+
+Now, suppose the requirement is to cast the columns containing "price" and "percent" suffix into decimal(19,2) data type.
+Then, user can configure the `CastColumnsBasedOnSuffix` transformation in the below manner:
+
+```hocon
+{
+ type = "CastColumnsBasedOnSuffix"
+ suffix-list = ["price", "percent"]
+ data-type-to-cast = "decimal(19,2)"
+}
+```
+
+The transformed response will now have the desired columns with the desired data types.
+
+```json
+{
+  "name": "abc",
+  "india_price": 200.00,
+  "US_price": 12.00,
+  "percentage_difference": 3.4678
+}
+```
+
+## CastColumnsBasedOnSubstring
+
+It lets the user cast the data type of multiple columns to the desired different types at once based on the substring of the columns.
+
+This transformation expects user to provide below inputs:
+
+| Input Arguments   | Mandatory | Default Value | Description                                                                                                         |
+|:------------------|:---------:|:-------------:|:--------------------------------------------------------------------------------------------------------------------|
+| substring-list    |    Yes    |       -       | It defines the list of substrings based on which given columns to be selected to cast them to the desired data type |
+| data-type-to-cast |    Yes    |       -       | It defines the desired data type to which the columns have to be casted                                             |
+
+For example, consider we have below restonomer response in json:
+
+```json
+{
+  "name": "abc",
+  "product_india_price": 200,
+  "product_US_price": 12,
+  "percentage_difference": 3.4678
+}
+```
+
+Now, suppose the requirement is to cast the columns containing "price" and "percent" into decimal(19,2) data type.
+Then, user can configure the `CastColumnsBasedOnSubstring` transformation in the below manner:
+
+```hocon
+{
+ type = "CastColumnsBasedOnSubstring"
+ substring-list = ["price", "percent"]
+ data-type-to-cast = "decimal(19,2)"
+}
+```
+
+The transformed response will now have the desired columns with the desired data types.
+
+```json
+{
+  "name": "abc",
+  "product_india_price": 200.00,
+  "product_US_price": 12.00,
+  "percentage_difference": 3.47
+}
+```
+
 ## FlattenSchema
 
 It lets the user flatten the schema of the restonomer response. If any of the column is of StructType or is nested, 
