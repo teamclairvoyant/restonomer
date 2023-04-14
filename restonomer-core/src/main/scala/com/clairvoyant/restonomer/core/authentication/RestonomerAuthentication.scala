@@ -19,6 +19,7 @@ import sttp.model.{Header, HeaderNames}
 import zio.config.derivation.nameWithLabel
 
 import java.net.URI
+import java.security.MessageDigest
 import java.time.Clock
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -278,6 +279,14 @@ case class AwsSignatureAuthentication(
   override def authenticate(
       httpRequest: Request[Either[String, String], Any]
   ): Request[Either[String, String], Any] = {
+
+    // TODO: Fetch payload from the request
+    val payload = ""
+    val payloadChecksum = MessageDigest
+      .getInstance("SHA-256")
+      .digest(payload.getBytes("UTF-8"))
+    val hexPayloadChecksum = payloadChecksum.map("%02x".format(_)).mkString
+
     val awsRequest = new DefaultRequest("AWS")
     awsRequest.setHttpMethod(HttpMethodName.GET)
     awsRequest.setEndpoint(new URI(s"${httpRequest.uri.scheme.get}://${httpRequest.uri.host.get}"))
@@ -292,7 +301,7 @@ case class AwsSignatureAuthentication(
         Map(
           AUTHORIZATION -> awsRequest.getHeaders.get(AUTHORIZATION),
           X_AMZ_DATE -> awsRequest.getHeaders.get(X_AMZ_DATE),
-          X_AMZ_CONTENT_SHA256 -> "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          X_AMZ_CONTENT_SHA256 -> hexPayloadChecksum
         )
       )
   }
