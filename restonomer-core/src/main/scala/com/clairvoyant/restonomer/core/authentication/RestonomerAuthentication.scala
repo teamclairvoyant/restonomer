@@ -1,18 +1,29 @@
 package com.clairvoyant.restonomer.core.authentication
 
+import com.amazonaws.DefaultRequest
+import com.amazonaws.auth.internal.SignerConstants.*
+import com.amazonaws.auth.{AWS4Signer, AWSCredentials, BasicAWSCredentials}
+import com.amazonaws.http.HttpMethodName
 import com.clairvoyant.restonomer.core.common.*
 import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.*
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.sttpBackend
 import com.jayway.jsonpath.JsonPath
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.HttpClients
+import org.apache.http.util.EntityUtils
 import pdi.jwt.*
 import pdi.jwt.algorithms.JwtUnknownAlgorithm
 import sttp.client3.*
+import sttp.model.{Header, HeaderNames}
 import zio.config.derivation.nameWithLabel
 
+import java.net.URI
+import java.security.MessageDigest
 import java.time.Clock
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import scala.jdk.CollectionConverters.*
 
 @nameWithLabel
 sealed trait RestonomerAuthentication {
@@ -245,5 +256,50 @@ case class ClientCredentials(
       },
       "$.access_token"
     )
+
+}
+
+case class AwsSignatureAuthentication(
+    service: String = "s3",
+    accessKey: String,
+    secretKey: String
+) extends RestonomerAuthentication {
+
+  override def validateCredentials(): Unit = {
+    if (accessKey.isBlank)
+      throw new RestonomerException(
+        "The provided credentials are invalid. The credentials should contain valid access key."
+      )
+    else if (secretKey.isBlank)
+      throw new RestonomerException(
+        "The provided credentials are invalid. The credentials should contain valid secret key."
+      )
+  }
+
+  override def authenticate(
+      httpRequest: Request[Either[String, String], Any]
+  ): Request[Either[String, String], Any] = {
+    val awsRequest = new DefaultRequest("AWS")
+    awsRequest.setHttpMethod(HttpMethodName.GET)
+    awsRequest.setEndpoint(new URI(s"${httpRequest.uri.scheme.get}://${httpRequest.uri.host.get}"))
+    awsRequest.setResourcePath(httpRequest.uri.path.mkString("/"))
+
+    val signer = new AWS4Signer()
+    signer.setServiceName(service)
+    signer.sign(awsRequest, new BasicAWSCredentials(accessKey, secretKey))
+
+    httpRequest
+      .headers(
+        Map(
+          AUTHORIZATION -> awsRequest.getHeaders.get(AUTHORIZATION),
+          X_AMZ_DATE -> awsRequest.getHeaders.get(X_AMZ_DATE),
+          X_AMZ_CONTENT_SHA256 -> MessageDigest
+            .getInstance("SHA-256")
+            .digest("".getBytes("UTF-8"))
+            .map("%02x".format(_))
+            .mkString
+        )
+      )
+  }
 
 }

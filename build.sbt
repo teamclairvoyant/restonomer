@@ -40,7 +40,9 @@ val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 
 val scalaXmlDependencies = Seq("org.scala-lang.modules" %% "scala-xml" % scalaXmlVersion)
 
-val scalaParserCombinatorsDependencies = Seq("org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion)
+val scalaParserCombinatorsDependencies = Seq(
+  "org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion
+)
 
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
