@@ -7,7 +7,7 @@ lazy val scalacOptions = Seq("-Xmax-inlines", "50")
 // ----- VARIABLES ----- //
 
 val organizationName = "com.clairvoyant.restonomer"
-val releaseVersion = "1.0"
+val releaseVersion = "2.0"
 
 val zioConfigVersion = "4.0.0-RC14"
 val sttpVersion = "3.8.13"
