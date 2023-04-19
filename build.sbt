@@ -91,7 +91,6 @@ val commonSettings = Seq(
 
 val restonomerCoreSettings =
   commonSettings ++ Seq(
-    publish := true,
     libraryDependencies ++= restonomerCoreDependencies,
     Test / parallelExecution := false,
     IntegrationTest / parallelExecution := false
@@ -99,7 +98,6 @@ val restonomerCoreSettings =
 
 val restonomerSparkUtilsSettings =
   commonSettings ++ Seq(
-    publish := true,
     libraryDependencies ++= restonomerSparkUtilsDependencies
   )
 
@@ -107,14 +105,12 @@ val restonomerSparkUtilsSettings =
 
 lazy val restonomer = (project in file("."))
   .settings(commonSettings)
-  .aggregate(`restonomer-core`, `restonomer-docs`, `restonomer-spark-utils`)
+  .aggregate(`restonomer-core`, `restonomer-spark-utils`)
 
 lazy val `restonomer-core` = project
   .configs(IntegrationTest)
   .settings(restonomerCoreSettings)
   .dependsOn(`restonomer-spark-utils` % "compile->compile;test->test;it->it;test->it")
-
-lazy val `restonomer-docs` = project
 
 lazy val `restonomer-spark-utils` = project
   .configs(IntegrationTest.extend(Test))
