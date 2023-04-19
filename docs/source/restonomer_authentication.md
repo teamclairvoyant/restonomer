@@ -4,12 +4,6 @@ The authentication in restonomer is represented by abstract class `RestonomerAut
 
 The restonomer framework supports below authentication mechanisms:
 
-* Basic Authentication
-* Bearer Authentication
-* API Key Authentication
-* JWT Authentication
-* Digest Authentication
-
 ## Basic Authentication
 
 The basic authentication in restonomer framework is represented by class `BasicAuthentication`.
