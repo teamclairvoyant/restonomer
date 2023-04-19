@@ -91,6 +91,7 @@ val commonSettings = Seq(
 
 val restonomerCoreSettings =
   commonSettings ++ Seq(
+    publish := true,
     libraryDependencies ++= restonomerCoreDependencies,
     Test / parallelExecution := false,
     IntegrationTest / parallelExecution := false
@@ -98,6 +99,7 @@ val restonomerCoreSettings =
 
 val restonomerSparkUtilsSettings =
   commonSettings ++ Seq(
+    publish := true,
     libraryDependencies ++= restonomerSparkUtilsDependencies
   )
 
@@ -121,7 +123,6 @@ lazy val `restonomer-spark-utils` = project
 // ----- PUBLISH TO GITHUB PACKAGES ----- //
 
 publishTo := Some("Restonomer Github Repo" at "https://maven.pkg.github.com/teamclairvoyant/restonomer/")
-publishMavenStyle := true
 credentials += Credentials(
   "GitHub Package Registry",
   "maven.pkg.github.com",
