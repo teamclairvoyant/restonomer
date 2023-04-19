@@ -1,11 +1,18 @@
 package com.clairvoyant.restonomer.core.common
 
-object APIKeyPlaceholders extends Enumeration {
-  val QUERY_PARAM: APIKeyPlaceholders.Value = Value("QueryParam")
-  val REQUEST_HEADER: APIKeyPlaceholders.Value = Value("RequestHeader")
-  val COOKIE: APIKeyPlaceholders.Value = Value("Cookie")
+enum APIKeyPlaceholders {
 
-  def isValidAPIKeyPlaceholder(apiKeyPlaceholder: String): Boolean = values.exists(_.toString == apiKeyPlaceholder)
+  case QueryParam extends APIKeyPlaceholders
+  case RequestHeader extends APIKeyPlaceholders
+  case Cookie extends APIKeyPlaceholders
 
-  def apply(placeholder: String): APIKeyPlaceholders.Value = APIKeyPlaceholders.withName(placeholder)
+}
+
+object APIKeyPlaceholders {
+
+  def isValidAPIKeyPlaceholder(apiKeyPlaceholder: String): Boolean =
+    APIKeyPlaceholders.values.exists(_.toString == apiKeyPlaceholder)
+
+  def apply(placeholder: String): APIKeyPlaceholders = APIKeyPlaceholders.valueOf(placeholder)
+
 }

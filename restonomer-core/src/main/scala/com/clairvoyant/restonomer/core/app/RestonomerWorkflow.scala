@@ -77,7 +77,7 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
       tokenResponsePlaceholder: String
   ): String => String =
     TokenResponsePlaceholders(tokenResponsePlaceholder) match {
-      case RESPONSE_BODY =>
+      case ResponseBody =>
         tokenJsonPath =>
           JsonPath.read[String](
             tokenHttpResponse.body match {
@@ -89,7 +89,7 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
             tokenJsonPath
           )
 
-      case RESPONSE_HEADERS =>
+      case ResponseHeaders =>
         tokenName =>
           tokenHttpResponse.headers
             .find(_.name == tokenName) match {
