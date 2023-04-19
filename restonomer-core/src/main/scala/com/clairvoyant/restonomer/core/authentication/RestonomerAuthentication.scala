@@ -119,13 +119,13 @@ case class APIKeyAuthentication(
       httpRequest: Request[Either[String, String], Any]
   ): Request[Either[String, String], Any] = {
     APIKeyPlaceholders(placeholder) match {
-      case QUERY_PARAM =>
+      case QueryParam =>
         httpRequest.copy[Identity, Either[String, String], Any](
           uri = httpRequest.uri.addParam(apiKeyName, apiKeyValue)
         )
-      case REQUEST_HEADER =>
+      case RequestHeader =>
         httpRequest.header(apiKeyName, apiKeyValue, replaceExisting = true)
-      case COOKIE =>
+      case Cookie =>
         httpRequest.cookie(apiKeyName, apiKeyValue)
     }
   }

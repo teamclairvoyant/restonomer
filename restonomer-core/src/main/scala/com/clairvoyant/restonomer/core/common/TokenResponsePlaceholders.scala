@@ -2,14 +2,18 @@ package com.clairvoyant.restonomer.core.common
 
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 
-object TokenResponsePlaceholders extends Enumeration {
+enum TokenResponsePlaceholders {
 
-  val RESPONSE_BODY: TokenResponsePlaceholders.Value = Value("ResponseBody")
-  val RESPONSE_HEADERS: TokenResponsePlaceholders.Value = Value("ResponseHeaders")
+  case ResponseBody extends TokenResponsePlaceholders
+  case ResponseHeaders extends TokenResponsePlaceholders
 
-  def apply(tokenResponsePlaceholder: String): TokenResponsePlaceholders.Value = {
+}
+
+object TokenResponsePlaceholders {
+
+  def apply(tokenResponsePlaceholder: String): TokenResponsePlaceholders = {
     if (isValidTokenResponsePlaceholder(tokenResponsePlaceholder))
-      TokenResponsePlaceholders.withName(tokenResponsePlaceholder)
+      TokenResponsePlaceholders.valueOf(tokenResponsePlaceholder)
     else
       throw new RestonomerException(s"The token response placeholder: $tokenResponsePlaceholder is not supported.")
   }
