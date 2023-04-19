@@ -8,7 +8,7 @@ class JSONResponseToDataFrameConverter(dataColumnName: Option[String] = None) ex
 
   def convertResponseToDataFrame(
       restonomerResponseBody: Seq[String]
-  )(implicit sparkSession: SparkSession): DataFrame = {
+  )(using sparkSession: SparkSession): DataFrame = {
     val responseDF =
       new JSONTextToDataFrameReader(
         sparkSession = sparkSession

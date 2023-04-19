@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/aws-signature-auth"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_aws_signature_authentication_response.json"
+  }
+}

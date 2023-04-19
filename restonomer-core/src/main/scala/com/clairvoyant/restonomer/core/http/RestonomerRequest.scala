@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.model._
-import sttp.client3._
+import com.clairvoyant.restonomer.core.model.*
+import sttp.client3.*
 import sttp.model.Method
 
 case class RestonomerRequest(httpRequest: Request[Either[String, String], Any])
@@ -10,7 +10,7 @@ object RestonomerRequest {
 
   def builder(
       requestConfig: RequestConfig
-  )(implicit tokenFunction: Option[String => String] = None): RestonomerRequestBuilder =
+  )(using tokenFunction: Option[String => String] = None): RestonomerRequestBuilder =
     RestonomerRequestBuilder(
       basicRequest.method(
         method = Method(requestConfig.method),

@@ -28,3 +28,51 @@ Restonomer also provides users with a toolkit for transformation and persistance
 
 
 Restonomer, at a high level, aims at providing users with a fault-tolerant and scalable solution to retrieve huge datasets from REST APIs, transform the datasets, and persist the datasets in a concurrent and distributed fashion.
+
+
+## Getting Started
+
+### Add SBT Dependency
+
+To use Restonomer in an existing SBT project with Scala 2.12 or a later version,
+add the following dependency to your `build.sbt`
+
+```sbt
+resolvers += "Restonomer Github Repo" at "https://maven.pkg.github.com/teamclairvoyant/restonomer/"
+
+libraryDependencies += "com.clairvoyant.restonomer" %% "restonomer-core" % "1.0"
+```
+
+### Simple Restonomer Client Application
+
+* Import the `RestonomerContext` class:
+
+  ```scala
+  import com.clairvoyant.restonomer.core.app.RestonomerContext
+  ```
+
+* Create `RestonomerContext` instance:
+
+  User can create the restonomer context instance by passing the restonomer context directory path to the constructor
+  of RestonomerContext class.
+
+  ```scala
+  private val restonomerContextDirectoryPath = "<restonomer_context_directory_path>"
+  private val restonomerContext = RestonomerContext(restonomerContextDirectoryPath)
+  ```
+
+* Run Checkpoints:
+
+  Once the restonomer context instance is created, user can use various methods provided by the instance to run specific
+  checkpoints or all checkpoints as desired.
+
+  ```scala
+  restonomerContext.runAllCheckpoints()
+  ```
+
+## Restonomer Usage Guide Document
+
+You can find the documentation on how to use Restonomer and all of its features along with well described 
+examples here:
+
+[Restonomer Usage Guide](https://teamclairvoyant.github.io/restonomer/)

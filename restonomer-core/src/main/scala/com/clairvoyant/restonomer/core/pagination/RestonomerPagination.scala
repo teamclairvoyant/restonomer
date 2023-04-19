@@ -1,11 +1,11 @@
 package com.clairvoyant.restonomer.core.pagination
 
 import com.jayway.jsonpath.JsonPath
+import zio.config.derivation.nameWithLabel
 
+@nameWithLabel
 sealed trait RestonomerPagination {
-
   def getNextPageToken(responseBody: String): Option[(String, String)]
-
 }
 
 case class PageNumberBasedPagination(

@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/cast-columns-based-on-substring-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_cast_columns_based_on_substring_transformation_response.json"
+  }
+}

@@ -4,6 +4,8 @@ To use Restonomer in an existing SBT project with Scala 2.12 or a later version,
 add the following dependency to your `build.sbt`
 
 ```sbt
+resolvers += "Restonomer Github Repo" at "https://maven.pkg.github.com/teamclairvoyant/restonomer/"
+
 libraryDependencies += "com.clairvoyant.restonomer" %% "restonomer-core" % "1.0"
 ```
 

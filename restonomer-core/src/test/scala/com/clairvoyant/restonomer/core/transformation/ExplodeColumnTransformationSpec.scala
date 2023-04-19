@@ -7,8 +7,6 @@ import org.apache.spark.sql.DataFrame
 
 class ExplodeColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
 
-  import sparkSession.implicits._
-
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
       sparkSession = sparkSession
@@ -28,12 +26,29 @@ class ExplodeColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
       columnName = "col_B"
     )
 
-    val expectedRestonomerResponseTransformedDF = Seq(
-      ("val_A", "val_1"),
-      ("val_A", "val_2"),
-      ("val_A", "val_3")
-    )
-      .toDF("col_A", "col_B")
+    val expectedRestonomerResponseTransformedDF: DataFrame =
+      new JSONTextToDataFrameReader(
+        sparkSession = sparkSession
+      ).read(text =
+        Seq(
+          """
+            |[
+            |  {
+            |    "col_A": "val_A",
+            |    "col_B": "val_1"
+            |  },
+            |  {
+            |    "col_A": "val_A",
+            |    "col_B": "val_2"
+            |  },
+            |  {
+            |    "col_A": "val_A",
+            |    "col_B": "val_3"
+            |  }
+            |]
+            |""".stripMargin
+        )
+      )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 

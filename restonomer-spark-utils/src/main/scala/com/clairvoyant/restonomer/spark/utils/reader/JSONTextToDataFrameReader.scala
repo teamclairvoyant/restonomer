@@ -6,7 +6,7 @@ class JSONTextToDataFrameReader(
     override val sparkSession: SparkSession
 ) extends DataFrameReader {
 
-  import sparkSession.implicits._
+  import sparkSession.implicits.*
 
   override def read(text: Seq[String]): DataFrame = sparkSession.read.json(text.toDS())
 

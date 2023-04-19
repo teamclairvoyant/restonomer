@@ -1,27 +1,26 @@
 package com.clairvoyant.restonomer.core.app
 
 import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders
-import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders._
-import com.clairvoyant.restonomer.core.converter._
+import com.clairvoyant.restonomer.core.common.TokenResponsePlaceholders.*
+import com.clairvoyant.restonomer.core.converter.*
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import com.clairvoyant.restonomer.core.http.{RestonomerRequest, RestonomerResponse}
-import com.clairvoyant.restonomer.core.model._
-import com.clairvoyant.restonomer.core.persistence.{FileSystem, RestonomerPersistence}
-import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
+import com.clairvoyant.restonomer.core.http.*
+import com.clairvoyant.restonomer.core.model.*
+import com.clairvoyant.restonomer.core.persistence.*
+import com.clairvoyant.restonomer.core.sttpBackend
+import com.clairvoyant.restonomer.spark.utils.writer.*
 import com.jayway.jsonpath.JsonPath
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import sttp.client3.{HttpClientFutureBackend, Response, SttpBackend}
+import sttp.client3.Response
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-class RestonomerWorkflow(implicit sparkSession: SparkSession) {
+class RestonomerWorkflow(using sparkSession: SparkSession) {
 
   def run(checkpointConfig: CheckpointConfig): Unit = {
-    implicit val sttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
-
     val tokenFunction = checkpointConfig.token
       .map { tokenConfig =>
         getTokenFunction(
@@ -39,7 +38,7 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 
     val dataRestonomerRequest =
       RestonomerRequest
-        .builder(checkpointConfig.data.dataRequest)(tokenFunction)
+        .builder(checkpointConfig.data.dataRequest)(using tokenFunction)
         .build
 
     val dataRestonomerResponse = RestonomerResponse.fetchFromRequest(
@@ -107,11 +106,19 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
   ): Future[Unit] = {
     val dataFrameWriter =
       restonomerPersistence match {
-        case FileSystem(fileFormat, filePath) =>
+        case FileSystem(fileFormat, filePath, saveMode) =>
           new DataFrameToFileSystemWriter(
-            sparkSession = sparkSession,
             fileFormat = fileFormat,
-            filePath = filePath
+            filePath = filePath,
+            saveMode = saveMode
+          )
+
+        case S3Bucket(bucketName, fileFormat, filePath, saveMode) =>
+          new DataFrameToS3BucketWriter(
+            bucketName = bucketName,
+            fileFormat = fileFormat,
+            filePath = filePath,
+            saveMode = saveMode
           )
       }
 
@@ -123,18 +130,19 @@ class RestonomerWorkflow(implicit sparkSession: SparkSession) {
 private object RestonomerWorkflow {
 
   def apply(applicationConfig: ApplicationConfig): RestonomerWorkflow = {
-    implicit val sparkSession: SparkSession = SparkSession
-      .builder()
-      .config(
-        applicationConfig.sparkConfigs
-          .map { sparkConfigs =>
-            sparkConfigs.foldLeft(new SparkConf()) { case (sparkConf, sparkConfig) =>
-              sparkConf.set(sparkConfig._1, sparkConfig._2)
+    given sparkSession: SparkSession =
+      SparkSession
+        .builder()
+        .config(
+          applicationConfig.sparkConfigs
+            .map { sparkConfigs =>
+              sparkConfigs.foldLeft(new SparkConf()) { case (sparkConf, sparkConfig) =>
+                sparkConf.set(sparkConfig._1, sparkConfig._2)
+              }
             }
-          }
-          .getOrElse(new SparkConf())
-      )
-      .getOrCreate()
+            .getOrElse(new SparkConf())
+        )
+        .getOrCreate()
 
     new RestonomerWorkflow()
   }

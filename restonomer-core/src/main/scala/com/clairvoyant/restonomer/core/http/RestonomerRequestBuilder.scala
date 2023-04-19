@@ -1,12 +1,12 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.authentication._
+import com.clairvoyant.restonomer.core.authentication.*
 import sttp.client3.Request
 
 case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {
 
   def withQueryParams(queryParams: Map[String, String])(
-      implicit tokenFunction: Option[String => String]
+      using tokenFunction: Option[String => String]
   ): RestonomerRequestBuilder =
     copy(httpRequest =
       httpRequest.method(
@@ -21,7 +21,7 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
 
   def withAuthentication(
       authenticationConfig: Option[RestonomerAuthentication]
-  )(implicit tokenFunction: Option[String => String]): RestonomerRequestBuilder =
+  )(using tokenFunction: Option[String => String]): RestonomerRequestBuilder =
     copy(httpRequest =
       authenticationConfig
         .map { restonomerAuthentication =>
@@ -51,6 +51,21 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
                 case jwtAuthentication @ JWTAuthentication(subject, secretKey, _, _) =>
                   jwtAuthentication.copy(
                     subject = tokenSubstitutor.substitute(subject),
+                    secretKey = tokenSubstitutor.substitute(secretKey)
+                  )
+
+                case digestAuthentication @ DigestAuthentication(userName, password) =>
+                  digestAuthentication.copy(
+                    userName = tokenSubstitutor.substitute(userName),
+                    password = tokenSubstitutor.substitute(password)
+                  )
+
+                case oAuth2Authentication @ OAuth2Authentication(_) =>
+                  oAuth2Authentication
+
+                case awsSignatureAuthentication @ AwsSignatureAuthentication(_, accessKey, secretKey) =>
+                  awsSignatureAuthentication.copy(
+                    accessKey = tokenSubstitutor.substitute(accessKey),
                     secretKey = tokenSubstitutor.substitute(secretKey)
                   )
               }

@@ -40,7 +40,7 @@ token = {
     url = "http://localhost:8080/token-response-body"
 
     authentication = {
-      type = "bearer-authentication"
+      type = "BearerAuthentication"
       bearer-token = "test_token_123"
     }
   }
@@ -53,7 +53,7 @@ data = {
     url = "https://postman-echo.com/basic-auth"
 
     authentication = {
-      type = "basic-authentication"
+      type = "BasicAuthentication"
       user-name = "postman"
       password = "token[$.secret]"
     }
@@ -61,12 +61,12 @@ data = {
 
   data-response = {
     body = {
-      type = "json"
+      type = "JSON"
     }
 
     persistence = {
-      type = "file-system"
-      file-format = "json"
+      type = "FileSystem"
+      file-format = "JSON"
       file-path = "./rest-output/"
     }
   }
@@ -135,7 +135,7 @@ token = {
     url = "http://localhost:8080/token-response-body"
 
     authentication = {
-      type = "bearer-authentication"
+      type = "BearerAuthentication"
       bearer-token = "test_token_123"
     }
   }
@@ -148,7 +148,7 @@ data = {
     url = "https://postman-echo.com/basic-auth"
 
     authentication = {
-      type = "basic-authentication"
+      type = "BasicAuthentication"
       user-name = "postman"
       password = ${BASIC_AUTH_TOKEN}
     }
@@ -156,12 +156,12 @@ data = {
 
   data-response = {
     body = {
-      type = "json"
+      type = "JSON"
     }
 
     persistence = {
-      type = "file-system"
-      file-format = "json"
+      type = "FileSystem"
+      file-format = "JSON"
       file-path = "./rest-output/"
     }
   }

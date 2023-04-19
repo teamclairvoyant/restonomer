@@ -2,13 +2,10 @@ package com.clairvoyant.restonomer.common
 
 import com.clairvoyant.restonomer.core.app.RestonomerContext
 import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
-import org.apache.commons.io.FileUtils
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-
-import java.io.File
 
 trait IntegrationTestDependencies
     extends AnyFlatSpec
@@ -17,25 +14,21 @@ trait IntegrationTestDependencies
     with DataFrameMatchers
     with BeforeAndAfterEach {
 
-  val sparkSession: SparkSession = SparkSession
-    .builder()
-    .master("local[*]")
-    .getOrCreate()
+  given sparkSession: SparkSession =
+    SparkSession
+      .builder()
+      .master("local[*]")
+      .getOrCreate()
 
   def runCheckpoint(checkpointFileName: String): Unit =
     RestonomerContext(s"$resourcesDirectoryPath/restonomer_context")
       .runCheckpoint(checkpointFilePath = s"$mappingsDirectory/$checkpointFileName")
 
-  def outputDF: DataFrame = sparkSession.read.json(s"/tmp/$mappingsDirectory")
+  given fileNameToDataFrameConversion: Conversion[String, DataFrame] with
 
-  def expectedDF: String => DataFrame =
-    fileName =>
+    override def apply(fileName: String): DataFrame =
       sparkSession.read
         .option("multiline", value = true)
         .json(s"$mockDataRootDirectoryPath/$mappingsDirectory/$fileName")
-
-  override def afterEach(): Unit = {
-    FileUtils.deleteDirectory(new File(s"/tmp/$mappingsDirectory"))
-  }
 
 }

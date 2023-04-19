@@ -1,8 +1,10 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.restonomer.spark.utils.transformer.DataFrameTransformerImplicits._
+import com.clairvoyant.restonomer.spark.utils.transformer.DataFrameTransformerImplicits.*
 import org.apache.spark.sql.DataFrame
+import zio.config.derivation.*
 
+@nameWithLabel
 sealed trait RestonomerTransformation {
   def transform(restonomerResponseDF: DataFrame): DataFrame
 }
@@ -135,5 +137,58 @@ case class FilterRecords(
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
     restonomerResponseDF.filterRecords(filterCondition)
+
+}
+
+case class SplitColumn(
+    fromColumn: String,
+    delimiter: String,
+    toColumns: Map[String, Int]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.splitColumn(fromColumn, delimiter, toColumns)
+
+}
+
+case class CastColumnsBasedOnPrefix(
+    prefixList: List[String],
+    dataTypeToCast: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.castColumnsBasedOnSubstring(
+      substringList = prefixList,
+      dataTypeToCast = dataTypeToCast,
+      matchType = "prefix"
+    )
+
+}
+
+case class CastColumnsBasedOnSuffix(
+    suffixList: List[String],
+    dataTypeToCast: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.castColumnsBasedOnSubstring(
+      substringList = suffixList,
+      dataTypeToCast = dataTypeToCast,
+      matchType = "suffix"
+    )
+
+}
+
+case class CastColumnsBasedOnSubstring(
+    substringList: List[String],
+    dataTypeToCast: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.castColumnsBasedOnSubstring(
+      substringList = substringList,
+      dataTypeToCast = dataTypeToCast,
+      matchType = "contains"
+    )
 
 }

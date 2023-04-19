@@ -6,17 +6,16 @@ import scala.io.Source
 import scala.util.matching.Regex
 
 class ConfigVariablesSubstitutor(
-    configVariablesFromFile: Map[String, String],
-    configVariablesFromApplicationArgs: Map[String, String],
-    environmentVariables: Map[String, String]
+    configVariablesFromFile: Map[String, String] = Map(),
+    configVariablesFromApplicationArgs: Map[String, String] = Map(),
+    environmentVariables: Map[String, String] = sys.env
 ) {
   private val CONFIG_VARIABLE_REGEX_PATTERN: Regex = """\$\{(\S*)}""".r
 
-  def substituteConfigVariables(configFile: File): String = {
+  def substituteConfigVariables(configString: String): String = {
     @tailrec
     def substituteConfigVariablesHelper(remainingMatchers: List[Regex.Match], configString: String): String = {
-      if (remainingMatchers.isEmpty)
-        configString
+      if (remainingMatchers.isEmpty) configString
       else {
         val matcher = remainingMatchers.head
 
@@ -30,30 +29,17 @@ class ConfigVariablesSubstitutor(
           else
             matcher.group(0)
 
-        substituteConfigVariablesHelper(remainingMatchers.tail, configString.replace(matcher.group(0), substituteValue))
+        substituteConfigVariablesHelper(
+          remainingMatchers = remainingMatchers.tail,
+          configString = configString.replace(matcher.group(0), substituteValue)
+        )
       }
     }
 
-    val configFileSource = Source.fromFile(configFile)
-
-    val configString =
-      try configFileSource.mkString
-      finally configFileSource.close()
-
-    val matchers = CONFIG_VARIABLE_REGEX_PATTERN.findAllMatchIn(configString).toList
-
-    substituteConfigVariablesHelper(matchers, configString)
+    substituteConfigVariablesHelper(
+      remainingMatchers = CONFIG_VARIABLE_REGEX_PATTERN.findAllMatchIn(configString).toList,
+      configString = configString
+    )
   }
-
-}
-
-object ConfigVariablesSubstitutor {
-
-  def apply(
-      configVariablesFromFile: Map[String, String] = Map(),
-      configVariablesFromApplicationArgs: Map[String, String] = Map(),
-      environmentVariables: Map[String, String] = sys.env
-  ): ConfigVariablesSubstitutor =
-    new ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
 
 }
