@@ -125,7 +125,7 @@ lazy val `restonomer-spark-utils` = project
 
 ThisBuild / publishTo := Some("Restonomer Github Repo" at "https://maven.pkg.github.com/teamclairvoyant/restonomer/")
 
-credentials += Credentials(
+ThisBuild / credentials += Credentials(
   "GitHub Package Registry",
   "maven.pkg.github.com",
   "teamclairvoyant",
