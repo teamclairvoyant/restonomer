@@ -106,8 +106,8 @@ val restonomerSparkUtilsSettings =
 lazy val restonomer = (project in file("."))
   .settings(
     commonSettings ++ Seq(
-      publish := {},
-      publishLocal := {}
+      publish / skip := true,
+      publishLocal / skip := true
     )
   )
   .aggregate(`restonomer-core`, `restonomer-spark-utils`)
