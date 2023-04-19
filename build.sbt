@@ -104,7 +104,12 @@ val restonomerSparkUtilsSettings =
 // ----- PROJECTS ----- //
 
 lazy val restonomer = (project in file("."))
-  .settings(commonSettings)
+  .settings(
+    commonSettings ++ Seq(
+      publish := {},
+      publishLocal := {}
+    )
+  )
   .aggregate(`restonomer-core`, `restonomer-spark-utils`)
 
 lazy val `restonomer-core` = project
@@ -119,6 +124,7 @@ lazy val `restonomer-spark-utils` = project
 // ----- PUBLISH TO GITHUB PACKAGES ----- //
 
 ThisBuild / publishTo := Some("Restonomer Github Repo" at "https://maven.pkg.github.com/teamclairvoyant/restonomer/")
+
 credentials += Credentials(
   "GitHub Package Registry",
   "maven.pkg.github.com",
