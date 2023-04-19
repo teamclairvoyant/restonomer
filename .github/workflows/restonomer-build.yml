@@ -2,9 +2,9 @@ name: Restonomer CI
 
 on:
   push:
-    branches: [ "staging", "master" ]
+    branches: ["staging"]
   pull_request:
-    branches: [ "staging", "master" ]
+    branches: ["staging", "master"]
 
 permissions:
   contents: read

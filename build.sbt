@@ -117,3 +117,14 @@ lazy val `restonomer-docs` = project
 lazy val `restonomer-spark-utils` = project
   .configs(IntegrationTest.extend(Test))
   .settings(restonomerSparkUtilsSettings)
+
+// ----- PUBLISH TO GITHUB PACKAGES ----- //
+
+publishTo := Some("Restonomer Github Repo" at "https://maven.pkg.github.com/teamclairvoyant/restonomer/")
+publishMavenStyle := true
+credentials += Credentials(
+  "GitHub Package Registry",
+  "maven.pkg.github.com",
+  "teamclairvoyant",
+  System.getenv("GITHUB_TOKEN")
+)
