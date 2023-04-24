@@ -1,5 +1,8 @@
 package com.clairvoyant.restonomer.core.body
 
+import zio.config.derivation.nameWithLabel
+
+@nameWithLabel
 sealed trait RestonomerRequestBody
 
 case class TextDataBody(data: String) extends RestonomerRequestBody

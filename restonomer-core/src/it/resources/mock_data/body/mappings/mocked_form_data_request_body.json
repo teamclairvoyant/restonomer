@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/form-data-request-body",
+    "bodyPatterns": [
+      {
+        "matches": "k1=v1&k2=v2"
+      }
+    ]
+  },
+  "response": {
+    "bodyFileName": "mocked_form_data_request_body_response.json"
+  }
+}
