@@ -1,6 +1,7 @@
 package com.clairvoyant.restonomer.core.http
 
 import com.clairvoyant.restonomer.core.authentication.BasicAuthentication
+import com.clairvoyant.restonomer.core.body.TextDataBody
 import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
 import sttp.model.Header
 
@@ -38,13 +39,13 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
   }
 
   "withBody - with custom body" should "be added to the request" in {
-    val body = "body_value"
+    val body = TextDataBody(data = "body_value")
 
     RestonomerRequestBuilder(basicHttpRequest)
-      .withBody(Option(body))
+      .withBody(Some(body))
       .httpRequest
       .body
-      .show shouldBe s"string: $body"
+      .show shouldBe s"string: ${body.data}"
   }
 
   "withBody - with no body" should "be added to the request as an empty string" in {

@@ -1,6 +1,7 @@
 package com.clairvoyant.restonomer.core.http
 
 import com.clairvoyant.restonomer.core.authentication.*
+import com.clairvoyant.restonomer.core.body.{FormDataBody, RestonomerRequestBody, TextDataBody}
 import sttp.client3.Request
 
 case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {
@@ -80,8 +81,17 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
   def withHeaders(headers: Map[String, String]): RestonomerRequestBuilder =
     copy(httpRequest = httpRequest.headers(headers))
 
-  def withBody(body: Option[String] = None): RestonomerRequestBuilder =
-    copy(httpRequest = body.map(httpRequest.body(_)).getOrElse(httpRequest))
+  def withBody(body: Option[RestonomerRequestBody] = None): RestonomerRequestBuilder =
+    copy(httpRequest =
+      body
+        .map {
+          case TextDataBody(data) =>
+            httpRequest.body(data)
+          case FormDataBody(data) =>
+            httpRequest.body(data)
+        }
+        .getOrElse(httpRequest)
+    )
 
   def build: RestonomerRequest = new RestonomerRequest(httpRequest)
 }
