@@ -8,14 +8,30 @@ object DataFrameTransformerImplicits {
 
   extension (df: DataFrame) {
 
-    def addLiteralColumn(
+    def addColumn(
         columnName: String,
         columnValue: String,
+        valueType: String,
         columnDataType: Option[String]
-    ): DataFrame =
+    ): DataFrame = {
+
+      val expression =
+        valueType match {
+          case "expression" =>
+            s"$columnValue"
+          case "literal" =>
+            s"'$columnValue'"
+          case _ =>
+            throw new Exception(s"The provided valueType: $valueType is not supported.")
+        }
+
+      df.selectExpr("*", s"col_A+2 as col_D")
       columnDataType
-        .map(dataType => df.withColumn(columnName, lit(columnValue).cast(dataType)))
-        .getOrElse(df.withColumn(columnName, lit(columnValue)))
+        .map(dataType =>
+          df.withColumn(columnName, expr(expression)).withColumn(columnName, col(columnName).cast(dataType))
+        )
+        .getOrElse(df.withColumn(columnName, expr(expression)))
+    }
 
     def deleteColumns(columnNames: List[String]): DataFrame = df.drop(columnNames*)
 
