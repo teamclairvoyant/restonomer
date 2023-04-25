@@ -1,9 +1,0 @@
-{
-  "request": {
-    "url": "/add-literal-column-transformation"
-  },
-  "response": {
-    "status": 200,
-    "bodyFileName": "mocked_add_literal_column_transformation_response.json"
-  }
-}
