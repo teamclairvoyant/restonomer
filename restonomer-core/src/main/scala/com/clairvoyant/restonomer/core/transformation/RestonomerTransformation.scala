@@ -11,16 +11,16 @@ sealed trait RestonomerTransformation {
 
 case class AddColumn(
     columnName: String,
+    columnValueType: String,
     columnValue: String,
-    valueType: String,
     columnDataType: Option[String] = None
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
     restonomerResponseDF.addColumn(
       columnName = columnName,
+      columnValueType = columnValueType,
       columnValue = columnValue,
-      valueType = valueType,
       columnDataType = columnDataType
     )
 

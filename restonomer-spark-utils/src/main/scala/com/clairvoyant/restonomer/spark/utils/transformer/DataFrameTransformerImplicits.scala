@@ -10,26 +10,22 @@ object DataFrameTransformerImplicits {
 
     def addColumn(
         columnName: String,
+        columnValueType: String,
         columnValue: String,
-        valueType: String,
         columnDataType: Option[String]
     ): DataFrame = {
-
       val expression =
-        valueType match {
+        columnValueType match {
           case "expression" =>
             s"$columnValue"
           case "literal" =>
             s"'$columnValue'"
           case _ =>
-            throw new Exception(s"The provided valueType: $valueType is not supported.")
+            throw new Exception(s"The provided columnValueType: $columnValueType is not supported.")
         }
 
-      df.selectExpr("*", s"col_A+2 as col_D")
       columnDataType
-        .map(dataType =>
-          df.withColumn(columnName, expr(expression)).withColumn(columnName, col(columnName).cast(dataType))
-        )
+        .map(dataType => df.withColumn(columnName, expr(expression).cast(dataType)))
         .getOrElse(df.withColumn(columnName, expr(expression)))
     }
 

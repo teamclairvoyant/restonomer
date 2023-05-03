@@ -26,8 +26,8 @@ class AddColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
   "transform() - with column-data-type" should "transform the dataframe as expected" in {
     val restonomerTransformation = AddColumn(
       columnName = "col_D",
+      columnValueType = "literal",
       columnValue = "val_D",
-      valueType = "literal",
       columnDataType = Some("string")
     )
 
@@ -57,8 +57,8 @@ class AddColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
   "transform() - without column-data-type" should "transform the dataframe as expected" in {
     val restonomerTransformation = AddColumn(
       columnName = "col_D",
+      columnValueType = "literal",
       columnValue = "val_D",
-      valueType = "literal",
       columnDataType = None
     )
 
@@ -88,8 +88,8 @@ class AddColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
   "transform() - with int column-data-type" should "transform the dataframe as expected" in {
     val restonomerTransformation = AddColumn(
       columnName = "col_D",
+      columnValueType = "literal",
       columnValue = "1",
-      valueType = "literal",
       columnDataType = Some("long")
     )
 
@@ -119,8 +119,8 @@ class AddColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
   "transform() - with expression and without casting" should "transform the dataframe as expected" in {
     val restonomerTransformation = AddColumn(
       columnName = "col_D",
-      columnValue = "col_c*2",
-      valueType = "expression"
+      columnValueType = "expression",
+      columnValue = "col_c * 2"
     )
 
     val expectedRestonomerResponseTransformedDF: DataFrame =
@@ -149,8 +149,8 @@ class AddColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
   "transform() - with expression and casting" should "transform the dataframe as expected" in {
     val restonomerTransformation = AddColumn(
       columnName = "col_D",
-      columnValue = "col_c*2",
-      valueType = "expression",
+      columnValueType = "expression",
+      columnValue = "col_c * 2",
       columnDataType = Some("long")
     )
 

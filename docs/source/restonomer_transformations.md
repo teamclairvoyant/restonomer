@@ -27,15 +27,15 @@ data = {
       {
         type = "AddColumn"
         column-name = "col_D"
+        column-value-type = "literal"
         column-value = "val_D"
-        value-type = "literal"
         column-data-type = "string"
       },
       {
         type = "AddColumn"
         column-name = "col_E"
+        column-value-type = "literal"
         column-value = "val_E"
-        value-type = "literal"
         column-data-type = "string"
       }
     ]
@@ -98,12 +98,12 @@ It lets the user add a new column with a literal value of the desired data type 
 
 This transformation needs below inputs from the user:
 
-| Input Arguments  | Mandatory | Default Value | Description                                                |
-|:-----------------|:---------:|:-------------:|:-----------------------------------------------------------|
-| column-name      |    Yes    |       -       | Name of the new column to be added                         |
-| column-value     |    Yes    |       -       | Literal value of the new column                            |
-| value-type       |    yes    |       -       | "literal" or "expression"                                  |
-| column-data-type |    No     |    string     | The spark sql data type that new column needs to be casted |
+| Input Arguments   | Mandatory | Default Value | Description                                                |
+|:------------------|:---------:|:-------------:|:-----------------------------------------------------------|
+| column-name       |    Yes    |       -       | Name of the new column to be added                         |
+| column-value-type |    yes    |       -       | "literal" or "expression"                                  |
+| column-value      |    Yes    |       -       | Literal value of the new column                            |
+| column-data-type  |    No     |    string     | The spark sql data type that new column needs to be casted |
 
 User can configure the `AddColumn` transformation in the below manner:
 
@@ -113,8 +113,8 @@ Example-1 : Where user wants to add a literal column
 {
   type = "AddColumn"
   column-name = "col_D"
+  column-value-type = "literal"
   column-value = "val_D"
-  value-type = "literal"
   column-data-type = "string"
 }
 ```
@@ -125,8 +125,8 @@ Example-2 : Where user wants to add a derived column using SQL expression.
 {
   type = "AddColumn"
   column-name = "col_D"
-  column-value = "((col_A+122)*100)"
-  value-type = "expression"
+  column-value-type = "expression"
+  column-value = "((col_A + 122) * 100)"
   column-data-type = "string"
 }
 ```
