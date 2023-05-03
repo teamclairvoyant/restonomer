@@ -25,15 +25,17 @@ data = {
 
     transformations = [
       {
-        type = "AddLiteralColumn"
+        type = "AddColumn"
         column-name = "col_D"
         column-value = "val_D"
+        value-type = "literal"
         column-data-type = "string"
       },
       {
-        type = "AddLiteralColumn"
+        type = "AddColumn"
         column-name = "col_E"
         column-value = "val_E"
+        value-type = "literal"
         column-data-type = "string"
       }
     ]
