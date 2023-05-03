@@ -1,37 +1,39 @@
 package com.clairvoyant.restonomer.core.config
 
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import zio.config.typesafe.*
 import zio.{ConfigProvider, *}
 
 import java.io.File
 import scala.annotation.tailrec
 import scala.io.Source
+import scala.util.{Failure, Success, Try, Using}
 
 object RestonomerConfigurationsLoader {
 
   def loadConfigFromFile[C](configFilePath: String, config: Config[C])(
       using configVariablesSubstitutor: Option[ConfigVariablesSubstitutor]
-  ): C = {
-    val configFileSource = Source.fromFile(new File(configFilePath))
-
-    val configString =
-      try configFileSource.mkString
-      finally configFileSource.close()
-
-    Unsafe.unsafe(implicit u => {
-      zio.Runtime.default.unsafe
-        .run(
-          ConfigProvider
-            .fromHoconString(
-              configVariablesSubstitutor
-                .map(_.substituteConfigVariables(configString))
-                .getOrElse(configString)
-            )
-            .load(config)
-        )
-        .getOrThrowFiberFailure()
-    })
-  }
+  ): C =
+    Using(Source.fromFile(new File(configFilePath))) { configFileSource =>
+      Unsafe.unsafe(implicit u => {
+        zio.Runtime.default.unsafe
+          .run(
+            ConfigProvider
+              .fromHoconString(
+                configVariablesSubstitutor
+                  .map(_.substituteConfigVariables(configFileSource.mkString))
+                  .getOrElse(configFileSource.mkString)
+              )
+              .load(config)
+          )
+          .getOrThrowFiberFailure()
+      })
+    } match {
+      case Success(config) =>
+        config
+      case Failure(exception) =>
+        throw new RestonomerException(exception.getMessage)
+    }
 
   def loadConfigsFromDirectory[C](configDirectoryPath: String, config: Config[C])(
       using configVariablesSubstitutor: Option[ConfigVariablesSubstitutor]

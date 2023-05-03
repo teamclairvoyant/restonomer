@@ -2,6 +2,7 @@ package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader.*
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
 
 import java.io.FileNotFoundException
@@ -12,7 +13,7 @@ class RestonomerConfigurationsLoaderSpec extends CoreSpec {
 
   "loadConfigFromFile - with non existing file" should "throw RestonomerException" in {
     val thrown =
-      the[FileNotFoundException] thrownBy loadConfigFromFile[CheckpointConfig](
+      the[RestonomerException] thrownBy loadConfigFromFile[CheckpointConfig](
         s"$resourcesPath/checkpoint_invalid.conf",
         CheckpointConfig.config
       )
