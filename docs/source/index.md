@@ -54,13 +54,13 @@ Restonomer, at a high level, aims at providing users with a fault-tolerant and s
    :maxdepth: 2
    :caption: Config Classes
    
-   config_classes
+   restonomer_config_classes
 
 .. toctree::
    :maxdepth: 2
    :caption: Token Request
    
-   token_request
+   restonomer_token_request
    
 .. toctree::
    :maxdepth: 2
@@ -91,6 +91,12 @@ Restonomer, at a high level, aims at providing users with a fault-tolerant and s
    :caption: Pagination
    
    restonomer_pagination
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Request Body
+   
+   restonomer_request_body
    
 .. toctree::
    :maxdepth: 2

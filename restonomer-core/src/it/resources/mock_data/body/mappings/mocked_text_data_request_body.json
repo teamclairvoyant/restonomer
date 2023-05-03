@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/text-data-request-body",
+    "bodyPatterns": [
+      {
+        "matches": "Hello World"
+      }
+    ]
+  },
+  "response": {
+    "bodyFileName": "mocked_text_data_request_body_response.json"
+  }
+}
