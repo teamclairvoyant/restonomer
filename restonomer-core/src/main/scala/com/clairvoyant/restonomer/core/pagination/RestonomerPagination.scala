@@ -37,7 +37,7 @@ case class PageNumberWithTotalPagesBasedPagination(
     val totalNumberOfPages = JsonPath.read[Int](responseBody, totalNumberOfPagesAttribute)
     val currentPageNumber = JsonPath.read[Int](responseBody, currentPageNumberAttribute)
 
-    if (totalNumberOfPages > currentPageNumber)
+    if (currentPageNumber != totalNumberOfPages)
       Some(pageTokenName -> (currentPageNumber + 1).toString)
     else
       None
