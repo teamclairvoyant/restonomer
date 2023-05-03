@@ -8,7 +8,7 @@ sealed trait RestonomerPagination {
   def getNextPageToken(responseBody: String): Option[(String, String)]
 }
 
-case class PageNumberBasedPagination(
+case class PageNumberWithTotalRecordsBasedPagination(
     totalNumberOfRecordsAttribute: String,
     currentPageNumberAttribute: String,
     maxRecordsPerPage: Int,

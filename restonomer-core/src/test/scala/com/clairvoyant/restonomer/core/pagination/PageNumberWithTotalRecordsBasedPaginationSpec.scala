@@ -2,7 +2,7 @@ package com.clairvoyant.restonomer.core.pagination
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
 
-class PageNumberBasedPaginationSpec extends CoreSpec {
+class PageNumberWithTotalRecordsBasedPaginationSpec extends CoreSpec {
 
   "getNextPageToken()" should "return the token for next page" in {
     val responseBody =
@@ -25,7 +25,7 @@ class PageNumberBasedPaginationSpec extends CoreSpec {
         |
         |""".stripMargin
 
-    val pagination = PageNumberBasedPagination(
+    val pagination = PageNumberWithTotalRecordsBasedPagination(
       totalNumberOfRecordsAttribute = "$.data.total.numberItems",
       currentPageNumberAttribute = "$.data.page",
       maxRecordsPerPage = 1,
@@ -56,7 +56,7 @@ class PageNumberBasedPaginationSpec extends CoreSpec {
         |
         |""".stripMargin
 
-    val pagination = PageNumberBasedPagination(
+    val pagination = PageNumberWithTotalRecordsBasedPagination(
       totalNumberOfRecordsAttribute = "$.data.total.numberItems",
       currentPageNumberAttribute = "$.data.page",
       maxRecordsPerPage = 1,
