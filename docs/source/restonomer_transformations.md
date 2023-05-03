@@ -25,15 +25,17 @@ data = {
 
     transformations = [
       {
-        type = "AddLiteralColumn"
+        type = "AddColumn"
         column-name = "col_D"
         column-value = "val_D"
+        value-type = "literal"
         column-data-type = "string"
       },
       {
-        type = "AddLiteralColumn"
+        type = "AddColumn"
         column-name = "col_E"
         column-value = "val_E"
+        value-type = "literal"
         column-data-type = "string"
       }
     ]
@@ -90,9 +92,9 @@ The transformed response will select the desired column from dataframe as shown 
 }
 ```
 
-## AddLiteralColumn
+## AddColumn
 
-It lets the user add a new column with a literal value of the desired data type.
+It lets the user add a new column with a literal value of the desired data type or with a valid SQL expression.
 
 This transformation needs below inputs from the user:
 
@@ -100,15 +102,31 @@ This transformation needs below inputs from the user:
 |:-----------------|:---------:|:-------------:|:-----------------------------------------------------------|
 | column-name      |    Yes    |       -       | Name of the new column to be added                         |
 | column-value     |    Yes    |       -       | Literal value of the new column                            |
+| value-type       |    yes    |       -       | "literal" or "expression"                                  |
 | column-data-type |    No     |    string     | The spark sql data type that new column needs to be casted |
 
 User can configure the `AddColumn` transformation in the below manner:
 
+Example-1 : Where user wants to add a literal column
+
 ```hocon
 {
-  type = "AddLiteralColumn"
+  type = "AddColumn"
   column-name = "col_D"
   column-value = "val_D"
+  value-type = "literal"
+  column-data-type = "string"
+}
+```
+
+Example-2 : Where user wants to add a derived column using SQL expression.
+
+```hocon
+{
+  type = "AddColumn"
+  column-name = "col_D"
+  column-value = "((col_A+122)*100)"
+  value-type = "expression"
   column-data-type = "string"
 }
 ```
