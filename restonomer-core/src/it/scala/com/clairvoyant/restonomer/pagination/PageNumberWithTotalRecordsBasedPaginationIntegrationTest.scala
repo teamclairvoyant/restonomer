@@ -6,7 +6,7 @@ class PageNumberWithTotalRecordsBasedPaginationIntegrationTest
     extends IntegrationTestDependencies
     with MockFileSystemPersistence {
 
-  override val mappingsDirectory: String = "pagination"
+  override val mappingsDirectory: String = "pagination/page_number_with_total_records_based_pagination"
 
   it should "perform pagination and get the grouped responses" in {
     runCheckpoint(checkpointFileName = "checkpoint_page_number_with_total_records_based_pagination.conf")

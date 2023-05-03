@@ -1,0 +1,15 @@
+{
+  "data": {
+    "total": {
+      "numberPages": 2
+    },
+    "page": 1,
+    "items": [
+      {
+        "col_A": "val_1",
+        "col_B": "val_2",
+        "col_C": "val_3"
+      }
+    ]
+  }
+}

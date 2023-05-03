@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/page_number_with_total_pages_based_pagination"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_page_number_with_total_pages_based_pagination_1_response.json"
+  }
+}

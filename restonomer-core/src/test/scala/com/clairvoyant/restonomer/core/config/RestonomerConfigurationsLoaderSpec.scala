@@ -17,7 +17,9 @@ class RestonomerConfigurationsLoaderSpec extends CoreSpec {
         CheckpointConfig.config
       )
 
-    thrown.getMessage should include("No such file or directory")
+    thrown.getMessage should (include("No such file or directory") or include(
+      "The system cannot find the file specified"
+    ))
   }
 
   "loadConfigFromFile - with existing valid file" should "return populated config object" in {
