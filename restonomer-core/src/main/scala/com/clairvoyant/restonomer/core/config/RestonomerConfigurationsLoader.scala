@@ -32,7 +32,7 @@ object RestonomerConfigurationsLoader {
       case Success(config) =>
         config
       case Failure(exception) =>
-        throw new RestonomerException(exception.getMessage)
+        throw exception
     }
 
   def loadConfigsFromDirectory[C](configDirectoryPath: String, config: Config[C])(
