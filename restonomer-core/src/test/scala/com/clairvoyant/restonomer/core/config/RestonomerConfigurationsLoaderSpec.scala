@@ -13,7 +13,7 @@ class RestonomerConfigurationsLoaderSpec extends CoreSpec {
 
   "loadConfigFromFile - with non existing file" should "throw RestonomerException" in {
     val thrown =
-      the[RestonomerException] thrownBy loadConfigFromFile[CheckpointConfig](
+      the[FileNotFoundException] thrownBy loadConfigFromFile[CheckpointConfig](
         s"$resourcesPath/checkpoint_invalid.conf",
         CheckpointConfig.config
       )
