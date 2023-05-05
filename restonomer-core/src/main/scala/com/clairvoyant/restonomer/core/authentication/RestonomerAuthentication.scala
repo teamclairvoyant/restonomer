@@ -219,7 +219,8 @@ sealed trait OAuth2AuthenticationGrantType {
 case class ClientCredentials(
     tokenUrl: String,
     clientId: String,
-    clientSecret: String
+    clientSecret: String,
+    scope: Option[String] = None
 ) extends OAuth2AuthenticationGrantType {
 
   override def validateCredentials(): Unit =
@@ -244,7 +245,11 @@ case class ClientCredentials(
             .post(uri"$tokenUrl")
             .auth
             .basic(clientId, clientSecret)
-            .body(Map("grant_type" -> "client_credentials"))
+            .body {
+              scope
+                .map(sc => Map("grant_type" -> "client_credentials", "scope" -> sc))
+                .getOrElse(Map("grant_type" -> "client_credentials"))
+            }
             .send(sttpBackend),
           Duration.Inf
         )
