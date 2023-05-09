@@ -39,7 +39,7 @@ object RestonomerConfigurationsLoader {
       using configVariablesSubstitutor: Option[ConfigVariablesSubstitutor]
   ): List[C] = {
     @tailrec
-    def loadConfigsFromDirectoryHelper(remainingConfigFiles: List[File], configs: List[C]): List[C] = {
+    def loadConfigsFromDirectoryHelper(remainingConfigFiles: List[File], configs: List[C]): List[C] =
       if (remainingConfigFiles.isEmpty) configs
       else {
         val configFile = remainingConfigFiles.head
@@ -52,7 +52,6 @@ object RestonomerConfigurationsLoader {
             loadConfigFromFile(configFile.getPath, config) :: configs
           )
       }
-    }
 
     loadConfigsFromDirectoryHelper(new File(configDirectoryPath).listFiles().toList, List())
   }
