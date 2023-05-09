@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/cursor-based-pagination?cursor=222222"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_cursor_based_pagination_2_response.json"
+  }
+}

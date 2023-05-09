@@ -1,6 +1,6 @@
 {
   "request": {
-    "url": "/page_number_with_total_pages_based_pagination"
+    "url": "/page-number-with-total-pages-based-pagination"
   },
   "response": {
     "status": 200,
