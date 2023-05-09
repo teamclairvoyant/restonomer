@@ -224,7 +224,7 @@ Then, the pagination details can be captured in the checkpoint file in the below
     }
 ```
 
-The `next-token-attribute` is represented as [JsonPath](https://support.smartbear.com/alertsite/docs/monitors/api/endpoint/jsonpath.html).
+The `next-cursor-attribute` is represented as [JsonPath](https://support.smartbear.com/alertsite/docs/monitors/api/endpoint/jsonpath.html).
 
 The complete example of checkpoint file including pagination is:
 
