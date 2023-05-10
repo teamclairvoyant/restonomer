@@ -27,8 +27,7 @@ class PageNumberWithTotalPagesBasedPaginationSpec extends CoreSpec {
 
     val pagination = PageNumberWithTotalPagesBasedPagination(
       totalNumberOfPagesAttribute = "$.data.total.numberPages",
-      currentPageNumberAttribute = "$.data.page",
-      pageTokenName = "page"
+      currentPageNumberAttribute = "$.data.page"
     )
 
     pagination.getNextPageToken(responseBody) shouldBe Some("page" -> "2")
@@ -57,8 +56,7 @@ class PageNumberWithTotalPagesBasedPaginationSpec extends CoreSpec {
 
     val pagination = PageNumberWithTotalPagesBasedPagination(
       totalNumberOfPagesAttribute = "$.data.total.numberPages",
-      currentPageNumberAttribute = "$.data.page",
-      pageTokenName = "page"
+      currentPageNumberAttribute = "$.data.page"
     )
 
     pagination.getNextPageToken(responseBody) shouldBe None

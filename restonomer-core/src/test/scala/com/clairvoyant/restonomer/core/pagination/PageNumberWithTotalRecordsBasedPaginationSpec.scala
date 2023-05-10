@@ -28,8 +28,7 @@ class PageNumberWithTotalRecordsBasedPaginationSpec extends CoreSpec {
     val pagination = PageNumberWithTotalRecordsBasedPagination(
       totalNumberOfRecordsAttribute = "$.data.total.numberItems",
       currentPageNumberAttribute = "$.data.page",
-      maxRecordsPerPage = 1,
-      pageTokenName = "page"
+      maxRecordsPerPage = 1
     )
 
     pagination.getNextPageToken(responseBody) shouldBe Some("page" -> "2")
@@ -59,8 +58,7 @@ class PageNumberWithTotalRecordsBasedPaginationSpec extends CoreSpec {
     val pagination = PageNumberWithTotalRecordsBasedPagination(
       totalNumberOfRecordsAttribute = "$.data.total.numberItems",
       currentPageNumberAttribute = "$.data.page",
-      maxRecordsPerPage = 1,
-      pageTokenName = "page"
+      maxRecordsPerPage = 1
     )
 
     pagination.getNextPageToken(responseBody) shouldBe None
