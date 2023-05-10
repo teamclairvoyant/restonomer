@@ -1,0 +1,37 @@
+[
+  {
+    "col_A": "val_A_1",
+    "col_B": "val_B_1",
+    "col_C": "val_C_1"
+  },
+  {
+    "col_A": "val_A_2",
+    "col_B": "val_B_2",
+    "col_C": "val_C_2"
+  },
+  {
+    "col_A": "val_A_3",
+    "col_B": "val_B_3",
+    "col_C": "val_C_3"
+  },
+  {
+    "col_A": "val_A_4",
+    "col_B": "val_B_4",
+    "col_C": "val_C_4"
+  },
+  {
+    "col_A": "val_A_5",
+    "col_B": "val_B_5",
+    "col_C": "val_C_5"
+  },
+  {
+    "col_A": "val_A_6",
+    "col_B": "val_B_6",
+    "col_C": "val_C_6"
+  },
+  {
+    "col_A": "val_A_7",
+    "col_B": "val_B_7",
+    "col_C": "val_C_7"
+  }
+]
