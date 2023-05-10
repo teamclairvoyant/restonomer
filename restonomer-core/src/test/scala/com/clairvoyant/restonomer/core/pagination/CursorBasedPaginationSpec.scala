@@ -21,10 +21,7 @@ class CursorBasedPaginationSpec extends CoreSpec {
         |}
         |""".stripMargin
 
-    val pagination = CursorBasedPagination(
-      nextCursorAttribute = "$.next",
-      pageTokenName = "cursor"
-    )
+    val pagination = CursorBasedPagination(nextCursorAttribute = "$.next")
 
     pagination.getNextPageToken(responseBody) shouldBe Some("cursor" -> "222222")
   }
@@ -46,10 +43,7 @@ class CursorBasedPaginationSpec extends CoreSpec {
         |}
         |""".stripMargin
 
-    val pagination = CursorBasedPagination(
-      nextCursorAttribute = "$.next",
-      pageTokenName = "cursor"
-    )
+    val pagination = CursorBasedPagination(nextCursorAttribute = "$.next")
 
     pagination.getNextPageToken(responseBody) shouldBe None
   }
