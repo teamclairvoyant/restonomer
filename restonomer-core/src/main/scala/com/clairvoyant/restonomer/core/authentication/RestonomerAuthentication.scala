@@ -64,7 +64,7 @@ case class BasicAuthentication(
 
   override def authenticate(
       httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] = {
+  ): Request[Either[String, String], Any] =
     basicToken
       .map(httpRequest.auth.basicToken)
       .getOrElse(
@@ -73,7 +73,6 @@ case class BasicAuthentication(
           password = password.get
         )
       )
-  }
 
 }
 
@@ -117,7 +116,7 @@ case class APIKeyAuthentication(
 
   override def authenticate(
       httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] = {
+  ): Request[Either[String, String], Any] =
     APIKeyPlaceholders(placeholder) match {
       case QueryParam =>
         httpRequest.copy[Identity, Either[String, String], Any](
@@ -128,7 +127,6 @@ case class APIKeyAuthentication(
       case Cookie =>
         httpRequest.cookie(apiKeyName, apiKeyValue)
     }
-  }
 
 }
 
@@ -156,7 +154,7 @@ case class JWTAuthentication(
 
   override def authenticate(
       httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] = {
+  ): Request[Either[String, String], Any] =
     httpRequest.auth.bearer(
       Jwt.encode(
         claim = JwtClaim(subject = Option(subject)).issuedNow.expiresIn(tokenExpiresIn),
@@ -164,7 +162,6 @@ case class JWTAuthentication(
         algorithm = JwtAlgorithm.fromString(algorithm)
       )
     )
-  }
 
 }
 
@@ -190,12 +187,11 @@ case class DigestAuthentication(
 
   override def authenticate(
       httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] = {
+  ): Request[Either[String, String], Any] =
     httpRequest.auth.digest(
       user = userName,
       password = password
     )
-  }
 
 }
 
