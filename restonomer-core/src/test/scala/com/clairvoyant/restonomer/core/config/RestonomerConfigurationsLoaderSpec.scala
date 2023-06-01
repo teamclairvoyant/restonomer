@@ -2,6 +2,7 @@ package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader.*
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
 
 import java.io.FileNotFoundException
@@ -17,7 +18,9 @@ class RestonomerConfigurationsLoaderSpec extends CoreSpec {
         CheckpointConfig.config
       )
 
-    thrown.getMessage should include("No such file or directory")
+    thrown.getMessage should (include("No such file or directory") or include(
+      "The system cannot find the file specified"
+    ))
   }
 
   "loadConfigFromFile - with existing valid file" should "return populated config object" in {

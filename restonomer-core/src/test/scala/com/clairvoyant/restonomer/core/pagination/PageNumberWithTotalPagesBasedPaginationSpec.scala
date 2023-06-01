@@ -2,7 +2,7 @@ package com.clairvoyant.restonomer.core.pagination
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
 
-class PageNumberBasedPaginationSpec extends CoreSpec {
+class PageNumberWithTotalPagesBasedPaginationSpec extends CoreSpec {
 
   "getNextPageToken()" should "return the token for next page" in {
     val responseBody =
@@ -10,7 +10,7 @@ class PageNumberBasedPaginationSpec extends CoreSpec {
         |{
         |  "data": {
         |    "total": {
-        |      "numberItems": 3
+        |      "numberPages": 3
         |    },
         |    "page": 1,
         |    "items": [
@@ -25,11 +25,9 @@ class PageNumberBasedPaginationSpec extends CoreSpec {
         |
         |""".stripMargin
 
-    val pagination = PageNumberBasedPagination(
-      totalNumberOfRecordsAttribute = "$.data.total.numberItems",
-      currentPageNumberAttribute = "$.data.page",
-      maxRecordsPerPage = 1,
-      pageTokenName = "page"
+    val pagination = PageNumberWithTotalPagesBasedPagination(
+      totalNumberOfPagesAttribute = "$.data.total.numberPages",
+      currentPageNumberAttribute = "$.data.page"
     )
 
     pagination.getNextPageToken(responseBody) shouldBe Some("page" -> "2")
@@ -41,7 +39,7 @@ class PageNumberBasedPaginationSpec extends CoreSpec {
         |{
         |  "data": {
         |    "total": {
-        |      "numberItems": 3
+        |      "numberPages": 3
         |    },
         |    "page": 3,
         |    "items": [
@@ -56,11 +54,9 @@ class PageNumberBasedPaginationSpec extends CoreSpec {
         |
         |""".stripMargin
 
-    val pagination = PageNumberBasedPagination(
-      totalNumberOfRecordsAttribute = "$.data.total.numberItems",
-      currentPageNumberAttribute = "$.data.page",
-      maxRecordsPerPage = 1,
-      pageTokenName = "page"
+    val pagination = PageNumberWithTotalPagesBasedPagination(
+      totalNumberOfPagesAttribute = "$.data.total.numberPages",
+      currentPageNumberAttribute = "$.data.page"
     )
 
     pagination.getNextPageToken(responseBody) shouldBe None

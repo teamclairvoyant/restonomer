@@ -1,0 +1,10 @@
+{
+    "request": {
+      "url": "/offset-based-pagination?offset=3"
+    },
+    "response": {
+      "status": 200,
+      "bodyFileName": "mocked_offset_based_pagination_2_response.json"
+    }
+  }
+  

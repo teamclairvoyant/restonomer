@@ -1,9 +1,0 @@
-{
-  "request": {
-    "url": "/page_number_based_pagination?page=3"
-  },
-  "response": {
-    "status": 200,
-    "bodyFileName": "mocked_page_number_based_pagination_3_response.json"
-  }
-}

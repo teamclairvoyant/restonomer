@@ -1,7 +1,7 @@
 project = 'restonomer'
 copyright = '2023, Clairvoyant'
 author = 'Clairvoyant'
-release = '2.0'
+release = '2.1.0'
 
 extensions = ['myst_parser']
 

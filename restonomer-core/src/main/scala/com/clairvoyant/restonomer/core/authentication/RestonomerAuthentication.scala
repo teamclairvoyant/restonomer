@@ -64,7 +64,7 @@ case class BasicAuthentication(
 
   override def authenticate(
       httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] = {
+  ): Request[Either[String, String], Any] =
     basicToken
       .map(httpRequest.auth.basicToken)
       .getOrElse(
@@ -73,7 +73,6 @@ case class BasicAuthentication(
           password = password.get
         )
       )
-  }
 
 }
 
@@ -117,7 +116,7 @@ case class APIKeyAuthentication(
 
   override def authenticate(
       httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] = {
+  ): Request[Either[String, String], Any] =
     APIKeyPlaceholders(placeholder) match {
       case QueryParam =>
         httpRequest.copy[Identity, Either[String, String], Any](
@@ -128,7 +127,6 @@ case class APIKeyAuthentication(
       case Cookie =>
         httpRequest.cookie(apiKeyName, apiKeyValue)
     }
-  }
 
 }
 
@@ -156,7 +154,7 @@ case class JWTAuthentication(
 
   override def authenticate(
       httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] = {
+  ): Request[Either[String, String], Any] =
     httpRequest.auth.bearer(
       Jwt.encode(
         claim = JwtClaim(subject = Option(subject)).issuedNow.expiresIn(tokenExpiresIn),
@@ -164,7 +162,6 @@ case class JWTAuthentication(
         algorithm = JwtAlgorithm.fromString(algorithm)
       )
     )
-  }
 
 }
 
@@ -190,12 +187,11 @@ case class DigestAuthentication(
 
   override def authenticate(
       httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] = {
+  ): Request[Either[String, String], Any] =
     httpRequest.auth.digest(
       user = userName,
       password = password
     )
-  }
 
 }
 
@@ -219,7 +215,8 @@ sealed trait OAuth2AuthenticationGrantType {
 case class ClientCredentials(
     tokenUrl: String,
     clientId: String,
-    clientSecret: String
+    clientSecret: String,
+    scope: Option[String] = None
 ) extends OAuth2AuthenticationGrantType {
 
   override def validateCredentials(): Unit =
@@ -244,7 +241,11 @@ case class ClientCredentials(
             .post(uri"$tokenUrl")
             .auth
             .basic(clientId, clientSecret)
-            .body(Map("grant_type" -> "client_credentials"))
+            .body {
+              scope
+                .map(sc => Map("grant_type" -> "client_credentials", "scope" -> sc))
+                .getOrElse(Map("grant_type" -> "client_credentials"))
+            }
             .send(sttpBackend),
           Duration.Inf
         )

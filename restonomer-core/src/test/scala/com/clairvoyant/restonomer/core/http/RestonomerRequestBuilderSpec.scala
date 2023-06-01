@@ -1,6 +1,7 @@
 package com.clairvoyant.restonomer.core.http
 
 import com.clairvoyant.restonomer.core.authentication.BasicAuthentication
+import com.clairvoyant.restonomer.core.body.{FormDataBody, TextDataBody}
 import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
 import sttp.model.Header
 
@@ -37,14 +38,24 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
     restonomerRequestBuilder.httpRequest.headers.contains(Header(headers.head._1, headers.head._2)) shouldBe true
   }
 
-  "withBody - with custom body" should "be added to the request" in {
-    val body = "body_value"
+  "withBody - with custom text data body" should "be added to the request" in {
+    val body = TextDataBody(data = "body_value")
 
     RestonomerRequestBuilder(basicHttpRequest)
-      .withBody(Option(body))
+      .withBody(Some(body))
       .httpRequest
       .body
-      .show shouldBe s"string: $body"
+      .show shouldBe s"string: body_value"
+  }
+
+  "withBody - with custom form data body" should "be added to the request" in {
+    val body = FormDataBody(data = Map("k1" -> "v1", "k2" -> "v2"))
+
+    RestonomerRequestBuilder(basicHttpRequest)
+      .withBody(Some(body))
+      .httpRequest
+      .body
+      .show shouldBe s"string: k1=v1&k2=v2"
   }
 
   "withBody - with no body" should "be added to the request as an empty string" in {

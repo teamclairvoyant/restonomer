@@ -9,15 +9,17 @@ sealed trait RestonomerTransformation {
   def transform(restonomerResponseDF: DataFrame): DataFrame
 }
 
-case class AddLiteralColumn(
+case class AddColumn(
     columnName: String,
+    columnValueType: String,
     columnValue: String,
     columnDataType: Option[String] = None
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.addLiteralColumn(
+    restonomerResponseDF.addColumn(
       columnName = columnName,
+      columnValueType = columnValueType,
       columnValue = columnValue,
       columnDataType = columnDataType
     )
