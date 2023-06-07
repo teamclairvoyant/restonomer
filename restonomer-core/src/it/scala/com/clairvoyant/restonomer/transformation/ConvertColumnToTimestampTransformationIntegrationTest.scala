@@ -9,6 +9,10 @@ class ConvertColumnToTimestampTransformationIntegrationTest
 
   override val mappingsDirectory: String = "transformation"
 
+  override val expectedDFSchema: Option[StructType] = Some(
+    StructType(List(StructField(name = "time", dataType = TimestampType)))
+  )
+
   it should "convert the specified column to Timestamp type" in {
     runCheckpoint(checkpointFileName = "checkpoint_convert_column_to_timestamp_transformation.conf")
     outputDF should matchExpectedDataFrame("expected_convert_column_to_timestamp_transformation.json")
