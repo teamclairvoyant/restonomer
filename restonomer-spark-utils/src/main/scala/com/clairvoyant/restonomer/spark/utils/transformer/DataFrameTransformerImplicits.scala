@@ -1,8 +1,12 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
+import org.apache.spark.sql.Column
+import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.*
-import org.apache.spark.sql.types.{ArrayType, DataType, StructField, StructType}
-import org.apache.spark.sql.{Column, DataFrame}
+import org.apache.spark.sql.types.ArrayType
+import org.apache.spark.sql.types.DataType
+import org.apache.spark.sql.types.StructField
+import org.apache.spark.sql.types.StructType
 
 object DataFrameTransformerImplicits {
 
@@ -217,6 +221,11 @@ object DataFrameTransformerImplicits {
           }
         }
         .foldLeft(df) { (df, colName) => df.withColumn(colName, col(colName).cast(dataTypeToCast)) }
+
+    def convertColumnToTimestamp(
+        columnName: String,
+        timestampFormat: String
+    ): DataFrame = df.withColumn(columnName, to_timestamp(col(columnName), timestampFormat))
 
   }
 
