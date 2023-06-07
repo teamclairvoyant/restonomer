@@ -1,0 +1,10 @@
+{
+    "request": {
+      "url": "/convert-column-to-timestamp-transformation"
+    },
+    "response": {
+      "status": 200,
+      "bodyFileName": "mocked_convert_column_to_timestamp_transformation_response.json"
+    }
+  }
+  
