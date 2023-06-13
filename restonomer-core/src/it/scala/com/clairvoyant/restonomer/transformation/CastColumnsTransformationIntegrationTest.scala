@@ -12,7 +12,9 @@ class CastColumnsTransformationIntegrationTest extends IntegrationTestDependenci
       List(
         StructField(name = "col_A", dataType = StringType),
         StructField(name = "col_B", dataType = DoubleType),
-        StructField(name = "col_C", dataType = new DecimalType(precision = 19, scale = 2))
+        StructField(name = "col_C", dataType = new DecimalType(precision = 19, scale = 2)),
+        StructField(name = "col_D", dataType = TimestampType),
+        StructField(name = "col_E", dataType = DateType)
       )
     )
   )
