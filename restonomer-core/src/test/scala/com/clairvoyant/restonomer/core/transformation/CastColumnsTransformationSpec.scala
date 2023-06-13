@@ -3,7 +3,7 @@ package com.clairvoyant.restonomer.core.transformation
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.types.{DecimalType, DoubleType, LongType, StringType}
+import org.apache.spark.sql.types.*
 
 class CastColumnsTransformationSpec extends CoreSpec {
 
@@ -16,7 +16,11 @@ class CastColumnsTransformationSpec extends CoreSpec {
           |{
           |  "col_A": 5,
           |  "col_B": 4,
-          |  "col_C": 3.4678
+          |  "col_C": 3.4678,
+          |  "col_D": "1990-07-23 10:20:30",
+          |  "col_E": "23-07-1990 10:20:30",
+          |  "col_F": "1990-07-23",
+          |  "col_G": "23-07-1990"
           |}
           |""".stripMargin
       )
@@ -42,12 +46,16 @@ class CastColumnsTransformationSpec extends CoreSpec {
       columnDataTypeMapper = Map(
         "col_A" -> "string",
         "col_B" -> "double",
-        "col_C" -> "decimal(19, 2)"
+        "col_C" -> "decimal(19, 2)",
+        "col_D" -> "timestamp",
+        "col_E" -> "timestamp(dd-MM-yyyy HH:mm:ss)",
+        "col_F" -> "date",
+        "col_G" -> "date(dd-MM-yyyy)"
       )
     )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
-
+    
     actualRestonomerResponseTransformedDF.schema.fields
       .filter(_.name == "col_A")
       .head
@@ -62,6 +70,26 @@ class CastColumnsTransformationSpec extends CoreSpec {
       .filter(_.name == "col_C")
       .head
       .dataType shouldBe DecimalType(19, 2)
+
+    actualRestonomerResponseTransformedDF.schema.fields
+      .filter(_.name == "col_D")
+      .head
+      .dataType shouldBe TimestampType
+
+    actualRestonomerResponseTransformedDF.schema.fields
+      .filter(_.name == "col_E")
+      .head
+      .dataType shouldBe TimestampType
+
+    actualRestonomerResponseTransformedDF.schema.fields
+      .filter(_.name == "col_F")
+      .head
+      .dataType shouldBe DateType
+
+    actualRestonomerResponseTransformedDF.schema.fields
+      .filter(_.name == "col_G")
+      .head
+      .dataType shouldBe DateType
   }
 
 }

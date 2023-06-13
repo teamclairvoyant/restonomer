@@ -1,12 +1,8 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
-import org.apache.spark.sql.Column
-import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.*
-import org.apache.spark.sql.types.ArrayType
-import org.apache.spark.sql.types.DataType
-import org.apache.spark.sql.types.StructField
-import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.types.{ArrayType, DataType, StructField, StructType}
+import org.apache.spark.sql.{Column, DataFrame}
 
 object DataFrameTransformerImplicits {
 
@@ -64,15 +60,41 @@ object DataFrameTransformerImplicits {
         df
     }
 
-    def castColumns(columnDataTypeMapper: Map[String, String]): DataFrame =
+    def castColumns(columnDataTypeMapper: Map[String, String]): DataFrame = {
+      val timestampDataTypeRegexPattern = "timestamp(?:\\((.*)\\))?".r
+      val dateDataTypeRegexPattern = "date(?:\\((.*)\\))?".r
+
       df.select(
-        df.columns.map { columnName =>
-          columnDataTypeMapper
-            .get(columnName)
-            .map(col(columnName).cast)
-            .getOrElse(col(columnName))
-        }*
+        df.columns
+          .map { columnName =>
+            columnDataTypeMapper
+              .get(columnName)
+              .map {
+                case timestampDataTypeRegexPattern(timestampFormat) =>
+                  {
+                    Option(timestampFormat) match {
+                      case Some(timestampFormat) =>
+                        to_timestamp(col(columnName), timestampFormat)
+                      case None =>
+                        to_timestamp(col(columnName))
+                    }
+                  }.as(columnName)
+                case dateDataTypeRegexPattern(dateFormat) =>
+                  {
+                    Option(dateFormat) match {
+                      case Some(dateFormat) =>
+                        to_date(col(columnName), dateFormat)
+                      case None =>
+                        to_date(col(columnName))
+                    }
+                  }.as(columnName)
+                case dataType =>
+                  col(columnName).cast(dataType)
+              }
+              .getOrElse(col(columnName))
+          }*
       )
+    }
 
     def convertColumnToJson(columnName: String): DataFrame = df.withColumn(columnName, to_json(col(columnName)))
 
@@ -221,11 +243,6 @@ object DataFrameTransformerImplicits {
           }
         }
         .foldLeft(df) { (df, colName) => df.withColumn(colName, col(colName).cast(dataTypeToCast)) }
-
-    def convertColumnToTimestamp(
-        columnName: String,
-        timestampFormat: String
-    ): DataFrame = df.withColumn(columnName, to_timestamp(col(columnName), timestampFormat))
 
   }
 

@@ -194,16 +194,3 @@ case class CastColumnsBasedOnSubstring(
     )
 
 }
-
-case class ConvertColumnToTimestamp(
-    columnName: String,
-    timestampFormat: String = "dd-MM-yyyy HH:mm:ss"
-) extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.convertColumnToTimestamp(
-      columnName = columnName,
-      timestampFormat = timestampFormat
-    )
-
-}
