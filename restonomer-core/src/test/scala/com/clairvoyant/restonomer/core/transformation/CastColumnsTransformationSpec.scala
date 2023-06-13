@@ -55,7 +55,7 @@ class CastColumnsTransformationSpec extends CoreSpec {
     )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
-    
+
     actualRestonomerResponseTransformedDF.schema.fields
       .filter(_.name == "col_A")
       .head
