@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/json-data-request-body",
+    "headers": {
+      "Content-Type": {
+        "matches": "application/json"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {"k1": "v1", "k2": "v2"}
+      }
+    ]
+  },
+  "response": {
+    "bodyFileName": "mocked_json_data_request_body_response.json"
+  }
+}
