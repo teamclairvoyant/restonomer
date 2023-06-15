@@ -26,67 +26,6 @@ case class AddColumn(
 
 }
 
-case class DeleteColumns(
-    columnNames: List[String]
-) extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.deleteColumns(columnNames)
-
-}
-
-case class ExplodeColumn(
-    columnName: String
-) extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.explodeColumn(columnName)
-
-}
-
-case class CastNestedColumn(
-    columnName: String,
-    ddl: String
-) extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.castNestedColumn(columnName, ddl)
-
-}
-
-case class FlattenSchema() extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.flattenSchema
-
-}
-
-case class CastColumns(
-    columnDataTypeMapper: Map[String, String]
-) extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.castColumns(columnDataTypeMapper)
-
-}
-
-case class ConvertColumnToJson(
-    columnName: String
-) extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.convertColumnToJson(columnName)
-
-}
-
-case class ReplaceStringInColumnValue(
-    columnName: String,
-    pattern: String,
-    replacement: String
-) extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.replaceStringInColumnValue(columnName, pattern, replacement)
-
-}
-
 case class AddPrefixToColumnNames(
     prefix: String,
     columnNames: List[String] = List[String]()
@@ -94,15 +33,6 @@ case class AddPrefixToColumnNames(
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
     restonomerResponseDF.addPrefixToColumnNames(prefix, columnNames)
-
-}
-
-case class RenameColumns(
-    renameColumnMapper: Map[String, String]
-) extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.renameColumns(renameColumnMapper)
 
 }
 
@@ -116,40 +46,12 @@ case class AddSuffixToColumnNames(
 
 }
 
-case class ChangeColumnCase(
-    caseType: String
+case class CastColumns(
+    columnDataTypeMapper: Map[String, String]
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.changeCaseOfColumnNames(caseType)
-
-}
-
-case class SelectColumns(
-    columnNames: List[String]
-) extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.selectColumns(columnNames)
-
-}
-
-case class FilterRecords(
-    filterCondition: String
-) extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.filterRecords(filterCondition)
-
-}
-
-case class SplitColumn(
-    fromColumn: String,
-    delimiter: String,
-    toColumns: Map[String, Int]
-) extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.splitColumn(fromColumn, delimiter, toColumns)
+    restonomerResponseDF.castColumns(columnDataTypeMapper)
 
 }
 
@@ -163,6 +65,20 @@ case class CastColumnsBasedOnPrefix(
       substringList = prefixList,
       dataTypeToCast = dataTypeToCast,
       matchType = "prefix"
+    )
+
+}
+
+case class CastColumnsBasedOnSubstring(
+    substringList: List[String],
+    dataTypeToCast: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.castColumnsBasedOnSubstring(
+      substringList = substringList,
+      dataTypeToCast = dataTypeToCast,
+      matchType = "contains"
     )
 
 }
@@ -181,16 +97,110 @@ case class CastColumnsBasedOnSuffix(
 
 }
 
-case class CastColumnsBasedOnSubstring(
-    substringList: List[String],
-    dataTypeToCast: String
+case class CastFromTo(
+    fromDataType: String,
+    toDataType: String
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.castColumnsBasedOnSubstring(
-      substringList = substringList,
-      dataTypeToCast = dataTypeToCast,
-      matchType = "contains"
-    )
+    restonomerResponseDF.castFromTo(fromDataType, toDataType)
+
+}
+
+case class CastNestedColumn(
+    columnName: String,
+    ddl: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.castNestedColumn(columnName, ddl)
+
+}
+
+case class ChangeColumnCase(
+    caseType: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.changeCaseOfColumnNames(caseType)
+
+}
+
+case class ConvertColumnToJson(
+    columnName: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.convertColumnToJson(columnName)
+
+}
+
+case class DeleteColumns(
+    columnNames: List[String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.deleteColumns(columnNames)
+
+}
+
+case class ExplodeColumn(
+    columnName: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.explodeColumn(columnName)
+
+}
+
+case class FilterRecords(
+    filterCondition: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.filterRecords(filterCondition)
+
+}
+
+case class FlattenSchema() extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.flattenSchema
+
+}
+
+case class RenameColumns(
+    renameColumnMapper: Map[String, String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.renameColumns(renameColumnMapper)
+
+}
+
+case class ReplaceStringInColumnValue(
+    columnName: String,
+    pattern: String,
+    replacement: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.replaceStringInColumnValue(columnName, pattern, replacement)
+
+}
+
+case class SelectColumns(
+    columnNames: List[String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.selectColumns(columnNames)
+
+}
+
+case class SplitColumn(
+    fromColumn: String,
+    delimiter: String,
+    toColumns: Map[String, Int]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.splitColumn(fromColumn, delimiter, toColumns)
 
 }
