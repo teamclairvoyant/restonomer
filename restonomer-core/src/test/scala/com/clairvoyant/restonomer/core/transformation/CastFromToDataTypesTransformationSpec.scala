@@ -16,7 +16,15 @@ class CastFromToDataTypesTransformationSpec extends CoreSpec {
           |{
           |  "col_A": 5,
           |  "col_B": 4,
-          |  "col_C": 3.4678
+          |  "col_C": 3.4678,
+          |  "col_D": {
+          |     "col_E": 6
+          |   },
+          |  "col_F": [
+          |    {
+          |       "col_G": 7
+          |    }
+          |  ]
           |}
           |""".stripMargin
       )
@@ -42,7 +50,8 @@ class CastFromToDataTypesTransformationSpec extends CoreSpec {
       dataTypeMapper = Map(
         "long" -> "integer",
         "double" -> "decimal(5, 2)"
-      )
+      ),
+      castRecursively = true
     )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)

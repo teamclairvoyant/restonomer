@@ -98,11 +98,12 @@ case class CastColumnsBasedOnSuffix(
 }
 
 case class CastFromToDataTypes(
-    dataTypeMapper: Map[String, String]
+    dataTypeMapper: Map[String, String],
+    castRecursively: Boolean = false
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.castFromToDataTypes(dataTypeMapper)
+    restonomerResponseDF.castFromToDataTypes(dataTypeMapper, castRecursively)
 
 }
 

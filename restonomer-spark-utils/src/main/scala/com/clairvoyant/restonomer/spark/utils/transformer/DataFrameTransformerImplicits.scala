@@ -123,17 +123,65 @@ object DataFrameTransformerImplicits {
         .foldLeft(df) { (df, colName) => df.withColumn(colName, col(colName).cast(dataTypeToCast)) }
 
     def castFromToDataTypes(
-        dataTypeMapper: Map[String, String]
+        dataTypeMapper: Map[String, String],
+        castRecursively: Boolean
     ): DataFrame =
-      dataTypeMapper.foldLeft(df) { (df, dataTypesPair) =>
-        df.select(
-          df.schema.map { structField =>
-            if (structField.dataType == CatalystSqlParser.parseDataType(dataTypesPair._1))
-              col(structField.name).cast(dataTypesPair._2)
-            else
-              col(structField.name)
-          }.toList*
-        )
+      dataTypeMapper.foldLeft(df) { (dataFrame, dataTypesPair) =>
+        val fromDataType = CatalystSqlParser.parseDataType(dataTypesPair._1)
+        val toDataType = CatalystSqlParser.parseDataType(dataTypesPair._2)
+
+        if (castRecursively == true) {
+          def applyCastFunctionRecursively(
+              schema: StructType,
+              fromDataType: DataType,
+              toDataType: DataType
+          ): StructType =
+            StructType(
+              schema.flatMap {
+                case sf @ StructField(_, ArrayType(arrayNestedType: StructType, containsNull), _, _) =>
+                  StructType(
+                    Seq(
+                      sf.copy(
+                        dataType = ArrayType(
+                          applyCastFunctionRecursively(arrayNestedType, fromDataType, toDataType),
+                          containsNull
+                        )
+                      )
+                    )
+                  )
+
+                case sf @ StructField(_, structType: StructType, _, _) =>
+                  StructType(
+                    Seq(
+                      sf.copy(
+                        dataType = applyCastFunctionRecursively(structType, fromDataType, toDataType)
+                      )
+                    )
+                  )
+
+                case sf @ StructField(_, dataType: DataType, _, _) =>
+                  StructType(
+                    Seq(
+                      if (dataType == fromDataType)
+                        sf.copy(dataType = toDataType)
+                      else
+                        sf
+                    )
+                  )
+              }
+            )
+
+          val newSchema = applyCastFunctionRecursively(dataFrame.schema, fromDataType, toDataType)
+          dataFrame.sparkSession.read.schema(newSchema).json(dataFrame.toJSON)
+        } else
+          dataFrame.select(
+            dataFrame.schema.map { structField =>
+              if (structField.dataType == fromDataType)
+                col(structField.name).cast(toDataType)
+              else
+                col(structField.name)
+            }.toList*
+          )
       }
 
     def castNestedColumn(
