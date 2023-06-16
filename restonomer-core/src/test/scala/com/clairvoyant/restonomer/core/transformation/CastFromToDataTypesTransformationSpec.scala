@@ -30,7 +30,7 @@ class CastFromToDataTypesTransformationSpec extends CoreSpec {
       )
     )
 
-  "transform()" should "cast columns as per the from and to data types" in {
+  "transform() - with castRecursively as true" should "cast columns as per the from and to data types" in {
     restonomerResponseDF.schema.fields
       .filter(_.name == "col_A")
       .head
@@ -45,6 +45,24 @@ class CastFromToDataTypesTransformationSpec extends CoreSpec {
       .filter(_.name == "col_C")
       .head
       .dataType shouldBe DoubleType
+
+    restonomerResponseDF
+      .select("col_D.col_E")
+      .schema
+      .fields
+      .head
+      .dataType shouldBe LongType
+
+    restonomerResponseDF.schema
+      .filter(_.name == "col_F")
+      .head
+      .dataType match {
+      case ArrayType(nestedArrayType: StructType, _) =>
+        nestedArrayType
+          .filter(_.name == "col_G")
+          .head
+          .dataType
+    } shouldBe LongType
 
     val restonomerTransformation = CastFromToDataTypes(
       dataTypeMapper = Map(
@@ -70,6 +88,101 @@ class CastFromToDataTypesTransformationSpec extends CoreSpec {
       .filter(_.name == "col_C")
       .head
       .dataType shouldBe new DecimalType(5, 2)
+
+    actualRestonomerResponseTransformedDF
+      .select("col_D.col_E")
+      .schema
+      .fields
+      .head
+      .dataType shouldBe IntegerType
+
+    actualRestonomerResponseTransformedDF.schema
+      .filter(_.name == "col_F")
+      .head
+      .dataType match {
+      case ArrayType(nestedArrayType: StructType, _) =>
+        nestedArrayType
+          .filter(_.name == "col_G")
+          .head
+          .dataType
+    } shouldBe IntegerType
+  }
+
+  "transform() - with castRecursively as false" should "cast columns as per the from and to data types" in {
+    restonomerResponseDF.schema.fields
+      .filter(_.name == "col_A")
+      .head
+      .dataType shouldBe LongType
+
+    restonomerResponseDF.schema.fields
+      .filter(_.name == "col_B")
+      .head
+      .dataType shouldBe LongType
+
+    restonomerResponseDF.schema.fields
+      .filter(_.name == "col_C")
+      .head
+      .dataType shouldBe DoubleType
+
+    restonomerResponseDF
+      .select("col_D.col_E")
+      .schema
+      .fields
+      .head
+      .dataType shouldBe LongType
+
+    restonomerResponseDF.schema
+      .filter(_.name == "col_F")
+      .head
+      .dataType match {
+      case ArrayType(nestedArrayType: StructType, _) =>
+        nestedArrayType
+          .filter(_.name == "col_G")
+          .head
+          .dataType
+    } shouldBe LongType
+
+    val restonomerTransformation = CastFromToDataTypes(
+      dataTypeMapper = Map(
+        "long" -> "integer",
+        "double" -> "decimal(5, 2)"
+      )
+    )
+
+    val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
+
+    actualRestonomerResponseTransformedDF.schema.fields
+      .filter(_.name == "col_A")
+      .head
+      .dataType shouldBe IntegerType
+
+    actualRestonomerResponseTransformedDF.schema.fields
+      .filter(_.name == "col_B")
+      .head
+      .dataType shouldBe IntegerType
+
+    actualRestonomerResponseTransformedDF.schema.fields
+      .filter(_.name == "col_C")
+      .head
+      .dataType shouldBe new DecimalType(5, 2)
+
+    actualRestonomerResponseTransformedDF
+      .select("col_D.col_E")
+      .schema
+      .fields
+      .head
+      .dataType shouldBe LongType
+
+    actualRestonomerResponseTransformedDF.schema
+      .filter(_.name == "col_F")
+      .head
+      .dataType match {
+      case ArrayType(nestedArrayType: StructType, _) =>
+        nestedArrayType
+          .filter(_.name == "col_G")
+          .head
+          .dataType
+    } shouldBe LongType
   }
 
 }
