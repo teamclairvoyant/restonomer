@@ -122,18 +122,19 @@ object DataFrameTransformerImplicits {
         }
         .foldLeft(df) { (df, colName) => df.withColumn(colName, col(colName).cast(dataTypeToCast)) }
 
-    def castFromTo(
-        fromType: String,
-        toType: String
+    def castFromToDataTypes(
+        dataTypeMapper: Map[String, String]
     ): DataFrame =
-      df.select(
-        df.schema.map { structField =>
-          if (structField.dataType == CatalystSqlParser.parseDataType(fromType))
-            col(structField.name).cast(toType)
-          else
-            col(structField.name)
-        }.toList*
-      )
+      dataTypeMapper.foldLeft(df) { (df, dataTypesPair) =>
+        df.select(
+          df.schema.map { structField =>
+            if (structField.dataType == CatalystSqlParser.parseDataType(dataTypesPair._1))
+              col(structField.name).cast(dataTypesPair._2)
+            else
+              col(structField.name)
+          }.toList*
+        )
+      }
 
     def castNestedColumn(
         columnName: String,
