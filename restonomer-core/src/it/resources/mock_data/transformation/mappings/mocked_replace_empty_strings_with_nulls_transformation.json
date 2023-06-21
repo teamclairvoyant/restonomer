@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/replace-empty-strings-with-nulls-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_replace_empty_strings_with_nulls_transformation_response.json"
+  }
+}

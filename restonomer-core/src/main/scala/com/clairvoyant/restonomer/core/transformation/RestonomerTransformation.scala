@@ -175,6 +175,12 @@ case class RenameColumns(
 
 }
 
+case class ReplaceEmptyStringsWithNulls() extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.replaceEmptyStringsWithNulls
+
+}
+
 case class ReplaceStringInColumnValue(
     columnName: String,
     pattern: String,
