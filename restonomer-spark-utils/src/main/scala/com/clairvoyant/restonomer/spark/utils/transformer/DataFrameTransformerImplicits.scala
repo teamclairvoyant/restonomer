@@ -1,13 +1,9 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
-import org.apache.spark.sql.Column
-import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.catalyst.parser.CatalystSqlParser
 import org.apache.spark.sql.functions.*
-import org.apache.spark.sql.types.ArrayType
-import org.apache.spark.sql.types.DataType
-import org.apache.spark.sql.types.StructField
-import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.types.*
+import org.apache.spark.sql.{Column, DataFrame}
 
 object DataFrameTransformerImplicits {
 
@@ -293,6 +289,8 @@ object DataFrameTransformerImplicits {
               .getOrElse(col(columnName))
           )*
       )
+
+    def replaceEmptyStringsWithNulls: DataFrame = df.na.replace(df.columns, Map("" -> null))
 
     def replaceStringInColumnValue(columnName: String, pattern: String, replacement: String): DataFrame =
       df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
