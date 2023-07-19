@@ -62,6 +62,8 @@ val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test
   .map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
   .map(_.cross(CrossVersion.for3Use2_13))
 
+val gcsDependencies = Seq("com.google.cloud.bigdataoss" % "gcs-connector" % "hadoop3-2.2.2")
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
