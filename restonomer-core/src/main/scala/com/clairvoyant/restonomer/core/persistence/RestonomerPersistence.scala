@@ -9,8 +9,10 @@ import scala.util.Using
 @nameWithLabel
 sealed trait RestonomerPersistence {
 
-  def persist(restonomerResponseDF: DataFrame, dataFrameWriter: DataFrameWriter): Unit =
-    dataFrameWriter.write(restonomerResponseDF)
+  def persist(restonomerResponseDF: DataFrame, dataFrameWriter: DataFrameWriter)(
+      using sparkSession: SparkSession
+  ): Unit = dataFrameWriter.write(restonomerResponseDF)
+
 }
 
 case class FileSystem(
