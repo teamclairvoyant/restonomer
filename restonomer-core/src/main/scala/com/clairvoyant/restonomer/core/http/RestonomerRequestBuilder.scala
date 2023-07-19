@@ -1,8 +1,10 @@
 package com.clairvoyant.restonomer.core.http
 
 import com.clairvoyant.restonomer.core.authentication.*
-import com.clairvoyant.restonomer.core.body.{FormDataBody, RestonomerRequestBody, TextDataBody}
+import com.clairvoyant.restonomer.core.body.*
 import sttp.client3.Request
+import sttp.model.Header
+import sttp.model.HeaderNames.*
 
 case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {
 
@@ -89,6 +91,10 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
             httpRequest.body(data)
           case FormDataBody(data) =>
             httpRequest.body(data)
+          case JSONDataBody(data) =>
+            httpRequest
+              .body(data)
+              .header(Header(ContentType, "application/json"), replaceExisting = true)
         }
         .getOrElse(httpRequest)
     )

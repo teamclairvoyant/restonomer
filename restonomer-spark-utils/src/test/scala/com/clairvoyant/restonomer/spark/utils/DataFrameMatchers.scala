@@ -75,7 +75,7 @@ trait DataFrameMatchers {
         rowNumber: Int
     ): ValidatedNel[String, Unit] = {
       expectedDFRow.toList.traverse_ { case (fieldName, expectedDFRowValue) =>
-        val actualDFRowValueOption = actualDFRow.get(fieldName)
+        val actualDFRowValueOption = actualDFRow.get(fieldName).flatMap(Option.apply)
         val actualDFRowValueClassOption = actualDFRowValueOption.map(_.getClass)
 
         val expectedDFRowValueOption = Option(expectedDFRowValue)
