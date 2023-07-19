@@ -186,7 +186,6 @@ object DataFrameTransformerImplicits {
         ddl: String
     ): DataFrame = df.withColumn(columnName, from_json(to_json(col(columnName)), DataType.fromDDL(ddl)))
 
-
     private def applyChangeNameFunctionRecursively(
         schema: StructType,
         changeNameFunction: String => String
@@ -261,7 +260,7 @@ object DataFrameTransformerImplicits {
         col(original).as(renamed)
       }: _*)
     }
-    
+
     def convertColumnToJson(columnName: String): DataFrame = df.withColumn(columnName, to_json(col(columnName)))
 
     def deleteColumns(columnNames: List[String]): DataFrame = df.drop(columnNames*)
