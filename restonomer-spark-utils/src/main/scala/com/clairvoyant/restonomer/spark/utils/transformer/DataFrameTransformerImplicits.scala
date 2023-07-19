@@ -1,5 +1,6 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
+import com.clairvoyant.restonomer.spark.utils.caseconverter.*
 import org.apache.spark.sql.functions.*
 import org.apache.spark.sql.types.{ArrayType, DataType, StructField, StructType}
 import org.apache.spark.sql.{Column, DataFrame}
@@ -132,23 +133,52 @@ object DataFrameTransformerImplicits {
         }
       )
 
-    def changeCaseOfColumnNames(caseType: String): DataFrame =
-      df.sparkSession.createDataFrame(
-        rowRDD = df.rdd,
-        schema = applyChangeNameFunctionRecursively(
-          schema = df.schema,
-          changeNameFunction =
-            (columnName: String) =>
-              caseType.toLowerCase() match {
-                case "upper" =>
-                  columnName.toUpperCase
-                case "lower" =>
-                  columnName.toLowerCase
-                case _ =>
-                  throw new Exception(s"The provided caseType: $caseType is not supported.")
-              }
-        )
-      )
+//    def changeCaseOfColumnNames(caseType: String): DataFrame =
+//      df.sparkSession.createDataFrame(
+//        rowRDD = df.rdd,
+//        schema = applyChangeNameFunctionRecursively(
+//          schema = df.schema,
+//          changeNameFunction =
+//            (columnName: String) =>
+//              caseType.toLowerCase() match {
+//                case "upper" =>
+//                  columnName.toUpperCase
+//                case "lower" =>
+//                  columnName.toLowerCase
+//                case _ =>
+//                  throw new Exception(s"The provided caseType: $caseType is not supported.")
+//              }
+//        )
+//      )
+
+    def changeCaseOfColumnNames(targetCaseType: String, sourceCaseType: String = "lower"): DataFrame = {
+
+      val converter =
+        targetCaseType.toLowerCase() match {
+          case "camel" =>
+            new CamelCaseConverter()
+          case "snake" =>
+            new SnakeCaseConverter()
+          case "pascal" =>
+            new PascalCaseConverter()
+          case "kebab" =>
+            new KebabCaseConverter()
+          case "lower" =>
+            new LowerCaseConverter()
+          case "upper" =>
+            new UpperCaseConverter()
+          case _ =>
+            throw new Exception(s"The provided caseType: $targetCaseType is not supported.")
+        }
+
+      val renamedColumnNames: Seq[String] = df.columns.map { columnName =>
+        converter.convert(columnName, sourceCaseType)
+      }
+
+      df.select(df.columns.zip(renamedColumnNames).map { case (original, renamed) =>
+        col(original).as(renamed)
+      }: _*)
+    }
 
     def addPrefixToColumnNames(prefix: String, columnNames: List[String]): DataFrame =
       if (columnNames.isEmpty)

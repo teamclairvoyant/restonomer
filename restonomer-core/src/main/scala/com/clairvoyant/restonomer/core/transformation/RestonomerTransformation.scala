@@ -117,11 +117,12 @@ case class AddSuffixToColumnNames(
 }
 
 case class ChangeColumnCase(
-    caseType: String
+    targetCaseType: String,
+    sourceCaseType: String = "lower"
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.changeCaseOfColumnNames(caseType)
+    restonomerResponseDF.changeCaseOfColumnNames(targetCaseType, sourceCaseType)
 
 }
 
