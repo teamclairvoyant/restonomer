@@ -17,6 +17,7 @@ import sttp.client3.Response
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
+import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToGCSBucketWriter
 
 class RestonomerWorkflow(using sparkSession: SparkSession) {
 
@@ -115,6 +116,15 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
 
         case S3Bucket(bucketName, fileFormat, filePath, saveMode) =>
           new DataFrameToS3BucketWriter(
+            bucketName = bucketName,
+            fileFormat = fileFormat,
+            filePath = filePath,
+            saveMode = saveMode
+          )
+
+        case GCSBucket(serviceAccountCredentialsFile, bucketName, fileFormat, filePath, saveMode) =>
+          new DataFrameToGCSBucketWriter(
+            serviceAccountCredentialsFile = serviceAccountCredentialsFile,
             bucketName = bucketName,
             fileFormat = fileFormat,
             filePath = filePath,
