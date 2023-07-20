@@ -21,6 +21,7 @@ val odelayVersion = "0.4.0"
 val s3MockVersion = "0.2.6"
 val scalaXmlVersion = "2.1.0"
 val scalaParserCombinatorsVersion = "2.2.0"
+val gcsConnectorVersion = "hadoop3-2.2.2"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -62,7 +63,7 @@ val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test
   .map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
   .map(_.cross(CrossVersion.for3Use2_13))
 
-val gcsDependencies = Seq("com.google.cloud.bigdataoss" % "gcs-connector" % "hadoop3-2.2.2")
+val gcsConnectorDependencies = Seq("com.google.cloud.bigdataoss" % "gcs-connector" % gcsConnectorVersion)
 
 // ----- MODULE DEPENDENCIES ----- //
 
@@ -76,7 +77,8 @@ val restonomerCoreDependencies =
     scalaTestDependencies.map(_ % "it,test") ++
     wireMockDependencies ++
     s3MockDependencies ++
-    odelayDependencies
+    odelayDependencies ++
+    gcsConnectorDependencies
 
 val restonomerSparkUtilsDependencies =
   sparkDependencies ++
