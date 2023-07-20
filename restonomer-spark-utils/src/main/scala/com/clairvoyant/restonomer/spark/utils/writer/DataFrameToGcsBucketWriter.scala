@@ -19,7 +19,10 @@ class DataFrameToGCSBucketWriter(
 
     hadoopConfigurations.set("fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem")
     hadoopConfigurations.set("google.cloud.auth.service.account.enable", "true")
-    hadoopConfigurations.set("google.cloud.auth.service.account.json.keyfile", serviceAccountCredentialsFile.getOrElse(""))
+    hadoopConfigurations.set(
+      "google.cloud.auth.service.account.json.keyfile",
+      serviceAccountCredentialsFile.getOrElse("")
+    )
 
     dataFrame.write
       .mode(saveMode)

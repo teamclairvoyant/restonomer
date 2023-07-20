@@ -17,6 +17,7 @@ import sttp.client3.Response
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
+import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToGCSBucketWriter
 
 class RestonomerWorkflow(using sparkSession: SparkSession) {
 
