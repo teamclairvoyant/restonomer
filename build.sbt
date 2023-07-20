@@ -116,7 +116,8 @@ lazy val restonomer = (project in file("."))
     commonSettings ++ Seq(
       publish / skip := true,
       publishLocal / skip := true
-    )
+    ),
+    addCommandAlias("run", "restonomer-core/run")
   )
   .aggregate(`restonomer-core`, `restonomer-spark-utils`)
 
