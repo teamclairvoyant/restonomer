@@ -22,6 +22,7 @@ val s3MockVersion = "0.2.6"
 val scalaXmlVersion = "2.1.0"
 val scalaParserCombinatorsVersion = "2.2.0"
 val gcsConnectorVersion = "hadoop3-2.2.2"
+val monovoreDeclineVersion = "2.4.1"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -65,6 +66,8 @@ val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test
 
 val gcsConnectorDependencies = Seq("com.google.cloud.bigdataoss" % "gcs-connector" % gcsConnectorVersion)
 
+val monovoreDeclineDependencies = Seq("com.monovore" %% "decline" % monovoreDeclineVersion)
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
@@ -78,7 +81,8 @@ val restonomerCoreDependencies =
     wireMockDependencies ++
     s3MockDependencies ++
     odelayDependencies ++
-    gcsConnectorDependencies
+    gcsConnectorDependencies ++
+    monovoreDeclineDependencies
 
 val restonomerSparkUtilsDependencies =
   sparkDependencies ++
