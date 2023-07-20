@@ -28,8 +28,8 @@ case class S3Bucket(
     saveMode: String = SaveMode.ErrorIfExists.name()
 ) extends RestonomerPersistence
 
-case class GcsBucket(
-    serviceAccountCredFile: String,
+case class GCSBucket(
+    serviceAccountCredentialsFile: Option[String],
     bucketName: String,
     fileFormat: String,
     filePath: String,

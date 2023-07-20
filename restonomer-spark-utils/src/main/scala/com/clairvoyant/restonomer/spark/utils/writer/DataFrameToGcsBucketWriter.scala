@@ -1,10 +1,12 @@
 package com.clairvoyant.restonomer.spark.utils.writer
 
-import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import org.apache.hadoop.conf.Configuration
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.SaveMode
+import org.apache.spark.sql.SparkSession
 
-class DataFrameToGcsBucketWriter(
-    serviceAccountCredFile: String,
+class DataFrameToGCSBucketWriter(
+    serviceAccountCredentialsFile: Option[String],
     bucketName: String,
     fileFormat: String,
     filePath: String,
@@ -17,7 +19,7 @@ class DataFrameToGcsBucketWriter(
 
     hadoopConfigurations.set("fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem")
     hadoopConfigurations.set("google.cloud.auth.service.account.enable", "true")
-    hadoopConfigurations.set("google.cloud.auth.service.account.json.keyfile", serviceAccountCredFile)
+    hadoopConfigurations.set("google.cloud.auth.service.account.json.keyfile", serviceAccountCredentialsFile.getOrElse(""))
 
     dataFrame.write
       .mode(saveMode)
