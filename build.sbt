@@ -151,20 +151,17 @@ ThisBuild / credentials += Credentials(
 // ----- ASSEMBLY MERGE STRATEGY ----- //
 
 ThisBuild / assemblyMergeStrategy := {
-  case PathList(ps @ _*)
-      if ps.last endsWith "io.netty.versions.properties" =>
+  case PathList(ps @ _*) if ps.last endsWith "io.netty.versions.properties" =>
     MergeStrategy.last
-    case PathList(ps @ _*)
-      if ps.last endsWith "native-image.properties" =>
+  case PathList(ps @ _*) if ps.last endsWith "native-image.properties" =>
     MergeStrategy.last
-    case PathList(ps @ _*)
-      if ps.last endsWith "reflection-config.json" =>
+  case PathList(ps @ _*) if ps.last endsWith "reflection-config.json" =>
     MergeStrategy.last
   case PathList(ps @ _*) if ps.last endsWith "public-suffix-list.txt" =>
     MergeStrategy.concat
   case PathList(ps @ _*) if ps.last endsWith "module-info.class" =>
     MergeStrategy.first
-    case PathList(ps @ _*) if ps.last endsWith "UnusedStubClass.class" =>
+  case PathList(ps @ _*) if ps.last endsWith "UnusedStubClass.class" =>
     MergeStrategy.first
   case x =>
     val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
