@@ -107,7 +107,8 @@ val restonomerCoreSettings =
   commonSettings ++ Seq(
     libraryDependencies ++= restonomerCoreDependencies,
     Test / parallelExecution := false,
-    IntegrationTest / parallelExecution := false
+    IntegrationTest / parallelExecution := false,
+    assembly / mainClass := Some("com.clairvoyant.restonomer.core.app.RestonomerApp")
   ) ++ Defaults.itSettings
 
 val restonomerSparkUtilsSettings =
@@ -126,16 +127,17 @@ lazy val restonomer = (project in file("."))
     addCommandAlias("run", "restonomer-core/run")
   )
   .aggregate(`restonomer-core`, `restonomer-spark-utils`)
-  .enablePlugins(AssemblyPlugin)
 
 lazy val `restonomer-core` = project
   .configs(IntegrationTest)
   .settings(restonomerCoreSettings)
   .dependsOn(`restonomer-spark-utils` % "compile->compile;test->test;it->it;test->it")
+  .enablePlugins(AssemblyPlugin)
 
 lazy val `restonomer-spark-utils` = project
   .configs(IntegrationTest.extend(Test))
   .settings(restonomerSparkUtilsSettings)
+  .enablePlugins(AssemblyPlugin)
 
 // ----- PUBLISH TO GITHUB PACKAGES ----- //
 
