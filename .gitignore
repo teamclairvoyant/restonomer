@@ -3,6 +3,7 @@
 .metals
 .venv
 .vscode
+.DS_Store
 
 project
 target

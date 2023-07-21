@@ -48,10 +48,14 @@ val scalaParserCombinatorsDependencies = Seq(
 
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
-  "org.apache.spark" %% "spark-sql" % sparkVersion,
-  "org.apache.spark" %% "spark-hadoop-cloud" % sparkVersion
+  "org.apache.spark" %% "spark-sql" % sparkVersion
 )
   .map(_ excludeAll ("org.scala-lang.modules", "scala-xml"))
+  .map(_.cross(CrossVersion.for3Use2_13))
+  .map(_ % "provided")
+
+val sparkHadoopCloudDependencies = Seq("org.apache.spark" %% "spark-hadoop-cloud" % sparkVersion)
+  .map(_ exclude ("org.apache.hadoop", "hadoop-client-runtime"))
   .map(_.cross(CrossVersion.for3Use2_13))
 
 val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
@@ -74,6 +78,7 @@ val restonomerCoreDependencies =
   zioConfigDependencies ++
     scalaXmlDependencies ++
     scalaParserCombinatorsDependencies ++
+    sparkDependencies ++
     sttpDependencies ++
     jwtDependencies ++
     jsonPathDependencies ++
@@ -86,6 +91,7 @@ val restonomerCoreDependencies =
 
 val restonomerSparkUtilsDependencies =
   sparkDependencies ++
+    sparkHadoopCloudDependencies ++
     catsDependencies ++
     scalaTestDependencies.map(_ % "test")
 
@@ -120,6 +126,7 @@ lazy val restonomer = (project in file("."))
     addCommandAlias("run", "restonomer-core/run")
   )
   .aggregate(`restonomer-core`, `restonomer-spark-utils`)
+  .enablePlugins(AssemblyPlugin)
 
 lazy val `restonomer-core` = project
   .configs(IntegrationTest)
@@ -140,3 +147,26 @@ ThisBuild / credentials += Credentials(
   "teamclairvoyant",
   System.getenv("GITHUB_TOKEN")
 )
+
+// ----- ASSEMBLY MERGE STRATEGY ----- //
+
+ThisBuild / assemblyMergeStrategy := {
+  case PathList(ps @ _*)
+      if ps.last endsWith "io.netty.versions.properties" =>
+    MergeStrategy.last
+    case PathList(ps @ _*)
+      if ps.last endsWith "native-image.properties" =>
+    MergeStrategy.last
+    case PathList(ps @ _*)
+      if ps.last endsWith "reflection-config.json" =>
+    MergeStrategy.last
+  case PathList(ps @ _*) if ps.last endsWith "public-suffix-list.txt" =>
+    MergeStrategy.concat
+  case PathList(ps @ _*) if ps.last endsWith "module-info.class" =>
+    MergeStrategy.first
+    case PathList(ps @ _*) if ps.last endsWith "UnusedStubClass.class" =>
+    MergeStrategy.first
+  case x =>
+    val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
+    oldStrategy(x)
+}
