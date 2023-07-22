@@ -45,7 +45,7 @@ val sparkDependencies = Seq(
 val sparkHadoopCloudDependencies = Seq("org.apache.spark" %% "spark-hadoop-cloud" % sparkVersion)
   .map(_ exclude ("org.apache.hadoop", "hadoop-client-runtime"))
 
-val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
+val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion % "it,test")
 
 val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVersion)
 
@@ -54,8 +54,6 @@ val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelay
 val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test")
 
 val gcsConnectorDependencies = Seq("com.google.cloud.bigdataoss" % "gcs-connector" % gcsConnectorVersion)
-
-val monovoreDeclineDependencies = Seq("com.monovore" %% "decline" % monovoreDeclineVersion)
 
 val scalaCompatCollectionDependencies = Seq("org.scala-lang.modules" %% "scala-collection-compat" % "2.1.6")
 
@@ -71,8 +69,7 @@ val restonomerCoreDependencies =
     wireMockDependencies ++
     s3MockDependencies ++
     odelayDependencies ++
-    gcsConnectorDependencies ++
-    monovoreDeclineDependencies
+    gcsConnectorDependencies
 
 val restonomerSparkUtilsDependencies =
   sparkDependencies ++

@@ -1,22 +1,16 @@
 package com.clairvoyant.restonomer.core.app
 
-import cats.implicits._
-import com.monovore.decline.{CommandApp, Opts}
+object RestonomerApp extends App {
 
-object RestonomerApp
-    extends CommandApp(
-      name = "restonomer-app",
-      header = "Dumps the data from the REST API provided in the checkpoint",
-      main = {
-        val restonomerContextDirPathOpt: Opts[String] = Opts
-          .option[String](long = "restonomer_context_dir_path", help = "Full path to the restonomer context directory")
+  val arguments =
+    args(0)
+      .split(";")
+      .map(arg => arg.split("~")(0) -> arg.split("~")(1))
+      .toMap
 
-        val checkpointFilePathOpt: Opts[String] = Opts
-          .option[String](long = "checkpoint_file_path", help = "Relative path of the checkpoint file to be executed")
+  val restonomerContextDirPath = arguments("restonomer_context_dir_path")
+  val checkpointFilePath = arguments("checkpoint_file_path")
 
-        (restonomerContextDirPathOpt, checkpointFilePathOpt).mapN { (restonomerContextDirPath, checkpointFilePath) =>
-          val restonomerContext = RestonomerContext(restonomerContextDirPath)
-          restonomerContext.runCheckpoint(checkpointFilePath)
-        }
-      }
-    )
+  val restonomerContext = RestonomerContext(restonomerContextDirPath)
+  restonomerContext.runCheckpoint(checkpointFilePath)
+}
