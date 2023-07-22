@@ -5,7 +5,7 @@ import org.apache.spark.sql.SparkSession
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import sttp.client3.{Request, UriContext, basicRequest}
+import sttp.client3.{basicRequest, Request, UriContext}
 import sttp.model.Method
 
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
