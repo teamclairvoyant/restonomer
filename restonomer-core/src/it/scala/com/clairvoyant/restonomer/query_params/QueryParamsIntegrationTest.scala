@@ -8,12 +8,12 @@ class QueryParamsIntegrationTest extends IntegrationTestDependencies with MockFi
 
   it should "add query params to the request url" in {
     runCheckpoint(checkpointFileName = "checkpoint_add_query_params.conf")
-    outputDF should matchExpectedDataFrame("expected_query_params.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_query_params.json"))
   }
 
   it should "add token in query params" in {
     runCheckpoint(checkpointFileName = "checkpoint_add_token_in_query_params.conf")
-    outputDF should matchExpectedDataFrame("expected_test_token_for_query_params.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_test_token_for_query_params.json"))
   }
 
 }

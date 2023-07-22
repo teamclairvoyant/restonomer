@@ -10,7 +10,7 @@ class PageNumberWithTotalPagesBasedPaginationIntegrationTest
 
   it should "perform pagination and get the grouped responses" in {
     runCheckpoint(checkpointFileName = "checkpoint_page_number_with_total_pages_based_pagination.conf")
-    outputDF should matchExpectedDataFrame("expected_page_number_with_total_pages_based_pagination.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_page_number_with_total_pages_based_pagination.json"))
   }
 
 }

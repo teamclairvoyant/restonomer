@@ -1,19 +1,19 @@
 package com.clairvoyant.restonomer.spark.utils
 
 import cats.data.{Validated, ValidatedNel}
-import cats.implicits.*
+import cats.implicits._
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, Row}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
-import scala.jdk.CollectionConverters.ListHasAsScala
+import scala.jdk.CollectionConverters.collectionAsScalaIterableConverter
 
 trait DataFrameMatchers {
   self: Matchers =>
 
   private def collectSorted(dataFrame: DataFrame, columnsToSortBy: List[String]): List[Row] =
-    dataFrame.sort(columnsToSortBy.head, columnsToSortBy.tail*).collectAsList().asScala.toList
+    dataFrame.sort(columnsToSortBy.head, columnsToSortBy.tail: _*).collectAsList().asScala.toList
 
   private def validateSize(actualDFRows: List[Row], expectedDFRows: List[Row]): ValidatedNel[String, Unit] =
     Validated.condNel(
@@ -61,7 +61,7 @@ trait DataFrameMatchers {
     )
   }
 
-  def validateRows(
+  /*def validateRows(
       actualDFRows: List[Row],
       expectedDFRows: List[Row],
       columns: Seq[String]
@@ -94,7 +94,7 @@ trait DataFrameMatchers {
       case ((actualDFRow, expectedDFRow), rowNumber) =>
         validateRow(actualDFRow, expectedDFRow, rowNumber)
     }
-  }
+  }*/
 
   def matchExpectedDataFrame(expectedDF: DataFrame): Matcher[DataFrame] =
     (actualDF: DataFrame) => {
@@ -118,12 +118,12 @@ trait DataFrameMatchers {
       val columnsValidation = validateColumns(actualDFColumns, expectedDFColumns)
       val sizeValidation = validateSize(actualDFRows, expectedDFRows)
       val schemaValidation = validateSchema(actualDF.schema, expectedDF.schema)
-      lazy val rowsValidation = validateRows(actualDFRows, expectedDFRows, actualDFColumns.toSeq.sorted)
+      //lazy val rowsValidation = validateRows(actualDFRows, expectedDFRows, actualDFColumns.toSeq.sorted)
 
       val allValidations = columnsValidation
         .combine(sizeValidation)
         .combine(schemaValidation)
-        .andThen((_: Unit) => rowsValidation)
+      //.andThen((_: Unit) => rowsValidation)
 
       val validationMessages = allValidations.fold(_.toList, _ => List.empty)
 

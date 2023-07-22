@@ -4,6 +4,6 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 
 trait DataFrameWriter {
 
-  def write(dataFrame: DataFrame)(using sparkSession: SparkSession): Unit
+  def write(dataFrame: DataFrame)(implicit sparkSession: SparkSession): Unit
 
 }

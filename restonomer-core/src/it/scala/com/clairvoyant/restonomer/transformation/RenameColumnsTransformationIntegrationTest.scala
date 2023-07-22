@@ -8,7 +8,7 @@ class RenameColumnsTransformationIntegrationTest extends IntegrationTestDependen
 
   it should "rename the columns of restonomer response dataframe as specified in the transformation mapper" in {
     runCheckpoint(checkpointFileName = "checkpoint_rename_columns_transformation.conf")
-    outputDF should matchExpectedDataFrame("expected_rename_columns_transformation.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_rename_columns_transformation.json"))
   }
 
 }

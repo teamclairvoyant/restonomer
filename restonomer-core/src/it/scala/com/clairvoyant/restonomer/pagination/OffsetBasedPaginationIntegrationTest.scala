@@ -9,7 +9,7 @@ class OffsetBasedPaginationIntegrationTest extends IntegrationTestDependencies w
 
   it should "perform pagination and get the grouped responses" in {
     runCheckpoint(checkpointFileName = "checkpoint_offset_based_pagination.conf")
-    outputDF should matchExpectedDataFrame("expected_offset_based_pagination.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_offset_based_pagination.json"))
   }
 
 }

@@ -17,27 +17,24 @@ trait IntegrationTestDependencies
 
   val expectedDFSchema: Option[StructType] = None
 
-  given sparkSession: SparkSession =
-    SparkSession
-      .builder()
-      .master("local[*]")
-      .getOrCreate()
+  implicit val sparkSession: SparkSession = SparkSession
+    .builder()
+    .master("local[*]")
+    .getOrCreate()
 
   def runCheckpoint(checkpointFileName: String): Unit =
     RestonomerContext(s"$resourcesDirectoryPath/restonomer_context")
       .runCheckpoint(checkpointFilePath = s"$mappingsDirectory/$checkpointFileName")
 
-  given fileNameToDataFrameConversion: Conversion[String, DataFrame] with
+  def readMockJSON(fileName: String): DataFrame = {
+    val dataFrameReader = sparkSession.read
+      .option("multiline", value = true)
+      .option("inferSchema", value = expectedDFSchema.isEmpty)
 
-    override def apply(fileName: String): DataFrame = {
-      val dataFrameReader = sparkSession.read
-        .option("multiline", value = true)
-        .option("inferSchema", value = expectedDFSchema.isEmpty)
-
-      expectedDFSchema
-        .map { schema => dataFrameReader.schema(schema) }
-        .getOrElse(dataFrameReader)
-        .json(s"$mockDataRootDirectoryPath/$mappingsDirectory/$fileName")
-    }
+    expectedDFSchema
+      .map { schema => dataFrameReader.schema(schema) }
+      .getOrElse(dataFrameReader)
+      .json(s"$mockDataRootDirectoryPath/$mappingsDirectory/$fileName")
+  }
 
 }

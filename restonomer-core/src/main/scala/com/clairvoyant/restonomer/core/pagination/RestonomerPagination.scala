@@ -51,11 +51,12 @@ case class CursorBasedPagination(
 ) extends RestonomerPagination {
 
   override def getNextPageToken(responseBody: String): Option[(String, String)] =
-    Option(JsonPath.read[Any](responseBody, nextCursorAttribute)) match
+    Option(JsonPath.read[Any](responseBody, nextCursorAttribute)) match {
       case Some(value) =>
-        Some(cursorTokenName -> value.toString())
+        Some(cursorTokenName -> value.toString)
       case None =>
         None
+    }
 
 }
 

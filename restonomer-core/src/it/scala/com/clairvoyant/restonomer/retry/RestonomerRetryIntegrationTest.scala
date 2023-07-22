@@ -11,28 +11,28 @@ class RestonomerRetryIntegrationTest extends IntegrationTestDependencies with Mo
 
   it should "return the response body successfully in case of status 200" in {
     runCheckpoint(checkpointFileName = "checkpoint_retry_status_200.conf")
-    outputDF should matchExpectedDataFrame("expected_retry_status_200.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_retry_status_200.json"))
   }
 
   // StatusCode.MovedPermanently (Redirection is done by akka itself)
 
   it should "return the response body successfully in case of status 301" in {
     runCheckpoint(checkpointFileName = "checkpoint_retry_status_301.conf")
-    outputDF should matchExpectedDataFrame("expected_retry_status_301.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_retry_status_301.json"))
   }
 
   // StatusCode.Found (Redirection is done by restonomer)
 
   it should "return the response body successfully in case of status 302" in {
     runCheckpoint(checkpointFileName = "checkpoint_retry_status_302.conf")
-    outputDF should matchExpectedDataFrame("expected_retry_status_302.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_retry_status_302.json"))
   }
 
   // StatusCode.TooManyRequests
 
   it should "return the response body successfully in case of status 429" in {
     runCheckpoint(checkpointFileName = "checkpoint_retry_status_429.conf")
-    outputDF should matchExpectedDataFrame("expected_retry_status_429.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_retry_status_429.json"))
   }
 
   // StatusCode.NoContent

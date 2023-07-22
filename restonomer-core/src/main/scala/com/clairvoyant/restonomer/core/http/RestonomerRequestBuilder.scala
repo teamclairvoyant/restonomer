@@ -1,22 +1,22 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.restonomer.core.authentication.*
-import com.clairvoyant.restonomer.core.body.*
+import com.clairvoyant.restonomer.core.authentication._
+import com.clairvoyant.restonomer.core.body._
 import sttp.client3.Request
 import sttp.model.Header
-import sttp.model.HeaderNames.*
+import sttp.model.HeaderNames._
 
 case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {
 
   def withQueryParams(queryParams: Map[String, String])(
-      using tokenFunction: Option[String => String]
+      implicit tokenFunction: Option[String => String]
   ): RestonomerRequestBuilder =
     copy(httpRequest =
       httpRequest.method(
         method = httpRequest.method,
         uri = httpRequest.uri.withParams(
           tokenFunction
-            .map(f => queryParams.view.mapValues(TokenSubstitutor(f).substitute).toMap)
+            .map(f => queryParams.mapValues(new TokenSubstitutor(f).substitute).toMap)
             .getOrElse(queryParams)
         )
       )
@@ -24,13 +24,13 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
 
   def withAuthentication(
       authenticationConfig: Option[RestonomerAuthentication]
-  )(using tokenFunction: Option[String => String]): RestonomerRequestBuilder =
+  )(implicit tokenFunction: Option[String => String]): RestonomerRequestBuilder =
     copy(httpRequest =
       authenticationConfig
         .map { restonomerAuthentication =>
           tokenFunction
             .map { f =>
-              val tokenSubstitutor = TokenSubstitutor(f)
+              val tokenSubstitutor = new TokenSubstitutor(f)
 
               restonomerAuthentication match {
                 case basicAuthentication @ BasicAuthentication(basicToken, userName, password) =>

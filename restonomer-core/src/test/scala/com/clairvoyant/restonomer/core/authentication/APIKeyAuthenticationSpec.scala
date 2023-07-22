@@ -12,7 +12,7 @@ class APIKeyAuthenticationSpec extends CoreSpec {
   val apiKeyAuthentication: APIKeyAuthentication = APIKeyAuthentication(
     apiKeyName = apiKeyName,
     apiKeyValue = apiKeyValue,
-    placeholder = APIKeyPlaceholders.QueryParam.toString
+    placeholder = APIKeyPlaceholders.QUERY_PARAM.toString
   )
 
   "validateCredentials - with blank api-key-name" should "throw RestonomerException" in {

@@ -1,9 +1,8 @@
 package com.clairvoyant.restonomer.core.authentication
 
-import com.amazonaws.auth.internal.SignerConstants.*
+import com.amazonaws.auth.internal.SignerConstants._
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import sttp.model.{Header, HeaderNames}
 
 class AwsSignatureAuthenticationSpec extends CoreSpec {
 

@@ -8,12 +8,12 @@ class BasicAuthenticationIntegrationTest extends IntegrationTestDependencies wit
 
   it should "authenticate request with basic authentication using token" in {
     runCheckpoint(checkpointFileName = "checkpoint_basic_authentication_token.conf")
-    outputDF should matchExpectedDataFrame("expected_basic_authentication_token.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_basic_authentication_token.json"))
   }
 
   it should "authenticate request with basic authentication using username and password" in {
     runCheckpoint(checkpointFileName = "checkpoint_basic_authentication_up.conf")
-    outputDF should matchExpectedDataFrame("expected_basic_authentication_up.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_basic_authentication_up.json"))
   }
 
 }

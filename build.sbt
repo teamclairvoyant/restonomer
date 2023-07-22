@@ -1,8 +1,6 @@
-ThisBuild / scalaVersion := "3.2.2"
+ThisBuild / scalaVersion := "2.12.14"
 
 Global / excludeLintKeys += Keys.parallelExecution
-
-lazy val scalacOptions = Seq("-Xmax-inlines", "50")
 
 // ----- VARIABLES ----- //
 
@@ -19,8 +17,6 @@ val catsVersion = "2.9.0"
 val jsonPathVersion = "2.7.0"
 val odelayVersion = "0.4.0"
 val s3MockVersion = "0.2.6"
-val scalaXmlVersion = "2.1.0"
-val scalaParserCombinatorsVersion = "2.2.0"
 val gcsConnectorVersion = "hadoop3-2.2.2"
 val monovoreDeclineVersion = "2.4.1"
 
@@ -40,23 +36,14 @@ val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" 
 
 val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 
-val scalaXmlDependencies = Seq("org.scala-lang.modules" %% "scala-xml" % scalaXmlVersion)
-
-val scalaParserCombinatorsDependencies = Seq(
-  "org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion
-)
-
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion
 )
-  .map(_ excludeAll ("org.scala-lang.modules", "scala-xml"))
-  .map(_.cross(CrossVersion.for3Use2_13))
   .map(_ % "provided")
 
 val sparkHadoopCloudDependencies = Seq("org.apache.spark" %% "spark-hadoop-cloud" % sparkVersion)
   .map(_ exclude ("org.apache.hadoop", "hadoop-client-runtime"))
-  .map(_.cross(CrossVersion.for3Use2_13))
 
 val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
 
@@ -65,19 +52,17 @@ val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVer
 val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
 
 val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test")
-  .map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
-  .map(_.cross(CrossVersion.for3Use2_13))
 
 val gcsConnectorDependencies = Seq("com.google.cloud.bigdataoss" % "gcs-connector" % gcsConnectorVersion)
 
 val monovoreDeclineDependencies = Seq("com.monovore" %% "decline" % monovoreDeclineVersion)
 
+val scalaCompatCollectionDependencies = Seq("org.scala-lang.modules" %% "scala-collection-compat" % "2.1.6")
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
   zioConfigDependencies ++
-    scalaXmlDependencies ++
-    scalaParserCombinatorsDependencies ++
     sparkDependencies ++
     sttpDependencies ++
     jwtDependencies ++
@@ -93,14 +78,14 @@ val restonomerSparkUtilsDependencies =
   sparkDependencies ++
     sparkHadoopCloudDependencies ++
     catsDependencies ++
-    scalaTestDependencies.map(_ % "test")
+    scalaTestDependencies.map(_ % "test") ++
+    scalaCompatCollectionDependencies
 
 // ----- SETTINGS ----- //
 
 val commonSettings = Seq(
   organization := organizationName,
-  version := releaseVersion,
-  Keys.scalacOptions ++= scalacOptions
+  version := releaseVersion
 )
 
 val restonomerCoreSettings =
@@ -124,7 +109,8 @@ lazy val restonomer = (project in file("."))
       publish / skip := true,
       publishLocal / skip := true
     ),
-    addCommandAlias("run", "restonomer-core/run")
+    addCommandAlias("run", "restonomer-core/run"),
+    addCommandAlias("assembly", "restonomer-core/assembly")
   )
   .aggregate(`restonomer-core`, `restonomer-spark-utils`)
 

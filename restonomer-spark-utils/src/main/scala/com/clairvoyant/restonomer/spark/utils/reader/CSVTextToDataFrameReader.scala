@@ -7,7 +7,7 @@ class CSVTextToDataFrameReader(
     containsHeader: Boolean = true
 ) extends DataFrameReader {
 
-  import sparkSession.implicits.*
+  import sparkSession.implicits._
 
   override def read(text: Seq[String]): DataFrame =
     sparkSession.read

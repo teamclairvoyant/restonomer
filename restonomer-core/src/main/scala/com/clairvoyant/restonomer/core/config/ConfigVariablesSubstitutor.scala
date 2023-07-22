@@ -1,8 +1,6 @@
 package com.clairvoyant.restonomer.core.config
 
-import java.io.File
 import scala.annotation.tailrec
-import scala.io.Source
 import scala.util.matching.Regex
 
 class ConfigVariablesSubstitutor(
@@ -21,11 +19,11 @@ class ConfigVariablesSubstitutor(
 
         val substituteValue =
           if (configVariablesFromFile.contains(matcher.group(1)))
-            s"\"${configVariablesFromFile(matcher.group(1))}\""
+            s""""${configVariablesFromFile(matcher.group(1))}""""
           else if (configVariablesFromApplicationArgs.contains(matcher.group(1)))
-            s"\"${configVariablesFromApplicationArgs(matcher.group(1))}\""
+            s""""${configVariablesFromApplicationArgs(matcher.group(1))}""""
           else if (environmentVariables.contains(matcher.group(1)))
-            s"\"${environmentVariables(matcher.group(1))}\""
+            s""""${environmentVariables(matcher.group(1))}""""
           else
             matcher.group(0)
 

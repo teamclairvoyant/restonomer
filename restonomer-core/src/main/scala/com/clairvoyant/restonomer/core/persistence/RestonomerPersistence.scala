@@ -2,15 +2,13 @@ package com.clairvoyant.restonomer.core.persistence
 
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameWriter
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
-import zio.config.derivation.*
-
-import scala.util.Using
+import zio.config.derivation._
 
 @nameWithLabel
 sealed trait RestonomerPersistence {
 
   def persist(restonomerResponseDF: DataFrame, dataFrameWriter: DataFrameWriter)(
-      using sparkSession: SparkSession
+      implicit sparkSession: SparkSession
   ): Unit = dataFrameWriter.write(restonomerResponseDF)
 
 }

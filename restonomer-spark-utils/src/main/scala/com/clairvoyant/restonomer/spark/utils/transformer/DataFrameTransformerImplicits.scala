@@ -1,13 +1,13 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
 import org.apache.spark.sql.catalyst.parser.CatalystSqlParser
-import org.apache.spark.sql.functions.*
-import org.apache.spark.sql.types.*
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql.types._
 import org.apache.spark.sql.{Column, DataFrame}
 
 object DataFrameTransformerImplicits {
 
-  extension (df: DataFrame) {
+  implicit class DataFrameWrapper(df: DataFrame) {
 
     def addColumn(
         columnName: String,
@@ -96,7 +96,7 @@ object DataFrameTransformerImplicits {
                   col(columnName).cast(dataType)
               }
               .getOrElse(col(columnName))
-          }*
+          }: _*
       )
     }
 
@@ -176,7 +176,7 @@ object DataFrameTransformerImplicits {
                 col(structField.name).cast(toDataType)
               else
                 col(structField.name)
-            }.toList*
+            }.toList: _*
           )
       }
 
@@ -251,7 +251,7 @@ object DataFrameTransformerImplicits {
 
     def convertColumnToJson(columnName: String): DataFrame = df.withColumn(columnName, to_json(col(columnName)))
 
-    def deleteColumns(columnNames: List[String]): DataFrame = df.drop(columnNames*)
+    def deleteColumns(columnNames: List[String]): DataFrame = df.drop(columnNames: _*)
 
     def explodeColumn(columnName: String): DataFrame = df.withColumn(columnName, explode(col(columnName)))
 
@@ -274,7 +274,7 @@ object DataFrameTransformerImplicits {
         }
 
       if (df.schema.exists(_.dataType.isInstanceOf[StructType]))
-        df.select(flattenSchemaFromStructType(df.schema)*)
+        df.select(flattenSchemaFromStructType(df.schema): _*)
       else
         df
     }
@@ -287,7 +287,7 @@ object DataFrameTransformerImplicits {
               .get(columnName)
               .map(col(columnName).name)
               .getOrElse(col(columnName))
-          )*
+          ): _*
       )
 
     def replaceEmptyStringsWithNulls: DataFrame = df.na.replace(df.columns, Map("" -> null))
@@ -295,7 +295,7 @@ object DataFrameTransformerImplicits {
     def replaceStringInColumnValue(columnName: String, pattern: String, replacement: String): DataFrame =
       df.withColumn(columnName, regexp_replace(col(columnName), pattern, replacement))
 
-    def selectColumns(columnNames: List[String]): DataFrame = df.select(columnNames.map(col)*)
+    def selectColumns(columnNames: List[String]): DataFrame = df.select(columnNames.map(col): _*)
 
     def splitColumn(
         fromColumn: String,

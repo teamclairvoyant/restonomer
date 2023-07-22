@@ -8,7 +8,7 @@ class CastNestedColumnTransformationIntegrationTest extends IntegrationTestDepen
 
   it should "cast mentioned nested column as per the given ddl" in {
     runCheckpoint(checkpointFileName = "checkpoint_cast_nested_column_transformation.conf")
-    outputDF should matchExpectedDataFrame("expected_cast_nested_column_transformation.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_cast_nested_column_transformation.json"))
   }
 
 }

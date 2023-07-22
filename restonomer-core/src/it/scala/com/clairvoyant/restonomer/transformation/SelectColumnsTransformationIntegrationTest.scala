@@ -8,7 +8,7 @@ class SelectColumnsTransformationIntegrationTest extends IntegrationTestDependen
 
   it should "select the mentioned columns in the list from the restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_select_columns_transformation.conf")
-    outputDF should matchExpectedDataFrame("expected_select_columns_transformation.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_select_columns_transformation.json"))
   }
 
 }

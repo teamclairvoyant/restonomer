@@ -1,12 +1,11 @@
 package com.clairvoyant.restonomer.core.app
 
 import com.clairvoyant.restonomer.core.config.ConfigVariablesSubstitutor
-import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader.*
+import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
 import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
-import zio.Config
-import zio.config.magnolia.*
+import zio.config.magnolia._
 
 import java.io.FileNotFoundException
 
@@ -36,7 +35,7 @@ class RestonomerContext(
   private val CHECKPOINTS_CONFIG_DIRECTORY_PATH = s"$restonomerContextDirectoryPath/checkpoints"
 
   private val configVariablesFromFile = {
-    given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = None
+    implicit val configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = None
 
     if (fileExists(CONFIG_VARIABLES_FILE_PATH))
       loadConfigFromFile[Map[String, String]](CONFIG_VARIABLES_FILE_PATH, deriveConfig[Map[String, String]])
@@ -45,7 +44,7 @@ class RestonomerContext(
   }
 
   private val applicationConfig = {
-    given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = None
+    implicit val configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = None
 
     if (fileExists(APPLICATION_CONFIG_FILE_PATH))
       loadConfigFromFile[ApplicationConfig](APPLICATION_CONFIG_FILE_PATH, ApplicationConfig.config)
@@ -55,8 +54,9 @@ class RestonomerContext(
       )
   }
 
-  given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] =
-    Some(ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs))
+  implicit val configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = Some(
+    new ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs)
+  )
 
   def runCheckpoint(checkpointFilePath: String): Unit = {
     val absoluteCheckpointFilePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointFilePath"

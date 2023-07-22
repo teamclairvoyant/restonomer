@@ -1,18 +1,17 @@
 package com.clairvoyant.restonomer.core.config
 
-import com.clairvoyant.restonomer.core.exception.RestonomerException
-import zio.config.typesafe.*
-import zio.{ConfigProvider, *}
+import zio.config.typesafe._
+import zio.{ConfigProvider, _}
 
 import java.io.File
 import scala.annotation.tailrec
 import scala.io.Source
-import scala.util.{Failure, Success, Try, Using}
+import scala.util.{Failure, Success, Using}
 
 object RestonomerConfigurationsLoader {
 
   def loadConfigFromFile[C](configFilePath: String, config: Config[C])(
-      using configVariablesSubstitutor: Option[ConfigVariablesSubstitutor]
+      implicit configVariablesSubstitutor: Option[ConfigVariablesSubstitutor]
   ): C =
     Using(Source.fromFile(new File(configFilePath))) { configFileSource =>
       Unsafe.unsafe(implicit u => {
@@ -36,7 +35,7 @@ object RestonomerConfigurationsLoader {
     }
 
   def loadConfigsFromDirectory[C](configDirectoryPath: String, config: Config[C])(
-      using configVariablesSubstitutor: Option[ConfigVariablesSubstitutor]
+      implicit configVariablesSubstitutor: Option[ConfigVariablesSubstitutor]
   ): List[C] = {
     @tailrec
     def loadConfigsFromDirectoryHelper(remainingConfigFiles: List[File], configs: List[C]): List[C] =

@@ -3,7 +3,9 @@ package com.clairvoyant.restonomer.core.transformation
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.types.*
+import org.apache.spark.sql.types._
+
+import scala.language.postfixOps
 
 class CastFromToDataTypesTransformationSpec extends CoreSpec {
 
@@ -53,16 +55,18 @@ class CastFromToDataTypesTransformationSpec extends CoreSpec {
       .head
       .dataType shouldBe LongType
 
-    restonomerResponseDF.schema
-      .filter(_.name == "col_F")
-      .head
-      .dataType match {
-      case ArrayType(nestedArrayType: StructType, _) =>
-        nestedArrayType
-          .filter(_.name == "col_G")
-          .head
-          .dataType
-    } shouldBe LongType
+    (
+      restonomerResponseDF.schema
+        .filter(_.name == "col_F")
+        .head
+        .dataType match {
+        case ArrayType(nestedArrayType: StructType, _) =>
+          nestedArrayType
+            .filter(_.name == "col_G")
+            .head
+            .dataType
+      }
+    ) shouldBe LongType
 
     val restonomerTransformation = CastFromToDataTypes(
       dataTypeMapper = Map(
@@ -96,16 +100,18 @@ class CastFromToDataTypesTransformationSpec extends CoreSpec {
       .head
       .dataType shouldBe IntegerType
 
-    actualRestonomerResponseTransformedDF.schema
-      .filter(_.name == "col_F")
-      .head
-      .dataType match {
-      case ArrayType(nestedArrayType: StructType, _) =>
-        nestedArrayType
-          .filter(_.name == "col_G")
-          .head
-          .dataType
-    } shouldBe IntegerType
+    (
+      actualRestonomerResponseTransformedDF.schema
+        .filter(_.name == "col_F")
+        .head
+        .dataType match {
+        case ArrayType(nestedArrayType: StructType, _) =>
+          nestedArrayType
+            .filter(_.name == "col_G")
+            .head
+            .dataType
+      }
+    ) shouldBe IntegerType
   }
 
   "transform() - with castRecursively as false" should "cast columns as per the from and to data types" in {
@@ -131,16 +137,18 @@ class CastFromToDataTypesTransformationSpec extends CoreSpec {
       .head
       .dataType shouldBe LongType
 
-    restonomerResponseDF.schema
-      .filter(_.name == "col_F")
-      .head
-      .dataType match {
-      case ArrayType(nestedArrayType: StructType, _) =>
-        nestedArrayType
-          .filter(_.name == "col_G")
-          .head
-          .dataType
-    } shouldBe LongType
+    (
+      restonomerResponseDF.schema
+        .filter(_.name == "col_F")
+        .head
+        .dataType match {
+        case ArrayType(nestedArrayType: StructType, _) =>
+          nestedArrayType
+            .filter(_.name == "col_G")
+            .head
+            .dataType
+      }
+    ) shouldBe LongType
 
     val restonomerTransformation = CastFromToDataTypes(
       dataTypeMapper = Map(
@@ -173,16 +181,18 @@ class CastFromToDataTypesTransformationSpec extends CoreSpec {
       .head
       .dataType shouldBe LongType
 
-    actualRestonomerResponseTransformedDF.schema
-      .filter(_.name == "col_F")
-      .head
-      .dataType match {
-      case ArrayType(nestedArrayType: StructType, _) =>
-        nestedArrayType
-          .filter(_.name == "col_G")
-          .head
-          .dataType
-    } shouldBe LongType
+    (
+      actualRestonomerResponseTransformedDF.schema
+        .filter(_.name == "col_F")
+        .head
+        .dataType match {
+        case ArrayType(nestedArrayType: StructType, _) =>
+          nestedArrayType
+            .filter(_.name == "col_G")
+            .head
+            .dataType
+      }
+    ) shouldBe LongType
   }
 
 }

@@ -10,7 +10,7 @@ class JSONResponseToDataFrameConverterIntegrationTest
 
   it should "convert the JSON response body into a dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_json_response_dataframe_converter.conf")
-    outputDF should matchExpectedDataFrame("expected_json_response.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_json_response.json"))
   }
 
 }

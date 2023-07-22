@@ -1,21 +1,17 @@
 package com.clairvoyant.restonomer.core.authentication
 
 import com.amazonaws.DefaultRequest
-import com.amazonaws.auth.internal.SignerConstants.*
-import com.amazonaws.auth.{AWS4Signer, AWSCredentials, BasicAWSCredentials}
+import com.amazonaws.auth.internal.SignerConstants._
+import com.amazonaws.auth.{AWS4Signer, BasicAWSCredentials}
 import com.amazonaws.http.HttpMethodName
-import com.clairvoyant.restonomer.core.common.*
-import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders.*
+import com.clairvoyant.restonomer.core.common.APIKeyPlaceholders._
+import com.clairvoyant.restonomer.core.common._
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.sttpBackend
 import com.jayway.jsonpath.JsonPath
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.impl.client.HttpClients
-import org.apache.http.util.EntityUtils
-import pdi.jwt.*
+import pdi.jwt._
 import pdi.jwt.algorithms.JwtUnknownAlgorithm
-import sttp.client3.*
-import sttp.model.{Header, HeaderNames}
+import sttp.client3._
 import zio.config.derivation.nameWithLabel
 
 import java.net.URI
@@ -23,7 +19,6 @@ import java.security.MessageDigest
 import java.time.Clock
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
-import scala.jdk.CollectionConverters.*
 
 @nameWithLabel
 sealed trait RestonomerAuthentication {
@@ -118,13 +113,13 @@ case class APIKeyAuthentication(
       httpRequest: Request[Either[String, String], Any]
   ): Request[Either[String, String], Any] =
     APIKeyPlaceholders(placeholder) match {
-      case QueryParam =>
+      case QUERY_PARAM =>
         httpRequest.copy[Identity, Either[String, String], Any](
           uri = httpRequest.uri.addParam(apiKeyName, apiKeyValue)
         )
-      case RequestHeader =>
+      case REQUEST_HEADER =>
         httpRequest.header(apiKeyName, apiKeyValue, replaceExisting = true)
-      case Cookie =>
+      case COOKIE =>
         httpRequest.cookie(apiKeyName, apiKeyValue)
     }
 
@@ -137,7 +132,7 @@ case class JWTAuthentication(
     tokenExpiresIn: Long = 1800
 ) extends RestonomerAuthentication {
 
-  given clock: Clock = Clock.systemDefaultZone()
+  implicit val clock: Clock = Clock.systemDefaultZone()
 
   override def validateCredentials(): Unit = {
     if (subject.isBlank || secretKey.isBlank)

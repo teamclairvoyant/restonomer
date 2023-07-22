@@ -9,7 +9,7 @@ class CSVResponseToDataFrameConverter(
 
   def convertResponseToDataFrame(
       restonomerResponseBody: Seq[String]
-  )(using sparkSession: SparkSession): DataFrame =
+  )(implicit sparkSession: SparkSession): DataFrame =
     new CSVTextToDataFrameReader(
       sparkSession = sparkSession,
       containsHeader = containsHeader

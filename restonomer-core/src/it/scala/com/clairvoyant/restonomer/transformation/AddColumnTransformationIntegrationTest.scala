@@ -8,7 +8,7 @@ class AddColumnTransformationIntegrationTest extends IntegrationTestDependencies
 
   it should "transform and add the column to the restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_add_column_transformation.conf")
-    outputDF should matchExpectedDataFrame("expected_add_column_transformation.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_add_column_transformation.json"))
   }
 
 }

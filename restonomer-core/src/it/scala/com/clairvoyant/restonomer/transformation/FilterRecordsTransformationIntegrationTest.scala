@@ -8,7 +8,7 @@ class FilterRecordsTransformationIntegrationTest extends IntegrationTestDependen
 
   it should "filter records from restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_filter_records_transformation.conf")
-    outputDF should matchExpectedDataFrame("expected_filter_records_transformation.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_filter_records_transformation.json"))
   }
 
 }

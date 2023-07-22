@@ -8,7 +8,7 @@ class FileSystemPersistenceIntegrationTest extends IntegrationTestDependencies w
 
   it should "persist the restonomer response dataframe in the file system in the desired format at the desired path" in {
     runCheckpoint(checkpointFileName = "checkpoint_file_system_persistence.conf")
-    outputDF should matchExpectedDataFrame("expected_file_system_persistence.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_file_system_persistence.json"))
   }
 
 }

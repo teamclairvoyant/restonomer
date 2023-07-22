@@ -10,7 +10,7 @@ class ReplaceStringInColumnValueTransformationIntegrationTest
 
   it should "replace mentioned columns values from the restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_replace_StringValue_transformation.conf")
-    outputDF should matchExpectedDataFrame("expected_replace_StringValue_transformation.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_replace_StringValue_transformation.json"))
   }
 
 }

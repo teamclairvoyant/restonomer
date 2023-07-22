@@ -1,9 +1,7 @@
 package com.clairvoyant.restonomer.spark.utils.writer
 
 import org.apache.hadoop.conf.Configuration
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.SaveMode
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 class DataFrameToGCSBucketWriter(
     serviceAccountCredentialsFile: Option[String],
@@ -13,7 +11,7 @@ class DataFrameToGCSBucketWriter(
     saveMode: String
 ) extends DataFrameWriter {
 
-  override def write(dataFrame: DataFrame)(using sparkSession: SparkSession): Unit = {
+  override def write(dataFrame: DataFrame)(implicit sparkSession: SparkSession): Unit = {
 
     val hadoopConfigurations: Configuration = sparkSession.sparkContext.hadoopConfiguration
 

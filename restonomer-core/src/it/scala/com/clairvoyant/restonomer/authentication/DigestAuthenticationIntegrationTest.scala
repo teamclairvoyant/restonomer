@@ -8,7 +8,7 @@ class DigestAuthenticationIntegrationTest extends IntegrationTestDependencies wi
 
   it should "authenticate request with digest authentication using token" in {
     runCheckpoint(checkpointFileName = "checkpoint_digest_authentication.conf")
-    outputDF should matchExpectedDataFrame("expected_digest_authentication.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_digest_authentication.json"))
   }
 
 }

@@ -11,7 +11,7 @@ class ReplaceEmptyStringsWithNullsTransformationIntegrationTest
 
   it should "replace empty strings with nulls in restonomer response dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_replace_empty_strings_with_nulls_transformation.conf")
-    outputDF should matchExpectedDataFrame("expected_replace_empty_strings_with_nulls_transformation.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_replace_empty_strings_with_nulls_transformation.json"))
   }
 
 }

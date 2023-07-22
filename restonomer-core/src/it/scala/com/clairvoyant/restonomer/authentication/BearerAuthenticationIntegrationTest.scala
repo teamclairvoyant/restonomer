@@ -8,7 +8,7 @@ class BearerAuthenticationIntegrationTest extends IntegrationTestDependencies wi
 
   it should "authenticate request with bearer authentication using token" in {
     runCheckpoint(checkpointFileName = "checkpoint_bearer_authentication.conf")
-    outputDF should matchExpectedDataFrame("expected_bearer_authentication.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_bearer_authentication.json"))
   }
 
 }

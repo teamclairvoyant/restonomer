@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.transformation
 
 import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
-import org.apache.spark.sql.types.*
+import org.apache.spark.sql.types._
 
 class CastColumnsTransformationIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
@@ -21,7 +21,7 @@ class CastColumnsTransformationIntegrationTest extends IntegrationTestDependenci
 
   it should "cast the columns of restonomer response dataframe as specified in the transformation mapper" in {
     runCheckpoint(checkpointFileName = "checkpoint_cast_columns_transformation.conf")
-    outputDF should matchExpectedDataFrame("expected_cast_columns_transformation.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_cast_columns_transformation.json"))
   }
 
 }

@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.core.model
 
 import zio.Config
-import zio.config.*
-import zio.config.magnolia.*
+import zio.config._
+import zio.config.magnolia._
 
 case class CheckpointConfig(
     name: String,

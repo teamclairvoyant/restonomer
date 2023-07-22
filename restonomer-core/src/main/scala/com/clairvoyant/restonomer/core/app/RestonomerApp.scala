@@ -1,9 +1,7 @@
 package com.clairvoyant.restonomer.core.app
 
-import cats.implicits.*
-import com.clairvoyant.restonomer.core.app.RestonomerContext
-import com.monovore.decline.CommandApp
-import com.monovore.decline.Opts
+import cats.implicits._
+import com.monovore.decline.{CommandApp, Opts}
 
 object RestonomerApp
     extends CommandApp(

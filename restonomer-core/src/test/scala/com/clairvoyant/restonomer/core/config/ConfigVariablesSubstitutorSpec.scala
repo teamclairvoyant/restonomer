@@ -2,8 +2,6 @@ package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
 
-import java.io.File
-
 class ConfigVariablesSubstitutorSpec extends CoreSpec {
 
   val configString: String =
@@ -66,7 +64,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val configVariablesFromApplicationArgs = Map[String, String]()
       val environmentVariables = Map[String, String]()
 
-      ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
+      new ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
         .substituteConfigVariables(configString) shouldBe expectedConfigString
     }
 
@@ -103,7 +101,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val configVariablesFromApplicationArgs = Map[String, String]()
       val environmentVariables = Map("BASIC_AUTH_TOKEN" -> "abcd1234")
 
-      ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
+      new ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
         .substituteConfigVariables(configString) shouldBe expectedConfigString
     }
 
@@ -140,7 +138,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val configVariablesFromApplicationArgs = Map[String, String]()
       val environmentVariables = Map("BASIC_AUTH_TOKEN" -> "abcd1234")
 
-      ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
+      new ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
         .substituteConfigVariables(configString) shouldBe expectedConfigString
     }
 
@@ -177,7 +175,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val configVariablesFromApplicationArgs = Map("BASIC_AUTH_TOKEN" -> "efgh5678")
       val environmentVariables = Map[String, String]()
 
-      ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
+      new ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
         .substituteConfigVariables(configString) shouldBe expectedConfigString
     }
 
@@ -215,7 +213,7 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       val configVariablesFromApplicationArgs = Map("BASIC_AUTH_TOKEN" -> "efgh5678")
       val environmentVariables = Map("BASIC_AUTH_TOKEN" -> "ijkl9876")
 
-      ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
+      new ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs, environmentVariables)
         .substituteConfigVariables(configString) shouldBe expectedConfigString
     }
 

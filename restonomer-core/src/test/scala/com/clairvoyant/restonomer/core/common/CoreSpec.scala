@@ -5,18 +5,15 @@ import org.apache.spark.sql.SparkSession
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import sttp.client3.*
+import sttp.client3.{Request, UriContext, basicRequest}
 import sttp.model.Method
-
-import scala.concurrent.Future
 
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
 
-  given sparkSession: SparkSession =
-    SparkSession
-      .builder()
-      .master("local[*]")
-      .getOrCreate()
+  implicit val sparkSession: SparkSession = SparkSession
+    .builder()
+    .master("local[*]")
+    .getOrCreate()
 
   val resourcesPath = "restonomer-core/src/test/resources"
   val url = "/test_url"

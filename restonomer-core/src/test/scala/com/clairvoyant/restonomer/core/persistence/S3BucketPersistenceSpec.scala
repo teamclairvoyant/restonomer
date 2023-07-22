@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.persistence
 
-import com.clairvoyant.restonomer.core.common.S3MockSpec.*
+import com.clairvoyant.restonomer.core.common.S3MockSpec._
 import com.clairvoyant.restonomer.core.common.{CoreSpec, S3MockSpec}
 import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToS3BucketWriter

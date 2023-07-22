@@ -8,7 +8,7 @@ import sttp.model.HeaderNames.ContentType
 
 class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
 
-  given tokenFunction: Option[String => String] = None
+  implicit val tokenFunction: Option[String => String] = None
 
   "withAuthentication - without authenticationConfig" should "return RestonomerRequestBuilder object with the same httpRequest" in {
     val authentication = None

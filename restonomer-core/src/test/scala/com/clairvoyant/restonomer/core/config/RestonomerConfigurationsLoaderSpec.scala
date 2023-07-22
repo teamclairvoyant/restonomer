@@ -1,15 +1,14 @@
 package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader.*
-import com.clairvoyant.restonomer.core.exception.RestonomerException
+import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader.{loadConfigFromFile, loadConfigsFromDirectory}
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
 
 import java.io.FileNotFoundException
 
 class RestonomerConfigurationsLoaderSpec extends CoreSpec {
 
-  given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = None
+  implicit val configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = None
 
   "loadConfigFromFile - with non existing file" should "throw RestonomerException" in {
     val thrown =

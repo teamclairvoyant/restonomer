@@ -8,7 +8,7 @@ class TextDataBodyIntegrationTest extends IntegrationTestDependencies with MockF
 
   it should "add custom text data body when provided by user" in {
     runCheckpoint(checkpointFileName = "checkpoint_text_data_request_body.conf")
-    outputDF should matchExpectedDataFrame("expected_text_data_request_body.json")
+    outputDF should matchExpectedDataFrame(readMockJSON("expected_text_data_request_body.json"))
   }
 
 }
