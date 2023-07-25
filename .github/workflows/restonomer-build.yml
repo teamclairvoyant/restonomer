@@ -22,11 +22,6 @@ jobs:
           cache: 'sbt'
       - name: Scalafmt Check
         run: sbt scalafmtCheckAll
-      - name: Run Fake GCS Server
-        uses: addnab/docker-run-action@v3
-        with:
-          image: fsouza/fake-gcs-server:latest
-          options: -d --name fake-gcs-server -p 4443:4443
       - name: Run Unit Tests
         run: sbt test
       - name: Run Integration Tests

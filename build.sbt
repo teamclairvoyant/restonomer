@@ -24,6 +24,7 @@ val scalaParserCombinatorsVersion = "2.2.0"
 val gcsConnectorVersion = "hadoop3-2.2.2"
 val monovoreDeclineVersion = "2.4.1"
 val googleCloudStorageVersion = "2.24.0"
+val testContainersScalaVersion = "0.40.17"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -75,6 +76,8 @@ val monovoreDeclineDependencies = Seq("com.monovore" %% "decline" % monovoreDecl
 
 val googleCloudStorageDependencies = Seq("com.google.cloud" % "google-cloud-storage" % googleCloudStorageVersion)
 
+val testContainersScalaDependencies = Seq("com.dimafeng" %% "testcontainers-scala" % testContainersScalaVersion % Test)
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
@@ -91,7 +94,8 @@ val restonomerCoreDependencies =
     odelayDependencies ++
     gcsConnectorDependencies ++
     monovoreDeclineDependencies ++
-    googleCloudStorageDependencies
+    googleCloudStorageDependencies ++
+    testContainersScalaDependencies
 
 val restonomerSparkUtilsDependencies =
   sparkDependencies ++

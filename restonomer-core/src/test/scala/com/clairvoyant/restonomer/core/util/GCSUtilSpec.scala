@@ -6,6 +6,10 @@ import com.google.cloud.storage.{BucketInfo, StorageOptions}
 
 class GCSUtilSpec extends CoreSpec with GCSMockSpec {
 
+  
+      .build()
+      .getService()
+
   "getBucketName() - with fullGCSPath" should "return correct bucket name" in {
     getBucketName(fullGCSPath = "gs://test-bucket/test-blob") shouldBe "test-bucket"
   }
@@ -15,13 +19,18 @@ class GCSUtilSpec extends CoreSpec with GCSMockSpec {
   }
 
   "getBlobs() - with fullGCSPath" should "return list of blobs" in {
-    val gcsBucket = gcsStorageClient.create(BucketInfo.of("test-bucket-1"))
+    withContainers { container =>
+      val gcsBucket = gcsStorageClient
+            .setHost(s"${container.}")
+            .create(BucketInfo.of("test-bucket-1"))
 
-    gcsBucket.create("test-blob/file-1.txt", "file-1 content".getBytes())
-    gcsBucket.create("test-blob/file-2.txt", "file-2 content".getBytes())
-    gcsBucket.create("test-blob/file-3.txt", "file-3 content".getBytes())
+      gcsBucket.create("test-blob/file-1.txt", "file-1 content".getBytes())
+      gcsBucket.create("test-blob/file-2.txt", "file-2 content".getBytes())
+      gcsBucket.create("test-blob/file-3.txt", "file-3 content".getBytes())
 
-    getBlobs(fullGCSPath = "gs://test-bucket-1/test-blob") should have size 3
+      getBlobs(fullGCSPath = "gs://test-bucket-1/test-blob") should have size 3
+    }
+
   }
 
   "getBlobFullPath()" should "return full path of blob" in {
