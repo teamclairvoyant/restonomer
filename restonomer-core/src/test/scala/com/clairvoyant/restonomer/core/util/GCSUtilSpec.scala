@@ -7,11 +7,11 @@ import com.google.cloud.storage.{BucketInfo, StorageOptions}
 class GCSUtilSpec extends CoreSpec with GCSMockSpec {
 
   "getBucketName() - with fullGCSPath" should "return correct bucket name" in {
-    getBucketName("gs://test-bucket/test-blob") shouldBe "test-bucket"
+    getBucketName(fullGCSPath = "gs://test-bucket/test-blob") shouldBe "test-bucket"
   }
 
   "getBlobName() - with fullGCSPath" should "return correct blob name" in {
-    getBlobName("gs://test-bucket/test-blob/abc/def") shouldBe "test-blob/abc/def"
+    getBlobName(fullGCSPath = "gs://test-bucket/test-blob/abc/def") shouldBe "test-blob/abc/def"
   }
 
   "getBlobs() - with fullGCSPath" should "return list of blobs" in {
@@ -21,7 +21,7 @@ class GCSUtilSpec extends CoreSpec with GCSMockSpec {
     gcsBucket.create("test-blob/file-2.txt", "file-2 content".getBytes())
     gcsBucket.create("test-blob/file-3.txt", "file-3 content".getBytes())
 
-    getBlobs("gs://test-bucket-1/test-blob") should have size 3
+    getBlobs(fullGCSPath = "gs://test-bucket-1/test-blob") should have size 3
   }
 
   "getBlobFullPath()" should "return full path of blob" in {
