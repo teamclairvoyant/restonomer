@@ -1,12 +1,8 @@
 package com.clairvoyant.restonomer.core.app
 
-import com.clairvoyant.restonomer.core.config.ConfigVariablesSubstitutor
-import com.clairvoyant.restonomer.core.config.GCSRestonomerContextLoader
-import com.clairvoyant.restonomer.core.config.LocalRestonomerContextLoader
-import com.clairvoyant.restonomer.core.config.RestonomerContextLoader
+import com.clairvoyant.restonomer.core.config.{ConfigVariablesSubstitutor, GCSRestonomerContextLoader, LocalRestonomerContextLoader, RestonomerContextLoader}
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import com.clairvoyant.restonomer.core.model.ApplicationConfig
-import com.clairvoyant.restonomer.core.model.CheckpointConfig
+import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
 import zio.Config
 import zio.config.magnolia.*
 

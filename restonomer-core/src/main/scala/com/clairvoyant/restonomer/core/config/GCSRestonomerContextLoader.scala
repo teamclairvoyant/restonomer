@@ -2,23 +2,17 @@ package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.app.RestonomerContext
 import com.clairvoyant.restonomer.core.util.GCSUtil.*
-import com.google.cloud.storage.Blob
-import com.google.cloud.storage.BlobId
-import com.google.cloud.storage.Storage
 import com.google.cloud.storage.Storage.BlobListOption
-import com.google.cloud.storage.StorageOptions
+import com.google.cloud.storage.{Blob, BlobId, Storage, StorageOptions}
 import zio.Config
 
-import java.io.ByteArrayInputStream
-import java.io.File
+import java.io.{ByteArrayInputStream, File}
 import scala.annotation.tailrec
 import scala.io.Source
 
-import collection.convert.ImplicitConversions.*
-
 class GCSRestonomerContextLoader extends RestonomerContextLoader {
 
-  given gcsStorageClient: Storage = StorageOptions.getDefaultInstance().getService()
+  given gcsStorageClient: Storage = StorageOptions.getDefaultInstance.getService
 
   override def fileExists(filePath: String): Boolean =
     gcsStorageClient
@@ -43,7 +37,7 @@ class GCSRestonomerContextLoader extends RestonomerContextLoader {
       else {
         val configFile = remainingConfigFiles.head
 
-        if (configFile.isDirectory())
+        if (configFile.isDirectory)
           loadConfigsFromDirectoryHelper(getBlobs(getBlobFullPath(configFile)) ++ remainingConfigFiles.tail, configs)
         else
           loadConfigsFromDirectoryHelper(

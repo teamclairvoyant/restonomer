@@ -2,14 +2,13 @@ package com.clairvoyant.restonomer.core.common
 
 import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
 import org.apache.spark.sql.SparkSession
-import org.scalatest.BeforeAndAfterAll
+import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import sttp.client3.*
 import sttp.model.Method
 
 import scala.concurrent.Future
-import org.scalatest.BeforeAndAfter
 
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
 

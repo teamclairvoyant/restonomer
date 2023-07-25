@@ -20,6 +20,6 @@ object GCSUtil {
       .iterateAll()
       .toList
 
-  def getBlobFullPath(blob: Blob): String = s"${GCS_PREFIX}${blob.getBucket()}/${blob.getName()}"
+  def getBlobFullPath(blob: Blob): String = s"${GCS_PREFIX}${blob.getBucket}/${blob.getName}"
 
 }

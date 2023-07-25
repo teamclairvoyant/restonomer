@@ -1,12 +1,8 @@
 package com.clairvoyant.restonomer.core.common
 
 import com.google.cloud.NoCredentials
-import com.google.cloud.storage.Storage
-import com.google.cloud.storage.StorageOptions
-import org.scalatest.BeforeAndAfterAll
-import org.scalatest.Suite
-import org.scalatest.BeforeAndAfter
-import com.google.cloud.storage.BucketInfo
+import com.google.cloud.storage.{BucketInfo, Storage, StorageOptions}
+import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll, Suite}
 
 trait GCSMockSpec {
   val gcsMockPort: Int = 4443
