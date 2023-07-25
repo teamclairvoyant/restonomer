@@ -2,13 +2,9 @@ package com.clairvoyant.restonomer.core.util
 
 import com.clairvoyant.restonomer.core.common.{CoreSpec, GCSMockSpec}
 import com.clairvoyant.restonomer.core.util.GCSUtil.*
-import com.google.cloud.storage.{BucketInfo, StorageOptions}
+import com.google.cloud.storage.{BucketInfo, Storage, StorageOptions}
 
 class GCSUtilSpec extends CoreSpec with GCSMockSpec {
-
-  
-      .build()
-      .getService()
 
   "getBucketName() - with fullGCSPath" should "return correct bucket name" in {
     getBucketName(fullGCSPath = "gs://test-bucket/test-blob") shouldBe "test-bucket"
@@ -20,9 +16,14 @@ class GCSUtilSpec extends CoreSpec with GCSMockSpec {
 
   "getBlobs() - with fullGCSPath" should "return list of blobs" in {
     withContainers { container =>
-      val gcsBucket = gcsStorageClient
-            .setHost(s"${container.}")
-            .create(BucketInfo.of("test-bucket-1"))
+      println(s"#### container host #### ==> ${container}")
+
+      given gcsStorageClient: Storage =
+        gcsStorageClientBuilder
+          .build()
+          .getService
+
+      val gcsBucket = gcsStorageClient.create(BucketInfo.of("test-bucket-1"))
 
       gcsBucket.create("test-blob/file-1.txt", "file-1 content".getBytes())
       gcsBucket.create("test-blob/file-2.txt", "file-2 content".getBytes())
@@ -34,10 +35,19 @@ class GCSUtilSpec extends CoreSpec with GCSMockSpec {
   }
 
   "getBlobFullPath()" should "return full path of blob" in {
-    val gcsBucket = gcsStorageClient.create(BucketInfo.of("test-bucket-2"))
-    val blob = gcsBucket.create("test-blob/file-1.txt", "file-1 content".getBytes())
+    withContainers { container =>
+      println(s"#### container host #### ==> ${container}")
 
-    getBlobFullPath(blob) shouldBe "gs://test-bucket-2/test-blob/file-1.txt"
+      given gcsStorageClient: Storage =
+        gcsStorageClientBuilder
+          .build()
+          .getService
+
+      val gcsBucket = gcsStorageClient.create(BucketInfo.of("test-bucket-2"))
+      val blob = gcsBucket.create("test-blob/file-1.txt", "file-1 content".getBytes())
+
+      getBlobFullPath(blob) shouldBe "gs://test-bucket-2/test-blob/file-1.txt"
+    }
   }
 
 }
