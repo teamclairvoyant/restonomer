@@ -6,7 +6,7 @@ import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll, Suite}
 
 trait GCSMockSpec {
   val gcsMockPort: Int = 4443
-  val gcsMockEndpoint: String = s"http://localhost:$gcsMockPort"
+  val gcsMockEndpoint: String = s"https://localhost:$gcsMockPort"
 
   given gcsStorageClient: Storage =
     StorageOptions
