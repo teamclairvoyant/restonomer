@@ -9,6 +9,7 @@ import sttp.client3.*
 import sttp.model.Method
 
 import scala.concurrent.Future
+import org.scalatest.BeforeAndAfter
 
 trait CoreSpec extends AnyFlatSpec with Matchers with BeforeAndAfterAll with DataFrameMatchers {
 

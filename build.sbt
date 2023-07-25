@@ -23,6 +23,7 @@ val scalaXmlVersion = "2.1.0"
 val scalaParserCombinatorsVersion = "2.2.0"
 val gcsConnectorVersion = "hadoop3-2.2.2"
 val monovoreDeclineVersion = "2.4.1"
+val googleCloudStorageVersion = "2.24.0"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -72,6 +73,8 @@ val gcsConnectorDependencies = Seq("com.google.cloud.bigdataoss" % "gcs-connecto
 
 val monovoreDeclineDependencies = Seq("com.monovore" %% "decline" % monovoreDeclineVersion)
 
+val googleCloudStorageDependencies = Seq("com.google.cloud" % "google-cloud-storage" % googleCloudStorageVersion)
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
@@ -87,7 +90,8 @@ val restonomerCoreDependencies =
     s3MockDependencies ++
     odelayDependencies ++
     gcsConnectorDependencies ++
-    monovoreDeclineDependencies
+    monovoreDeclineDependencies ++
+    googleCloudStorageDependencies
 
 val restonomerSparkUtilsDependencies =
   sparkDependencies ++
