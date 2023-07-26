@@ -2,12 +2,16 @@ package com.clairvoyant.restonomer.core.common
 
 import com.dimafeng.testcontainers.GenericContainer
 import com.dimafeng.testcontainers.GenericContainer.Def
+import com.dimafeng.testcontainers.GenericContainer.FileSystemBind
 import com.dimafeng.testcontainers.scalatest.TestContainerForAll
 import com.google.cloud.NoCredentials
+import com.google.cloud.storage.BucketInfo
+import com.google.cloud.storage.Storage
+import com.google.cloud.storage.StorageOptions
 import com.google.cloud.storage.StorageOptions.Builder
-import com.google.cloud.storage.{BucketInfo, Storage, StorageOptions}
 import org.scalatest.Suite
 import org.scalatest.flatspec.AnyFlatSpec
+import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.wait.strategy.Wait
 
 import java.net.URL
@@ -18,14 +22,15 @@ trait GCSMockSpec extends TestContainerForAll {
 
   val gcsPrefix = "gs://"
   val mockGCSBucketName = "test-bucket"
-  val mockBlobName = "dirA/dirB/dirC"
+  val mockBlobName = "restonomer_context/checkpoints"
   val mockFullGCSPath = s"$gcsPrefix$mockGCSBucketName/$mockBlobName"
   val mockGCSPort = 4443
 
   override val containerDef: Def[GenericContainer] = GenericContainer.Def(
     dockerImage = "fsouza/fake-gcs-server:latest",
     exposedPorts = Seq(mockGCSPort),
-    command = Seq("-scheme=http")
+    command = Seq("-scheme=http"),
+    classpathResourceMapping = Seq(FileSystemBind("fake-gcs-server/data", "/data", BindMode.READ_ONLY))
   )
 
   implicit lazy val gcsStorageClient: Storage = withContainers { container =>
@@ -38,6 +43,6 @@ trait GCSMockSpec extends TestContainerForAll {
       .getService
   }
 
-  lazy val gcsBucket = gcsStorageClient.create(BucketInfo.of(mockGCSBucketName))
+  lazy val gcsBucket = gcsStorageClient.get(mockGCSBucketName)
 
 }

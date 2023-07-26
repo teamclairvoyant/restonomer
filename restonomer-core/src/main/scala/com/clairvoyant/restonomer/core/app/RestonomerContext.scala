@@ -7,6 +7,8 @@ import zio.Config
 import zio.config.magnolia.*
 
 import java.io.FileNotFoundException
+import com.google.cloud.storage.StorageOptions
+import com.google.cloud.storage.Storage
 
 object RestonomerContext {
 
@@ -15,10 +17,10 @@ object RestonomerContext {
       configVariablesFromApplicationArgs: Map[String, String] = Map()
   ): RestonomerContext = {
     val restonomerContextLoader =
-      if (restonomerContextDirectoryPath.startsWith("gs://"))
+      if (restonomerContextDirectoryPath.startsWith("gs://")) {
+        given gcsStorageClient: Storage = StorageOptions.getDefaultInstance().getService()
         GCSRestonomerContextLoader()
-      else
-        LocalRestonomerContextLoader()
+      } else LocalRestonomerContextLoader()
 
     if (restonomerContextLoader.fileExists(restonomerContextDirectoryPath))
       new RestonomerContext(restonomerContextLoader, restonomerContextDirectoryPath, configVariablesFromApplicationArgs)
