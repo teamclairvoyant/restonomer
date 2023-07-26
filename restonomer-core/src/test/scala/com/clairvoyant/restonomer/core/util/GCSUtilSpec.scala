@@ -10,6 +10,7 @@ import org.testcontainers.containers.wait.strategy.Wait
 
 import java.net.URL
 import scala.io.Source
+import com.google.cloud.storage.BlobId
 
 class GCSUtilSpec extends CoreSpec with GCSMockSpec {
 
@@ -30,8 +31,9 @@ class GCSUtilSpec extends CoreSpec with GCSMockSpec {
   }
 
   "getBlobFullPath()" should "return full path of blob" in {
-    val blob = gcsBucket.create(s"$mockBlobName/file-1.txt", "file-1-content".getBytes())
-    getBlobFullPath(blob) shouldBe s"$mockFullGCSPath/file-1.txt"
+    getBlobFullPath(
+      blob = gcsStorageClient.get(BlobId.of(gcsBucket.getName(), s"$mockBlobName/file-1.txt"))
+    ) shouldBe s"$mockFullGCSPath/file-1.txt"
   }
 
 }
