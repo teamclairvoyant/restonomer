@@ -1,17 +1,13 @@
 package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.exception.RestonomerException
-import zio.ConfigProvider
-import zio._
+import zio.*
 import zio.config.typesafe.*
 
 import java.io.File
 import scala.annotation.tailrec
 import scala.io.Source
-import scala.util.Failure
-import scala.util.Success
-import scala.util.Try
-import scala.util.Using
+import scala.util.{Failure, Success, Try, Using}
 
 trait RestonomerContextLoader {
 

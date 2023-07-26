@@ -14,45 +14,24 @@ import scala.io.Source
 class GCSUtilSpec extends CoreSpec with GCSMockSpec {
 
   "getBucketName() - with fullGCSPath" should "return correct bucket name" in {
-    getBucketName(fullGCSPath = "gs://test-bucket/test-blob") shouldBe "test-bucket"
+    getBucketName(mockFullGCSPath) shouldBe mockGCSBucketName
   }
 
   "getBlobName() - with fullGCSPath" should "return correct blob name" in {
-    getBlobName(fullGCSPath = "gs://test-bucket/test-blob/abc/def") shouldBe "test-blob/abc/def"
+    getBlobName(mockFullGCSPath) shouldBe mockBlobName
   }
 
   "getBlobs() - with fullGCSPath" should "return list of blobs" in {
-    withContainers { container =>
-      given gcsStorageClient: Storage =
-        gcsStorageClientBuilder
-          .setHost(s"http://${container.containerIpAddress}:${container.mappedPort(4443)}")
-          .build()
-          .getService
+    gcsBucket.create(s"$mockBlobName/file-1.txt", "file-1-content".getBytes())
+    gcsBucket.create(s"$mockBlobName/file-2.txt", "file-2-content".getBytes())
+    gcsBucket.create(s"$mockBlobName/file-3.txt", "file-3-content".getBytes())
 
-      val gcsBucket = gcsStorageClient.create(BucketInfo.of("test-bucket-1"))
-
-      gcsBucket.create("test-blob/file-1.txt", "file-1 content".getBytes())
-      gcsBucket.create("test-blob/file-2.txt", "file-2 content".getBytes())
-      gcsBucket.create("test-blob/file-3.txt", "file-3 content".getBytes())
-
-      getBlobs(fullGCSPath = "gs://test-bucket-1/test-blob") should have size 3
-    }
-
+    getBlobs(mockFullGCSPath) should have size 3
   }
 
   "getBlobFullPath()" should "return full path of blob" in {
-    withContainers { container =>
-      given gcsStorageClient: Storage =
-        gcsStorageClientBuilder
-          .setHost(s"http://${container.containerIpAddress}:${container.mappedPort(4443)}")
-          .build()
-          .getService
-
-      val gcsBucket = gcsStorageClient.create(BucketInfo.of("test-bucket-2"))
-      val blob = gcsBucket.create("test-blob/file-1.txt", "file-1 content".getBytes())
-
-      getBlobFullPath(blob) shouldBe "gs://test-bucket-2/test-blob/file-1.txt"
-    }
+    val blob = gcsBucket.create(s"$mockBlobName/file-1.txt", "file-1-content".getBytes())
+    getBlobFullPath(blob) shouldBe s"$mockFullGCSPath/file-1.txt"
   }
 
 }

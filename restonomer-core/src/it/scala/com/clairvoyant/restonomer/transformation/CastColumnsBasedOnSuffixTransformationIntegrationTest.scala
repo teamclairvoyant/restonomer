@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.transformation
 
 import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
-import org.apache.spark.sql.types.{DecimalType, DoubleType, StringType, StructField, StructType}
+import org.apache.spark.sql.types.*
 
 class CastColumnsBasedOnSuffixTransformationIntegrationTest
     extends IntegrationTestDependencies

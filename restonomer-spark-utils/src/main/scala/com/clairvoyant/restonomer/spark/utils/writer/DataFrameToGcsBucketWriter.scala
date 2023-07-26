@@ -1,9 +1,7 @@
 package com.clairvoyant.restonomer.spark.utils.writer
 
 import org.apache.hadoop.conf.Configuration
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.SaveMode
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
 class DataFrameToGCSBucketWriter(
     serviceAccountCredentialsFile: Option[String],
