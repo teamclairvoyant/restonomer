@@ -1,11 +1,11 @@
 package com.clairvoyant.restonomer.core.config
 
-import java.nio.file.Files
-import java.nio.file.Paths
-import scala.io.Source
 import zio.Config
-import scala.annotation.tailrec
+
 import java.io.File
+import java.nio.file.{Files, Paths}
+import scala.annotation.tailrec
+import scala.io.Source
 
 class LocalRestonomerContextLoader extends RestonomerContextLoader {
 

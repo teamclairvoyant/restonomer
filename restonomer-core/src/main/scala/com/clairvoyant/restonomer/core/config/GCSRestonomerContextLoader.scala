@@ -10,14 +10,10 @@ import java.io.{ByteArrayInputStream, File}
 import scala.annotation.tailrec
 import scala.io.Source
 
-class GCSRestonomerContextLoader extends RestonomerContextLoader {
-
-  given gcsStorageClient: Storage = StorageOptions.getDefaultInstance.getService
+class GCSRestonomerContextLoader(using gcsStorageClient: Storage) extends RestonomerContextLoader {
 
   override def fileExists(filePath: String): Boolean =
-    gcsStorageClient
-      .get(BlobId.of(getBucketName(filePath), getBlobName(filePath)))
-      .exists()
+    gcsStorageClient.get(BlobId.of(getBucketName(filePath), getBlobName(filePath))) != null
 
   override def readConfigFile(configFilePath: String): Source =
     Source.fromInputStream(

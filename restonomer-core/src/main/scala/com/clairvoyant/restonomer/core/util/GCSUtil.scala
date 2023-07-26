@@ -1,10 +1,10 @@
 package com.clairvoyant.restonomer.core.util
 
-import com.google.cloud.storage.StorageOptions
-import com.google.cloud.storage.Storage
 import com.google.cloud.storage.Storage.BlobListOption
-import com.google.cloud.storage.Blob
-import collection.convert.ImplicitConversions.*
+import com.google.cloud.storage.StorageOptions.Builder
+import com.google.cloud.storage.{Blob, Storage, StorageOptions}
+
+import scala.jdk.CollectionConverters.*
 
 object GCSUtil {
 
@@ -18,6 +18,7 @@ object GCSUtil {
     gcsStorageClient
       .list(getBucketName(fullGCSPath), BlobListOption.prefix(getBlobName(fullGCSPath)))
       .iterateAll()
+      .asScala
       .toList
 
   def getBlobFullPath(blob: Blob): String = s"${GCS_PREFIX}${blob.getBucket}/${blob.getName}"

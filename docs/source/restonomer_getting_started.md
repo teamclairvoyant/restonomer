@@ -31,6 +31,8 @@ libraryDependencies += "com.clairvoyant.restonomer" %% "restonomer-core" % "2.1.
   User can create the restonomer context instance by passing the restonomer context directory path to the constructor 
   of RestonomerContext class.
 
+  Currently, user can provide the local file system path or GCS path for the restonomer context directory.
+
   ```scala
   private val restonomerContextDirectoryPath = "<restonomer_context_directory_path>"
   private val restonomerContext = RestonomerContext(restonomerContextDirectoryPath)

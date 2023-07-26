@@ -3,6 +3,7 @@ package com.clairvoyant.restonomer.core.app
 import com.clairvoyant.restonomer.core.config.{ConfigVariablesSubstitutor, GCSRestonomerContextLoader, LocalRestonomerContextLoader, RestonomerContextLoader}
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
+import com.google.cloud.storage.{Storage, StorageOptions}
 import zio.Config
 import zio.config.magnolia.*
 
@@ -15,10 +16,10 @@ object RestonomerContext {
       configVariablesFromApplicationArgs: Map[String, String] = Map()
   ): RestonomerContext = {
     val restonomerContextLoader =
-      if (restonomerContextDirectoryPath.startsWith("gs://"))
+      if (restonomerContextDirectoryPath.startsWith("gs://")) {
+        given gcsStorageClient: Storage = StorageOptions.getDefaultInstance().getService()
         GCSRestonomerContextLoader()
-      else
-        LocalRestonomerContextLoader()
+      } else LocalRestonomerContextLoader()
 
     if (restonomerContextLoader.fileExists(restonomerContextDirectoryPath))
       new RestonomerContext(restonomerContextLoader, restonomerContextDirectoryPath, configVariablesFromApplicationArgs)
