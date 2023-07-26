@@ -3,12 +3,11 @@ package com.clairvoyant.restonomer.core.app
 import com.clairvoyant.restonomer.core.config.{ConfigVariablesSubstitutor, GCSRestonomerContextLoader, LocalRestonomerContextLoader, RestonomerContextLoader}
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
+import com.google.cloud.storage.{Storage, StorageOptions}
 import zio.Config
 import zio.config.magnolia.*
 
 import java.io.FileNotFoundException
-import com.google.cloud.storage.StorageOptions
-import com.google.cloud.storage.Storage
 
 object RestonomerContext {
 

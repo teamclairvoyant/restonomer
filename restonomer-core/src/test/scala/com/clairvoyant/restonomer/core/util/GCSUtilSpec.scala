@@ -1,14 +1,10 @@
 package com.clairvoyant.restonomer.core.util
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.core.common.GCSMockSpec
+import com.clairvoyant.restonomer.core.common.{CoreSpec, GCSMockSpec}
 import com.clairvoyant.restonomer.core.util.GCSUtil.*
 import com.dimafeng.testcontainers.GenericContainer.Def
 import com.dimafeng.testcontainers.scalatest.TestContainerForAll
-import com.google.cloud.storage.BlobId
-import com.google.cloud.storage.BucketInfo
-import com.google.cloud.storage.Storage
-import com.google.cloud.storage.StorageOptions
+import com.google.cloud.storage.{BlobId, BucketInfo, Storage, StorageOptions}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.testcontainers.containers.wait.strategy.Wait
 

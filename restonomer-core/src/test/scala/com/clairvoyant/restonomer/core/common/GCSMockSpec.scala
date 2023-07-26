@@ -1,13 +1,10 @@
 package com.clairvoyant.restonomer.core.common
 
 import com.dimafeng.testcontainers.GenericContainer
-import com.dimafeng.testcontainers.GenericContainer.Def
-import com.dimafeng.testcontainers.GenericContainer.FileSystemBind
+import com.dimafeng.testcontainers.GenericContainer.{Def, FileSystemBind}
 import com.dimafeng.testcontainers.scalatest.TestContainerForAll
 import com.google.cloud.NoCredentials
-import com.google.cloud.storage.BucketInfo
-import com.google.cloud.storage.Storage
-import com.google.cloud.storage.StorageOptions
+import com.google.cloud.storage.{BucketInfo, Storage, StorageOptions}
 import com.google.cloud.storage.StorageOptions.Builder
 import org.scalatest.Suite
 import org.scalatest.flatspec.AnyFlatSpec

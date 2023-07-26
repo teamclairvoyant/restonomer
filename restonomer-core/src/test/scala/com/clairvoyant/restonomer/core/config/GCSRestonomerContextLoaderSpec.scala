@@ -1,7 +1,6 @@
 package com.clairvoyant.restonomer.core.config
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.core.common.GCSMockSpec
+import com.clairvoyant.restonomer.core.common.{CoreSpec, GCSMockSpec}
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
 
 class GCSRestonomerContextLoaderSpec extends CoreSpec with GCSMockSpec {
@@ -11,6 +10,13 @@ class GCSRestonomerContextLoaderSpec extends CoreSpec with GCSMockSpec {
       "gs://test-bucket/restonomer_context/checkpoints/authentication/api_key_authentication/checkpoint_api_key_authentication_cookie.conf"
 
     GCSRestonomerContextLoader().fileExists(configFilePath) shouldBe true
+  }
+
+  "fileExists()" should "return false" in {
+    val configFilePath =
+      "gs://test-bucket/restonomer_context/checkpoints/authentication/api_key_authentication/checkpoint_api_key_authentication_cookie-1.conf"
+
+    GCSRestonomerContextLoader().fileExists(configFilePath) shouldBe false
   }
 
   "readConfigFile()" should "return config file content" in {
