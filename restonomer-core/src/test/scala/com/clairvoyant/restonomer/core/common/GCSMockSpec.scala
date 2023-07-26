@@ -1,21 +1,25 @@
 package com.clairvoyant.restonomer.core.common
 
 import com.dimafeng.testcontainers.GenericContainer
-import com.dimafeng.testcontainers.scalatest.TestContainerForEach
+import com.dimafeng.testcontainers.GenericContainer.Def
+import com.dimafeng.testcontainers.scalatest.TestContainerForAll
 import com.google.cloud.NoCredentials
+import com.google.cloud.storage.StorageOptions
 import com.google.cloud.storage.StorageOptions.Builder
-import com.google.cloud.storage.{BucketInfo, Storage, StorageOptions}
-import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll, Suite}
+import org.scalatest.Suite
+import org.scalatest.flatspec.AnyFlatSpec
 import org.testcontainers.containers.wait.strategy.Wait
 
-trait GCSMockSpec extends TestContainerForEach {
+import java.net.URL
+import scala.io.Source
+
+trait GCSMockSpec extends TestContainerForAll {
   this: Suite =>
 
-  val gcsMockPort: Int = 4443
-
-  override val containerDef = GenericContainer.Def(
+  override val containerDef: Def[GenericContainer] = GenericContainer.Def(
     dockerImage = "fsouza/fake-gcs-server:latest",
-    exposedPorts = Seq(gcsMockPort)
+    exposedPorts = Seq(4443),
+    command = Seq("-scheme=http")
   )
 
   val gcsStorageClientBuilder: Builder = StorageOptions

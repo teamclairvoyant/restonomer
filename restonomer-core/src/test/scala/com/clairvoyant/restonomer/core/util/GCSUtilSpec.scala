@@ -2,7 +2,14 @@ package com.clairvoyant.restonomer.core.util
 
 import com.clairvoyant.restonomer.core.common.{CoreSpec, GCSMockSpec}
 import com.clairvoyant.restonomer.core.util.GCSUtil.*
+import com.dimafeng.testcontainers.GenericContainer.Def
+import com.dimafeng.testcontainers.scalatest.TestContainerForAll
 import com.google.cloud.storage.{BucketInfo, Storage, StorageOptions}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.testcontainers.containers.wait.strategy.Wait
+
+import java.net.URL
+import scala.io.Source
 
 class GCSUtilSpec extends CoreSpec with GCSMockSpec {
 
@@ -16,10 +23,9 @@ class GCSUtilSpec extends CoreSpec with GCSMockSpec {
 
   "getBlobs() - with fullGCSPath" should "return list of blobs" in {
     withContainers { container =>
-      println(s"#### container host #### ==> ${container}")
-
       given gcsStorageClient: Storage =
         gcsStorageClientBuilder
+          .setHost(s"http://${container.containerIpAddress}:${container.mappedPort(4443)}")
           .build()
           .getService
 
@@ -36,10 +42,9 @@ class GCSUtilSpec extends CoreSpec with GCSMockSpec {
 
   "getBlobFullPath()" should "return full path of blob" in {
     withContainers { container =>
-      println(s"#### container host #### ==> ${container}")
-
       given gcsStorageClient: Storage =
         gcsStorageClientBuilder
+          .setHost(s"http://${container.containerIpAddress}:${container.mappedPort(4443)}")
           .build()
           .getService
 
