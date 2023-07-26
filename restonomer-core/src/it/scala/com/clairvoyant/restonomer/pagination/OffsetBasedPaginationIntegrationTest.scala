@@ -1,7 +1,6 @@
 package com.clairvoyant.restonomer.pagination
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
-import com.clairvoyant.restonomer.common.MockFileSystemPersistence
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
 class OffsetBasedPaginationIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 

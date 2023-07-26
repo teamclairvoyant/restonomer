@@ -120,6 +120,15 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
             filePath = filePath,
             saveMode = saveMode
           )
+
+        case GCSBucket(serviceAccountCredentialsFile, bucketName, fileFormat, filePath, saveMode) =>
+          new DataFrameToGCSBucketWriter(
+            serviceAccountCredentialsFile = serviceAccountCredentialsFile,
+            bucketName = bucketName,
+            fileFormat = fileFormat,
+            filePath = filePath,
+            saveMode = saveMode
+          )
       }
 
     restonomerResponseDF.map(restonomerPersistence.persist(_, dataFrameWriter))
