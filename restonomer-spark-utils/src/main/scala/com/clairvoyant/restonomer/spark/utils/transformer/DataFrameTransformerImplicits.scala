@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.spark.utils.transformer
 
-import com.clairvoyant.restonomer.spark.utils.caseconverter.*
+import com.clairvoyant.restonomer.spark.utils.transformer.DataFrameTransformerHelper.*
 import org.apache.spark.sql.catalyst.parser.CatalystSqlParser
 import org.apache.spark.sql.functions.*
 import org.apache.spark.sql.types.*
@@ -127,7 +127,7 @@ object DataFrameTransformerImplicits {
         val fromDataType = CatalystSqlParser.parseDataType(dataTypesPair._1)
         val toDataType = CatalystSqlParser.parseDataType(dataTypesPair._2)
 
-        if (castRecursively == true) {
+        if (castRecursively) {
           def applyCastFunctionRecursively(
               schema: StructType,
               fromDataType: DataType,
@@ -232,8 +232,7 @@ object DataFrameTransformerImplicits {
         }
       )
 
-    def changeCaseOfColumnNames(targetCaseType: String, sourceCaseType: String = "lower"): DataFrame = {
-
+    def changeCaseOfColumnNames(sourceCaseType: String, targetCaseType: String): DataFrame = {
       val converter =
         targetCaseType.toLowerCase() match {
           case "camel" =>

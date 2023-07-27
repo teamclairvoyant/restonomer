@@ -127,12 +127,12 @@ case class ConvertColumnToJson(
 }
 
 case class ChangeColumnCase(
-    targetCaseType: String,
-    sourceCaseType: String = "lower"
+    sourceCaseType: String = "lower",
+    targetCaseType: String
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.changeCaseOfColumnNames(targetCaseType, sourceCaseType)
+    restonomerResponseDF.changeCaseOfColumnNames(sourceCaseType, targetCaseType)
 
 }
 

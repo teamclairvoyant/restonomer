@@ -5,7 +5,7 @@ import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
 import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import org.apache.spark.sql.DataFrame
 
-class ConvertColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers {
+class ChangeColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers {
 
   val restonomerResponseDF1: DataFrame =
     new JSONTextToDataFrameReader(

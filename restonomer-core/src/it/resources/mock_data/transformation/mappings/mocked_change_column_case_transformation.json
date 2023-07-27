@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/change-column-case-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_change_column_case_transformation_response.json"
+  }
+}
