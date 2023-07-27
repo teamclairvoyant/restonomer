@@ -117,21 +117,22 @@ case class CastNestedColumn(
 
 }
 
-case class ChangeColumnCase(
-    caseType: String
-) extends RestonomerTransformation {
-
-  override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.changeCaseOfColumnNames(caseType)
-
-}
-
 case class ConvertColumnToJson(
     columnName: String
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
     restonomerResponseDF.convertColumnToJson(columnName)
+
+}
+
+case class ChangeColumnCase(
+    sourceCaseType: String = "lower",
+    targetCaseType: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.changeCaseOfColumnNames(sourceCaseType, targetCaseType)
 
 }
 

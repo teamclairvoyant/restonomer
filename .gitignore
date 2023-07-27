@@ -9,3 +9,5 @@ project
 target
 
 docs/build
+.idea
+.bsp
