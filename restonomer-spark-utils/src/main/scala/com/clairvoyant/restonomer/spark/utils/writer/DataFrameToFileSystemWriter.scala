@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.spark.utils.writer
 
-import org.apache.spark.sql.{DataFrame, SaveMode}
+import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
 class DataFrameToFileSystemWriter(
     fileFormat: String,
@@ -8,7 +8,7 @@ class DataFrameToFileSystemWriter(
     saveMode: String
 ) extends DataFrameWriter {
 
-  override def write(dataFrame: DataFrame): Unit =
+  override def write(dataFrame: DataFrame)(using sparkSession: SparkSession): Unit =
     dataFrame.write
       .format(fileFormat)
       .mode(saveMode)

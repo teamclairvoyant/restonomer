@@ -2,9 +2,9 @@ package com.clairvoyant.restonomer.core.common
 
 import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
 import org.apache.spark.sql.SparkSession
-import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll}
 import sttp.client3.*
 import sttp.model.Method
 

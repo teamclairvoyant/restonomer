@@ -8,6 +8,6 @@ trait MockS3BucketPersistence {
   val s3MockFilePath = "test-output-dir"
 
   def outputDF(using sparkSession: SparkSession): DataFrame =
-    sparkSession.read.json(s"s3a://$s3MockBucketName/$s3MockFilePath")
+    sparkSession.read.parquet(s"s3a://$s3MockBucketName/$s3MockFilePath")
 
 }

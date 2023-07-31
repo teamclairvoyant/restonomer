@@ -4,26 +4,27 @@ import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
 import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.types.StringType
 
-class ConvertColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers {
+class ReplaceEmptyStringsWithNullsTransformationSpec extends CoreSpec with DataFrameMatchers {
 
-  val restonomerResponseDF =
+  val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
       sparkSession = sparkSession
     ).read(text =
       Seq(
         """
           |{
-          |    "col_a": "1",
-          |    "COL_B": "2"
-          |}""".stripMargin
+          |  "col_A": "",
+          |  "col_B": "val_B",
+          |  "col_C": ""
+          |}
+          |""".stripMargin
       )
     )
 
-  "transform() - with valid column name and case type" should "transform the column case" in {
-    val restonomerTransformation = ChangeColumnCase(
-      caseType = "lower"
-    )
+  "transform()" should "replace all empty strings with nulls" in {
+    val restonomerTransformation = ReplaceEmptyStringsWithNulls()
 
     val expectedRestonomerResponseTransformedDF =
       new JSONTextToDataFrameReader(
@@ -32,14 +33,25 @@ class ConvertColumnCaseTransformationSpec extends CoreSpec with DataFrameMatcher
         Seq(
           """
             |{
-            |  "col_a": "1",
-            |  "col_b": "2"
+            |  "col_A": null,
+            |  "col_B": "val_B",
+            |  "col_C": null
             |}
             |""".stripMargin
         )
       )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
+
+    actualRestonomerResponseTransformedDF.schema.fields
+      .filter(_.name == "col_A")
+      .head
+      .dataType shouldBe StringType
+
+    actualRestonomerResponseTransformedDF.schema.fields
+      .filter(_.name == "col_C")
+      .head
+      .dataType shouldBe StringType
 
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(
       expectedDF = expectedRestonomerResponseTransformedDF

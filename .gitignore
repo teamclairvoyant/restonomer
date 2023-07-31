@@ -1,9 +1,13 @@
 .bloop
+.bsp
 .metals
 .venv
 .vscode
+.DS_Store
 
 project
 target
 
 docs/build
+.idea
+.bsp
