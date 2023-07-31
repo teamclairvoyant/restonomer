@@ -125,11 +125,11 @@ This can be done in either of below 2 ways:
     }
 ```
 
-## GcsBucket
+## GCSBucket
 
-When user wants to use GcsBucket service from GCP for persistence, he can use GcsBucket persistence feature from restonomer.
+When user wants to use GCSBucket service from GCP for persistence, he can use GCSBucket persistence feature from restonomer.
 
-The GcsBucket persistence needs below arguments from the user:
+The GCSBucket persistence needs below arguments from the user:
 
 | Input Arguments            | Mandatory | Default Value | Description                                                                                                                                               |
 |:---------------------------|:---------:|:-------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -143,7 +143,7 @@ User can configure the S3Bucket persistence in the below manner:
 
 ```hocon
 persistence = {
-  type = "GcsBucket"
+  type = "GCSBucket"
   service-account-cred-file = "/user/secret/creds/gcs-cred.json"
   bucket-name = "test-bucket"
   file-format = "JSON"
