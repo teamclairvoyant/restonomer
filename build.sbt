@@ -1,13 +1,46 @@
 ThisBuild / scalaVersion := "3.2.2"
 
+ThisBuild / credentials += Credentials(
+  "GitHub Package Registry",
+  "maven.pkg.github.com",
+  System.getenv("GITHUB_USERNAME"),
+  System.getenv("GITHUB_TOKEN")
+)
+
+// ----- RESOLVERS ----- //
+
+ThisBuild / resolvers += "DataScalaxyReaderText Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-reader-text/"
+
+// ----- PACKAGE SETTINGS ----- //
+
+ThisBuild / organization := "com.clairvoyant.restonomer"
+
+ThisBuild / version := "2.2.0"
+
+// ----- PUBLISH TO GITHUB PACKAGES ----- //
+
+ThisBuild / publishTo := Some("Restonomer Github Repo" at "https://maven.pkg.github.com/teamclairvoyant/restonomer/")
+
+// ----- ASSEMBLY MERGE STRATEGY ----- //
+
+ThisBuild / assemblyMergeStrategy := {
+  case PathList(ps @ _*)
+      if (ps.last endsWith "io.netty.versions.properties")
+        || (ps.last endsWith "reflection-config.json")
+        || (ps.last endsWith "native-image.properties")
+        || (ps.last endsWith "module-info.class")
+        || (ps.last endsWith "UnusedStubClass.class") =>
+    MergeStrategy.last
+  case PathList(ps @ _*) if ps.last endsWith "public-suffix-list.txt" =>
+    MergeStrategy.concat
+  case x =>
+    val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
+    oldStrategy(x)
+}
+
 Global / excludeLintKeys += Keys.parallelExecution
 
-lazy val scalacOptions = Seq("-Xmax-inlines", "50")
-
-// ----- VARIABLES ----- //
-
-val organizationName = "com.clairvoyant.restonomer"
-val releaseVersion = "2.2.0"
+// ----- TOOL VERSIONS ----- //
 
 val zioConfigVersion = "4.0.0-RC14"
 val sttpVersion = "3.8.13"
@@ -25,6 +58,7 @@ val gcsConnectorVersion = "hadoop3-2.2.2"
 val monovoreDeclineVersion = "2.4.1"
 val googleCloudStorageVersion = "2.24.0"
 val testContainersScalaVersion = "0.40.17"
+val dataScalaxyReaderTextVersion = "1.0.0"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -78,6 +112,10 @@ val googleCloudStorageDependencies = Seq("com.google.cloud" % "google-cloud-stor
 
 val testContainersScalaDependencies = Seq("com.dimafeng" %% "testcontainers-scala" % testContainersScalaVersion % Test)
 
+val dataScalaxyReaderTextDependencies = Seq(
+  "com.clairvoyant.data.scalaxy" %% "text-reader" % dataScalaxyReaderTextVersion
+)
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
@@ -95,7 +133,8 @@ val restonomerCoreDependencies =
     gcsConnectorDependencies ++
     monovoreDeclineDependencies ++
     googleCloudStorageDependencies ++
-    testContainersScalaDependencies
+    testContainersScalaDependencies ++
+    dataScalaxyReaderTextDependencies
 
 val restonomerSparkUtilsDependencies =
   sparkDependencies ++
@@ -106,9 +145,7 @@ val restonomerSparkUtilsDependencies =
 // ----- SETTINGS ----- //
 
 val commonSettings = Seq(
-  organization := organizationName,
-  version := releaseVersion,
-  Keys.scalacOptions ++= scalacOptions
+  scalacOptions ++= Seq("-Xmax-inlines", "50")
 )
 
 val restonomerCoreSettings =
@@ -132,7 +169,8 @@ lazy val restonomer = (project in file("."))
       publish / skip := true,
       publishLocal / skip := true
     ),
-    addCommandAlias("run", "restonomer-core/run")
+    addCommandAlias("run", "restonomer-core/run"),
+    addCommandAlias("assembly", "restonomer-core/assembly")
   )
   .aggregate(`restonomer-core`, `restonomer-spark-utils`)
 
@@ -144,33 +182,10 @@ lazy val `restonomer-core` = project
 
 lazy val `restonomer-spark-utils` = project
   .configs(IntegrationTest.extend(Test))
-  .settings(restonomerSparkUtilsSettings)
+  .settings(
+    restonomerSparkUtilsSettings ++ Seq(
+      publish / skip := true,
+      publishLocal / skip := true
+    )
+  )
   .enablePlugins(AssemblyPlugin)
-
-// ----- PUBLISH TO GITHUB PACKAGES ----- //
-
-ThisBuild / publishTo := Some("Restonomer Github Repo" at "https://maven.pkg.github.com/teamclairvoyant/restonomer/")
-
-ThisBuild / credentials += Credentials(
-  "GitHub Package Registry",
-  "maven.pkg.github.com",
-  "teamclairvoyant",
-  System.getenv("GITHUB_TOKEN")
-)
-
-// ----- ASSEMBLY MERGE STRATEGY ----- //
-
-ThisBuild / assemblyMergeStrategy := {
-  case PathList(ps @ _*)
-      if (ps.last endsWith "io.netty.versions.properties")
-        || (ps.last endsWith "reflection-config.json")
-        || (ps.last endsWith "native-image.properties")
-        || (ps.last endsWith "module-info.class")
-        || (ps.last endsWith "UnusedStubClass.class") =>
-    MergeStrategy.last
-  case PathList(ps @ _*) if ps.last endsWith "public-suffix-list.txt" =>
-    MergeStrategy.concat
-  case x =>
-    val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
-    oldStrategy(x)
-}
