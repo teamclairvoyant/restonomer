@@ -1,29 +1,25 @@
 package com.clairvoyant.restonomer.core.persistence
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToFileSystemWriter
 import org.apache.commons.io.FileUtils
 import org.apache.spark.sql.DataFrame
 
 import java.io.File
+import com.clairvoyant.data.scalaxy.reader.text.JSONTextToDataFrameReader
 
 class FileSystemPersistenceSpec extends CoreSpec {
 
-  val restonomerResponseDF: DataFrame =
-    new JSONTextToDataFrameReader(
-      sparkSession = sparkSession
-    ).read(text =
-      Seq(
-        """
-          |{
-          |  "col_A": "val_A",
-          |  "col_B": "val_B",
-          |  "col_C": "val_C",
-          |  "col_D": "val_D"
-          |}
-          |""".stripMargin
-      )
+  val restonomerResponseDF: DataFrame = new JSONTextToDataFrameReader()
+    .read(
+      """
+        |{
+        |  "col_A": "val_A",
+        |  "col_B": "val_B",
+        |  "col_C": "val_C",
+        |  "col_D": "val_D"
+        |}
+        |""".stripMargin
     )
 
   lazy val dataFrameToFileSystemWriterOutputDirPath = s"out_${System.currentTimeMillis()}"

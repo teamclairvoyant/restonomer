@@ -51,6 +51,7 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
       .map { httpResponseBody =>
         (checkpointConfig.data.dataResponse.body match {
           case JSON(
+                columnNameOfCorruptRecord,
                 dataColumnName,
                 dateFormat,
                 inferSchema,
@@ -61,7 +62,8 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
                 timestampFormat,
                 timestampNTZFormat
               ) =>
-            new JSONResponseToDataFrameConverter(
+            JSONResponseToDataFrameConverter(
+              columnNameOfCorruptRecord,
               dataColumnName,
               dateFormat,
               inferSchema,
@@ -72,8 +74,50 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
               timestampFormat,
               timestampNTZFormat
             )
-          case CSV() =>
-            new CSVResponseToDataFrameConverter
+          case CSV(
+                columnNameOfCorruptRecord,
+                dateFormat,
+                emptyValue,
+                enforceSchema,
+                escape,
+                header,
+                inferSchema,
+                ignoreLeadingWhiteSpace,
+                ignoreTrailingWhiteSpace,
+                lineSep,
+                locale,
+                multiLine,
+                nanValue,
+                nullValue,
+                originalSchema,
+                quote,
+                recordSep,
+                sep,
+                timestampFormat,
+                timestampNTZFormat
+              ) =>
+            CSVResponseToDataFrameConverter(
+              columnNameOfCorruptRecord,
+              dateFormat,
+              emptyValue,
+              enforceSchema,
+              escape,
+              header,
+              inferSchema,
+              ignoreLeadingWhiteSpace,
+              ignoreTrailingWhiteSpace,
+              lineSep,
+              locale,
+              multiLine,
+              nanValue,
+              nullValue,
+              originalSchema,
+              quote,
+              recordSep,
+              sep,
+              timestampFormat,
+              timestampNTZFormat
+            )
         }).convertResponseToDataFrame(httpResponseBody.toSeq)
       }
 

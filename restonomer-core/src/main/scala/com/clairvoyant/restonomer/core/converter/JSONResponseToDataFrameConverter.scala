@@ -1,13 +1,12 @@
 package com.clairvoyant.restonomer.core.converter
 
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions.col
-import org.apache.spark.sql.functions.explode
+import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.functions.*
 import org.apache.spark.sql.types.StructType
 import com.clairvoyant.data.scalaxy.reader.text.JSONTextToDataFrameReader
 
 class JSONResponseToDataFrameConverter(
+    columnNameOfCorruptRecord: String,
     dataColumnName: Option[String],
     dateFormat: String,
     inferSchema: Boolean,
@@ -23,15 +22,16 @@ class JSONResponseToDataFrameConverter(
       restonomerResponseBody: Seq[String]
   )(using sparkSession: SparkSession): DataFrame = {
     val responseDF = JSONTextToDataFrameReader(
+      columnNameOfCorruptRecord = columnNameOfCorruptRecord,
       dateFormat = dateFormat,
       inferSchema = inferSchema,
       locale = locale,
       multiLine = multiLine,
-      originalSchema = originalSchema.map(StructType.fromDDL(_)),
+      originalSchema = originalSchema.map(StructType.fromDDL),
       primitivesAsString = primitivesAsString,
       timestampFormat = timestampFormat,
       timestampNTZFormat = timestampNTZFormat
-    )
+    ).read(restonomerResponseBody)
 
     dataColumnName
       .map { dataColumn =>
