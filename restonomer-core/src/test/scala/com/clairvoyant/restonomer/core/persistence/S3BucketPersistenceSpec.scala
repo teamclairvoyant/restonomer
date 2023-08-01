@@ -1,13 +1,14 @@
 package com.clairvoyant.restonomer.core.persistence
 
+import com.clairvoyant.data.scalaxy.reader.text.JSONTextToDataFrameReader
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
+import com.clairvoyant.restonomer.core.common.S3MockSpec
 import com.clairvoyant.restonomer.core.common.S3MockSpec.*
-import com.clairvoyant.restonomer.core.common.{CoreSpec, S3MockSpec}
 import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToS3BucketWriter
 import org.apache.hadoop.conf.Configuration
 import org.apache.spark.sql.DataFrame
-import com.clairvoyant.data.scalaxy.reader.text.JSONTextToDataFrameReader
 
-class S3BucketPersistenceSpec extends CoreSpec with S3MockSpec {
+class S3BucketPersistenceSpec extends DataScalaxyTestUtil with S3MockSpec {
 
   val hadoopConfigurations: Configuration = sparkSession.sparkContext.hadoopConfiguration
 
@@ -17,7 +18,7 @@ class S3BucketPersistenceSpec extends CoreSpec with S3MockSpec {
   hadoopConfigurations.set("fs.s3a.path.style.access", "true")
   hadoopConfigurations.set("fs.s3a.change.detection.version.required", "false")
 
-  val restonomerResponseDF: DataFrame = JSONTextToDataFrameReader()
+  val restonomerResponseDF = JSONTextToDataFrameReader()
     .read(
       """
         |{

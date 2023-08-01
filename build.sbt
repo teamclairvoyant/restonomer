@@ -59,6 +59,7 @@ val testContainersScalaVersion = "0.40.17"
 val dataScalaxyReaderTextVersion = "1.0.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
 val sparkVersion = "3.3.2"
+val scalaParserCombinatorsVersion = "2.2.0"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -73,6 +74,10 @@ val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersi
 val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % "it,test")
 
 val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
+
+val scalaParserCombinatorsDependencies = Seq(
+  "org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion
+)
 
 val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
@@ -107,7 +112,7 @@ val dataScalaxyReaderTextDependencies = Seq(
 ).map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
 
 val dataScalaxyTestUtilDependencies = Seq(
-  "com.clairvoyant.data.scalaxy" %% "test-util" % dataScalaxyTestUtilVersion
+  "com.clairvoyant.data.scalaxy" %% "test-util" % dataScalaxyTestUtilVersion % "it,test"
 )
 
 // ----- MODULE DEPENDENCIES ----- //
@@ -125,12 +130,12 @@ val restonomerCoreDependencies =
     googleCloudStorageDependencies ++
     testContainersScalaDependencies ++
     dataScalaxyReaderTextDependencies ++
-    dataScalaxyTestUtilDependencies.map(_ % "it,test")
+    dataScalaxyTestUtilDependencies ++
+    scalaParserCombinatorsDependencies
 
 val restonomerSparkUtilsDependencies =
   sparkDependencies ++
-    sparkHadoopCloudDependencies ++
-    dataScalaxyTestUtilDependencies.map(_ % "test")
+    sparkHadoopCloudDependencies
 
 // ----- SETTINGS ----- //
 

@@ -1,27 +1,20 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
-import org.apache.spark.sql.DataFrame
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import org.apache.spark.sql.types.*
 
-class CastColumnsBasedOnSubstringTransformationSpec extends CoreSpec {
+class CastColumnsBasedOnSubstringTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF: DataFrame =
-    new JSONTextToDataFrameReader(
-      sparkSession = sparkSession
-    ).read(text =
-      Seq(
-        """
-          |{
-          |  "name": "abc",
-          |  "product_price_in_india": "240",
-          |  "product_price_in_canada": "3",
-          |  "percent_difference": "10.23"
-          |}
-          |""".stripMargin
-      )
-    )
+  val restonomerResponseDF = readJSON(
+    """
+      |{
+      |  "name": "abc",
+      |  "product_price_in_india": "240",
+      |  "product_price_in_canada": "3",
+      |  "percent_difference": "10.23"
+      |}
+      |""".stripMargin
+  )
 
   "transform()" should "cast columns with the given substring to the given type" in {
     val restonomerTransformation = CastColumnsBasedOnSubstring(

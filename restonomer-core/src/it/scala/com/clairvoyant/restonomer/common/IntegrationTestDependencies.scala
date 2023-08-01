@@ -1,27 +1,16 @@
 package com.clairvoyant.restonomer.common
 
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import com.clairvoyant.restonomer.core.app.RestonomerContext
-import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-trait IntegrationTestDependencies
-    extends AnyFlatSpec
-    with Matchers
-    with MockedHttpServer
-    with DataFrameMatchers
-    with BeforeAndAfterEach {
+trait IntegrationTestDependencies extends DataScalaxyTestUtil with MockedHttpServer with BeforeAndAfterEach {
 
   val expectedDFSchema: Option[StructType] = None
-
-  given sparkSession: SparkSession =
-    SparkSession
-      .builder()
-      .master("local[*]")
-      .getOrCreate()
 
   def runCheckpoint(checkpointFileName: String): Unit =
     RestonomerContext(s"$resourcesDirectoryPath/restonomer_context")

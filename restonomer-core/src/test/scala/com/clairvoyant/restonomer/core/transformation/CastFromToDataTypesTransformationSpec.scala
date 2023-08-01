@@ -1,34 +1,28 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.types.*
 
-class CastFromToDataTypesTransformationSpec extends CoreSpec {
+class CastFromToDataTypesTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF: DataFrame =
-    new JSONTextToDataFrameReader(
-      sparkSession = sparkSession
-    ).read(text =
-      Seq(
-        """
-          |{
-          |  "col_A": 5,
-          |  "col_B": 4,
-          |  "col_C": 3.4678,
-          |  "col_D": {
-          |     "col_E": 6
-          |   },
-          |  "col_F": [
-          |    {
-          |       "col_G": 7
-          |    }
-          |  ]
-          |}
-          |""".stripMargin
-      )
-    )
+  val restonomerResponseDF = readJSON(
+    """
+      |{
+      |  "col_A": 5,
+      |  "col_B": 4,
+      |  "col_C": 3.4678,
+      |  "col_D": {
+      |     "col_E": 6
+      |   },
+      |  "col_F": [
+      |    {
+      |       "col_G": 7
+      |    }
+      |  ]
+      |}
+      |""".stripMargin
+  )
 
   "transform() - with castRecursively as true" should "cast columns as per the from and to data types" in {
     restonomerResponseDF.schema.fields
