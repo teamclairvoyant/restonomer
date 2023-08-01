@@ -1,8 +1,7 @@
 package com.clairvoyant.restonomer.core.converter
 
 import com.clairvoyant.data.scalaxy.reader.text.CSVTextToDataFrameReader
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types.StructType
 
 class CSVResponseToDataFrameConverter(

@@ -2,11 +2,10 @@ package com.clairvoyant.restonomer.common
 
 import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import com.clairvoyant.restonomer.core.app.RestonomerContext
+import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
 
 trait IntegrationTestDependencies extends DataScalaxyTestUtil with MockedHttpServer with BeforeAndAfterEach {
 

@@ -1,9 +1,9 @@
 package com.clairvoyant.restonomer.core.converter
 
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import com.clairvoyant.data.scalaxy.reader.text.JSONTextToDataFrameReader
 import org.apache.spark.sql.functions.*
 import org.apache.spark.sql.types.StructType
-import com.clairvoyant.data.scalaxy.reader.text.JSONTextToDataFrameReader
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 class JSONResponseToDataFrameConverter(
     columnNameOfCorruptRecord: String,
