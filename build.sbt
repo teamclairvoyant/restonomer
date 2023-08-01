@@ -9,7 +9,10 @@ ThisBuild / credentials += Credentials(
 
 // ----- RESOLVERS ----- //
 
-ThisBuild / resolvers += "DataScalaxyReaderText Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-reader-text/"
+ThisBuild / resolvers ++= Seq(
+  "DataScalaxyReaderText Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-reader-text/",
+  "DataScalaxyTestUtil Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-test-util/"
+)
 
 // ----- PACKAGE SETTINGS ----- //
 
@@ -44,21 +47,18 @@ Global / excludeLintKeys += Keys.parallelExecution
 
 val zioConfigVersion = "4.0.0-RC14"
 val sttpVersion = "3.8.13"
-val scalaTestVersion = "3.2.15"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.2.0"
-val sparkVersion = "3.3.2"
-val catsVersion = "2.9.0"
 val jsonPathVersion = "2.7.0"
 val odelayVersion = "0.4.0"
 val s3MockVersion = "0.2.6"
-val scalaXmlVersion = "2.1.0"
-val scalaParserCombinatorsVersion = "2.2.0"
 val gcsConnectorVersion = "hadoop3-2.2.2"
 val monovoreDeclineVersion = "2.4.1"
 val googleCloudStorageVersion = "2.24.0"
 val testContainersScalaVersion = "0.40.17"
 val dataScalaxyReaderTextVersion = "1.0.0"
+val dataScalaxyTestUtilVersion = "1.0.0"
+val sparkHadoopCloudVersion = "3.3.2"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -70,31 +70,13 @@ val zioConfigDependencies = Seq(
 
 val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
 
-val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion)
-
 val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % "it,test")
 
 val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
 
-val scalaXmlDependencies = Seq("org.scala-lang.modules" %% "scala-xml" % scalaXmlVersion)
-
-val scalaParserCombinatorsDependencies = Seq(
-  "org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion
-)
-
-val sparkDependencies = Seq(
-  "org.apache.spark" %% "spark-core" % sparkVersion,
-  "org.apache.spark" %% "spark-sql" % sparkVersion
-)
-  .map(_ excludeAll ("org.scala-lang.modules", "scala-xml"))
-  .map(_.cross(CrossVersion.for3Use2_13))
-  .map(_ % "provided")
-
-val sparkHadoopCloudDependencies = Seq("org.apache.spark" %% "spark-hadoop-cloud" % sparkVersion)
+val sparkHadoopCloudDependencies = Seq("org.apache.spark" %% "spark-hadoop-cloud" % sparkHadoopCloudVersion)
   .map(_ exclude ("org.apache.hadoop", "hadoop-client-runtime"))
   .map(_.cross(CrossVersion.for3Use2_13))
-
-val catsDependencies = Seq("org.typelevel" %% "cats-core" % catsVersion)
 
 val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVersion)
 
@@ -114,19 +96,19 @@ val testContainersScalaDependencies = Seq("com.dimafeng" %% "testcontainers-scal
 
 val dataScalaxyReaderTextDependencies = Seq(
   "com.clairvoyant.data.scalaxy" %% "text-reader" % dataScalaxyReaderTextVersion
+).map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
+
+val dataScalaxyTestUtilDependencies = Seq(
+  "com.clairvoyant.data.scalaxy" %% "test-util" % dataScalaxyTestUtilVersion
 )
 
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
   zioConfigDependencies ++
-    scalaXmlDependencies ++
-    scalaParserCombinatorsDependencies ++
-    sparkDependencies ++
     sttpDependencies ++
     jwtDependencies ++
     jsonPathDependencies ++
-    scalaTestDependencies.map(_ % "it,test") ++
     wireMockDependencies ++
     s3MockDependencies ++
     odelayDependencies ++
@@ -134,13 +116,12 @@ val restonomerCoreDependencies =
     monovoreDeclineDependencies ++
     googleCloudStorageDependencies ++
     testContainersScalaDependencies ++
-    dataScalaxyReaderTextDependencies
+    dataScalaxyReaderTextDependencies ++
+    dataScalaxyTestUtilDependencies.map(_ % "it,test")
 
 val restonomerSparkUtilsDependencies =
-  sparkDependencies ++
-    sparkHadoopCloudDependencies ++
-    catsDependencies ++
-    scalaTestDependencies.map(_ % "test")
+  sparkHadoopCloudDependencies ++
+    dataScalaxyTestUtilDependencies.map(_ % "test")
 
 // ----- SETTINGS ----- //
 
