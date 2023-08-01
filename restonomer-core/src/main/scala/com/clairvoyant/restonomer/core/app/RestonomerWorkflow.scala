@@ -50,8 +50,28 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
     val restonomerResponseDF = dataRestonomerResponse.body
       .map { httpResponseBody =>
         (checkpointConfig.data.dataResponse.body match {
-          case JSON(dataColumnName) =>
-            new JSONResponseToDataFrameConverter(dataColumnName)
+          case JSON(
+                dataColumnName,
+                dateFormat,
+                inferSchema,
+                locale,
+                multiLine,
+                originalSchema,
+                primitivesAsString,
+                timestampFormat,
+                timestampNTZFormat
+              ) =>
+            new JSONResponseToDataFrameConverter(
+              dataColumnName,
+              dateFormat,
+              inferSchema,
+              locale,
+              multiLine,
+              originalSchema,
+              primitivesAsString,
+              timestampFormat,
+              timestampNTZFormat
+            )
           case CSV() =>
             new CSVResponseToDataFrameConverter
         }).convertResponseToDataFrame(httpResponseBody.toSeq)
