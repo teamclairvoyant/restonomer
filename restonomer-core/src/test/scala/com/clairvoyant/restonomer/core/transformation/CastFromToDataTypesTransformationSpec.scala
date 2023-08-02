@@ -47,16 +47,18 @@ class CastFromToDataTypesTransformationSpec extends DataScalaxyTestUtil {
       .head
       .dataType shouldBe LongType
 
-    restonomerResponseDF.schema
-      .filter(_.name == "col_F")
-      .head
-      .dataType match {
-      case ArrayType(nestedArrayType: StructType, _) =>
-        nestedArrayType
-          .filter(_.name == "col_G")
-          .head
-          .dataType
-    } shouldBe LongType
+    (
+      restonomerResponseDF.schema
+        .filter(_.name == "col_F")
+        .head
+        .dataType match {
+        case ArrayType(nestedArrayType: StructType, _) =>
+          nestedArrayType
+            .filter(_.name == "col_G")
+            .head
+            .dataType
+      }
+    ) shouldBe LongType
 
     val restonomerTransformation = CastFromToDataTypes(
       dataTypeMapper = Map(
@@ -90,16 +92,18 @@ class CastFromToDataTypesTransformationSpec extends DataScalaxyTestUtil {
       .head
       .dataType shouldBe IntegerType
 
-    actualRestonomerResponseTransformedDF.schema
-      .filter(_.name == "col_F")
-      .head
-      .dataType match {
-      case ArrayType(nestedArrayType: StructType, _) =>
-        nestedArrayType
-          .filter(_.name == "col_G")
-          .head
-          .dataType
-    } shouldBe IntegerType
+    (
+      actualRestonomerResponseTransformedDF.schema
+        .filter(_.name == "col_F")
+        .head
+        .dataType match {
+        case ArrayType(nestedArrayType: StructType, _) =>
+          nestedArrayType
+            .filter(_.name == "col_G")
+            .head
+            .dataType
+      }
+    ) shouldBe IntegerType
   }
 
   "transform() - with castRecursively as false" should "cast columns as per the from and to data types" in {
@@ -125,16 +129,18 @@ class CastFromToDataTypesTransformationSpec extends DataScalaxyTestUtil {
       .head
       .dataType shouldBe LongType
 
-    restonomerResponseDF.schema
-      .filter(_.name == "col_F")
-      .head
-      .dataType match {
-      case ArrayType(nestedArrayType: StructType, _) =>
-        nestedArrayType
-          .filter(_.name == "col_G")
-          .head
-          .dataType
-    } shouldBe LongType
+    (
+      restonomerResponseDF.schema
+        .filter(_.name == "col_F")
+        .head
+        .dataType match {
+        case ArrayType(nestedArrayType: StructType, _) =>
+          nestedArrayType
+            .filter(_.name == "col_G")
+            .head
+            .dataType
+      }
+    ) shouldBe LongType
 
     val restonomerTransformation = CastFromToDataTypes(
       dataTypeMapper = Map(
@@ -167,16 +173,18 @@ class CastFromToDataTypesTransformationSpec extends DataScalaxyTestUtil {
       .head
       .dataType shouldBe LongType
 
-    actualRestonomerResponseTransformedDF.schema
-      .filter(_.name == "col_F")
-      .head
-      .dataType match {
-      case ArrayType(nestedArrayType: StructType, _) =>
-        nestedArrayType
-          .filter(_.name == "col_G")
-          .head
-          .dataType
-    } shouldBe LongType
+    (
+      actualRestonomerResponseTransformedDF.schema
+        .filter(_.name == "col_F")
+        .head
+        .dataType match {
+        case ArrayType(nestedArrayType: StructType, _) =>
+          nestedArrayType
+            .filter(_.name == "col_G")
+            .head
+            .dataType
+      }
+    ) shouldBe LongType
   }
 
 }
