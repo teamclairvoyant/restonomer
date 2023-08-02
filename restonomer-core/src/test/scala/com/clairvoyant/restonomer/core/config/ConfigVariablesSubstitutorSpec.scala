@@ -1,10 +1,8 @@
 package com.clairvoyant.restonomer.core.config
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 
-import java.io.File
-
-class ConfigVariablesSubstitutorSpec extends CoreSpec {
+class ConfigVariablesSubstitutorSpec extends DataScalaxyTestUtil {
 
   val configString: String =
     """name = "sample-checkpoint-conf-variable"
