@@ -24,5 +24,11 @@ jobs:
         run: sbt scalafmtCheckAll
       - name: Run Unit Tests
         run: sbt test
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Integration Tests
         run: sbt IntegrationTest/test
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
