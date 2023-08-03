@@ -1,9 +1,10 @@
 package com.clairvoyant.restonomer.core.authentication
 
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 
-class DigestAuthenticationSpec extends CoreSpec {
+class DigestAuthenticationSpec extends DataScalaxyTestUtil {
 
   "validateCredentials - with empty credentials" should "throw RestonomerException" in {
     val authentication = DigestAuthentication(userName = "", password = "")
