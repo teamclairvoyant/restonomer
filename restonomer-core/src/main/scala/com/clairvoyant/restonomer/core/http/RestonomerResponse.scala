@@ -78,8 +78,7 @@ object RestonomerResponse {
     restonomerRequest.httpRequest
       .send(sttpBackend)
       .flatMap {
-        case Response(body, StatusCode.Ok, _, _, _, _) =>
-          Future(body.toSeq)
+        case Response(body, StatusCode.Ok, _, _, _, _) => Future(body.toSeq)
 
         case response @ Response(_, statusCode, _, headers, _, _)
             if statusCodesToRetry.contains(statusCode) && currentRetryAttemptNumber < maxRetries =>
@@ -118,8 +117,7 @@ object RestonomerResponse {
             currentRetryAttemptNumber = currentRetryAttemptNumber + 1
           )
 
-        case Response(_, StatusCode.NoContent, _, _, _, _) =>
-          throw new RestonomerException("No Content.")
+        case Response(_, StatusCode.NoContent, _, _, _, _) => throw new RestonomerException("No Content.")
 
         case _ =>
           throw new RestonomerException(

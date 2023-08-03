@@ -10,12 +10,9 @@ object DataFrameTransformerHelper {
 
     def convert(inputString: String, sourceCaseType: String): String =
       sourceCaseType.toLowerCase() match {
-        case "snake" =>
-          snakeToCamel(inputString)
-        case "pascal" =>
-          pascalToCamel(inputString)
-        case "kebab" =>
-          kebabToCamel(inputString)
+        case "snake"  => snakeToCamel(inputString)
+        case "pascal" => pascalToCamel(inputString)
+        case "kebab"  => kebabToCamel(inputString)
         case _ =>
           throw new Exception(s"Camel-case conversion only supported for source case types : Snake/Pascal/Kebab..")
       }
@@ -41,12 +38,9 @@ object DataFrameTransformerHelper {
     def convert(inputString: String, sourceCaseType: String): String = {
 
       sourceCaseType.toLowerCase() match {
-        case "snake" =>
-          snakeToKebab(inputString)
-        case "camel" =>
-          camelToKebab(inputString)
-        case "pascal" =>
-          pascalToKebab(inputString)
+        case "snake"  => snakeToKebab(inputString)
+        case "camel"  => camelToKebab(inputString)
+        case "pascal" => pascalToKebab(inputString)
         case _ =>
           throw new Exception(s"Kebab-case conversion only supported for source case types : Snake/Camel/Pascal..")
       }
@@ -79,12 +73,9 @@ object DataFrameTransformerHelper {
     def convert(inputString: String, sourceCaseType: String): String = {
 
       sourceCaseType.toLowerCase() match {
-        case "snake" =>
-          snakeToPascal(inputString)
-        case "camel" =>
-          camelToPascal(inputString)
-        case "kebab" =>
-          kebabToPascal(inputString)
+        case "snake" => snakeToPascal(inputString)
+        case "camel" => camelToPascal(inputString)
+        case "kebab" => kebabToPascal(inputString)
         case _ =>
           throw new Exception(s"Pascal-case conversion only supported for source case types : Snake/Camel/Kebab..")
       }
@@ -108,12 +99,9 @@ object DataFrameTransformerHelper {
 
     def convert(inputString: String, sourceCaseType: String): String = {
       sourceCaseType.toLowerCase() match {
-        case "camel" =>
-          camelToSnake(inputString)
-        case "pascal" =>
-          pascalToSnake(inputString)
-        case "kebab" =>
-          kebabToSnake(inputString)
+        case "camel"  => camelToSnake(inputString)
+        case "pascal" => pascalToSnake(inputString)
+        case "kebab"  => kebabToSnake(inputString)
         case _ =>
           throw new Exception(s"Snake-case conversion only supported for source case types : Camel/Pascal/Kebab..")
       }

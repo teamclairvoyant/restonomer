@@ -63,8 +63,7 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
                     password = tokenSubstitutor.substitute(password)
                   )
 
-                case oAuth2Authentication @ OAuth2Authentication(_) =>
-                  oAuth2Authentication
+                case oAuth2Authentication @ OAuth2Authentication(_) => oAuth2Authentication
 
                 case awsSignatureAuthentication @ AwsSignatureAuthentication(_, accessKey, secretKey) =>
                   awsSignatureAuthentication.copy(
@@ -87,10 +86,8 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
     copy(httpRequest =
       body
         .map {
-          case TextDataBody(data) =>
-            httpRequest.body(data)
-          case FormDataBody(data) =>
-            httpRequest.body(data)
+          case TextDataBody(data) => httpRequest.body(data)
+          case FormDataBody(data) => httpRequest.body(data)
           case JSONDataBody(data) =>
             httpRequest
               .body(data)
