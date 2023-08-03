@@ -91,8 +91,7 @@ trait DataFrameMatchers {
     }
 
     actualDFRowsValues.zip(expectedDFRowsValues).zipWithIndex.traverse_ {
-      case ((actualDFRow, expectedDFRow), rowNumber) =>
-        validateRow(actualDFRow, expectedDFRow, rowNumber)
+      case ((actualDFRow, expectedDFRow), rowNumber) => validateRow(actualDFRow, expectedDFRow, rowNumber)
     }
   }
 

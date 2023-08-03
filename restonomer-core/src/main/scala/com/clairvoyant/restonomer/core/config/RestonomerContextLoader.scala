@@ -33,10 +33,8 @@ trait RestonomerContextLoader {
           .getOrThrowFiberFailure()
       })
     } match {
-      case Success(config) =>
-        config
-      case Failure(exception) =>
-        throw exception
+      case Success(config)    => config
+      case Failure(exception) => throw exception
     }
 
   def loadConfigsFromDirectory[C](configDirectoryPath: String, config: Config[C])(
