@@ -1,11 +1,12 @@
 package com.clairvoyant.restonomer.core.authentication
 
-import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
+import com.clairvoyant.restonomer.core.common.HttpMockSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, stubFor, urlEqualTo}
 
-class OAuth2AuthenticationSpec extends CoreSpec with HttpMockSpec {
+class OAuth2AuthenticationSpec extends DataScalaxyTestUtil with HttpMockSpec {
 
   "ClientCredentials - validateCredentials - with empty tokenUrl" should "throw RestonomerException" in {
     val clientCredentials = ClientCredentials(

@@ -9,10 +9,10 @@ object RestonomerApp
       name = "restonomer-app",
       header = "Dumps the data from the REST API provided in the checkpoint",
       main = {
-        val restonomerContextDirPathOpt: Opts[String] = Opts
+        val restonomerContextDirPathOpt = Opts
           .option[String](long = "restonomer_context_dir_path", help = "Full path to the restonomer context directory")
 
-        val checkpointFilePathOpt: Opts[String] = Opts
+        val checkpointFilePathOpt = Opts
           .option[String](long = "checkpoint_file_path", help = "Relative path of the checkpoint file to be executed")
 
         (restonomerContextDirPathOpt, checkpointFilePathOpt).mapN { (restonomerContextDirPath, checkpointFilePath) =>
