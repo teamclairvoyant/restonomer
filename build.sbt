@@ -42,7 +42,6 @@ ThisBuild / assemblyMergeStrategy := {
 }
 
 Global / excludeLintKeys += Keys.parallelExecution
-coverageEnabled := true
 
 // ----- TOOL VERSIONS ----- //
 
@@ -141,7 +140,8 @@ val restonomerSparkUtilsDependencies =
 // ----- SETTINGS ----- //
 
 val commonSettings = Seq(
-  scalacOptions ++= Seq("-Xmax-inlines", "50")
+  scalacOptions ++= Seq("-Xmax-inlines", "50"),
+  coverageEnabled := true
 )
 
 val restonomerCoreSettings =
