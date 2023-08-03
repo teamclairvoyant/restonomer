@@ -1,9 +1,9 @@
 package com.clairvoyant.restonomer.core.authentication
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 
-class JWTAuthenticationSpec extends CoreSpec {
+class JWTAuthenticationSpec extends DataScalaxyTestUtil {
 
   val subject = "test_subject"
   val secretKey = "test_key"
