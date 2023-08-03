@@ -4,8 +4,8 @@ import com.dimafeng.testcontainers.GenericContainer
 import com.dimafeng.testcontainers.GenericContainer.{Def, FileSystemBind}
 import com.dimafeng.testcontainers.scalatest.TestContainerForAll
 import com.google.cloud.NoCredentials
-import com.google.cloud.storage.{BucketInfo, Storage, StorageOptions}
 import com.google.cloud.storage.StorageOptions.Builder
+import com.google.cloud.storage.{BucketInfo, Storage, StorageOptions}
 import org.scalatest.Suite
 import org.scalatest.flatspec.AnyFlatSpec
 import org.testcontainers.containers.BindMode

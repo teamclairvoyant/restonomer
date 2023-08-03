@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.core.pagination
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 
-class PageNumberWithTotalRecordsBasedPaginationSpec extends CoreSpec {
+class PageNumberWithTotalRecordsBasedPaginationSpec extends DataScalaxyTestUtil {
 
   "getNextPageToken()" should "return the token for next page" in {
     val responseBody =
