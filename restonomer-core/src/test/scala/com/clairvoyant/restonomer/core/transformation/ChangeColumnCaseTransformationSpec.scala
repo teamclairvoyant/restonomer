@@ -1,69 +1,46 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
-import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
-import org.apache.spark.sql.DataFrame
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 
-class ChangeColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers {
+class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF1: DataFrame =
-    new JSONTextToDataFrameReader(
-      sparkSession = sparkSession
-    ).read(text =
-      Seq(
-        """
-          |{
-          |    "col_a": "1",
-          |    "COL_B": "2"
-          |}""".stripMargin
-      )
-    )
+  val restonomerResponseDF1 = readJSON(
+    """
+      |{
+      |    "col_a": "1",
+      |    "COL_B": "2"
+      |}""".stripMargin
+  )
 
-  val restonomerResponseDF2: DataFrame =
-    new JSONTextToDataFrameReader(
-      sparkSession = sparkSession
-    ).read(text =
-      Seq(
-        """
-          |{
-          |    "colA": "1",
-          |    "colB": "2"
-          |}""".stripMargin
-      )
-    )
+  val restonomerResponseDF2 = readJSON(
+    """
+      |{
+      |    "colA": "1",
+      |    "colB": "2"
+      |}""".stripMargin
+  )
 
-  val restonomerResponseDF3: DataFrame =
-    new JSONTextToDataFrameReader(
-      sparkSession = sparkSession
-    ).read(text =
-      Seq(
-        """
-          |{
-          |    "ColA": "1",
-          |    "ColB": "2"
-          |}""".stripMargin
-      )
-    )
+  val restonomerResponseDF3 = readJSON(
+    """
+      |{
+      |    "ColA": "1",
+      |    "ColB": "2"
+      |}""".stripMargin
+  )
 
   "transform() - with 'lower' targetCase" should "renames all the columns to lower case" in {
     val restonomerTransformation = ChangeColumnCase(
       targetCaseType = "lower"
     )
 
-    val expectedDF =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "col_a": "1",
-            |  "col_b": "2"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedDF = readJSON(
+      """
+        |{
+        |  "col_a": "1",
+        |  "col_b": "2"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF1)
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(expectedDF)
@@ -75,19 +52,14 @@ class ChangeColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers
       sourceCaseType = "snake"
     )
 
-    val expectedDF =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "col-a": "1",
-            |  "col-b": "2"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedDF = readJSON(
+      """
+        |{
+        |  "col-a": "1",
+        |  "col-b": "2"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF1)
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(expectedDF)
@@ -99,19 +71,14 @@ class ChangeColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers
       sourceCaseType = "snake"
     )
 
-    val expectedDF =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "colA": "1",
-            |  "colB": "2"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedDF = readJSON(
+      """
+        |{
+        |  "colA": "1",
+        |  "colB": "2"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF1)
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(expectedDF)
@@ -123,19 +90,14 @@ class ChangeColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers
       sourceCaseType = "snake"
     )
 
-    val expectedDF =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "ColA": "1",
-            |  "ColB": "2"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedDF = readJSON(
+      """
+        |{
+        |  "ColA": "1",
+        |  "ColB": "2"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF1)
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(expectedDF)
@@ -147,19 +109,14 @@ class ChangeColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers
       sourceCaseType = "camel"
     )
 
-    val expectedDF =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "col_a": "1",
-            |  "col_b": "2"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedDF = readJSON(
+      """
+        |{
+        |  "col_a": "1",
+        |  "col_b": "2"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF2)
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(expectedDF)
@@ -171,19 +128,14 @@ class ChangeColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers
       sourceCaseType = "camel"
     )
 
-    val expectedDF =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "col-a": "1",
-            |  "col-b": "2"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedDF = readJSON(
+      """
+        |{
+        |  "col-a": "1",
+        |  "col-b": "2"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF2)
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(expectedDF)
@@ -195,19 +147,14 @@ class ChangeColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers
       sourceCaseType = "camel"
     )
 
-    val expectedDF =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "ColA": "1",
-            |  "ColB": "2"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedDF = readJSON(
+      """
+        |{
+        |  "ColA": "1",
+        |  "ColB": "2"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF2)
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(expectedDF)
@@ -219,19 +166,14 @@ class ChangeColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers
       sourceCaseType = "pascal"
     )
 
-    val expectedDF =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "col_a": "1",
-            |  "col_b": "2"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedDF = readJSON(
+      """
+        |{
+        |  "col_a": "1",
+        |  "col_b": "2"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF3)
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(expectedDF)
@@ -243,19 +185,14 @@ class ChangeColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers
       sourceCaseType = "pascal"
     )
 
-    val expectedDF =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "col-a": "1",
-            |  "col-b": "2"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedDF = readJSON(
+      """
+        |{
+        |  "col-a": "1",
+        |  "col-b": "2"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF3)
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(expectedDF)
@@ -267,19 +204,14 @@ class ChangeColumnCaseTransformationSpec extends CoreSpec with DataFrameMatchers
       sourceCaseType = "pascal"
     )
 
-    val expectedDF =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "colA": "1",
-            |  "colB": "2"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedDF = readJSON(
+      """
+        |{
+        |  "colA": "1",
+        |  "colB": "2"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF3)
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(expectedDF)

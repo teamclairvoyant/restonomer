@@ -1,30 +1,23 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
-import org.apache.spark.sql.DataFrame
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import org.apache.spark.sql.types.*
 
-class CastColumnsTransformationSpec extends CoreSpec {
+class CastColumnsTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF: DataFrame =
-    new JSONTextToDataFrameReader(
-      sparkSession = sparkSession
-    ).read(text =
-      Seq(
-        """
-          |{
-          |  "col_A": 5,
-          |  "col_B": 4,
-          |  "col_C": 3.4678,
-          |  "col_D": "1990-07-23 10:20:30",
-          |  "col_E": "23-07-1990 10:20:30",
-          |  "col_F": "1990-07-23",
-          |  "col_G": "23-07-1990"
-          |}
-          |""".stripMargin
-      )
-    )
+  val restonomerResponseDF = readJSON(
+    """
+      |{
+      |  "col_A": 5,
+      |  "col_B": 4,
+      |  "col_C": 3.4678,
+      |  "col_D": "1990-07-23 10:20:30",
+      |  "col_E": "23-07-1990 10:20:30",
+      |  "col_F": "1990-07-23",
+      |  "col_G": "23-07-1990"
+      |}
+      |""".stripMargin
+  )
 
   "transform() - with columnDataTypeMapper" should "cast columns as specified in the mapper" in {
     restonomerResponseDF.schema.fields
