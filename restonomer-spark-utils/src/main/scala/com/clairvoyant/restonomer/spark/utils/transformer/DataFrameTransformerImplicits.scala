@@ -18,12 +18,9 @@ object DataFrameTransformerImplicits {
     ): DataFrame = {
       val expression =
         columnValueType match {
-          case "expression" =>
-            s"$columnValue"
-          case "literal" =>
-            s"'$columnValue'"
-          case _ =>
-            throw new Exception(s"The provided columnValueType: $columnValueType is not supported.")
+          case "expression" => s"$columnValue"
+          case "literal"    => s"'$columnValue'"
+          case _            => throw new Exception(s"The provided columnValueType: $columnValueType is not supported.")
         }
 
       columnDataType
@@ -78,23 +75,18 @@ object DataFrameTransformerImplicits {
                 case timestampDataTypeRegexPattern(timestampFormat) =>
                   {
                     Option(timestampFormat) match {
-                      case Some(timestampFormat) =>
-                        to_timestamp(col(columnName), timestampFormat)
-                      case None =>
-                        to_timestamp(col(columnName))
+                      case Some(timestampFormat) => to_timestamp(col(columnName), timestampFormat)
+                      case None                  => to_timestamp(col(columnName))
                     }
                   }.as(columnName)
                 case dateDataTypeRegexPattern(dateFormat) =>
                   {
                     Option(dateFormat) match {
-                      case Some(dateFormat) =>
-                        to_date(col(columnName), dateFormat)
-                      case None =>
-                        to_date(col(columnName))
+                      case Some(dateFormat) => to_date(col(columnName), dateFormat)
+                      case None             => to_date(col(columnName))
                     }
                   }.as(columnName)
-                case dataType =>
-                  col(columnName).cast(dataType)
+                case dataType => col(columnName).cast(dataType)
               }
               .getOrElse(col(columnName))
           }*
@@ -109,12 +101,9 @@ object DataFrameTransformerImplicits {
       df.columns
         .filter {
           matchType match {
-            case "prefix" =>
-              c => substringList.exists(c.startsWith)
-            case "suffix" =>
-              c => substringList.exists(c.endsWith)
-            case "contains" =>
-              c => substringList.exists(c.contains)
+            case "prefix"   => c => substringList.exists(c.startsWith)
+            case "suffix"   => c => substringList.exists(c.endsWith)
+            case "contains" => c => substringList.exists(c.contains)
           }
         }
         .foldLeft(df) { (df, colName) => df.withColumn(colName, col(colName).cast(dataTypeToCast)) }
@@ -235,29 +224,20 @@ object DataFrameTransformerImplicits {
     def changeCaseOfColumnNames(sourceCaseType: String, targetCaseType: String): DataFrame = {
       val converter =
         targetCaseType.toLowerCase() match {
-          case "camel" =>
-            new CamelCaseConverter()
-          case "snake" =>
-            new SnakeCaseConverter()
-          case "pascal" =>
-            new PascalCaseConverter()
-          case "kebab" =>
-            new KebabCaseConverter()
-          case "lower" =>
-            new LowerCaseConverter()
-          case "upper" =>
-            new UpperCaseConverter()
-          case _ =>
-            throw new Exception(s"The provided caseType: $targetCaseType is not supported.")
+          case "camel"  => new CamelCaseConverter()
+          case "snake"  => new SnakeCaseConverter()
+          case "pascal" => new PascalCaseConverter()
+          case "kebab"  => new KebabCaseConverter()
+          case "lower"  => new LowerCaseConverter()
+          case "upper"  => new UpperCaseConverter()
+          case _        => throw new Exception(s"The provided caseType: $targetCaseType is not supported.")
         }
 
       val renamedColumnNames: Seq[String] = df.columns.map { columnName =>
         converter.convert(columnName, sourceCaseType)
       }
 
-      df.select(df.columns.zip(renamedColumnNames).map { case (original, renamed) =>
-        col(original).as(renamed)
-      }: _*)
+      df.select(df.columns.zip(renamedColumnNames).map { case (original, renamed) => col(original).as(renamed) }: _*)
     }
 
     def convertColumnToJson(columnName: String): DataFrame = df.withColumn(columnName, to_json(col(columnName)))
@@ -277,10 +257,8 @@ object DataFrameTransformerImplicits {
           val newColName = prefix.map(p => s"$p.${field.name}").getOrElse(field.name)
 
           field.dataType match {
-            case st: StructType =>
-              flattenSchemaFromStructType(st, Some(newColName))
-            case _ =>
-              Array(col(newColName).as(newColName.replace(".", "_")))
+            case st: StructType => flattenSchemaFromStructType(st, Some(newColName))
+            case _              => Array(col(newColName).as(newColName.replace(".", "_")))
           }
         }
 

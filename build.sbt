@@ -45,21 +45,21 @@ Global / excludeLintKeys += Keys.parallelExecution
 
 // ----- TOOL VERSIONS ----- //
 
-val zioConfigVersion = "4.0.0-RC14"
-val sttpVersion = "3.8.13"
+val zioConfigVersion = "4.0.0-RC16"
+val sttpVersion = "3.8.16"
 val wireMockVersion = "2.27.2"
-val jwtCoreVersion = "9.2.0"
-val jsonPathVersion = "2.7.0"
+val jwtCoreVersion = "9.4.3"
+val jsonPathVersion = "2.8.0"
 val odelayVersion = "0.4.0"
 val s3MockVersion = "0.2.6"
-val gcsConnectorVersion = "hadoop3-2.2.2"
+val gcsConnectorVersion = "hadoop3-2.2.16"
 val monovoreDeclineVersion = "2.4.1"
-val googleCloudStorageVersion = "2.24.0"
+val googleCloudStorageVersion = "2.25.0"
 val testContainersScalaVersion = "0.40.17"
 val dataScalaxyReaderTextVersion = "1.0.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
-val sparkVersion = "3.3.2"
-val scalaParserCombinatorsVersion = "2.2.0"
+val sparkVersion = "3.4.1"
+val scalaParserCombinatorsVersion = "2.3.0"
 
 // ----- TOOL DEPENDENCIES ----- //
 
