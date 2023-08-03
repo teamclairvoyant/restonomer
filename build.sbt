@@ -42,6 +42,7 @@ ThisBuild / assemblyMergeStrategy := {
 }
 
 Global / excludeLintKeys += Keys.parallelExecution
+coverageEnabled := true
 
 // ----- TOOL VERSIONS ----- //
 

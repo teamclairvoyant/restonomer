@@ -114,10 +114,8 @@ class AddColumnTransformationSpec extends DataScalaxyTestUtil {
     )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
-    actualRestonomerResponseTransformedDF.show(10, false)
-    actualRestonomerResponseTransformedDF should matchExpectedDataFrame(
-      expectedDF = expectedRestonomerResponseTransformedDF
-    )
+
+    actualRestonomerResponseTransformedDF should matchExpectedDataFrame(expectedRestonomerResponseTransformedDF)
   }
 
   "transform() - with expression and casting" should "transform the dataframe as expected" in {

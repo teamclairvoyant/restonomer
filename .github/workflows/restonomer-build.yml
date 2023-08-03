@@ -23,12 +23,12 @@ jobs:
       - name: Scalafmt Check
         run: sbt scalafmtCheckAll
       - name: Run Unit Tests
-        run: sbt coverage test
+        run: sbt test
         env:
           GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Integration Tests
-        run: sbt coverage IntegrationTest/test
+        run: sbt IntegrationTest/test
         env:
           GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
