@@ -46,7 +46,7 @@ Global / excludeLintKeys += Keys.parallelExecution
 // ----- TOOL VERSIONS ----- //
 
 val zioConfigVersion = "4.0.0-RC14"
-val sttpVersion = "3.8.13"
+val sttpVersion = "3.8.16"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.4.3"
 val jsonPathVersion = "2.8.0"
