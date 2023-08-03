@@ -1,27 +1,21 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.types.*
 
-class CastColumnsBasedOnSuffixTransformationSpec extends CoreSpec {
+class CastColumnsBasedOnSuffixTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF: DataFrame =
-    new JSONTextToDataFrameReader(
-      sparkSession = sparkSession
-    ).read(text =
-      Seq(
-        """
-          |{
-          |  "name": "abc",
-          |  "india_price": "240",
-          |  "US_price": "3",
-          |  "percent_difference": "10.23"
-          |}
-          |""".stripMargin
-      )
-    )
+  val restonomerResponseDF = readJSON(
+    """
+      |{
+      |  "name": "abc",
+      |  "india_price": "240",
+      |  "US_price": "3",
+      |  "percent_difference": "10.23"
+      |}
+      |""".stripMargin
+  )
 
   "transform()" should "cast columns with the given suffix to the given type" in {
     val restonomerTransformation = CastColumnsBasedOnSuffix(

@@ -1,28 +1,20 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
-import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
-import org.apache.spark.sql.DataFrame
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 
-class CastNestedColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
+class CastNestedColumnTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF: DataFrame =
-    new JSONTextToDataFrameReader(
-      sparkSession = sparkSession
-    ).read(text =
-      Seq(
-        """
-          |{
-          |  "col_A": "val_A",
-          |  "col_B": {
-          |     "col_C": "val_C",
-          |     "col_D": 5
-          |  }
-          |}
-          |""".stripMargin
-      )
-    )
+  val restonomerResponseDF = readJSON(
+    """
+      |{
+      |  "col_A": "val_A",
+      |  "col_B": {
+      |     "col_C": "val_C",
+      |     "col_D": 5
+      |  }
+      |}
+      |""".stripMargin
+  )
 
   "transform() - with valid column name and ddl" should "cast the nested column" in {
     restonomerResponseDF.schema.fields
