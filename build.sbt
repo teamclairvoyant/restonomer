@@ -23,7 +23,7 @@ val scalaXmlVersion = "2.1.0"
 val scalaParserCombinatorsVersion = "2.2.0"
 val gcsConnectorVersion = "hadoop3-2.2.2"
 val monovoreDeclineVersion = "2.4.1"
-val googleCloudStorageVersion = "2.24.0"
+val googleCloudStorageVersion = "2.25.0"
 val testContainersScalaVersion = "0.40.17"
 
 // ----- TOOL DEPENDENCIES ----- //
