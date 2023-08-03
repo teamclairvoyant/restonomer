@@ -58,8 +58,8 @@ val googleCloudStorageVersion = "2.25.0"
 val testContainersScalaVersion = "0.40.17"
 val dataScalaxyReaderTextVersion = "1.0.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
-val sparkVersion = "3.4.1"
-val scalaParserCombinatorsVersion = "2.2.0"
+val sparkVersion = "3.3.2"
+val scalaParserCombinatorsVersion = "2.3.0"
 
 // ----- TOOL DEPENDENCIES ----- //
 
