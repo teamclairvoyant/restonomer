@@ -11,7 +11,7 @@ val releaseVersion = "2.2.0"
 
 val zioConfigVersion = "4.0.0-RC14"
 val sttpVersion = "3.8.13"
-val scalaTestVersion = "3.2.15"
+val scalaTestVersion = "3.2.16"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.2.0"
 val sparkVersion = "3.3.2"
