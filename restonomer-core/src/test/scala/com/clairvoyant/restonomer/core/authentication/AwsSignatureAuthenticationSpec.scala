@@ -1,11 +1,12 @@
 package com.clairvoyant.restonomer.core.authentication
 
 import com.amazonaws.auth.internal.SignerConstants.*
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import sttp.model.{Header, HeaderNames}
 
-class AwsSignatureAuthenticationSpec extends CoreSpec {
+class AwsSignatureAuthenticationSpec extends CoreSpec with DataScalaxyTestUtil {
 
   "validateCredentials - with blank access-key" should "throw RestonomerException" in {
     val authentication = AwsSignatureAuthentication(
