@@ -298,6 +298,12 @@ object DataFrameTransformerImplicits {
         )
       }
 
+    def addMissingColumn(columnName: String, columnValue: String, columnDataType: String): DataFrame =
+      if (df.columns.contains(columnName))
+        df
+      else
+        df.withColumn(columnName, lit(columnValue).cast(columnDataType))
+
   }
 
 }

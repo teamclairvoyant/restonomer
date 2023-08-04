@@ -11,5 +11,4 @@ class AddMissingColumnTransformationIntegrationTest extends IntegrationTestDepen
     outputDF should matchExpectedDataFrame("expected_add_missing_column_transformation.json")
   }
 
-  
 }
