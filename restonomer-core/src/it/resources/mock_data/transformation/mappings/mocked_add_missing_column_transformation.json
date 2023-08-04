@@ -1,9 +1,9 @@
 {
-    "request": {
-      "url": "/add-missing-columns-transformation"
-    },
-    "response": {
-      "status": 200,
-      "bodyFileName": "mocked_add_missing_column_transformation_response.json"
-    }
+  "request": {
+    "url": "/add-missing-column-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_add_missing_column_transformation_response.json"
   }
+}

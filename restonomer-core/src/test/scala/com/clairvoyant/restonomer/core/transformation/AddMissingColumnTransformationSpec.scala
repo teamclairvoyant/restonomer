@@ -5,7 +5,7 @@ import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
 import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
 import org.apache.spark.sql.DataFrame
 
-class AddMissingColumnsTransformationSpec extends CoreSpec with DataFrameMatchers {
+class AddMissingColumnTransformationSpec extends CoreSpec with DataFrameMatchers {
 
   val restonomerResponseDF: DataFrame =
     new JSONTextToDataFrameReader(
@@ -21,15 +21,15 @@ class AddMissingColumnsTransformationSpec extends CoreSpec with DataFrameMatcher
           |""".stripMargin
       )
     )
-  
+
   "transform() - with details of missing columns" should "Add the columns" in {
-    val restonomerTransformation = AddMissingColumns(
+    val restonomerTransformation = AddMissingColumn(
       columnName = "col_D",
       columnValue = "val_D",
       columnDataType = "String"
     )
 
-     val expectedRestonomerResponseTransformedDF: DataFrame =
+    val expectedRestonomerResponseTransformedDF: DataFrame =
       new JSONTextToDataFrameReader(
         sparkSession = sparkSession
       ).read(text =
@@ -49,14 +49,13 @@ class AddMissingColumnsTransformationSpec extends CoreSpec with DataFrameMatcher
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(
       expectedDF = expectedRestonomerResponseTransformedDF
     )
-}
+  }
 
-
-  "tranform() - if columns are already present"  should "return the original dataframe" in {
-    val restonomerTransformation = AddMissingColumns(
-       columnName = "col_A",
-       columnValue = "val_A",
-       columnDataType = "String"
+  "tranform() - if columns are already present" should "return the original dataframe" in {
+    val restonomerTransformation = AddMissingColumn(
+      columnName = "col_A",
+      columnValue = "val_A",
+      columnDataType = "String"
     )
 
     val expectedRestonomerResponseTransformedDF = restonomerResponseDF
@@ -67,8 +66,6 @@ class AddMissingColumnsTransformationSpec extends CoreSpec with DataFrameMatcher
       expectedDF = expectedRestonomerResponseTransformedDF
     )
 
+  }
 
- }
 }
-
-

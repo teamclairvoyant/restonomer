@@ -196,14 +196,14 @@ case class CastColumnsBasedOnSubstring(
 }
 
 
-case class AddMissingColumns(
+case class AddMissingColumn(
     columnName: String,
     columnValue: String,
     columnDataType: String
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.addMissingColumns(
+    restonomerResponseDF.addMissingColumn(
       columnName = columnName,
       columnValue = columnValue,
       columnDataType = columnDataType
