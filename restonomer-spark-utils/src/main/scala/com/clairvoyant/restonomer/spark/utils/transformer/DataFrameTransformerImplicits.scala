@@ -218,6 +218,15 @@ object DataFrameTransformerImplicits {
         }
         .foldLeft(df) { (df, colName) => df.withColumn(colName, col(colName).cast(dataTypeToCast)) }
 
+    def addMissingColumns(columnName: String,
+        columnValue: String,
+        columnDataType: String): DataFrame = {
+          if (df.columns.contains(columnName))
+            df
+          else
+            df.withColumn(columnName, lit(columnValue).cast(columnDataType))
+        }
+      }
+
   }
 
-}
