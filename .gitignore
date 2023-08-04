@@ -1,8 +1,9 @@
 .bloop
+.bsp
+.idea
 .metals
 .venv
 .vscode
-.bsp
 .DS_Store
 
 project

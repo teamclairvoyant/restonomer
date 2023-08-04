@@ -1,11 +1,13 @@
 package com.clairvoyant.restonomer.core.http
 
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import com.clairvoyant.restonomer.core.authentication.BasicAuthentication
-import com.clairvoyant.restonomer.core.body.{FormDataBody, TextDataBody}
+import com.clairvoyant.restonomer.core.body.{FormDataBody, JSONDataBody, TextDataBody}
 import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
 import sttp.model.Header
+import sttp.model.HeaderNames.ContentType
 
-class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
+class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec with DataScalaxyTestUtil {
 
   given tokenFunction: Option[String => String] = None
 
@@ -56,6 +58,18 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
       .httpRequest
       .body
       .show shouldBe s"string: k1=v1&k2=v2"
+  }
+
+  "withBody - with json data body" should "be added to the request" in {
+    val body = JSONDataBody(data = """{"k1": "v1", "k2": "v2"}""")
+
+    val httpRequest =
+      RestonomerRequestBuilder(basicHttpRequest)
+        .withBody(Some(body))
+        .httpRequest
+
+    httpRequest.body.show shouldBe s"""string: {"k1": "v1", "k2": "v2"}"""
+    httpRequest.headers.contains(Header(ContentType, "application/json")) shouldBe true
   }
 
   "withBody - with no body" should "be added to the request as an empty string" in {

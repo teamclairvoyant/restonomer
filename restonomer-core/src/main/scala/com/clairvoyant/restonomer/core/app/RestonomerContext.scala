@@ -1,10 +1,9 @@
 package com.clairvoyant.restonomer.core.app
 
-import com.clairvoyant.restonomer.core.config.ConfigVariablesSubstitutor
-import com.clairvoyant.restonomer.core.config.RestonomerConfigurationsLoader.*
+import com.clairvoyant.restonomer.core.config.{ConfigVariablesSubstitutor, GCSRestonomerContextLoader, LocalRestonomerContextLoader, RestonomerContextLoader}
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.{ApplicationConfig, CheckpointConfig}
-import com.clairvoyant.restonomer.core.util.FileUtil.fileExists
+import com.google.cloud.storage.{Storage, StorageOptions}
 import zio.Config
 import zio.config.magnolia.*
 
@@ -12,22 +11,28 @@ import java.io.FileNotFoundException
 
 object RestonomerContext {
 
-  private val DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH = "./restonomer_context"
-
   def apply(
-      restonomerContextDirectoryPath: String = DEFAULT_RESTONOMER_CONTEXT_DIRECTORY_PATH,
+      restonomerContextDirectoryPath: String,
       configVariablesFromApplicationArgs: Map[String, String] = Map()
-  ): RestonomerContext =
-    if (fileExists(restonomerContextDirectoryPath))
-      new RestonomerContext(restonomerContextDirectoryPath, configVariablesFromApplicationArgs)
+  ): RestonomerContext = {
+    val restonomerContextLoader =
+      if (restonomerContextDirectoryPath.startsWith("gs://")) {
+        given gcsStorageClient: Storage = StorageOptions.getDefaultInstance().getService()
+        GCSRestonomerContextLoader()
+      } else LocalRestonomerContextLoader()
+
+    if (restonomerContextLoader.fileExists(restonomerContextDirectoryPath))
+      new RestonomerContext(restonomerContextLoader, restonomerContextDirectoryPath, configVariablesFromApplicationArgs)
     else
       throw new RestonomerException(
         s"The restonomerContextDirectoryPath: $restonomerContextDirectoryPath does not exists."
       )
+  }
 
 }
 
 class RestonomerContext(
+    val restonomerContextLoader: RestonomerContextLoader,
     val restonomerContextDirectoryPath: String,
     val configVariablesFromApplicationArgs: Map[String, String]
 ) {
@@ -38,8 +43,9 @@ class RestonomerContext(
   private val configVariablesFromFile = {
     given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = None
 
-    if (fileExists(CONFIG_VARIABLES_FILE_PATH))
-      loadConfigFromFile[Map[String, String]](CONFIG_VARIABLES_FILE_PATH, deriveConfig[Map[String, String]])
+    if (restonomerContextLoader.fileExists(CONFIG_VARIABLES_FILE_PATH))
+      restonomerContextLoader
+        .loadConfigFromFile[Map[String, String]](CONFIG_VARIABLES_FILE_PATH, deriveConfig[Map[String, String]])
     else
       Map[String, String]()
   }
@@ -47,8 +53,9 @@ class RestonomerContext(
   private val applicationConfig = {
     given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = None
 
-    if (fileExists(APPLICATION_CONFIG_FILE_PATH))
-      loadConfigFromFile[ApplicationConfig](APPLICATION_CONFIG_FILE_PATH, ApplicationConfig.config)
+    if (restonomerContextLoader.fileExists(APPLICATION_CONFIG_FILE_PATH))
+      restonomerContextLoader
+        .loadConfigFromFile[ApplicationConfig](APPLICATION_CONFIG_FILE_PATH, ApplicationConfig.config)
     else
       throw new FileNotFoundException(
         s"The application config file with the path: $APPLICATION_CONFIG_FILE_PATH does not exists."
@@ -61,8 +68,11 @@ class RestonomerContext(
   def runCheckpoint(checkpointFilePath: String): Unit = {
     val absoluteCheckpointFilePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointFilePath"
 
-    if (fileExists(absoluteCheckpointFilePath))
-      runCheckpoint(loadConfigFromFile[CheckpointConfig](absoluteCheckpointFilePath, CheckpointConfig.config))
+    if (restonomerContextLoader.fileExists(absoluteCheckpointFilePath))
+      runCheckpoint(
+        restonomerContextLoader
+          .loadConfigFromFile[CheckpointConfig](absoluteCheckpointFilePath, CheckpointConfig.config)
+      )
     else
       throw new FileNotFoundException(
         s"The checkpoint file with the path: $absoluteCheckpointFilePath does not exists."
@@ -72,9 +82,10 @@ class RestonomerContext(
   def runCheckpointsUnderDirectory(checkpointsDirectoryPath: String): Unit = {
     val absoluteCheckpointsDirectoryPath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointsDirectoryPath"
 
-    if (fileExists(absoluteCheckpointsDirectoryPath))
+    if (restonomerContextLoader.fileExists(absoluteCheckpointsDirectoryPath))
       runCheckpoints(
-        loadConfigsFromDirectory[CheckpointConfig](absoluteCheckpointsDirectoryPath, CheckpointConfig.config)
+        restonomerContextLoader
+          .loadConfigsFromDirectory[CheckpointConfig](absoluteCheckpointsDirectoryPath, CheckpointConfig.config)
       )
     else
       throw new FileNotFoundException(
@@ -83,9 +94,10 @@ class RestonomerContext(
   }
 
   def runAllCheckpoints(): Unit =
-    if (fileExists(CHECKPOINTS_CONFIG_DIRECTORY_PATH))
+    if (restonomerContextLoader.fileExists(CHECKPOINTS_CONFIG_DIRECTORY_PATH))
       runCheckpoints(
-        loadConfigsFromDirectory[CheckpointConfig](CHECKPOINTS_CONFIG_DIRECTORY_PATH, CheckpointConfig.config)
+        restonomerContextLoader
+          .loadConfigsFromDirectory[CheckpointConfig](CHECKPOINTS_CONFIG_DIRECTORY_PATH, CheckpointConfig.config)
       )
     else
       throw new FileNotFoundException(

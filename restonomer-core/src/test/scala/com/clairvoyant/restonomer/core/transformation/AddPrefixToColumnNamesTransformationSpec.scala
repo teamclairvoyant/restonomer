@@ -1,26 +1,18 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
-import com.clairvoyant.restonomer.spark.utils.DataFrameMatchers
-import com.clairvoyant.restonomer.spark.utils.reader.JSONTextToDataFrameReader
-import org.apache.spark.sql.DataFrame
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 
-class AddPrefixToColumnNamesTransformationSpec extends CoreSpec with DataFrameMatchers {
+class AddPrefixToColumnNamesTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF: DataFrame =
-    new JSONTextToDataFrameReader(
-      sparkSession = sparkSession
-    ).read(text =
-      Seq(
-        """
-          |{
-          |  "col_A": "val_A",
-          |  "col_B": "val_B",
-          |  "col_C": "val_C"
-          |}
-          |""".stripMargin
-      )
-    )
+  val restonomerResponseDF = readJSON(
+    """
+      |{
+      |  "col_A": "val_A",
+      |  "col_B": "val_B",
+      |  "col_C": "val_C"
+      |}
+      |""".stripMargin
+  )
 
   "transform() - with prefix and column list" should "transform the dataframe as expected" in {
     val restonomerTransformation = AddPrefixToColumnNames(
@@ -28,20 +20,15 @@ class AddPrefixToColumnNamesTransformationSpec extends CoreSpec with DataFrameMa
       columnNames = List("col_A", "col_B")
     )
 
-    val expectedRestonomerResponseTransformedDF: DataFrame =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "test_col_A": "val_A",
-            |  "test_col_B": "val_B",
-            |  "col_C": "val_C"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedRestonomerResponseTransformedDF = readJSON(
+      """
+        |{
+        |  "test_col_A": "val_A",
+        |  "test_col_B": "val_B",
+        |  "col_C": "val_C"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 
@@ -55,20 +42,15 @@ class AddPrefixToColumnNamesTransformationSpec extends CoreSpec with DataFrameMa
       prefix = "test"
     )
 
-    val expectedRestonomerResponseTransformedDF: DataFrame =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "test_col_A": "val_A",
-            |  "test_col_B": "val_B",
-            |  "test_col_C": "val_C"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedRestonomerResponseTransformedDF = readJSON(
+      """
+        |{
+        |  "test_col_A": "val_A",
+        |  "test_col_B": "val_B",
+        |  "test_col_C": "val_C"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 
@@ -83,20 +65,15 @@ class AddPrefixToColumnNamesTransformationSpec extends CoreSpec with DataFrameMa
       columnNames = List("col_A", "fake_col")
     )
 
-    val expectedRestonomerResponseTransformedDF: DataFrame =
-      new JSONTextToDataFrameReader(
-        sparkSession = sparkSession
-      ).read(text =
-        Seq(
-          """
-            |{
-            |  "test_col_A": "val_A",
-            |  "col_B": "val_B",
-            |  "col_C": "val_C"
-            |}
-            |""".stripMargin
-        )
-      )
+    val expectedRestonomerResponseTransformedDF = readJSON(
+      """
+        |{
+        |  "test_col_A": "val_A",
+        |  "col_B": "val_B",
+        |  "col_C": "val_C"
+        |}
+        |""".stripMargin
+    )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 
