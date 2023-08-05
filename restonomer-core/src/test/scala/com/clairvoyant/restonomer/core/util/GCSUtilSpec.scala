@@ -1,17 +1,18 @@
 package com.clairvoyant.restonomer.core.util
 
-import com.clairvoyant.restonomer.core.common.{CoreSpec, GCSMockSpec}
+import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
+import com.clairvoyant.restonomer.core.common.GCSMockSpec
 import com.clairvoyant.restonomer.core.util.GCSUtil.*
 import com.dimafeng.testcontainers.GenericContainer.Def
 import com.dimafeng.testcontainers.scalatest.TestContainerForAll
-import com.google.cloud.storage.{BlobId, BucketInfo, Storage, StorageOptions}
+import com.google.cloud.storage.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.testcontainers.containers.wait.strategy.Wait
 
 import java.net.URL
 import scala.io.Source
 
-class GCSUtilSpec extends CoreSpec with GCSMockSpec {
+class GCSUtilSpec extends DataScalaxyTestUtil with GCSMockSpec {
 
   "getBucketName() - with fullGCSPath" should "return correct bucket name" in {
     getBucketName(mockFullGCSPath) shouldBe mockGCSBucketName
@@ -29,7 +30,7 @@ class GCSUtilSpec extends CoreSpec with GCSMockSpec {
     getBlobFullPath(
       blob = gcsStorageClient.get(
         BlobId.of(
-          gcsBucket.getName(),
+          gcsBucket.getName,
           s"$mockBlobName/authentication/api_key_authentication/checkpoint_api_key_authentication_cookie.conf"
         )
       )

@@ -122,10 +122,8 @@ case class APIKeyAuthentication(
         httpRequest.copy[Identity, Either[String, String], Any](
           uri = httpRequest.uri.addParam(apiKeyName, apiKeyValue)
         )
-      case RequestHeader =>
-        httpRequest.header(apiKeyName, apiKeyValue, replaceExisting = true)
-      case Cookie =>
-        httpRequest.cookie(apiKeyName, apiKeyValue)
+      case RequestHeader => httpRequest.header(apiKeyName, apiKeyValue, replaceExisting = true)
+      case Cookie        => httpRequest.cookie(apiKeyName, apiKeyValue)
     }
 
 }
@@ -250,10 +248,8 @@ case class ClientCredentials(
           Duration.Inf
         )
         .body match {
-        case Left(errorMessage) =>
-          throw new RestonomerException(errorMessage)
-        case Right(responseBody) =>
-          responseBody
+        case Left(errorMessage)  => throw new RestonomerException(errorMessage)
+        case Right(responseBody) => responseBody
       },
       "$.access_token"
     )

@@ -50,18 +50,80 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
     val restonomerResponseDF = dataRestonomerResponse.body
       .map { httpResponseBody =>
         (checkpointConfig.data.dataResponse.body match {
-          case JSON(dataColumnName) =>
-            new JSONResponseToDataFrameConverter(dataColumnName)
-          case CSV() =>
-            new CSVResponseToDataFrameConverter
+          case JSON(
+                columnNameOfCorruptRecord,
+                dataColumnName,
+                dateFormat,
+                inferSchema,
+                locale,
+                multiLine,
+                originalSchema,
+                primitivesAsString,
+                timestampFormat,
+                timestampNTZFormat
+              ) =>
+            JSONResponseToDataFrameConverter(
+              columnNameOfCorruptRecord,
+              dataColumnName,
+              dateFormat,
+              inferSchema,
+              locale,
+              multiLine,
+              originalSchema,
+              primitivesAsString,
+              timestampFormat,
+              timestampNTZFormat
+            )
+          case CSV(
+                columnNameOfCorruptRecord,
+                dateFormat,
+                emptyValue,
+                enforceSchema,
+                escape,
+                header,
+                inferSchema,
+                ignoreLeadingWhiteSpace,
+                ignoreTrailingWhiteSpace,
+                lineSep,
+                locale,
+                multiLine,
+                nanValue,
+                nullValue,
+                originalSchema,
+                quote,
+                recordSep,
+                sep,
+                timestampFormat,
+                timestampNTZFormat
+              ) =>
+            CSVResponseToDataFrameConverter(
+              columnNameOfCorruptRecord,
+              dateFormat,
+              emptyValue,
+              enforceSchema,
+              escape,
+              header,
+              inferSchema,
+              ignoreLeadingWhiteSpace,
+              ignoreTrailingWhiteSpace,
+              lineSep,
+              locale,
+              multiLine,
+              nanValue,
+              nullValue,
+              originalSchema,
+              quote,
+              recordSep,
+              sep,
+              timestampFormat,
+              timestampNTZFormat
+            )
         }).convertResponseToDataFrame(httpResponseBody.toSeq)
       }
 
     val restonomerResponseTransformedDF = restonomerResponseDF.map { df =>
       checkpointConfig.data.dataResponse.transformations
-        .foldLeft(df) { case (df, restonomerTransformation) =>
-          restonomerTransformation.transform(df)
-        }
+        .foldLeft(df) { case (df, restonomerTransformation) => restonomerTransformation.transform(df) }
     }
 
     val persistedRestonomerResponseDF = persistRestonomerResponseDataFrame(
@@ -81,10 +143,8 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
         tokenJsonPath =>
           JsonPath.read[String](
             tokenHttpResponse.body match {
-              case Left(errorMessage) =>
-                throw new RestonomerException(errorMessage)
-              case Right(responseBody) =>
-                responseBody
+              case Left(errorMessage)  => throw new RestonomerException(errorMessage)
+              case Right(responseBody) => responseBody
             },
             tokenJsonPath
           )
@@ -93,10 +153,8 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
         tokenName =>
           tokenHttpResponse.headers
             .find(_.name == tokenName) match {
-            case Some(header) =>
-              header.value
-            case None =>
-              throw new RestonomerException(s"Could not find the value of $tokenName in the token response.")
+            case Some(header) => header.value
+            case None => throw new RestonomerException(s"Could not find the value of $tokenName in the token response.")
           }
     }
 

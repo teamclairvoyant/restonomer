@@ -1,6 +1,7 @@
 package com.clairvoyant.restonomer.converter
 
 import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
+import org.apache.spark.sql.types.*
 
 class JSONResponseToDataFrameConverterIntegrationTest
     extends IntegrationTestDependencies
