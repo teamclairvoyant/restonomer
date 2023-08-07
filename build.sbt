@@ -34,8 +34,7 @@ ThisBuild / assemblyMergeStrategy := {
         || (ps.last endsWith "module-info.class")
         || (ps.last endsWith "UnusedStubClass.class") =>
     MergeStrategy.last
-  case PathList(ps @ _*) if ps.last endsWith "public-suffix-list.txt" =>
-    MergeStrategy.concat
+  case PathList(ps @ _*) if ps.last endsWith "public-suffix-list.txt" => MergeStrategy.concat
   case x =>
     val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
     oldStrategy(x)
@@ -52,7 +51,7 @@ val jwtCoreVersion = "9.4.3"
 val jsonPathVersion = "2.8.0"
 val odelayVersion = "0.4.0"
 val s3MockVersion = "0.2.6"
-val gcsConnectorVersion = "hadoop3-2.2.16"
+val gcsConnectorVersion = "1.9.4-hadoop3"
 val monovoreDeclineVersion = "2.4.1"
 val googleCloudStorageVersion = "2.26.0"
 val testContainersScalaVersion = "0.40.17"
