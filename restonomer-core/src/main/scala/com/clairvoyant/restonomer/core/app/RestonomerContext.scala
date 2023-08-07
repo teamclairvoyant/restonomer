@@ -19,7 +19,8 @@ object RestonomerContext {
       if (restonomerContextDirectoryPath.startsWith("gs://")) {
         given gcsStorageClient: Storage = StorageOptions.getDefaultInstance().getService()
         GCSRestonomerContextLoader()
-      } else LocalRestonomerContextLoader()
+      } else
+        LocalRestonomerContextLoader()
 
     if (restonomerContextLoader.fileExists(restonomerContextDirectoryPath))
       new RestonomerContext(restonomerContextLoader, restonomerContextDirectoryPath, configVariablesFromApplicationArgs)

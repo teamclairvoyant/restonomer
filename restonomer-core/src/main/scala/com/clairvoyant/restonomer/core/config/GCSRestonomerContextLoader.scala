@@ -29,7 +29,8 @@ class GCSRestonomerContextLoader(using gcsStorageClient: Storage) extends Reston
   ): List[C] = {
     @tailrec
     def loadConfigsFromDirectoryHelper(remainingConfigFiles: List[Blob], configs: List[C]): List[C] =
-      if (remainingConfigFiles.isEmpty) configs
+      if (remainingConfigFiles.isEmpty)
+        configs
       else {
         val configFile = remainingConfigFiles.head
 

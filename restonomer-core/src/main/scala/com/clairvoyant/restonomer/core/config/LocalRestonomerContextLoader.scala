@@ -18,7 +18,8 @@ class LocalRestonomerContextLoader extends RestonomerContextLoader {
   ): List[C] = {
     @tailrec
     def loadConfigsFromDirectoryHelper(remainingConfigFiles: List[File], configs: List[C]): List[C] =
-      if (remainingConfigFiles.isEmpty) configs
+      if (remainingConfigFiles.isEmpty)
+        configs
       else {
         val configFile = remainingConfigFiles.head
 

@@ -34,8 +34,7 @@ ThisBuild / assemblyMergeStrategy := {
         || (ps.last endsWith "module-info.class")
         || (ps.last endsWith "UnusedStubClass.class") =>
     MergeStrategy.last
-  case PathList(ps @ _*) if ps.last endsWith "public-suffix-list.txt" =>
-    MergeStrategy.concat
+  case PathList(ps @ _*) if ps.last endsWith "public-suffix-list.txt" => MergeStrategy.concat
   case x =>
     val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
     oldStrategy(x)
