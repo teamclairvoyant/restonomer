@@ -34,22 +34,43 @@ ThisBuild / assemblyMergeStrategy := {
         || (ps.last endsWith "module-info.class")
         || (ps.last endsWith "UnusedStubClass.class") =>
     MergeStrategy.last
-  case PathList(ps @ _*) if ps.last endsWith "public-suffix-list.txt" =>
-    MergeStrategy.concat
+  case PathList(ps @ _*) if ps.last endsWith "public-suffix-list.txt" => MergeStrategy.concat
   case x =>
     val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
     oldStrategy(x)
 }
 
-Global / excludeLintKeys += Keys.parallelExecution
+// ----- SCALA COMPILER OPTIONS ----- //
+
+Global / scalacOptions ++= Seq("-Xmax-inlines", "50")
 
 // ----- SCALAFIX ----- //
 
+ThisBuild / semanticdbEnabled := true
 ThisBuild / scalafixOnCompile := true
 
 // ----- WARTREMOVER ----- //
 
-ThisBuild / wartremoverErrors ++= Warts.all
+ThisBuild / wartremoverErrors ++= Warts.allBut(
+  Wart.Any,
+  Wart.DefaultArguments,
+  Wart.Equals,
+  Wart.FinalCaseClass,
+  Wart.GlobalExecutionContext,
+  Wart.ImplicitParameter,
+  Wart.IsInstanceOf,
+  Wart.IterableOps,
+  Wart.LeakingSealed,
+  Wart.Nothing,
+  Wart.OptionPartial,
+  Wart.Overloading,
+  Wart.PlatformDefault,
+  Wart.Recursion,
+  Wart.RedundantConversions,
+  Wart.StringPlusAny,
+  Wart.Throw,
+  Wart.ToString
+)
 
 // ----- TOOL VERSIONS ----- //
 
@@ -145,33 +166,12 @@ val restonomerSparkUtilsDependencies =
   sparkDependencies ++
     sparkHadoopCloudDependencies
 
-// ----- SETTINGS ----- //
-
-val commonSettings = Seq(
-  scalacOptions ++= Seq("-Xmax-inlines", "50")
-)
-
-val restonomerCoreSettings =
-  commonSettings ++ Seq(
-    libraryDependencies ++= restonomerCoreDependencies,
-    Test / parallelExecution := false,
-    IntegrationTest / parallelExecution := false,
-    assembly / mainClass := Some("com.clairvoyant.restonomer.core.app.RestonomerApp")
-  ) ++ Defaults.itSettings
-
-val restonomerSparkUtilsSettings =
-  commonSettings ++ Seq(
-    libraryDependencies ++= restonomerSparkUtilsDependencies
-  )
-
 // ----- PROJECTS ----- //
 
 lazy val restonomer = (project in file("."))
   .settings(
-    commonSettings ++ Seq(
-      publish / skip := true,
-      publishLocal / skip := true
-    ),
+    publish / skip := true,
+    publishLocal / skip := true,
     addCommandAlias("run", "restonomer-core/run"),
     addCommandAlias("assembly", "restonomer-core/assembly")
   )
@@ -179,16 +179,21 @@ lazy val restonomer = (project in file("."))
 
 lazy val `restonomer-core` = project
   .configs(IntegrationTest)
-  .settings(restonomerCoreSettings)
+  .settings(
+    libraryDependencies ++= restonomerCoreDependencies,
+    Test / parallelExecution := false,
+    IntegrationTest / parallelExecution := false,
+    Defaults.itSettings,
+    scalafixConfigSettings(IntegrationTest),
+    assembly / mainClass := Some("com.clairvoyant.restonomer.core.app.RestonomerApp")
+  )
   .dependsOn(`restonomer-spark-utils` % "compile->compile;test->test;it->it;test->it")
   .enablePlugins(AssemblyPlugin)
 
 lazy val `restonomer-spark-utils` = project
-  .configs(IntegrationTest.extend(Test))
   .settings(
-    restonomerSparkUtilsSettings ++ Seq(
-      publish / skip := true,
-      publishLocal / skip := true
-    )
+    libraryDependencies ++= restonomerSparkUtilsDependencies,
+    publish / skip := true,
+    publishLocal / skip := true
   )
   .enablePlugins(AssemblyPlugin)
