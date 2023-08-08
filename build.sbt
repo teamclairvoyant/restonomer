@@ -43,6 +43,14 @@ ThisBuild / assemblyMergeStrategy := {
 
 Global / excludeLintKeys += Keys.parallelExecution
 
+// ----- SCALAFIX ----- //
+
+ThisBuild / scalafixOnCompile := true
+
+// ----- WARTREMOVER ----- //
+
+ThisBuild / wartremoverErrors ++= Warts.all
+
 // ----- TOOL VERSIONS ----- //
 
 val zioConfigVersion = "4.0.0-RC16"
