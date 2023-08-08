@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.core.converter
 
 import com.clairvoyant.data.scalaxy.reader.text.CSVTextToDataFrameReader
-import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 class CSVResponseToDataFrameConverter(
     columnNameOfCorruptRecord: String,
