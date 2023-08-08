@@ -15,7 +15,8 @@ class ConfigVariablesSubstitutor(
   def substituteConfigVariables(configString: String): String = {
     @tailrec
     def substituteConfigVariablesHelper(remainingMatchers: List[Regex.Match], configString: String): String = {
-      if (remainingMatchers.isEmpty) configString
+      if (remainingMatchers.isEmpty)
+        configString
       else {
         val matcher = remainingMatchers.head
 
