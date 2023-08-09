@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 const FeatureList = [
   {
     title: 'Configuration Driven Framework',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    imgSrc: require('@site/static/img/configuration_driven.png').default,
     description: (
       <>
         Restonomer is a configuration-driven framework that hides all the implementation details from users and provides just an abstraction for building integration layers to consume HTTP-based services.
@@ -14,7 +14,7 @@ const FeatureList = [
   },
   {
     title: 'Data Ingestion',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    imgSrc: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
         Restonomer enables users to ingest data from HTTP-based services in a distributed manner.
@@ -23,7 +23,7 @@ const FeatureList = [
   },
   {
     title: 'Response Data Formats',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    imgSrc: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
         Restonomer supports various API response data formats like JSON, XML, CSV, etc.
@@ -32,7 +32,7 @@ const FeatureList = [
   },
   {
     title: 'Data Transformation',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    imgSrc: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
         Restonomer provides users with the ability to transform their api response data to the required format and structure in a distributed fashion.
@@ -43,7 +43,7 @@ const FeatureList = [
   },
   {
     title: 'Data Persistence',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    imgSrc: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
         Restonomer provides users with the ability to persist the api response data in the target storage system of their choice.
@@ -53,7 +53,7 @@ const FeatureList = [
   },
   {
     title: 'Authentication',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    imgSrc: require('@site/static/img/authentication.png').default,
     description: (
       <>
         With Restonomer, user does not have to worry about implementing the algorithm for authenticating itself to the REST API.
@@ -63,7 +63,7 @@ const FeatureList = [
   },
   {
     title: 'Fetch Selected Data',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    imgSrc: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
         Restonomer provides a mechanism to deal with over-fetching of data. 
@@ -75,7 +75,7 @@ const FeatureList = [
   },
   {
     title: 'Pagination',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    imgSrc: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
         Restomer provides support for pagination while fetching huge datasets from the REST API. 
@@ -98,11 +98,11 @@ const FeatureList = [
   },
 ];
 
-function Feature({Svg, title, description}) {
+function Feature({imgSrc, title, description}) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
+        <img src={imgSrc}/>
       </div>
       <div className="text--center padding-horiz--md">
         <h3>{title}</h3>
