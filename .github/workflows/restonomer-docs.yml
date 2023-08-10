@@ -1,8 +1,8 @@
-name: Deploy Restonomer Documentation
+name: Deploy Restonomer Website
 
 on:
   push:
-    branches: ["master"]
+    branches: ["staging"]
 
 permissions:
   contents: write
@@ -12,15 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
-      - name: Install Sphinx Dependencies
-        run: pip install sphinx sphinx_rtd_theme recommonmark sphinx-autobuild myst-parser
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
       - name: Generate HTML Files
-        run: sphinx-build -b html docs/source/ docs/build/html
+        working-directory: site
+        run: npm run build
       - name: Deploy HTML Files
         uses: peaceiris/actions-gh-pages@v3
         with:
           publish_branch: github-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/build/html
+          publish_dir: site/build
           force_orphan: true
