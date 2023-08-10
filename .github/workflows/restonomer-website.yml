@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  deploy-restonomer-docs:
+  deploy-restonomer-website:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -16,9 +16,9 @@ jobs:
         with:
           node-version: "16"
       - name: Install Docusaurus
+        working-directory: site
         run: npm install
       - name: Generate HTML Files
-        working-directory: site
         run: npm run build
       - name: Deploy HTML Files
         uses: peaceiris/actions-gh-pages@v3
