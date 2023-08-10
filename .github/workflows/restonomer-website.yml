@@ -2,7 +2,7 @@ name: Deploy Restonomer Website
 
 on:
   push:
-    branches: ["staging"]
+    branches: ["master"]
 
 permissions:
   contents: write
