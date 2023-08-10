@@ -44,7 +44,6 @@ const FeatureList = [
     description: (
       <>
         Restonomer provides users with the ability to transform their api response data to the required format and structure in a distributed fashion.
-        Restonomer makes use of the spark functions to transform the data in the background. 
       </>
     ),
   },
@@ -56,7 +55,6 @@ const FeatureList = [
     description: (
       <>
         Restonomer provides users with the ability to persist the api response data in the target storage system of their choice.
-        Once the data has been fetched and transformed, user can provide configurations specifying the target destination and other required parameters related to the target system.
       </>
     ),
   },
@@ -80,8 +78,7 @@ const FeatureList = [
     description: (
       <>
         Restonomer provides a mechanism to deal with over-fetching of data. 
-        Suppose an API returns 100 fields in a response, but we are interested only in 10 fields. 
-        Then, without requesting any change on the API side implementation, users can configure the fields that they are really interested in. 
+        Without requesting any change on the API side implementation, users can configure the fields that they are really interested in. 
         This reduces the amount of data size to be fetched across the network for further processing.
       </>
     ),
@@ -94,8 +91,6 @@ const FeatureList = [
     description: (
       <>
         Restomer provides support for pagination while fetching huge datasets from the REST API. 
-        Some of the APIs are not able to fetch the complete data in a single request, and hence they make use of pagination to load the data in consecutive pages. 
-        A separate http request gets created for each page. 
         Each API has its own custom pagination scheme, and Restonomer internally implements the solution to deal with the same. 
       </>
     ),
@@ -108,7 +103,6 @@ const FeatureList = [
     description: (
       <>
         Restonomer makes sure that its auto retry mechanism makes another attempt to retrieve the relevant information in the event of a request failure, depending on the type of status code it receives as a response. 
-        Restonomer is robust and able to deal with potential temporary failures of the services you rely on.
       </>
     ),
   },
