@@ -16,9 +16,9 @@ const FeatureList = [
   },
   {
     title: 'Data Ingestion',
-    imgSrc: require('@site/static/img/undraw_docusaurus_tree.svg').default,
-    width: '200',
-    height: '200',
+    imgSrc: require('@site/static/img/data_ingestion.png').default,
+    width: '100',
+    height: '100',
     description: (
       <>
         Restonomer enables users to ingest data from HTTP-based services in a distributed manner.
@@ -45,7 +45,6 @@ const FeatureList = [
       <>
         Restonomer provides users with the ability to transform their api response data to the required format and structure in a distributed fashion.
         Restonomer makes use of the spark functions to transform the data in the background. 
-        User need not to write any code for applying transformation, they just need to provide required configurations in the most easy way possible.
       </>
     ),
   },
@@ -91,22 +90,21 @@ const FeatureList = [
     title: 'Pagination',
     imgSrc: require('@site/static/img/pagination.png').default,
     width: '200',
-    height: '200',
+    height: '100',
     description: (
       <>
         Restomer provides support for pagination while fetching huge datasets from the REST API. 
         Some of the APIs are not able to fetch the complete data in a single request, and hence they make use of pagination to load the data in consecutive pages. 
         A separate http request gets created for each page. 
         Each API has its own custom pagination scheme, and Restonomer internally implements the solution to deal with the same. 
-        The users just need to provide few configurations without letting themselves know about the internal details of the implementation.
       </>
     ),
   },
   {
     title: 'Auto Retry',
-    imgSrc: require('@site/static/img/undraw_docusaurus_react.svg').default,
-    width: '200',
-    height: '200',
+    imgSrc: require('@site/static/img/retry.jpg').default,
+    width: '100',
+    height: '100',
     description: (
       <>
         Restonomer makes sure that its auto retry mechanism makes another attempt to retrieve the relevant information in the event of a request failure, depending on the type of status code it receives as a response. 

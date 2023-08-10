@@ -37,10 +37,6 @@ const config = {
     ({
       navbar: {
         title: 'Restonomer',
-        logo: {
-          src: 'img/logo.svg',
-          alt: 'Restonomer Logo'
-        },
         items: [
           {
             href: 'https://github.com/teamclairvoyant/restonomer',
