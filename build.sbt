@@ -75,7 +75,7 @@ ThisBuild / wartremoverErrors ++= Warts.allBut(
 // ----- TOOL VERSIONS ----- //
 
 val zioConfigVersion = "4.0.0-RC16"
-val sttpVersion = "3.8.16"
+val sttpVersion = "3.9.0"
 val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.4.3"
 val jsonPathVersion = "2.8.0"
