@@ -47,7 +47,7 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec with DataS
       .withBody(Some(body))
       .httpRequest
       .body
-      .show shouldBe s"string: body_value"
+      .show shouldBe "string: body_value"
   }
 
   "withBody - with custom form data body" should "be added to the request" in {
@@ -57,7 +57,7 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec with DataS
       .withBody(Some(body))
       .httpRequest
       .body
-      .show shouldBe s"string: k1=v1&k2=v2"
+      .show shouldBe "string: k1=v1&k2=v2"
   }
 
   "withBody - with json data body" should "be added to the request" in {
@@ -68,7 +68,7 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec with DataS
         .withBody(Some(body))
         .httpRequest
 
-    httpRequest.body.show shouldBe s"""string: {"k1": "v1", "k2": "v2"}"""
+    httpRequest.body.show shouldBe """string: {"k1": "v1", "k2": "v2"}"""
     httpRequest.headers.contains(Header(ContentType, "application/json")) shouldBe true
   }
 
