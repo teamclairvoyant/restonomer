@@ -24,6 +24,8 @@ class RenameColumnsTransformationSpec extends DataScalaxyTestUtil {
       )
     )
 
+    val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
+
     val expectedRestonomerResponseTransformedDF: DataFrame = readJSON(
       """
         |{
@@ -33,18 +35,6 @@ class RenameColumnsTransformationSpec extends DataScalaxyTestUtil {
         |}
         |""".stripMargin
     )
-
-    val restonomerResponseDF = readJSON(
-      """
-        |{
-        |  "A": "val_A",
-        |  "B": "val_B",
-        |  "C": "val_C"
-        |}
-        |""".stripMargin
-    )
-
-    val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 
     actualRestonomerResponseTransformedDF should matchExpectedDataFrame(
       expectedDF = expectedRestonomerResponseTransformedDF

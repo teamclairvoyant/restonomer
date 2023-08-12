@@ -22,6 +22,8 @@ jobs:
           cache: 'sbt'
       - name: Scalafmt Check
         run: sbt scalafmtCheckAll
+      - name: Scalafix Check
+        run: sbt "scalafixAll --check"
       - name: Run Unit Tests
         run: sbt test
         env:
