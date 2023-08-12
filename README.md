@@ -85,4 +85,4 @@ libraryDependencies += "com.clairvoyant.restonomer" %% "restonomer-core" % "2.2.
 You can find the documentation on how to use Restonomer and all of its features along with well described 
 examples here:
 
-[Restonomer Usage Guide](https://teamclairvoyant.github.io/restonomer/)
+[Restonomer Usage Guide](https://teamclairvoyant.github.io/restonomer/docs/intro)
