@@ -84,6 +84,31 @@ Example-2 : Where user wants to add a derived column using SQL expression.
 }
 ```
 
+## AddMissingColumn
+
+It lets the user add a missing column if it does not exist with a literal value of the desired data type.
+
+This transformation needs below inputs from the user:
+
+| Input Arguments   | Mandatory | Default Value | Description                                                |
+|:------------------|:---------:|:-------------:|:-----------------------------------------------------------|
+| column-name       |    Yes    |       -       | Name of the new column to be added                         |
+| column-value      |    Yes    |       -       | Literal value of the new column                            |
+| column-data-type  |    Yes    |       -       | The spark sql data type that new column needs to be casted |
+
+User can configure the `AddMissingColumn` transformation in the below manner:
+
+Example-1 : Where user wants to check if a particular column exist and add it when it doesn't exist
+
+```hocon
+{
+  type = "AddMissingColumn"
+  column-name = "col_D"
+  column-value = "val_D"
+  column-data-type = "string"
+}
+```
+
 ## AddPrefixToColumnNames
 
 It lets the user add a desired prefix to select/all column names.
