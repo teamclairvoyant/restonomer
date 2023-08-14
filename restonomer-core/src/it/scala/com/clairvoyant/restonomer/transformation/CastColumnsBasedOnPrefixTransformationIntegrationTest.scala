@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.transformation
 
 import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
-import org.apache.spark.sql.types.{DecimalType, StringType, StructField, StructType}
+import org.apache.spark.sql.types.*
 
 class CastColumnsBasedOnPrefixTransformationIntegrationTest
     extends IntegrationTestDependencies
@@ -15,7 +15,7 @@ class CastColumnsBasedOnPrefixTransformationIntegrationTest
         StructField(name = "name", dataType = StringType),
         StructField(name = "price_in_india", dataType = new DecimalType(precision = 19, scale = 2)),
         StructField(name = "price_in_uk", dataType = new DecimalType(precision = 19, scale = 2)),
-        StructField(name = "percentage_difference", dataType = new DecimalType(precision = 19, scale = 2))
+        StructField(name = "percentage_difference", dataType = DoubleType)
       )
     )
   )

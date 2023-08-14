@@ -1,16 +1,16 @@
 # AddColumn
 
-It lets the user add a new column with a literal value of the desired data type.
+It lets the user add a new column with an expression value of the desired data type.
 
 This transformation needs below inputs from the user:
 
 | Input Arguments   | Mandatory | Default Value | Description                                                |
 |:------------------|:---------:|:-------------:|:-----------------------------------------------------------|
 | column-name       |    Yes    |       -       | Name of the new column to be added                         |
-| column-value      |    Yes    |       -       | Literal value of the new column                            |
+| column-expression |    Yes    |       -       | Expression for the value of the new column                 |
 | column-data-type  |    No     |       -       | The spark sql data type that new column needs to be casted |
 
-User can configure the `AddColumn` transformation in the below manner:
+User can configure the `AddColumnWithExpression` transformation in the below manner:
 
 For example, consider we have below restonomer response in json:
 
@@ -22,15 +22,14 @@ For example, consider we have below restonomer response in json:
 }
 ```
 
-Now, if the requirement is to add a new column `col_D` with the literal value `val_D`, then user can configure the 
-`AddColumn` transformation in the below manner:
+Now, if the requirement is to add a new column `col_D` with the value twice as the value of `col_C`, then user can configure the 
+`AddColumnWithExpression` transformation in the below manner:
 
 ```hocon
 {
-  type = "AddColumn"
+  type = "AddColumnWithExpression"
   column-name = "col_D"
-  column-value = "val_D"
-  column-data-type = "string"
+  column-expression = "col_C * 2"
 }
 ```
 
@@ -41,6 +40,6 @@ The transformed response will now have the new column `col_D` added:
   "col_A": "val_A",
   "col_B": "val_B",
   "col_C": 10.2,
-  "col_D": "val_D"
+  "col_D": 20.4
 }
 ```
