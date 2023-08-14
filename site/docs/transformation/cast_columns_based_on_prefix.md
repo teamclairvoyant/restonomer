@@ -4,10 +4,10 @@ It lets the user cast the data type of multiple columns to the desired different
 
 This transformation expects user to provide below inputs:
 
-| Input Arguments    | Mandatory | Default Value | Description                                                                                                       |
-|:-------------------|:---------:|:-------------:|:------------------------------------------------------------------------------------------------------------------|
-| prefix-list        |    Yes    |       -       | It defines the list of prefixes based on which given columns to be selected to cast them to the desired data type |
-| data-type-to-cast  |    Yes    |       -       | It defines the desired data type to which the columns have to be casted                                           |
+| Input Arguments | Mandatory | Default Value | Description                                                                                             |
+|:----------------|:---------:|:-------------:|:--------------------------------------------------------------------------------------------------------|
+| prefix          |    Yes    |       -       | It defines the prefix based on which given columns to be selected to cast them to the desired data type |
+| data-type       |    Yes    |       -       | It defines the desired data type to which the columns have to be casted                                 |
 
 For example, consider we have below restonomer response in json:
 
@@ -20,14 +20,14 @@ For example, consider we have below restonomer response in json:
 }
 ```
 
-Now, suppose the requirement is to cast the columns containing "price" and "percent" prefix into decimal(19,2) data type.
+Now, suppose the requirement is to cast the columns containing `price` prefix into `decimal(19,2)` data type.
 Then, user can configure the `CastColumnsBasedOnPrefix` transformation in the below manner:
 
 ```hocon
 {
  type = "CastColumnsBasedOnPrefix"
- prefix-list = ["price", "percent"]
- data-type-to-cast = "decimal(19,2)"
+ prefix = "price"
+ data-type = "decimal(19,2)"
 }
 ```
 
@@ -38,6 +38,6 @@ The transformed response will now have the desired columns with the desired data
   "name": "abc",
   "price_in_india": 200.00,
   "price_in_uk": 12.00,
-  "percentage_difference": 3.47
+  "percentage_difference": 3.4678
 }
 ```

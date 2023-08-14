@@ -4,10 +4,10 @@ It lets the user cast the data type of multiple columns to the desired different
 
 This transformation expects user to provide below inputs:
 
-| Input Arguments   | Mandatory | Default Value | Description                                                                                                       |
-|:------------------|:---------:|:-------------:|:------------------------------------------------------------------------------------------------------------------|
-| suffix-list       |    Yes    |       -       | It defines the list of suffixes based on which given columns to be selected to cast them to the desired data type |
-| data-type-to-cast |    Yes    |       -       | It defines the desired data type to which the columns have to be casted                                           |
+| Input Arguments | Mandatory | Default Value | Description                                                                                                     |
+|:----------------|:---------:|:-------------:|:----------------------------------------------------------------------------------------------------------------|
+| suffix          |    Yes    |       -       | It defines the suffix based on which given columns to be selected to cast them to the desired data type         |
+| data-type       |    Yes    |       -       | It defines the desired data type to which the columns have to be casted                                         |
 
 For example, consider we have below restonomer response in json:
 
@@ -20,14 +20,14 @@ For example, consider we have below restonomer response in json:
 }
 ```
 
-Now, suppose the requirement is to cast the columns containing "price" and "percent" suffix into decimal(19,2) data type.
+Now, suppose the requirement is to cast the columns containing `price` as suffix into `decimal(19,2)` data type.
 Then, user can configure the `CastColumnsBasedOnSuffix` transformation in the below manner:
 
 ```hocon
 {
  type = "CastColumnsBasedOnSuffix"
- suffix-list = ["price", "percent"]
- data-type-to-cast = "decimal(19,2)"
+ suffix = "price"
+ data-type = "decimal(19,2)"
 }
 ```
 

@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/add-column-with-expression-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_add_column_with_expression_transformation_response.json"
+  }
+}

@@ -19,8 +19,8 @@ class CastColumnsBasedOnSuffixTransformationSpec extends DataScalaxyTestUtil {
 
   "transform()" should "cast columns with the given suffix to the given type" in {
     val restonomerTransformation = CastColumnsBasedOnSuffix(
-      suffixList = List("price", "percent"),
-      dataTypeToCast = "float"
+      suffix = "price",
+      dataType = "float"
     )
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
@@ -39,35 +39,6 @@ class CastColumnsBasedOnSuffixTransformationSpec extends DataScalaxyTestUtil {
       .filter(_.name == "US_price")
       .head
       .dataType shouldBe FloatType
-
-    actualRestonomerResponseTransformedDF.schema.fields
-      .filter(_.name == "percent_difference")
-      .head
-      .dataType shouldBe StringType
-  }
-
-  "transform()" should "skip the suffix having no matches" in {
-    val restonomerTransformation = CastColumnsBasedOnPrefix(
-      prefixList = List("amount", "value"),
-      dataTypeToCast = "double"
-    )
-
-    val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
-
-    actualRestonomerResponseTransformedDF.schema.fields
-      .filter(_.name == "name")
-      .head
-      .dataType shouldBe StringType
-
-    actualRestonomerResponseTransformedDF.schema.fields
-      .filter(_.name == "india_price")
-      .head
-      .dataType shouldBe StringType
-
-    actualRestonomerResponseTransformedDF.schema.fields
-      .filter(_.name == "US_price")
-      .head
-      .dataType shouldBe StringType
 
     actualRestonomerResponseTransformedDF.schema.fields
       .filter(_.name == "percent_difference")
