@@ -24,6 +24,9 @@ jobs:
         run: sbt scalafmtCheckAll
       - name: Scalafix Check
         run: sbt "scalafixAll --check"
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Unit Tests
         run: sbt test
         env:
