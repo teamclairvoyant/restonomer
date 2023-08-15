@@ -2,9 +2,9 @@ name: Restonomer CI
 
 on:
   push:
-    branches: ["staging"]
+    branches: [ "staging" ]
   pull_request:
-    branches: ["staging", "master"]
+    branches: [ "staging", "master" ]
 
 permissions:
   contents: read
@@ -20,6 +20,10 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: 'sbt'
+      - name: Clean SBT Cache
+        run: |
+          rm -rf $HOME/.ivy2/cache
+          rm -rf $HOME/.sbt/boot/
       - name: Scalafmt Check
         run: sbt scalafmtCheckAll
       - name: Scalafix Check

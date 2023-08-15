@@ -4,11 +4,12 @@ It lets the user add a new column with a literal value of the desired data type.
 
 This transformation needs below inputs from the user:
 
-| Input Arguments   | Mandatory | Default Value | Description                                                |
-|:------------------|:---------:|:-------------:|:-----------------------------------------------------------|
-| column-name       |    Yes    |       -       | Name of the new column to be added                         |
-| column-value      |    Yes    |       -       | Literal value of the new column                            |
-| column-data-type  |    No     |       -       | The spark sql data type that new column needs to be casted |
+| Input Arguments  | Mandatory | Default Value | Description                                                                                                                                                                        |
+|:-----------------|:---------:|:-------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| column-name      |    Yes    |       -       | Name of the new column to be added                                                                                                                                                 |
+| column-value     |    Yes    |       -       | Literal value of the new column                                                                                                                                                    |
+| column-data-type |    No     |       -       | The spark sql data type that new column needs to be casted                                                                                                                         |
+| replace-existing |    No     |     false     | If set to true, if a column already exists with the same name as `column-name`, it will get replaced with the new value. <br/>If set to false, then it returns original dataframe. |
 
 User can configure the `AddColumn` transformation in the below manner:
 
@@ -31,6 +32,7 @@ Now, if the requirement is to add a new column `col_D` with the literal value `v
   column-name = "col_D"
   column-value = "val_D"
   column-data-type = "string"
+  replace-existing = true
 }
 ```
 

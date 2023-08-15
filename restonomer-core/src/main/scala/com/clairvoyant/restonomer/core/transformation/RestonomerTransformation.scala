@@ -13,14 +13,16 @@ sealed trait RestonomerTransformation {
 case class AddColumn(
     columnName: String,
     columnValue: String,
-    columnDataType: Option[String] = None
+    columnDataType: Option[String] = None,
+    replaceExisting: Boolean = false
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
     restonomerResponseDF.addColumn(
       columnName = columnName,
       columnValue = columnValue,
-      columnDataType = columnDataType
+      columnDataType = columnDataType,
+      replaceExisting = replaceExisting
     )
 
 }
@@ -28,14 +30,16 @@ case class AddColumn(
 case class AddColumnWithExpression(
     columnName: String,
     columnExpression: String,
-    columnDataType: Option[String] = None
+    columnDataType: Option[String] = None,
+    replaceExisting: Boolean = false
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
     restonomerResponseDF.addColumnWithExpression(
       columnName = columnName,
       columnExpression = columnExpression,
-      columnDataType = columnDataType
+      columnDataType = columnDataType,
+      replaceExisting = replaceExisting
     )
 
 }
