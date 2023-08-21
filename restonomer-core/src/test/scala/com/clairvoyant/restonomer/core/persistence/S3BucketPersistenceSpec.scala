@@ -38,17 +38,9 @@ class S3BucketPersistenceSpec extends DataScalaxyTestUtil with S3MockSpec {
 
     s3Client.createBucket(s3BucketPersistence.bucketName)
 
-    s3BucketPersistence.persist(
-      restonomerResponseDF,
-      new DataFrameToS3BucketWriter(
-        bucketName = s3BucketPersistence.bucketName,
-        fileFormat = s3BucketPersistence.fileFormat,
-        filePath = s3BucketPersistence.filePath,
-        saveMode = s3BucketPersistence.saveMode
-      )
-    )
+    s3BucketPersistence.persist(restonomerResponseDF)
 
-    sparkSession.read.json(
+    readJSONFromFile(
       s"s3a://${s3BucketPersistence.bucketName}/${s3BucketPersistence.filePath}"
     ) should matchExpectedDataFrame(restonomerResponseDF)
   }

@@ -4,7 +4,7 @@ import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 
 class AddPrefixToColumnNamesTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       |  "col_A": "val_A",
@@ -20,7 +20,7 @@ class AddPrefixToColumnNamesTransformationSpec extends DataScalaxyTestUtil {
       columnNames = List("col_A", "col_B")
     )
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |{
         |  "test_col_A": "val_A",
@@ -42,7 +42,7 @@ class AddPrefixToColumnNamesTransformationSpec extends DataScalaxyTestUtil {
       prefix = "test"
     )
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |{
         |  "test_col_A": "val_A",
@@ -65,7 +65,7 @@ class AddPrefixToColumnNamesTransformationSpec extends DataScalaxyTestUtil {
       columnNames = List("col_A", "fake_col")
     )
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |{
         |  "test_col_A": "val_A",

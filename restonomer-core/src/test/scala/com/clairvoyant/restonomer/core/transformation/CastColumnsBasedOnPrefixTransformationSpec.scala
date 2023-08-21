@@ -5,7 +5,7 @@ import org.apache.spark.sql.types.*
 
 class CastColumnsBasedOnPrefixTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       |  "name": "abc",

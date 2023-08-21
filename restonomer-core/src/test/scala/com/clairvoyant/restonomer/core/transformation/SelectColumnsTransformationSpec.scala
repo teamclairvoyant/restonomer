@@ -5,7 +5,7 @@ import org.apache.spark.sql.DataFrame
 
 class SelectColumnsTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       |  "col_A": "val_A",
@@ -20,7 +20,7 @@ class SelectColumnsTransformationSpec extends DataScalaxyTestUtil {
       columnNames = List("col_C", "col_B")
     )
 
-    val expectedRestonomerResponseTransformedDF: DataFrame = readJSON(
+    val expectedRestonomerResponseTransformedDF: DataFrame = readJSONFromText(
       """
         |{
         |  "col_B": "val_B",
