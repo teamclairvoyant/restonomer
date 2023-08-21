@@ -4,7 +4,7 @@ import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 
 class CastNestedColumnTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       |  "col_A": "val_A",

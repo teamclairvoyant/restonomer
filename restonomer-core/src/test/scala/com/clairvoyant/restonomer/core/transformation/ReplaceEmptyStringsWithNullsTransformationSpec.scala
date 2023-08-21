@@ -6,7 +6,7 @@ import org.apache.spark.sql.types.StringType
 
 class ReplaceEmptyStringsWithNullsTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       |  "col_A": "",
@@ -19,7 +19,7 @@ class ReplaceEmptyStringsWithNullsTransformationSpec extends DataScalaxyTestUtil
   "transform()" should "replace all empty strings with nulls" in {
     val restonomerTransformation = ReplaceEmptyStringsWithNulls()
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |{
         |  "col_A": null,

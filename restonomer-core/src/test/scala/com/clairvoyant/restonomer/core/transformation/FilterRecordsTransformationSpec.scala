@@ -5,7 +5,7 @@ import org.apache.spark.sql.AnalysisException
 
 class FilterRecordsTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |[
       |  {
@@ -27,7 +27,7 @@ class FilterRecordsTransformationSpec extends DataScalaxyTestUtil {
       filterCondition = "col_A > 10"
     )
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |[
         |  {

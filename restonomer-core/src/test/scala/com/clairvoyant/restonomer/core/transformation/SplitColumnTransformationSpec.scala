@@ -4,7 +4,7 @@ import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 
 class SplitColumnTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       | "address": "Apt-123,XYZ Building,Pune,Maharashtra"
@@ -26,7 +26,7 @@ class SplitColumnTransformationSpec extends DataScalaxyTestUtil {
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |{
         | "address": "Apt-123,XYZ Building,Pune,Maharashtra",
