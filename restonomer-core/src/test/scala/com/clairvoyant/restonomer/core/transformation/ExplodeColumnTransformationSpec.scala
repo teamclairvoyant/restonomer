@@ -4,7 +4,7 @@ import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 
 class ExplodeColumnTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       |  "col_A": "val_A",
@@ -18,7 +18,7 @@ class ExplodeColumnTransformationSpec extends DataScalaxyTestUtil {
       columnName = "col_B"
     )
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |[
         |  {

@@ -161,36 +161,7 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
   private def persistRestonomerResponseDataFrame(
       restonomerResponseDF: Future[DataFrame],
       restonomerPersistence: RestonomerPersistence
-  ): Future[Unit] = {
-    val dataFrameWriter =
-      restonomerPersistence match {
-        case FileSystem(fileFormat, filePath, saveMode) =>
-          new DataFrameToFileSystemWriter(
-            fileFormat = fileFormat,
-            filePath = filePath,
-            saveMode = saveMode
-          )
-
-        case S3Bucket(bucketName, fileFormat, filePath, saveMode) =>
-          new DataFrameToS3BucketWriter(
-            bucketName = bucketName,
-            fileFormat = fileFormat,
-            filePath = filePath,
-            saveMode = saveMode
-          )
-
-        case GCSBucket(serviceAccountCredentialsFile, bucketName, fileFormat, filePath, saveMode) =>
-          new DataFrameToGCSBucketWriter(
-            serviceAccountCredentialsFile = serviceAccountCredentialsFile,
-            bucketName = bucketName,
-            fileFormat = fileFormat,
-            filePath = filePath,
-            saveMode = saveMode
-          )
-      }
-
-    restonomerResponseDF.map(restonomerPersistence.persist(_, dataFrameWriter))
-  }
+  ): Future[Unit] = restonomerResponseDF.map(restonomerPersistence.persist)
 
 }
 

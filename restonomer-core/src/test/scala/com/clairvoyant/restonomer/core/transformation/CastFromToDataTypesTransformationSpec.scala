@@ -6,7 +6,7 @@ import org.apache.spark.sql.types.*
 
 class CastFromToDataTypesTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       |  "col_A": 5,

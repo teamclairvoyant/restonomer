@@ -12,7 +12,8 @@ ThisBuild / credentials += Credentials(
 ThisBuild / resolvers ++= Seq(
   "DataScalaxyReaderText Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-reader-text/",
   "DataScalaxyTestUtil Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-test-util/",
-  "DataScalaxyTransformer Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-transformer/"
+  "DataScalaxyTransformer Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-transformer/",
+  "DataScalaxyWriter Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-writer/"
 )
 
 // ----- PACKAGE SETTINGS ----- //
@@ -89,6 +90,7 @@ val testContainersScalaVersion = "0.40.17"
 val dataScalaxyReaderTextVersion = "1.0.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
 val dataScalaxyTransformerVersion = "1.0.0"
+val dataScalaxyWriterVersion = "1.0.0"
 val sparkVersion = "3.4.1"
 val scalaParserCombinatorsVersion = "2.3.0"
 
@@ -150,6 +152,10 @@ val dataScalaxyTransformerDependencies = Seq(
   "com.clairvoyant.data.scalaxy" %% "transformer" % dataScalaxyTestUtilVersion
 ).map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
 
+val dataScalaxyWriterDependencies = Seq(
+  "com.clairvoyant.data.scalaxy" %% "writer-local-file-system" % dataScalaxyWriterVersion
+).map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
@@ -167,6 +173,7 @@ val restonomerCoreDependencies =
     dataScalaxyReaderTextDependencies ++
     dataScalaxyTestUtilDependencies ++
     dataScalaxyTransformerDependencies ++
+    dataScalaxyWriterDependencies ++
     scalaParserCombinatorsDependencies
 
 val restonomerSparkUtilsDependencies =

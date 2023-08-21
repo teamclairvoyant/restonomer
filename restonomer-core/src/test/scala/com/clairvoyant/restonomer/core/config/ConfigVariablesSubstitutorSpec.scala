@@ -23,8 +23,10 @@ class ConfigVariablesSubstitutorSpec extends DataScalaxyTestUtil {
       |    }
       |
       |    persistence = {
-      |      type = "FileSystem"
-      |      file-format = "JSON"
+      |      type = "LocalFileSystem"
+      |      file-format = {
+        type = "JSONFileFormat"
+      }
       |      file-path = "/tmp"
       |    }
       |  }
@@ -52,8 +54,10 @@ class ConfigVariablesSubstitutorSpec extends DataScalaxyTestUtil {
           |    }
           |
           |    persistence = {
-          |      type = "FileSystem"
-          |      file-format = "JSON"
+          |      type = "LocalFileSystem"
+          |      file-format = {
+        type = "JSONFileFormat"
+      }
           |      file-path = "/tmp"
           |    }
           |  }
@@ -89,8 +93,10 @@ class ConfigVariablesSubstitutorSpec extends DataScalaxyTestUtil {
           |    }
           |
           |    persistence = {
-          |      type = "FileSystem"
-          |      file-format = "JSON"
+          |      type = "LocalFileSystem"
+          |      file-format = {
+        type = "JSONFileFormat"
+      }
           |      file-path = "/tmp"
           |    }
           |  }
@@ -126,8 +132,10 @@ class ConfigVariablesSubstitutorSpec extends DataScalaxyTestUtil {
           |    }
           |
           |    persistence = {
-          |      type = "FileSystem"
-          |      file-format = "JSON"
+          |      type = "LocalFileSystem"
+          |      file-format = {
+        type = "JSONFileFormat"
+      }
           |      file-path = "/tmp"
           |    }
           |  }
@@ -163,8 +171,10 @@ class ConfigVariablesSubstitutorSpec extends DataScalaxyTestUtil {
           |    }
           |
           |    persistence = {
-          |      type = "FileSystem"
-          |      file-format = "JSON"
+          |      type = "LocalFileSystem"
+          |      file-format = {
+        type = "JSONFileFormat"
+      }
           |      file-path = "/tmp"
           |    }
           |  }
@@ -201,8 +211,10 @@ class ConfigVariablesSubstitutorSpec extends DataScalaxyTestUtil {
           |    }
           |
           |    persistence = {
-          |      type = "FileSystem"
-          |      file-format = "JSON"
+          |      type = "LocalFileSystem"
+          |      file-format = {
+        type = "JSONFileFormat"
+      }
           |      file-path = "/tmp"
           |    }
           |  }

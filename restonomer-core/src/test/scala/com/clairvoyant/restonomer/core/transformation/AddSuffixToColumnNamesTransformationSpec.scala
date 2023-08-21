@@ -5,7 +5,7 @@ import org.apache.spark.sql.DataFrame
 
 class AddSuffixToColumnNamesTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       |  "col_A": "val_A",
@@ -21,7 +21,7 @@ class AddSuffixToColumnNamesTransformationSpec extends DataScalaxyTestUtil {
       columnNames = List("col_A", "col_B")
     )
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |{
         |  "col_A_old": "val_A",
@@ -43,7 +43,7 @@ class AddSuffixToColumnNamesTransformationSpec extends DataScalaxyTestUtil {
       suffix = "old"
     )
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |{
         |  "col_A_old": "val_A",
@@ -66,7 +66,7 @@ class AddSuffixToColumnNamesTransformationSpec extends DataScalaxyTestUtil {
       columnNames = List("col_A", "fake_col")
     )
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |{
         |  "col_A_old": "val_A",

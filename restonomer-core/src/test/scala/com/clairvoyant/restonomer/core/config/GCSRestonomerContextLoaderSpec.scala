@@ -46,8 +46,10 @@ class GCSRestonomerContextLoaderSpec extends DataScalaxyTestUtil with GCSMockSpe
                             |    }
                             |
                             |    persistence = {
-                            |      type = "FileSystem"
-                            |      file-format = "parquet"
+                            |      type = "LocalFileSystem"
+                            |      file-format = {
+        type = "ParquetFileFormat"
+      }
                             |      file-path = "/tmp/authentication/api_key_authentication"
                             |    }
                             |  }

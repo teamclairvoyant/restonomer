@@ -5,7 +5,7 @@ import org.apache.spark.sql.DataFrame
 
 class ReplaceStringInColumnValueTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       |  "col_A": "val_A",
@@ -23,7 +23,7 @@ class ReplaceStringInColumnValueTransformationSpec extends DataScalaxyTestUtil {
       replacement = "value_D"
     )
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |{
         |  "col_A": "val_A",

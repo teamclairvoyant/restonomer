@@ -5,7 +5,7 @@ import org.apache.spark.sql.DataFrame
 
 class RenameColumnsTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       |  "col_A": "val_A",
@@ -26,7 +26,7 @@ class RenameColumnsTransformationSpec extends DataScalaxyTestUtil {
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 
-    val expectedRestonomerResponseTransformedDF: DataFrame = readJSON(
+    val expectedRestonomerResponseTransformedDF: DataFrame = readJSONFromText(
       """
         |{
         |  "A": "val_A",
@@ -49,7 +49,7 @@ class RenameColumnsTransformationSpec extends DataScalaxyTestUtil {
       )
     )
 
-    val expectedRestonomerResponseTransformedDF: DataFrame = readJSON(
+    val expectedRestonomerResponseTransformedDF: DataFrame = readJSONFromText(
       """
         |{
         |  "A": "val_A",
@@ -73,7 +73,7 @@ class RenameColumnsTransformationSpec extends DataScalaxyTestUtil {
       )
     )
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |{
         |  "col_A": "val_A",
@@ -99,7 +99,7 @@ class RenameColumnsTransformationSpec extends DataScalaxyTestUtil {
       )
     )
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |{
         |  "COL_a": "val_A",

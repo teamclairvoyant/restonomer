@@ -39,8 +39,10 @@ class LocalRestonomerContextLoaderSpec extends CoreSpec with DataScalaxyTestUtil
                             |    }
                             |
                             |    persistence = {
-                            |      type = "FileSystem"
-                            |      file-format = "JSON"
+                            |      type = "LocalFileSystem"
+                            |      file-format = {
+        type = "JSONFileFormat"
+      }
                             |      file-path = "/tmp"
                             |    }
                             |  }

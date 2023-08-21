@@ -4,7 +4,7 @@ import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 
 class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF1 = readJSON(
+  val restonomerResponseDF1 = readJSONFromText(
     """
       |{
       |    "col_a": "1",
@@ -12,7 +12,7 @@ class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
       |}""".stripMargin
   )
 
-  val restonomerResponseDF2 = readJSON(
+  val restonomerResponseDF2 = readJSONFromText(
     """
       |{
       |    "colA": "1",
@@ -20,7 +20,7 @@ class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
       |}""".stripMargin
   )
 
-  val restonomerResponseDF3 = readJSON(
+  val restonomerResponseDF3 = readJSONFromText(
     """
       |{
       |    "ColA": "1",
@@ -33,7 +33,7 @@ class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
       targetCaseType = "lower"
     )
 
-    val expectedDF = readJSON(
+    val expectedDF = readJSONFromText(
       """
         |{
         |  "col_a": "1",
@@ -52,7 +52,7 @@ class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
       sourceCaseType = "snake"
     )
 
-    val expectedDF = readJSON(
+    val expectedDF = readJSONFromText(
       """
         |{
         |  "col-a": "1",
@@ -71,7 +71,7 @@ class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
       sourceCaseType = "snake"
     )
 
-    val expectedDF = readJSON(
+    val expectedDF = readJSONFromText(
       """
         |{
         |  "colA": "1",
@@ -90,7 +90,7 @@ class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
       sourceCaseType = "snake"
     )
 
-    val expectedDF = readJSON(
+    val expectedDF = readJSONFromText(
       """
         |{
         |  "ColA": "1",
@@ -109,7 +109,7 @@ class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
       sourceCaseType = "camel"
     )
 
-    val expectedDF = readJSON(
+    val expectedDF = readJSONFromText(
       """
         |{
         |  "col_a": "1",
@@ -128,7 +128,7 @@ class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
       sourceCaseType = "camel"
     )
 
-    val expectedDF = readJSON(
+    val expectedDF = readJSONFromText(
       """
         |{
         |  "col-a": "1",
@@ -147,7 +147,7 @@ class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
       sourceCaseType = "camel"
     )
 
-    val expectedDF = readJSON(
+    val expectedDF = readJSONFromText(
       """
         |{
         |  "ColA": "1",
@@ -166,7 +166,7 @@ class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
       sourceCaseType = "pascal"
     )
 
-    val expectedDF = readJSON(
+    val expectedDF = readJSONFromText(
       """
         |{
         |  "col_a": "1",
@@ -185,7 +185,7 @@ class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
       sourceCaseType = "pascal"
     )
 
-    val expectedDF = readJSON(
+    val expectedDF = readJSONFromText(
       """
         |{
         |  "col-a": "1",
@@ -204,7 +204,7 @@ class ChangeColumnCaseTransformationSpec extends DataScalaxyTestUtil {
       sourceCaseType = "pascal"
     )
 
-    val expectedDF = readJSON(
+    val expectedDF = readJSONFromText(
       """
         |{
         |  "colA": "1",

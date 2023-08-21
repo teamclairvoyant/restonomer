@@ -5,7 +5,7 @@ import org.apache.spark.sql.DataFrame
 
 class FlattenSchemaTransformationSpec extends DataScalaxyTestUtil {
 
-  val restonomerResponseDF = readJSON(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       |  "rewardApprovedMonthPeriod": {
@@ -21,7 +21,7 @@ class FlattenSchemaTransformationSpec extends DataScalaxyTestUtil {
 
     val actualRestonomerResponseTransformedDF = restonomerTransformation.transform(restonomerResponseDF)
 
-    val expectedRestonomerResponseTransformedDF = readJSON(
+    val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """
         |{
         |  "rewardApprovedMonthPeriod_from": "2021-09",
