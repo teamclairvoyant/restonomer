@@ -11,7 +11,7 @@ import com.clairvoyant.data.scalaxy.writer.local.file.instances.*
 
 class LocalFileSystemPersistenceSpec extends DataScalaxyTestUtil with BeforeAndAfterEach {
 
-  val restonomerResponseDF = readCSVFromText(
+  val restonomerResponseDF = readJSONFromText(
     """
       |{
       |  "col_A": "val_A",
