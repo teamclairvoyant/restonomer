@@ -26,7 +26,7 @@ case class LocalFileSystem(
     fileFormat match {
       case csvFileFormat: CSVFileFormat =>
         DataFrameToLocalFileSystemWriter
-          .write(
+          .write[CSVFileFormat](
             dataFrame = restonomerResponseDF,
             fileFormat = csvFileFormat,
             path = filePath
@@ -34,7 +34,7 @@ case class LocalFileSystem(
 
       case jsonFileFormat: JSONFileFormat =>
         DataFrameToLocalFileSystemWriter
-          .write(
+          .write[JSONFileFormat](
             dataFrame = restonomerResponseDF,
             fileFormat = jsonFileFormat,
             path = filePath
@@ -42,7 +42,7 @@ case class LocalFileSystem(
 
       case xmlFileFormat: XMLFileFormat =>
         DataFrameToLocalFileSystemWriter
-          .write(
+          .write[XMLFileFormat](
             dataFrame = restonomerResponseDF,
             fileFormat = xmlFileFormat,
             path = filePath
@@ -50,7 +50,7 @@ case class LocalFileSystem(
 
       case parquetFileFormat: ParquetFileFormat =>
         DataFrameToLocalFileSystemWriter
-          .write(
+          .write[ParquetFileFormat](
             dataFrame = restonomerResponseDF,
             fileFormat = parquetFileFormat,
             path = filePath
