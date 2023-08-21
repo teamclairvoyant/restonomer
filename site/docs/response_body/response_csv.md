@@ -25,7 +25,7 @@ data = {
     }
 
     persistence = {
-      type = "FileSystem"
+      type = "LocalFileSystem"
       file-format = "csv"
       file-path = "/tmp/converter"
     }

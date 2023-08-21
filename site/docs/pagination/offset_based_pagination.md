@@ -82,8 +82,10 @@ data = {
     }
 
     persistence = {
-      type = "FileSystem"
-      file-format = "JSON"
+      type = "LocalFileSystem"
+      file-format = {
+        type = "ParquetFileFormat"
+      }
       file-path = "/tmp/pagination"
     }
   }
