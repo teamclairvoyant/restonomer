@@ -1,13 +1,13 @@
 package com.clairvoyant.restonomer.core.persistence
 
 import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
+import com.clairvoyant.data.scalaxy.writer.local.file.formats.*
+import com.clairvoyant.data.scalaxy.writer.local.file.instances.*
 import org.apache.commons.io.FileUtils
 import org.apache.spark.sql.DataFrame
 import org.scalatest.BeforeAndAfterEach
 
 import java.io.File
-import com.clairvoyant.data.scalaxy.writer.local.file.formats.*
-import com.clairvoyant.data.scalaxy.writer.local.file.instances.*
 
 class LocalFileSystemPersistenceSpec extends DataScalaxyTestUtil with BeforeAndAfterEach {
 
