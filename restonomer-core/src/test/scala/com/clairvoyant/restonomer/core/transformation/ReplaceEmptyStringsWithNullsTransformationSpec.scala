@@ -1,10 +1,11 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
+import com.clairvoyant.data.scalaxy.test.util.matchers.DataFrameMatcher
+import com.clairvoyant.data.scalaxy.test.util.readers.DataFrameReader
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.types.StringType
 
-class ReplaceEmptyStringsWithNullsTransformationSpec extends DataScalaxyTestUtil {
+class ReplaceEmptyStringsWithNullsTransformationSpec extends DataFrameReader with DataFrameMatcher {
 
   val restonomerResponseDF = readJSONFromText(
     """

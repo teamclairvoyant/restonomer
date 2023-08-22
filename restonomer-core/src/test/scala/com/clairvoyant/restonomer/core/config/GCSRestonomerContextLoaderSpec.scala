@@ -1,10 +1,9 @@
 package com.clairvoyant.restonomer.core.config
 
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
-import com.clairvoyant.restonomer.core.common.GCSMockSpec
+import com.clairvoyant.restonomer.core.common.{CoreSpec, GCSMockSpec}
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
 
-class GCSRestonomerContextLoaderSpec extends DataScalaxyTestUtil with GCSMockSpec {
+class GCSRestonomerContextLoaderSpec extends CoreSpec with GCSMockSpec {
 
   "fileExists()" should "return true" in {
     val configFilePath =

@@ -1,13 +1,12 @@
 package com.clairvoyant.restonomer.core.config
 
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
 
 import java.io.FileNotFoundException
 
-class LocalRestonomerContextLoaderSpec extends CoreSpec with DataScalaxyTestUtil {
+class LocalRestonomerContextLoaderSpec extends CoreSpec {
 
   given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = None
 

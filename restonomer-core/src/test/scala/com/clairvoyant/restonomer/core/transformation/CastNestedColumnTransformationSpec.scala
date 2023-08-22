@@ -1,8 +1,9 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
+import com.clairvoyant.data.scalaxy.test.util.matchers.DataFrameMatcher
+import com.clairvoyant.data.scalaxy.test.util.readers.DataFrameReader
 
-class CastNestedColumnTransformationSpec extends DataScalaxyTestUtil {
+class CastNestedColumnTransformationSpec extends DataFrameReader with DataFrameMatcher {
 
   val restonomerResponseDF = readJSONFromText(
     """
