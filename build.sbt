@@ -157,7 +157,7 @@ val dataScalaxyWriterDependencies = Seq(
 val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion % Test)
 
 val s3MockDependencies = Seq(
-  "io.findify" %% "s3mock" % s3MockVersion % Test
+  "io.findify" %% "s3mock" % s3MockVersion % "test,it"
 )
   .map(_.cross(CrossVersion.for3Use2_13))
   .map(_ excludeAll ("org.scala-lang.modules", "scala-xml"))
