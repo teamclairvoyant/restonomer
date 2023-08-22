@@ -1,10 +1,10 @@
 package com.clairvoyant.restonomer.core.persistence
 
 import com.clairvoyant.data.scalaxy.writer.aws.s3.DataFrameToS3BucketWriter
-import com.clairvoyant.data.scalaxy.writer.aws.s3.formats.{CSVFileFormat => S3CSVFileFormat, FileFormat => S3FileFormat, JSONFileFormat => S3JSONFileFormat, ParquetFileFormat => S3ParquetFileFormat, XMLFileFormat => S3XMLFileFormat}
+import com.clairvoyant.data.scalaxy.writer.aws.s3.formats.{CSVFileFormat as S3CSVFileFormat, FileFormat as S3FileFormat, JSONFileFormat as S3JSONFileFormat, ParquetFileFormat as S3ParquetFileFormat, XMLFileFormat as S3XMLFileFormat}
 import com.clairvoyant.data.scalaxy.writer.aws.s3.instances.*
 import com.clairvoyant.data.scalaxy.writer.local.file.DataFrameToLocalFileSystemWriter
-import com.clairvoyant.data.scalaxy.writer.local.file.formats.{CSVFileFormat => LocalCSVFileFormat, FileFormat => LocalFileFormat, JSONFileFormat => LocalJSONFileFormat, ParquetFileFormat => LocalParquetFileFormat, XMLFileFormat => LocalXMLFileFormat}
+import com.clairvoyant.data.scalaxy.writer.local.file.formats.{CSVFileFormat as LocalCSVFileFormat, FileFormat as LocalFileFormat, JSONFileFormat as LocalJSONFileFormat, ParquetFileFormat as LocalParquetFileFormat, XMLFileFormat as LocalXMLFileFormat}
 import com.clairvoyant.data.scalaxy.writer.local.file.instances.*
 import com.clairvoyant.restonomer.spark.utils.writer.{DataFrameToGCSBucketWriter, DataFrameWriter}
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}

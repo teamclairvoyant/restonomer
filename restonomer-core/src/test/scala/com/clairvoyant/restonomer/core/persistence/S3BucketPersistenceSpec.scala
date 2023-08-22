@@ -1,13 +1,11 @@
 package com.clairvoyant.restonomer.core.persistence
 
-import com.clairvoyant.data.scalaxy.reader.text.JSONTextToDataFrameReader
-import com.clairvoyant.restonomer.core.common.S3MockSpec
-import com.clairvoyant.restonomer.core.common.S3MockSpec.*
-import org.apache.hadoop.conf.Configuration
-import org.apache.spark.sql.DataFrame
+import com.clairvoyant.data.scalaxy.test.util.matchers.DataFrameMatcher
+import com.clairvoyant.data.scalaxy.test.util.mock.S3BucketMock
 import com.clairvoyant.data.scalaxy.test.util.readers.DataFrameReader
+import com.clairvoyant.data.scalaxy.writer.aws.s3.formats.JSONFileFormat
 
-class S3BucketPersistenceSpec extends DataFrameReader with S3MockSpec {
+class S3BucketPersistenceSpec extends DataFrameReader with DataFrameMatcher with S3BucketMock {
 
   val restonomerResponseDF = readJSONFromText(
     """
@@ -22,7 +20,7 @@ class S3BucketPersistenceSpec extends DataFrameReader with S3MockSpec {
   "persist()" should "save the dataframe to the files in the s3 bucket" in {
     val s3BucketPersistence = S3Bucket(
       bucketName = "test-bucket",
-      fileFormat = "JSON",
+      fileFormat = JSONFileFormat(),
       filePath = "test-output-dir"
     )
 

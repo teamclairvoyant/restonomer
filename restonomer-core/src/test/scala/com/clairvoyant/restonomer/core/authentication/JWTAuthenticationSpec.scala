@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.core.authentication
 
-import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.clairvoyant.restonomer.core.common.CoreSpec
+import com.clairvoyant.restonomer.core.exception.RestonomerException
 
 class JWTAuthenticationSpec extends CoreSpec {
 

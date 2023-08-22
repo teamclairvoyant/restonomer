@@ -1,15 +1,14 @@
 package com.clairvoyant.restonomer.core.persistence
 
-import com.clairvoyant.restonomer.core.common.CoreSpec
+import com.clairvoyant.data.scalaxy.test.util.matchers.DataFrameMatcher
+import com.clairvoyant.data.scalaxy.test.util.readers.DataFrameReader
 import com.clairvoyant.data.scalaxy.writer.local.file.formats.*
-import com.clairvoyant.data.scalaxy.writer.local.file.instances.*
 import org.apache.commons.io.FileUtils
-import org.apache.spark.sql.DataFrame
 import org.scalatest.BeforeAndAfterEach
 
 import java.io.File
 
-class LocalFileSystemPersistenceSpec extends DataScalaxyTestUtil with BeforeAndAfterEach {
+class LocalFileSystemPersistenceSpec extends DataFrameReader with DataFrameMatcher with BeforeAndAfterEach {
 
   val restonomerResponseDF = readJSONFromText(
     """

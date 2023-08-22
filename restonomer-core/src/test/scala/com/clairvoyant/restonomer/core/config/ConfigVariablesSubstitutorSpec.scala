@@ -2,7 +2,6 @@ package com.clairvoyant.restonomer.core.config
 
 import com.clairvoyant.restonomer.core.common.CoreSpec
 
-
 class ConfigVariablesSubstitutorSpec extends CoreSpec {
 
   val configString: String =

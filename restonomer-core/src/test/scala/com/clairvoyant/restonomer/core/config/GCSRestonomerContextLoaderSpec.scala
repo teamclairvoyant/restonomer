@@ -1,8 +1,7 @@
 package com.clairvoyant.restonomer.core.config
 
-import com.clairvoyant.restonomer.core.common.GCSMockSpec
+import com.clairvoyant.restonomer.core.common.{CoreSpec, GCSMockSpec}
 import com.clairvoyant.restonomer.core.model.CheckpointConfig
-import com.clairvoyant.restonomer.core.common.CoreSpec
 
 class GCSRestonomerContextLoaderSpec extends CoreSpec with GCSMockSpec {
 

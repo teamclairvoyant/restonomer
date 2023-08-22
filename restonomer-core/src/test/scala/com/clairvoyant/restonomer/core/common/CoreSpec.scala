@@ -1,13 +1,9 @@
 package com.clairvoyant.restonomer.core.common
 
-import org.apache.spark.sql.SparkSession
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll}
 import sttp.client3.*
 import sttp.model.Method
-
-import scala.concurrent.Future
 
 trait CoreSpec extends AnyFlatSpec with Matchers {
 

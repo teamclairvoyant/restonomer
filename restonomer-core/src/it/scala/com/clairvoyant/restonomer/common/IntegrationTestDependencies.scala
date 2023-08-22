@@ -1,13 +1,18 @@
 package com.clairvoyant.restonomer.common
 
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
+import com.clairvoyant.data.scalaxy.test.util.matchers.DataFrameMatcher
+import com.clairvoyant.data.scalaxy.test.util.readers.DataFrameReader
 import com.clairvoyant.restonomer.core.app.RestonomerContext
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.types.StructType
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AnyFlatSpec
 
-trait IntegrationTestDependencies extends DataScalaxyTestUtil with MockedHttpServer with BeforeAndAfterEach {
+trait IntegrationTestDependencies
+    extends DataFrameReader
+    with DataFrameMatcher
+    with MockedHttpServer
+    with BeforeAndAfterEach {
 
   val expectedDFSchema: Option[StructType] = None
 

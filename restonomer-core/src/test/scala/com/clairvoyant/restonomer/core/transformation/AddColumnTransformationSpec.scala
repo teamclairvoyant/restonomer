@@ -1,9 +1,9 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.functions.expr
 import com.clairvoyant.data.scalaxy.test.util.matchers.DataFrameMatcher
 import com.clairvoyant.data.scalaxy.test.util.readers.DataFrameReader
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.functions.expr
 
 class AddColumnTransformationSpec extends DataFrameReader with DataFrameMatcher {
 

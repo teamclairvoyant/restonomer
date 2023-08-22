@@ -1,10 +1,9 @@
 package com.clairvoyant.restonomer.core.authentication
 
-import com.clairvoyant.restonomer.core.common.HttpMockSpec
+import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, stubFor, urlEqualTo}
-import com.clairvoyant.restonomer.core.common.CoreSpec
 
 class OAuth2AuthenticationSpec extends CoreSpec with HttpMockSpec {
 
