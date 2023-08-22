@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.persistence
 
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
+import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.data.scalaxy.writer.local.file.formats.*
 import com.clairvoyant.data.scalaxy.writer.local.file.instances.*
 import org.apache.commons.io.FileUtils

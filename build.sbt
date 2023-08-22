@@ -82,7 +82,6 @@ val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.4.3"
 val jsonPathVersion = "2.8.0"
 val odelayVersion = "0.4.0"
-val s3MockVersion = "0.2.6"
 val gcsConnectorVersion = "hadoop3-2.2.17"
 val monovoreDeclineVersion = "2.4.1"
 val googleCloudStorageVersion = "2.26.1"
@@ -93,6 +92,7 @@ val dataScalaxyTransformerVersion = "1.0.0"
 val dataScalaxyWriterVersion = "1.0.0"
 val sparkVersion = "3.4.1"
 val scalaParserCombinatorsVersion = "2.3.0"
+val scalaTestVersion = "3.2.15"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -128,10 +128,6 @@ val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVer
 
 val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
 
-val s3MockDependencies = Seq("io.findify" %% "s3mock" % s3MockVersion % "it,test")
-  .map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
-  .map(_.cross(CrossVersion.for3Use2_13))
-
 val gcsConnectorDependencies = Seq("com.google.cloud.bigdataoss" % "gcs-connector" % gcsConnectorVersion)
 
 val monovoreDeclineDependencies = Seq("com.monovore" %% "decline" % monovoreDeclineVersion)
@@ -153,8 +149,11 @@ val dataScalaxyTransformerDependencies = Seq(
 ).map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
 
 val dataScalaxyWriterDependencies = Seq(
-  "com.clairvoyant.data.scalaxy" %% "writer-local-file-system" % dataScalaxyWriterVersion
+  "com.clairvoyant.data.scalaxy" %% "writer-local-file-system" % dataScalaxyWriterVersion,
+  "com.clairvoyant.data.scalaxy" %% "writer-aws" % dataScalaxyWriterVersion
 ).map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
+
+val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion % Test)
 
 // ----- MODULE DEPENDENCIES ----- //
 
@@ -164,7 +163,6 @@ val restonomerCoreDependencies =
     jwtDependencies ++
     jsonPathDependencies ++
     wireMockDependencies ++
-    s3MockDependencies ++
     odelayDependencies ++
     gcsConnectorDependencies ++
     monovoreDeclineDependencies ++
@@ -174,7 +172,8 @@ val restonomerCoreDependencies =
     dataScalaxyTestUtilDependencies ++
     dataScalaxyTransformerDependencies ++
     dataScalaxyWriterDependencies ++
-    scalaParserCombinatorsDependencies
+    scalaParserCombinatorsDependencies ++
+    scalaTestDependencies
 
 val restonomerSparkUtilsDependencies =
   sparkDependencies ++

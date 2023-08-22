@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
+import com.clairvoyant.restonomer.core.common.CoreSpec
 
 class DeleteColumnsTransformationSpec extends DataScalaxyTestUtil {
 

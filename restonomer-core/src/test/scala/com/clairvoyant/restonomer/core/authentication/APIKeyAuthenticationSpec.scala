@@ -1,11 +1,10 @@
 package com.clairvoyant.restonomer.core.authentication
 
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import com.clairvoyant.restonomer.core.common.{APIKeyPlaceholders, CoreSpec}
 import com.clairvoyant.restonomer.core.exception.RestonomerException
 import sttp.model.{Header, HeaderNames}
 
-class APIKeyAuthenticationSpec extends CoreSpec with DataScalaxyTestUtil {
+class APIKeyAuthenticationSpec extends CoreSpec {
 
   val apiKeyName = "test_api_key_name"
   val apiKeyValue = "test_api_key_value"

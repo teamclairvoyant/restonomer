@@ -1,6 +1,6 @@
 package com.clairvoyant.restonomer.core.util
 
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
+import com.clairvoyant.restonomer.core.common.CoreSpec
 import com.clairvoyant.restonomer.core.common.GCSMockSpec
 import com.clairvoyant.restonomer.core.util.GCSUtil.*
 import com.dimafeng.testcontainers.GenericContainer.Def

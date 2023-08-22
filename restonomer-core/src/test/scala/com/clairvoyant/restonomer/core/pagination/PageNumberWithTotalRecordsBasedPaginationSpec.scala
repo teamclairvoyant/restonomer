@@ -1,6 +1,8 @@
 package com.clairvoyant.restonomer.core.pagination
 
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
+package com.clairvoyant.restonomer.core.pagination
+
+import com.clairvoyant.restonomer.core.common.CoreSpec
 
 class PageNumberWithTotalRecordsBasedPaginationSpec extends DataScalaxyTestUtil {
 

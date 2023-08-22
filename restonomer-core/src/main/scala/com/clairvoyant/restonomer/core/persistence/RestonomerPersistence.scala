@@ -1,56 +1,56 @@
 package com.clairvoyant.restonomer.core.persistence
 
+import com.clairvoyant.data.scalaxy.writer.aws.s3.DataFrameToS3BucketWriter
+import com.clairvoyant.data.scalaxy.writer.aws.s3.formats.{CSVFileFormat => S3CSVFileFormat, FileFormat => S3FileFormat, JSONFileFormat => S3JSONFileFormat, ParquetFileFormat => S3ParquetFileFormat, XMLFileFormat => S3XMLFileFormat}
+import com.clairvoyant.data.scalaxy.writer.aws.s3.instances.*
 import com.clairvoyant.data.scalaxy.writer.local.file.DataFrameToLocalFileSystemWriter
-import com.clairvoyant.data.scalaxy.writer.local.file.formats.*
+import com.clairvoyant.data.scalaxy.writer.local.file.formats.{CSVFileFormat => LocalCSVFileFormat, FileFormat => LocalFileFormat, JSONFileFormat => LocalJSONFileFormat, ParquetFileFormat => LocalParquetFileFormat, XMLFileFormat => LocalXMLFileFormat}
 import com.clairvoyant.data.scalaxy.writer.local.file.instances.*
-import com.clairvoyant.restonomer.spark.utils.writer.{DataFrameToGCSBucketWriter, DataFrameToS3BucketWriter, DataFrameWriter}
+import com.clairvoyant.restonomer.spark.utils.writer.{DataFrameToGCSBucketWriter, DataFrameWriter}
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import zio.config.derivation.*
 
 import scala.util.Using
 
 @nameWithLabel
-sealed trait RestonomerPersistence {
-
+sealed trait RestonomerPersistence:
   def persist(restonomerResponseDF: DataFrame)(using sparkSession: SparkSession): Unit
 
-}
-
 case class LocalFileSystem(
-    fileFormat: FileFormat,
+    fileFormat: LocalFileFormat,
     filePath: String,
     saveMode: String = SaveMode.ErrorIfExists.name()
 ) extends RestonomerPersistence:
 
   def persist(restonomerResponseDF: DataFrame)(using sparkSession: SparkSession): Unit =
     fileFormat match {
-      case csvFileFormat: CSVFileFormat =>
+      case csvFileFormat: LocalCSVFileFormat =>
         DataFrameToLocalFileSystemWriter
-          .write[CSVFileFormat](
+          .write[LocalCSVFileFormat](
             dataFrame = restonomerResponseDF,
             fileFormat = csvFileFormat,
             path = filePath
           )
 
-      case jsonFileFormat: JSONFileFormat =>
+      case jsonFileFormat: LocalJSONFileFormat =>
         DataFrameToLocalFileSystemWriter
-          .write[JSONFileFormat](
+          .write[LocalJSONFileFormat](
             dataFrame = restonomerResponseDF,
             fileFormat = jsonFileFormat,
             path = filePath
           )
 
-      case xmlFileFormat: XMLFileFormat =>
+      case xmlFileFormat: LocalXMLFileFormat =>
         DataFrameToLocalFileSystemWriter
-          .write[XMLFileFormat](
+          .write[LocalXMLFileFormat](
             dataFrame = restonomerResponseDF,
             fileFormat = xmlFileFormat,
             path = filePath
           )
 
-      case parquetFileFormat: ParquetFileFormat =>
+      case parquetFileFormat: LocalParquetFileFormat =>
         DataFrameToLocalFileSystemWriter
-          .write[ParquetFileFormat](
+          .write[LocalParquetFileFormat](
             dataFrame = restonomerResponseDF,
             fileFormat = parquetFileFormat,
             path = filePath
@@ -59,19 +59,49 @@ case class LocalFileSystem(
 
 case class S3Bucket(
     bucketName: String,
-    fileFormat: String,
+    fileFormat: S3FileFormat,
     filePath: String,
     saveMode: String = SaveMode.ErrorIfExists.name()
 ) extends RestonomerPersistence:
 
-  override def persist(restonomerResponseDF: DataFrame)(using sparkSession: SparkSession): Unit = {
-    DataFrameToS3BucketWriter(
-      bucketName = bucketName,
-      fileFormat = fileFormat,
-      filePath = filePath,
-      saveMode = saveMode
-    ).write(restonomerResponseDF)
-  }
+  override def persist(restonomerResponseDF: DataFrame)(using sparkSession: SparkSession): Unit =
+    fileFormat match {
+      case csvFileFormat: S3CSVFileFormat =>
+        DataFrameToS3BucketWriter
+          .write[S3CSVFileFormat](
+            dataFrame = restonomerResponseDF,
+            fileFormat = csvFileFormat,
+            bucketName = bucketName,
+            path = filePath
+          )
+
+      case jsonFileFormat: S3JSONFileFormat =>
+        DataFrameToS3BucketWriter
+          .write[S3JSONFileFormat](
+            dataFrame = restonomerResponseDF,
+            fileFormat = jsonFileFormat,
+            bucketName = bucketName,
+            path = filePath
+          )
+
+      case xmlFileFormat: S3XMLFileFormat =>
+        DataFrameToS3BucketWriter
+          .write[S3XMLFileFormat](
+            dataFrame = restonomerResponseDF,
+            fileFormat = xmlFileFormat,
+            bucketName = bucketName,
+            path = filePath
+          )
+
+      case parquetFileFormat: S3ParquetFileFormat =>
+        DataFrameToS3BucketWriter
+          .write[S3ParquetFileFormat](
+            dataFrame = restonomerResponseDF,
+            fileFormat = parquetFileFormat,
+            bucketName = bucketName,
+            path = filePath
+          )
+    }
 
 case class GCSBucket(
     serviceAccountCredentialsFile: Option[String],

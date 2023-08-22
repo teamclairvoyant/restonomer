@@ -9,7 +9,7 @@ import sttp.model.Method
 
 import scala.concurrent.Future
 
-trait CoreSpec {
+trait CoreSpec extends AnyFlatSpec with Matchers {
 
   val resourcesPath = "restonomer-core/src/test/resources"
   val url = "/test_url"

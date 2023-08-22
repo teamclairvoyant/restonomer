@@ -1,13 +1,12 @@
 package com.clairvoyant.restonomer.core.http
 
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import com.clairvoyant.restonomer.core.authentication.BasicAuthentication
 import com.clairvoyant.restonomer.core.body.{FormDataBody, JSONDataBody, TextDataBody}
 import com.clairvoyant.restonomer.core.common.{CoreSpec, HttpMockSpec}
 import sttp.model.Header
 import sttp.model.HeaderNames.ContentType
 
-class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec with DataScalaxyTestUtil {
+class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
 
   given tokenFunction: Option[String => String] = None
 

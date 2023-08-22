@@ -1,33 +1,23 @@
 package com.clairvoyant.restonomer.core.persistence
 
 import com.clairvoyant.data.scalaxy.reader.text.JSONTextToDataFrameReader
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
 import com.clairvoyant.restonomer.core.common.S3MockSpec
 import com.clairvoyant.restonomer.core.common.S3MockSpec.*
-import com.clairvoyant.restonomer.spark.utils.writer.DataFrameToS3BucketWriter
 import org.apache.hadoop.conf.Configuration
 import org.apache.spark.sql.DataFrame
+import com.clairvoyant.data.scalaxy.test.util.readers.DataFrameReader
 
-class S3BucketPersistenceSpec extends DataScalaxyTestUtil with S3MockSpec {
+class S3BucketPersistenceSpec extends DataFrameReader with S3MockSpec {
 
-  val hadoopConfigurations: Configuration = sparkSession.sparkContext.hadoopConfiguration
-
-  hadoopConfigurations.set("fs.s3a.endpoint", s3MockEndpoint)
-  hadoopConfigurations.set("fs.s3a.access.key", s3MockAWSAccessKey)
-  hadoopConfigurations.set("fs.s3a.secret.key", s3MockAWSSecretKey)
-  hadoopConfigurations.set("fs.s3a.path.style.access", "true")
-  hadoopConfigurations.set("fs.s3a.change.detection.version.required", "false")
-
-  val restonomerResponseDF = JSONTextToDataFrameReader()
-    .read(
-      """
-        |{
-        |  "col_A": "val_A",
-        |  "col_B": "val_B",
-        |  "col_C": "val_C"
-        |}
-        |""".stripMargin
-    )
+  val restonomerResponseDF = readJSONFromText(
+    """
+      |{
+      |  "col_A": "val_A",
+      |  "col_B": "val_B",
+      |  "col_C": "val_C"
+      |}
+      |""".stripMargin
+  )
 
   "persist()" should "save the dataframe to the files in the s3 bucket" in {
     val s3BucketPersistence = S3Bucket(

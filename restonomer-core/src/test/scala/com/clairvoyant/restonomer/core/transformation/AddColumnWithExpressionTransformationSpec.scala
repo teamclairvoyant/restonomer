@@ -1,11 +1,11 @@
 package com.clairvoyant.restonomer.core.transformation
 
-import com.clairvoyant.data.scalaxy.test.util.DataScalaxyTestUtil
-import com.clairvoyant.restonomer.core.common.CoreSpec
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.expr
+import com.clairvoyant.data.scalaxy.test.util.matchers.DataFrameMatcher
+import com.clairvoyant.data.scalaxy.test.util.readers.DataFrameReader
 
-class AddColumnWithExpressionTransformationSpec extends DataScalaxyTestUtil {
+class AddColumnWithExpressionTransformationSpec extends DataFrameReader with DataFrameMatcher {
 
   val restonomerResponseDF = readJSONFromText(
     """
