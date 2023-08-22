@@ -93,6 +93,7 @@ val dataScalaxyWriterVersion = "1.0.0"
 val sparkVersion = "3.4.1"
 val scalaParserCombinatorsVersion = "2.3.0"
 val scalaTestVersion = "3.2.15"
+val s3MockVersion = "0.2.6"
 
 // ----- TOOL DEPENDENCIES ----- //
 
@@ -155,6 +156,12 @@ val dataScalaxyWriterDependencies = Seq(
 
 val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion % Test)
 
+val s3MockDependencies = Seq(
+  "io.findify" %% "s3mock" % s3MockVersion % Test
+)
+  .map(_.cross(CrossVersion.for3Use2_13))
+  .map(_ excludeAll ("org.scala-lang.modules", "scala-xml"))
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerCoreDependencies =
@@ -173,7 +180,8 @@ val restonomerCoreDependencies =
     dataScalaxyTransformerDependencies ++
     dataScalaxyWriterDependencies ++
     scalaParserCombinatorsDependencies ++
-    scalaTestDependencies
+    scalaTestDependencies ++
+    s3MockDependencies
 
 val restonomerSparkUtilsDependencies =
   sparkDependencies ++
