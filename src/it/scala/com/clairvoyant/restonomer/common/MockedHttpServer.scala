@@ -16,7 +16,7 @@ trait MockedHttpServer extends BeforeAndAfterAll {
         .usingFilesUnderDirectory(s"$mockDataRootDirectoryPath/$mappingsDirectory")
     )
 
-  val resourcesDirectoryPath = "restonomer-core/src/it/resources"
+  val resourcesDirectoryPath = "src/it/resources"
   val mockDataRootDirectoryPath: String = s"$resourcesDirectoryPath/mock_data"
 
   override def beforeAll(): Unit = mockedHttpServer.start()
