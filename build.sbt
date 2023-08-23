@@ -85,7 +85,6 @@ val jsonPathVersion = "2.8.0"
 val jwtCoreVersion = "9.4.3"
 val monovoreDeclineVersion = "2.4.1"
 val odelayVersion = "0.4.0"
-val s3MockVersion = "0.2.6"
 val scalaParserCombinatorsVersion = "2.3.0"
 val sttpVersion = "3.9.0"
 val testContainersScalaVersion = "0.40.17"
@@ -122,12 +121,6 @@ val monovoreDeclineDependencies = Seq("com.monovore" %% "decline" % monovoreDecl
 
 val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
 
-val s3MockDependencies = Seq(
-  "io.findify" %% "s3mock" % s3MockVersion % "test,it"
-)
-  .map(_.cross(CrossVersion.for3Use2_13))
-  .map(_ excludeAll ("org.scala-lang.modules", "scala-xml"))
-
 val scalaParserCombinatorsDependencies = Seq(
   "org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion
 )
@@ -156,7 +149,6 @@ val restonomerDependencies =
     jwtCoreDependencies ++
     monovoreDeclineDependencies ++
     odelayDependencies ++
-    s3MockDependencies ++
     scalaParserCombinatorsDependencies ++
     sttpDependencies ++
     testContainersScalaDependencies ++
