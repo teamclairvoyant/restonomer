@@ -76,50 +76,23 @@ ThisBuild / wartremoverErrors ++= Warts.allBut(
 
 // ----- TOOL VERSIONS ----- //
 
-val zioConfigVersion = "4.0.0-RC16"
-val sttpVersion = "3.9.0"
-val wireMockVersion = "2.27.2"
-val jwtCoreVersion = "9.4.3"
-val jsonPathVersion = "2.8.0"
-val odelayVersion = "0.4.0"
-val monovoreDeclineVersion = "2.4.1"
-val googleCloudStorageVersion = "2.26.1"
-val testContainersScalaVersion = "0.40.17"
 val dataScalaxyReaderTextVersion = "1.0.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
 val dataScalaxyTransformerVersion = "1.0.0"
 val dataScalaxyWriterVersion = "1.0.0"
-val scalaParserCombinatorsVersion = "2.3.0"
-val scalaTestVersion = "3.2.15"
+val googleCloudStorageVersion = "2.26.1"
+val jsonPathVersion = "2.8.0"
+val jwtCoreVersion = "9.4.3"
+val monovoreDeclineVersion = "2.4.1"
+val odelayVersion = "0.4.0"
 val s3MockVersion = "0.2.6"
+val scalaParserCombinatorsVersion = "2.3.0"
+val sttpVersion = "3.9.0"
+val testContainersScalaVersion = "0.40.17"
+val wireMockVersion = "2.27.2"
+val zioConfigVersion = "4.0.0-RC16"
 
 // ----- TOOL DEPENDENCIES ----- //
-
-val zioConfigDependencies = Seq(
-  "dev.zio" %% "zio-config" % zioConfigVersion,
-  "dev.zio" %% "zio-config-magnolia" % zioConfigVersion,
-  "dev.zio" %% "zio-config-typesafe" % zioConfigVersion
-)
-
-val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
-
-val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % "it,test")
-
-val jwtDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
-
-val scalaParserCombinatorsDependencies = Seq(
-  "org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion
-)
-
-val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVersion)
-
-val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
-
-val monovoreDeclineDependencies = Seq("com.monovore" %% "decline" % monovoreDeclineVersion)
-
-val googleCloudStorageDependencies = Seq("com.google.cloud" % "google-cloud-storage" % googleCloudStorageVersion)
-
-val testContainersScalaDependencies = Seq("com.dimafeng" %% "testcontainers-scala" % testContainersScalaVersion % Test)
 
 val dataScalaxyReaderTextDependencies = Seq(
   "com.clairvoyant.data.scalaxy" %% "text-reader" % dataScalaxyReaderTextVersion
@@ -139,7 +112,15 @@ val dataScalaxyWriterDependencies = Seq(
   "com.clairvoyant.data.scalaxy" %% "writer-gcp" % dataScalaxyWriterVersion
 ).map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
 
-val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion % Test)
+val googleCloudStorageDependencies = Seq("com.google.cloud" % "google-cloud-storage" % googleCloudStorageVersion)
+
+val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVersion)
+
+val jwtCoreDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
+
+val monovoreDeclineDependencies = Seq("com.monovore" %% "decline" % monovoreDeclineVersion)
+
+val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
 
 val s3MockDependencies = Seq(
   "io.findify" %% "s3mock" % s3MockVersion % "test,it"
@@ -147,25 +128,40 @@ val s3MockDependencies = Seq(
   .map(_.cross(CrossVersion.for3Use2_13))
   .map(_ excludeAll ("org.scala-lang.modules", "scala-xml"))
 
+val scalaParserCombinatorsDependencies = Seq(
+  "org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion
+)
+
+val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
+
+val testContainersScalaDependencies = Seq("com.dimafeng" %% "testcontainers-scala" % testContainersScalaVersion % Test)
+
+val wireMockDependencies = Seq("com.github.tomakehurst" % "wiremock-standalone" % wireMockVersion % "it,test")
+
+val zioConfigDependencies = Seq(
+  "dev.zio" %% "zio-config" % zioConfigVersion,
+  "dev.zio" %% "zio-config-magnolia" % zioConfigVersion,
+  "dev.zio" %% "zio-config-typesafe" % zioConfigVersion
+)
+
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerDependencies =
-  zioConfigDependencies ++
-    sttpDependencies ++
-    jwtDependencies ++
-    jsonPathDependencies ++
-    wireMockDependencies ++
-    odelayDependencies ++
-    monovoreDeclineDependencies ++
-    googleCloudStorageDependencies ++
-    testContainersScalaDependencies ++
-    dataScalaxyReaderTextDependencies ++
+  dataScalaxyReaderTextDependencies ++
     dataScalaxyTestUtilDependencies ++
     dataScalaxyTransformerDependencies ++
     dataScalaxyWriterDependencies ++
+    googleCloudStorageDependencies ++
+    jsonPathDependencies ++
+    jwtCoreDependencies ++
+    monovoreDeclineDependencies ++
+    odelayDependencies ++
+    s3MockDependencies ++
     scalaParserCombinatorsDependencies ++
-    scalaTestDependencies ++
-    s3MockDependencies
+    sttpDependencies ++
+    testContainersScalaDependencies ++
+    wireMockDependencies ++
+    zioConfigDependencies
 
 // ----- PROJECTS ----- //
 
@@ -177,6 +173,6 @@ lazy val restonomer = (project in file("."))
     IntegrationTest / parallelExecution := false,
     Defaults.itSettings,
     scalafixConfigSettings(IntegrationTest),
-    assembly / mainClass := Some("com.clairvoyant.restonomer.core.app.RestonomerApp")
+    assembly / mainClass := Some("com.clairvoyant.restonomer.app.RestonomerApp")
   )
   .enablePlugins(AssemblyPlugin)

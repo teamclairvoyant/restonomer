@@ -1,7 +1,7 @@
 package com.clairvoyant.restonomer.retry
 
 import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
-import com.clairvoyant.restonomer.core.exception.RestonomerException
+import com.clairvoyant.restonomer.exception.RestonomerException
 
 class RestonomerRetryIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
