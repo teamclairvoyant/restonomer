@@ -28,18 +28,22 @@ ThisBuild / publishTo := Some("Restonomer Github Repo" at "https://maven.pkg.git
 
 // ----- ASSEMBLY MERGE STRATEGY ----- //
 
+val mergeStrategyLastFiles = Seq(
+  "io.netty.versions.properties",
+  "reflection-config.json",
+  "native-image.properties",
+  "module-info.class",
+  "UnusedStubClass.class"
+)
+
+val mergeStrategyConcatFiles = Seq(
+  "public-suffix-list.txt"
+)
+
 ThisBuild / assemblyMergeStrategy := {
-  case PathList(ps @ _*)
-      if (ps.last endsWith "io.netty.versions.properties")
-        || (ps.last endsWith "reflection-config.json")
-        || (ps.last endsWith "native-image.properties")
-        || (ps.last endsWith "module-info.class")
-        || (ps.last endsWith "UnusedStubClass.class") =>
-    MergeStrategy.last
-  case PathList(ps @ _*) if ps.last endsWith "public-suffix-list.txt" => MergeStrategy.concat
-  case x =>
-    val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
-    oldStrategy(x)
+  case PathList(ps @ _*) if mergeStrategyLastFiles.exists(ps.last endsWith _)   => MergeStrategy.last
+  case PathList(ps @ _*) if mergeStrategyConcatFiles.exists(ps.last endsWith _) => MergeStrategy.concat
+  case x => (ThisBuild / assemblyMergeStrategy).value(x)
 }
 
 // ----- SCALA COMPILER OPTIONS ----- //
@@ -95,7 +99,7 @@ val zioConfigVersion = "4.0.0-RC16"
 
 val dataScalaxyReaderTextDependencies = Seq(
   "com.clairvoyant.data.scalaxy" %% "text-reader" % dataScalaxyReaderTextVersion
-).map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
+)
 
 val dataScalaxyTestUtilDependencies = Seq(
   "com.clairvoyant.data.scalaxy" %% "test-util" % dataScalaxyTestUtilVersion % "it,test"
@@ -103,13 +107,13 @@ val dataScalaxyTestUtilDependencies = Seq(
 
 val dataScalaxyTransformerDependencies = Seq(
   "com.clairvoyant.data.scalaxy" %% "transformer" % dataScalaxyTestUtilVersion
-).map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
+)
 
 val dataScalaxyWriterDependencies = Seq(
   "com.clairvoyant.data.scalaxy" %% "writer-local-file-system" % dataScalaxyWriterVersion,
   "com.clairvoyant.data.scalaxy" %% "writer-aws" % dataScalaxyWriterVersion,
   "com.clairvoyant.data.scalaxy" %% "writer-gcp" % dataScalaxyWriterVersion
-).map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
+)
 
 val googleCloudStorageDependencies = Seq("com.google.cloud" % "google-cloud-storage" % googleCloudStorageVersion)
 
@@ -160,7 +164,9 @@ val restonomerDependencies =
 lazy val restonomer = (project in file("."))
   .configs(IntegrationTest)
   .settings(
-    libraryDependencies ++= restonomerDependencies,
+    libraryDependencies ++= restonomerDependencies.map(
+      _ excludeAll ("org.scala-lang.modules", "scala-collection-compat")
+    ),
     Test / parallelExecution := false,
     IntegrationTest / parallelExecution := false,
     Defaults.itSettings,
