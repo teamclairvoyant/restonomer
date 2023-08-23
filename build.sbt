@@ -18,7 +18,7 @@ ThisBuild / resolvers ++= Seq(
 
 // ----- PACKAGE SETTINGS ----- //
 
-ThisBuild / organization := "com.clairvoyant.restonomer"
+ThisBuild / organization := "com.clairvoyant"
 
 ThisBuild / version := "2.2.0"
 
@@ -82,7 +82,6 @@ val wireMockVersion = "2.27.2"
 val jwtCoreVersion = "9.4.3"
 val jsonPathVersion = "2.8.0"
 val odelayVersion = "0.4.0"
-val gcsConnectorVersion = "hadoop3-2.2.17"
 val monovoreDeclineVersion = "2.4.1"
 val googleCloudStorageVersion = "2.26.1"
 val testContainersScalaVersion = "0.40.17"
@@ -90,7 +89,6 @@ val dataScalaxyReaderTextVersion = "1.0.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
 val dataScalaxyTransformerVersion = "1.0.0"
 val dataScalaxyWriterVersion = "1.0.0"
-val sparkVersion = "3.4.1"
 val scalaParserCombinatorsVersion = "2.3.0"
 val scalaTestVersion = "3.2.15"
 val s3MockVersion = "0.2.6"
@@ -113,23 +111,9 @@ val scalaParserCombinatorsDependencies = Seq(
   "org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion
 )
 
-val sparkDependencies = Seq(
-  "org.apache.spark" %% "spark-core" % sparkVersion,
-  "org.apache.spark" %% "spark-sql" % sparkVersion
-)
-  .map(_ excludeAll ("org.scala-lang.modules", "scala-xml"))
-  .map(_.cross(CrossVersion.for3Use2_13))
-  .map(_ % "provided")
-
-val sparkHadoopCloudDependencies = Seq("org.apache.spark" %% "spark-hadoop-cloud" % sparkVersion)
-  .map(_ exclude ("org.apache.hadoop", "hadoop-client-runtime"))
-  .map(_.cross(CrossVersion.for3Use2_13))
-
 val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVersion)
 
 val odelayDependencies = Seq("com.softwaremill.odelay" %% "odelay-core" % odelayVersion)
-
-val gcsConnectorDependencies = Seq("com.google.cloud.bigdataoss" % "gcs-connector" % gcsConnectorVersion)
 
 val monovoreDeclineDependencies = Seq("com.monovore" %% "decline" % monovoreDeclineVersion)
 
@@ -151,7 +135,8 @@ val dataScalaxyTransformerDependencies = Seq(
 
 val dataScalaxyWriterDependencies = Seq(
   "com.clairvoyant.data.scalaxy" %% "writer-local-file-system" % dataScalaxyWriterVersion,
-  "com.clairvoyant.data.scalaxy" %% "writer-aws" % dataScalaxyWriterVersion
+  "com.clairvoyant.data.scalaxy" %% "writer-aws" % dataScalaxyWriterVersion,
+  "com.clairvoyant.data.scalaxy" %% "writer-gcp" % dataScalaxyWriterVersion
 ).map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat"))
 
 val scalaTestDependencies = Seq("org.scalatest" %% "scalatest" % scalaTestVersion % Test)
@@ -164,14 +149,13 @@ val s3MockDependencies = Seq(
 
 // ----- MODULE DEPENDENCIES ----- //
 
-val restonomerCoreDependencies =
+val restonomerDependencies =
   zioConfigDependencies ++
     sttpDependencies ++
     jwtDependencies ++
     jsonPathDependencies ++
     wireMockDependencies ++
     odelayDependencies ++
-    gcsConnectorDependencies ++
     monovoreDeclineDependencies ++
     googleCloudStorageDependencies ++
     testContainersScalaDependencies ++
@@ -183,38 +167,16 @@ val restonomerCoreDependencies =
     scalaTestDependencies ++
     s3MockDependencies
 
-val restonomerSparkUtilsDependencies =
-  sparkDependencies ++
-    sparkHadoopCloudDependencies
-
 // ----- PROJECTS ----- //
 
 lazy val restonomer = (project in file("."))
-  .settings(
-    publish / skip := true,
-    publishLocal / skip := true,
-    addCommandAlias("run", "restonomer-core/run"),
-    addCommandAlias("assembly", "restonomer-core/assembly")
-  )
-  .aggregate(`restonomer-core`, `restonomer-spark-utils`)
-
-lazy val `restonomer-core` = project
   .configs(IntegrationTest)
   .settings(
-    libraryDependencies ++= restonomerCoreDependencies,
+    libraryDependencies ++= restonomerDependencies,
     Test / parallelExecution := false,
     IntegrationTest / parallelExecution := false,
     Defaults.itSettings,
     scalafixConfigSettings(IntegrationTest),
     assembly / mainClass := Some("com.clairvoyant.restonomer.core.app.RestonomerApp")
-  )
-  .dependsOn(`restonomer-spark-utils` % "compile->compile;test->test;it->it;test->it")
-  .enablePlugins(AssemblyPlugin)
-
-lazy val `restonomer-spark-utils` = project
-  .settings(
-    libraryDependencies ++= restonomerSparkUtilsDependencies,
-    publish / skip := true,
-    publishLocal / skip := true
   )
   .enablePlugins(AssemblyPlugin)

@@ -8,7 +8,6 @@ import com.clairvoyant.restonomer.core.http.*
 import com.clairvoyant.restonomer.core.model.*
 import com.clairvoyant.restonomer.core.persistence.*
 import com.clairvoyant.restonomer.core.sttpBackend
-import com.clairvoyant.restonomer.spark.utils.writer.*
 import com.jayway.jsonpath.JsonPath
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
