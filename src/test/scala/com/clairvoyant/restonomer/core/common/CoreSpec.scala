@@ -7,7 +7,7 @@ import sttp.model.Method
 
 trait CoreSpec extends AnyFlatSpec with Matchers {
 
-  val resourcesPath = "restonomer-core/src/test/resources"
+  val resourcesPath = "src/test/resources"
   val url = "/test_url"
   val uri = s"http://localhost:8080$url"
 
