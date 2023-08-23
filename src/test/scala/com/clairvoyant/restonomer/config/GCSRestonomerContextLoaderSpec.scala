@@ -47,7 +47,7 @@ class GCSRestonomerContextLoaderSpec extends CoreSpec with GCSMockSpec {
                             |    persistence = {
                             |      type = "LocalFileSystem"
                             |      file-format = {
-                            |         type = "ParquetFileFormat"
+                            |        type = "ParquetFileFormat"
                             |      }
                             |      file-path = "/tmp/authentication/api_key_authentication"
                             |    }
