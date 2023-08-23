@@ -90,6 +90,7 @@ val jwtCoreVersion = "9.4.3"
 val monovoreDeclineVersion = "2.4.1"
 val odelayVersion = "0.4.0"
 val scalaParserCombinatorsVersion = "2.3.0"
+val scalaXmlVersion = "2.1.0"
 val sttpVersion = "3.9.0"
 val testContainersScalaVersion = "0.40.17"
 val wireMockVersion = "2.27.2"
@@ -129,6 +130,8 @@ val scalaParserCombinatorsDependencies = Seq(
   "org.scala-lang.modules" %% "scala-parser-combinators" % scalaParserCombinatorsVersion
 )
 
+val scalaXmlDependencies = Seq("org.scala-lang.modules" %% "scala-xml" % scalaXmlVersion)
+
 val sttpDependencies = Seq("com.softwaremill.sttp.client3" %% "core" % sttpVersion)
 
 val testContainersScalaDependencies = Seq("com.dimafeng" %% "testcontainers-scala" % testContainersScalaVersion % Test)
@@ -154,6 +157,7 @@ val restonomerDependencies =
     monovoreDeclineDependencies ++
     odelayDependencies ++
     scalaParserCombinatorsDependencies ++
+    scalaXmlDependencies ++
     sttpDependencies ++
     testContainersScalaDependencies ++
     wireMockDependencies ++
