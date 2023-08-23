@@ -3,7 +3,7 @@
 * Import the `RestonomerContext` class:
 
   ```scala
-  import com.clairvoyant.restonomer.core.app.RestonomerContext
+  import com.clairvoyant.restonomer.app.RestonomerContext
   ```
 
 * Create `RestonomerContext` instance:
