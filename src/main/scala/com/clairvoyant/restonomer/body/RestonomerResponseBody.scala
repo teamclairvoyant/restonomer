@@ -1,19 +1,18 @@
-package com.clairvoyant.restonomer.model
+package com.clairvoyant.restonomer.body
 
 import com.clairvoyant.data.scalaxy.reader.text.TextToDataFrameReader
 import com.clairvoyant.data.scalaxy.reader.text.formats.*
 import com.clairvoyant.data.scalaxy.reader.text.instances.*
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import zio.config.derivation.nameWithLabel
+import zio.config.derivation.*
 
 @nameWithLabel
-sealed trait DataResponseBodyConfig:
-
+sealed trait RestonomerResponseBody:
   def read(restonomerResponseBody: Seq[String])(using sparkSession: SparkSession): DataFrame
 
 case class Text(
     format: TextFormat
-) extends DataResponseBodyConfig:
+) extends RestonomerResponseBody:
 
   override def read(restonomerResponseBody: Seq[String])(using sparkSession: SparkSession): DataFrame =
     format match {
