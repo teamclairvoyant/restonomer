@@ -11,29 +11,35 @@ sealed trait RestonomerResponseBody:
   def read(restonomerResponseBody: Seq[String])(using sparkSession: SparkSession): DataFrame
 
 case class Text(
-    format: TextFormat
+    textFormat: TextFormat
 ) extends RestonomerResponseBody:
 
   override def read(restonomerResponseBody: Seq[String])(using sparkSession: SparkSession): DataFrame =
-    format match {
+    textFormat match {
       case csvTextFormat: CSVTextFormat =>
         TextToDataFrameReader
           .read[CSVTextFormat](
             text = restonomerResponseBody,
-            textFormat = csvTextFormat
+            textFormat = csvTextFormat,
+            originalSchema = None,
+            adaptSchemaColumns = identity
           )
 
       case jsonTextFormat: JSONTextFormat =>
         TextToDataFrameReader
           .read[JSONTextFormat](
             text = restonomerResponseBody,
-            textFormat = jsonTextFormat
+            textFormat = jsonTextFormat,
+            originalSchema = None,
+            adaptSchemaColumns = identity
           )
 
       case xmlTextFormat: XMLTextFormat =>
         TextToDataFrameReader
           .read[XMLTextFormat](
             text = restonomerResponseBody,
-            textFormat = xmlTextFormat
+            textFormat = xmlTextFormat,
+            originalSchema = None,
+            adaptSchemaColumns = identity
           )
     }

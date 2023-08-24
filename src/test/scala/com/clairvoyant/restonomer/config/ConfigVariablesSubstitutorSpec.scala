@@ -25,8 +25,8 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
       |    persistence = {
       |      type = "LocalFileSystem"
       |      file-format = {
-        type = "JSONFileFormat"
-      }
+      |         type = "JSONFileFormat"
+      |      }
       |      file-path = "/tmp"
       |    }
       |  }
@@ -56,8 +56,8 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    persistence = {
           |      type = "LocalFileSystem"
           |      file-format = {
-        type = "JSONFileFormat"
-      }
+          |         type = "JSONFileFormat"
+          |      }
           |      file-path = "/tmp"
           |    }
           |  }
@@ -95,8 +95,8 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    persistence = {
           |      type = "LocalFileSystem"
           |      file-format = {
-        type = "JSONFileFormat"
-      }
+          |         type = "JSONFileFormat"
+          |      }
           |      file-path = "/tmp"
           |    }
           |  }
@@ -134,8 +134,8 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    persistence = {
           |      type = "LocalFileSystem"
           |      file-format = {
-        type = "JSONFileFormat"
-      }
+          |         type = "JSONFileFormat"
+          |      }
           |      file-path = "/tmp"
           |    }
           |  }
@@ -173,8 +173,8 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    persistence = {
           |      type = "LocalFileSystem"
           |      file-format = {
-        type = "JSONFileFormat"
-      }
+          |         type = "JSONFileFormat"
+          |      }
           |      file-path = "/tmp"
           |    }
           |  }
@@ -213,8 +213,8 @@ class ConfigVariablesSubstitutorSpec extends CoreSpec {
           |    persistence = {
           |      type = "LocalFileSystem"
           |      file-format = {
-        type = "JSONFileFormat"
-      }
+          |         type = "JSONFileFormat"
+          |      }
           |      file-path = "/tmp"
           |    }
           |  }
