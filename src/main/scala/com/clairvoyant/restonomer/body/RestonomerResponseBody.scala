@@ -4,7 +4,7 @@ import com.clairvoyant.data.scalaxy.reader.text.TextToDataFrameReader
 import com.clairvoyant.data.scalaxy.reader.text.formats.*
 import com.clairvoyant.data.scalaxy.reader.text.instances.*
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import zio.config.derivation.*
+import zio.config.derivation.nameWithLabel
 
 @nameWithLabel
 sealed trait RestonomerResponseBody:

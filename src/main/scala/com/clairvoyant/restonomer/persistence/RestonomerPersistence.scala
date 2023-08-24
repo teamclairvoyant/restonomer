@@ -11,7 +11,7 @@ import com.clairvoyant.data.scalaxy.writer.local.file.formats.{CSVFileFormat as 
 import com.clairvoyant.data.scalaxy.writer.local.file.instances.*
 import org.apache.hadoop.conf.Configuration
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
-import zio.config.derivation.*
+import zio.config.derivation.nameWithLabel
 
 import scala.util.Using
 
