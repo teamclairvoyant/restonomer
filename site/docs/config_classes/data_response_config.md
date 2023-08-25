@@ -15,8 +15,11 @@ The response configurations are provided in the checkpoint file in the below man
 ```hocon
 data-response = {
   body = {
-    type = "JSON"
-  }
+      type = "Text"
+      text-format = {
+        type = "JSONTextFormat"
+      }
+    }
 
   transformations = [
     {
