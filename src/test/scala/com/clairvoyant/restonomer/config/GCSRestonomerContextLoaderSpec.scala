@@ -41,7 +41,10 @@ class GCSRestonomerContextLoaderSpec extends CoreSpec with GCSMockSpec {
                             |
                             |  data-response = {
                             |    body = {
-                            |      type = "JSON"
+                            |      type = "Text"
+                            |      text-format = {
+                            |        type = "JSONTextFormat"
+                            |      }
                             |    }
                             |
                             |    persistence = {
