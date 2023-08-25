@@ -10,7 +10,7 @@ ThisBuild / credentials += Credentials(
 // ----- RESOLVERS ----- //
 
 ThisBuild / resolvers ++= Seq(
-  "DataScalaxyReaderText Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-reader-text/",
+  "DataScalaxyReader Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-reader/",
   "DataScalaxyTestUtil Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-test-util/",
   "DataScalaxyTransformer Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-transformer/",
   "DataScalaxyWriter Repo" at "https://maven.pkg.github.com/teamclairvoyant/data-scalaxy-writer/"
@@ -80,7 +80,7 @@ ThisBuild / wartremoverErrors ++= Warts.allBut(
 
 // ----- TOOL VERSIONS ----- //
 
-val dataScalaxyReaderTextVersion = "1.0.0"
+val dataScalaxyReaderVersion = "1.0.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
 val dataScalaxyTransformerVersion = "1.0.0"
 val dataScalaxyWriterVersion = "1.0.0"
@@ -98,8 +98,8 @@ val zioConfigVersion = "4.0.0-RC16"
 
 // ----- TOOL DEPENDENCIES ----- //
 
-val dataScalaxyReaderTextDependencies = Seq(
-  "com.clairvoyant.data.scalaxy" %% "text-reader" % dataScalaxyReaderTextVersion
+val dataScalaxyReaderDependencies = Seq(
+  "com.clairvoyant.data.scalaxy" %% "reader-text" % dataScalaxyReaderVersion
 )
 
 val dataScalaxyTestUtilDependencies = Seq(
@@ -147,7 +147,7 @@ val zioConfigDependencies = Seq(
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerDependencies =
-  dataScalaxyReaderTextDependencies ++
+  dataScalaxyReaderDependencies ++
     dataScalaxyTestUtilDependencies ++
     dataScalaxyTransformerDependencies ++
     dataScalaxyWriterDependencies ++

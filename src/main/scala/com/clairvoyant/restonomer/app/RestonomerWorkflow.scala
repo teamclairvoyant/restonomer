@@ -63,7 +63,7 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
     )
 
     val restonomerResponseDF = dataRestonomerResponse.body
-      .map(checkpointConfig.data.dataResponse.body.convertResponseToDataFrame)
+      .map(checkpointConfig.data.dataResponse.body.read)
 
     val restonomerResponseTransformedDF = restonomerResponseDF.map { df =>
       checkpointConfig.data.dataResponse.transformations

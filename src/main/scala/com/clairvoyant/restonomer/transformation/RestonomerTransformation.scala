@@ -3,7 +3,7 @@ package com.clairvoyant.restonomer.transformation
 import com.clairvoyant.data.scalaxy.transformer.DataFrameTransformerImplicits.*
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.*
-import zio.config.derivation.*
+import zio.config.derivation.nameWithLabel
 
 @nameWithLabel
 sealed trait RestonomerTransformation {

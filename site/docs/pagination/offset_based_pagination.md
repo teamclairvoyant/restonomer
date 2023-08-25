@@ -70,8 +70,11 @@ data = {
 
   data-response = {
     body = {
-      type = "JSON"
-      data-column-name = "data"
+      type = "Text"
+      text-format = {
+        type = "JSONTextFormat"
+        data-column-name = "data"
+      }
     }
 
     pagination = {
