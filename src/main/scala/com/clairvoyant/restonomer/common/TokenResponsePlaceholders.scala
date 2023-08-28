@@ -1,5 +1,6 @@
 package com.clairvoyant.restonomer.common
 
+import cats.syntax.eq.*
 import com.clairvoyant.restonomer.exception.RestonomerException
 
 enum TokenResponsePlaceholders {
@@ -16,6 +17,6 @@ object TokenResponsePlaceholders {
   }
 
   private def isValidTokenResponsePlaceholder(tokenResponsePlaceholder: String): Boolean =
-    values.exists(_.toString == tokenResponsePlaceholder)
+    values.exists(_.toString === tokenResponsePlaceholder)
 
 }

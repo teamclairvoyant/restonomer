@@ -1,5 +1,6 @@
 package com.clairvoyant.restonomer.common
 
+import cats.syntax.eq.*
 import com.clairvoyant.restonomer.exception.RestonomerException
 
 enum APIKeyPlaceholders {
@@ -14,6 +15,6 @@ object APIKeyPlaceholders {
     else
       throw new RestonomerException(s"The API Key placeholder: $apiKeyPlaceholder is not supported.")
 
-  def isValidAPIKeyPlaceholder(apiKeyPlaceholder: String): Boolean = values.exists(_.toString == apiKeyPlaceholder)
+  def isValidAPIKeyPlaceholder(apiKeyPlaceholder: String): Boolean = values.exists(_.toString === apiKeyPlaceholder)
 
 }

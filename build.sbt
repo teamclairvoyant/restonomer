@@ -80,6 +80,7 @@ ThisBuild / wartremoverErrors ++= Warts.allBut(
 
 // ----- TOOL VERSIONS ----- //
 
+val catsVersion = "2.10.0"
 val dataScalaxyReaderVersion = "1.0.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
 val dataScalaxyTransformerVersion = "1.0.0"
@@ -97,6 +98,10 @@ val wireMockVersion = "2.27.2"
 val zioConfigVersion = "4.0.0-RC16"
 
 // ----- TOOL DEPENDENCIES ----- //
+
+val catsDependencies = Seq(
+  "org.typelevel" %% "cats-core" % catsVersion
+)
 
 val dataScalaxyReaderDependencies = Seq(
   "com.clairvoyant.data.scalaxy" %% "reader-text" % dataScalaxyReaderVersion
@@ -147,7 +152,8 @@ val zioConfigDependencies = Seq(
 // ----- MODULE DEPENDENCIES ----- //
 
 val restonomerDependencies =
-  dataScalaxyReaderDependencies ++
+  catsDependencies ++
+    dataScalaxyReaderDependencies ++
     dataScalaxyTestUtilDependencies ++
     dataScalaxyTransformerDependencies ++
     dataScalaxyWriterDependencies ++

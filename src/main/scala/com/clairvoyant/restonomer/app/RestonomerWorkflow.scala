@@ -1,5 +1,6 @@
 package com.clairvoyant.restonomer.app
 
+import cats.syntax.eq.*
 import com.clairvoyant.restonomer.common.TokenResponsePlaceholders
 import com.clairvoyant.restonomer.common.TokenResponsePlaceholders.*
 import com.clairvoyant.restonomer.exception.RestonomerException
@@ -43,7 +44,7 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
           case ResponseHeaders =>
             (tokenName: String) =>
               tokenHttpResponse.headers
-                .find(_.name == tokenName) match {
+                .find(_.name === tokenName) match {
                 case Some(header) => header.value
                 case None =>
                   throw new RestonomerException(s"Could not find the value of $tokenName in the token response.")

@@ -1,5 +1,6 @@
 package com.clairvoyant.restonomer.http
 
+import cats.syntax.eq.*
 import com.clairvoyant.restonomer.exception.RestonomerException
 import com.clairvoyant.restonomer.model.RetryConfig
 import com.clairvoyant.restonomer.pagination.RestonomerPagination
@@ -136,7 +137,7 @@ object RestonomerResponse {
   ): Future[T] = {
     val retryAfterInSeconds =
       headers
-        .find(_.name.toLowerCase == "retry-after")
+        .find(_.name.toLowerCase === "retry-after")
         .map(_.value.toInt)
         .getOrElse(sleepTimeInSeconds)
         .seconds
