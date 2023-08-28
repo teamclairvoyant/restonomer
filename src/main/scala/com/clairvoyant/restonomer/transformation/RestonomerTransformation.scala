@@ -119,6 +119,13 @@ case class CastNestedColumn(
 
 }
 
+case class ConvertArrayOfStructColumnsToArrayOfString() extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.convertArrayOfStructToArrayOfString
+
+}
+
 case class ConvertColumnToJson(
     columnName: String
 ) extends RestonomerTransformation {

@@ -1,0 +1,9 @@
+{
+    "request": {
+      "url": "/convert-array-of-struct-to-array-of-string-transformation"
+    },
+    "response": {
+      "status": 200,
+      "bodyFileName": "mocked_convert_array_of_struct_to_array_of_string_transformation_response.json"
+    }
+}
