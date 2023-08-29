@@ -2,7 +2,7 @@ package com.clairvoyant.restonomer.transformation
 
 import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
-class ConvertArrayOfStructColumnsToArrayOfStringTransformationIntegrationTest
+class ConvertArrayOfStructToArrayOfJSONStringTransformationIntegrationTest
     extends IntegrationTestDependencies
     with MockFileSystemPersistence {
 
