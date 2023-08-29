@@ -3,7 +3,7 @@ package com.clairvoyant.restonomer.transformation
 import com.clairvoyant.data.scalaxy.test.util.matchers.DataFrameMatcher
 import com.clairvoyant.data.scalaxy.test.util.readers.DataFrameReader
 
-class ConvertArrayOfStructColumnsToArrayOfStringTransformationSpec extends DataFrameReader with DataFrameMatcher {
+class ConvertArrayOfStructToArrayOfJSONStringTransformationSpec extends DataFrameReader with DataFrameMatcher {
 
   val restonomerResponseDF = readJSONFromText(
     """
@@ -23,7 +23,7 @@ class ConvertArrayOfStructColumnsToArrayOfStringTransformationSpec extends DataF
   )
 
   "transform()" should "convert all columns of array of struct type to array of string type" in {
-    val restonomerTransformation = ConvertArrayOfStructColumnsToArrayOfString()
+    val restonomerTransformation = ConvertArrayOfStructToArrayOfJSONString()
 
     val expectedRestonomerResponseTransformedDF = readJSONFromText(
       """

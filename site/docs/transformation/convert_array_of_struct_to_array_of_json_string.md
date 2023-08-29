@@ -1,6 +1,6 @@
-# ConvertArrayOfStructColumnsToArrayOfString
+# ConvertArrayOfStructToArrayOfJSONString
 
-It lets the user convert columns of array of struct type to array of string type.
+It lets the user convert columns of array of struct type to array of json string type.
 
 For example, consider we have below restonomer response in json:
 
@@ -21,11 +21,11 @@ For example, consider we have below restonomer response in json:
 
 Now, suppose the requirement is to transform `col_A` to array of json string.
 
-Then, user can configure the `ConvertArrayOfStructColumnsToArrayOfString` transformation in the below manner:
+Then, user can configure the `ConvertArrayOfStructToArrayOfJSONString` transformation in the below manner:
 
 ```hocon
 {
-  type = "ConvertArrayOfStructColumnsToArrayOfString"
+  type = "ConvertArrayOfStructToArrayOfJSONString"
 }
 ```
 
