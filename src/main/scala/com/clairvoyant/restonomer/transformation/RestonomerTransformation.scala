@@ -223,6 +223,15 @@ case class SelectColumns(
 
 }
 
+case class SelectColumnsWithExpressions(
+    columnExpressions: List[String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.selectExpr(columnExpressions*)
+
+}
+
 case class SplitColumn(
     fromColumn: String,
     delimiter: String,

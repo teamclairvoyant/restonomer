@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/select-columns-with-expressions-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_select_columns_with_expressions_transformation_response.json"
+  }
+}

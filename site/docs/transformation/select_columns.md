@@ -31,7 +31,7 @@ Then, user can configure the `SelectColumns` transformation in the below manner:
 
 ```hocon
 {
-  type = "select-columns"
+  type = "SelectColumns"
   column-names= ["col_B", "col_C"]
   }
 ```
