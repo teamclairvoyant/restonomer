@@ -6,9 +6,9 @@ class SelectColumnsTransformationIntegrationTest extends IntegrationTestDependen
 
   override val mappingsDirectory: String = "transformation"
 
-  it should "select the mentioned columns in the list from the restonomer response dataframe" in {
-    runCheckpoint(checkpointFileName = "checkpoint_select_columns_transformation.conf")
-    outputDF should matchExpectedDataFrame("expected_select_columns_transformation.json")
+  it should "select columns as per provided expressions" in {
+    runCheckpoint(checkpointFileName = "checkpoint_select_columns_with_expressions_transformation.conf")
+    outputDF should matchExpectedDataFrame("expected_select_columns_with_expressions_transformation.json")
   }
 
 }
