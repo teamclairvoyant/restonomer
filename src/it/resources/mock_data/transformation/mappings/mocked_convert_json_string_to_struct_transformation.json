@@ -1,0 +1,9 @@
+{
+    "request": {
+      "url": "/convert-json-string-to-struct-transformation"
+    },
+    "response": {
+      "status": 200,
+      "bodyFileName": "mocked_convert_json_string_to_struct_transformation_response.json"
+    }
+}

@@ -1,4 +1,5 @@
 # Restonomer
+[![Scala Steward badge](https://img.shields.io/badge/Scala_Steward-helping-blue.svg?style=flat&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAMAAAARSr4IAAAAVFBMVEUAAACHjojlOy5NWlrKzcYRKjGFjIbp293YycuLa3pYY2LSqql4f3pCUFTgSjNodYRmcXUsPD/NTTbjRS+2jomhgnzNc223cGvZS0HaSD0XLjbaSjElhIr+AAAAAXRSTlMAQObYZgAAAHlJREFUCNdNyosOwyAIhWHAQS1Vt7a77/3fcxxdmv0xwmckutAR1nkm4ggbyEcg/wWmlGLDAA3oL50xi6fk5ffZ3E2E3QfZDCcCN2YtbEWZt+Drc6u6rlqv7Uk0LdKqqr5rk2UCRXOk0vmQKGfc94nOJyQjouF9H/wCc9gECEYfONoAAAAASUVORK5CYII=)](https://scala-steward.org)
 
 Restonomer has been designed with a clear focus on solving the various data retrieval issues while fetching huge datasets from REST APIs that include:
 
@@ -47,7 +48,7 @@ credentials += Credentials(
   "<github_token>"
 )
 
-libraryDependencies += "com.clairvoyant.restonomer" %% "restonomer-core" % "2.2.0"
+libraryDependencies += "com.clairvoyant" %% "restonomer" % "3.0.0"
 ```
 
 `<github_token>` is the Personal Access Token with the permission to read packages.
@@ -57,7 +58,7 @@ libraryDependencies += "com.clairvoyant.restonomer" %% "restonomer-core" % "2.2.
 * Import the `RestonomerContext` class:
 
   ```scala
-  import com.clairvoyant.restonomer.core.app.RestonomerContext
+  import com.clairvoyant.restonomer.app.RestonomerContext
   ```
 
 * Create `RestonomerContext` instance:
@@ -84,4 +85,4 @@ libraryDependencies += "com.clairvoyant.restonomer" %% "restonomer-core" % "2.2.
 You can find the documentation on how to use Restonomer and all of its features along with well described 
 examples here:
 
-[Restonomer Usage Guide](https://teamclairvoyant.github.io/restonomer/)
+[Restonomer Usage Guide](https://teamclairvoyant.github.io/restonomer/docs/intro)
