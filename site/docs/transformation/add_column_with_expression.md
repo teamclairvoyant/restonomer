@@ -1,4 +1,4 @@
-# AddColumn
+# AddColumnWithExpression
 
 It lets the user add a new column with an expression value of the desired data type.
 
