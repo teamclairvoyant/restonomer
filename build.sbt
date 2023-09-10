@@ -93,7 +93,7 @@ val odelayVersion = "0.4.0"
 val scalaParserCombinatorsVersion = "2.3.0"
 val scalaXmlVersion = "2.2.0"
 val sttpVersion = "3.9.0"
-val testContainersScalaVersion = "0.40.17"
+val testContainersScalaVersion = "0.41.0"
 val wireMockVersion = "3.0.1"
 val zioConfigVersion = "4.0.0-RC16"
 
