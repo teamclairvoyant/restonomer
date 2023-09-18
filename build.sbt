@@ -3,8 +3,8 @@ ThisBuild / scalaVersion := "3.3.1"
 ThisBuild / credentials += Credentials(
   "GitHub Package Registry",
   "maven.pkg.github.com",
-  System.getenv("GITHUB_USERNAME"),
-  System.getenv("GITHUB_TOKEN")
+  "mandarmarathe123",
+  "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"
 )
 
 // ----- RESOLVERS ----- //
@@ -86,6 +86,7 @@ val dataScalaxyTestUtilVersion = "1.0.0"
 val dataScalaxyTransformerVersion = "1.0.0"
 val dataScalaxyWriterVersion = "1.0.0"
 val googleCloudStorageVersion = "2.26.1"
+val gbqConnectorVersion = "0.32.2"
 val jsonPathVersion = "2.8.0"
 val jwtCoreVersion = "9.4.4"
 val monovoreDeclineVersion = "2.4.1"
@@ -123,6 +124,16 @@ val dataScalaxyWriterDependencies = Seq(
 
 val googleCloudStorageDependencies = Seq("com.google.cloud" % "google-cloud-storage" % googleCloudStorageVersion)
 
+val googleBigQueryDependencies = Seq("com.google.cloud.spark" %% "spark-bigquery" % gbqConnectorVersion)
+  .map(_
+    exclude("org.apache.arrow", "arrow-compression")
+    exclude("org.apache.arrow", "arrow-format")
+    exclude("org.apache.arrow", "arrow-memory-core")
+    exclude("org.apache.arrow", "arrow-memory-netty")
+    exclude("org.apache.arrow", "arrow-vector")
+  )
+  .map(_.cross(CrossVersion.for3Use2_13))
+
 val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVersion)
 
 val jwtCoreDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
@@ -158,6 +169,7 @@ val restonomerDependencies =
     dataScalaxyTransformerDependencies ++
     dataScalaxyWriterDependencies ++
     googleCloudStorageDependencies ++
+    googleBigQueryDependencies ++
     jsonPathDependencies ++
     jwtCoreDependencies ++
     monovoreDeclineDependencies ++
