@@ -132,6 +132,17 @@ case class ChangeColumnCase(
 
 }
 
+case class ConcatColumns(
+    newColumnName: String,
+    columnsToBeConcatenated: List[String],
+    separator: String = ""
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame) =
+    restonomerResponseDF.withColumn(newColumnName, concat_ws(separator, columnsToBeConcatenated.map(col)*))
+
+}
+
 case class ConvertArrayOfStructToArrayOfJSONString() extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
