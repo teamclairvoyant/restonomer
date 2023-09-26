@@ -132,6 +132,16 @@ case class ChangeColumnCase(
 
 }
 
+case class CoalesceColumns(
+    newColumnName: String,
+    columnsToCoalesce: List[String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.withColumn(newColumnName, coalesce(columnsToCoalesce.map(col)*))
+
+}
+
 case class ConcatColumns(
     newColumnName: String,
     columnsToBeConcatenated: List[String],
