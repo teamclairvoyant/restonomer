@@ -3,10 +3,10 @@ package com.clairvoyant.restonomer.persistence
 import com.clairvoyant.data.scalaxy.writer.aws.s3.DataFrameToS3BucketWriter
 import com.clairvoyant.data.scalaxy.writer.aws.s3.formats.{CSVFileFormat as S3CSVFileFormat, FileFormat as S3FileFormat, JSONFileFormat as S3JSONFileFormat, ParquetFileFormat as S3ParquetFileFormat, XMLFileFormat as S3XMLFileFormat}
 import com.clairvoyant.data.scalaxy.writer.aws.s3.instances.*
-import com.clairvoyant.data.scalaxy.writer.gcp.gcs.DataFrameToGCSBucketWriter
 import com.clairvoyant.data.scalaxy.writer.gcp.bigquery.DataFrameToBigQueryWriter
-import com.clairvoyant.data.scalaxy.writer.gcp.bigquery.types.{BigQueryWriterType, DirectBigQueryWriterType, IndirectBigQueryWriterType}
-import com.clairvoyant.data.scalaxy.writer.gcp.bigquery.instances.{DataFrameToDirectBQWriter, DataFrameToIndirectBQWriter}
+import com.clairvoyant.data.scalaxy.writer.gcp.bigquery.instances.*
+import com.clairvoyant.data.scalaxy.writer.gcp.bigquery.types.*
+import com.clairvoyant.data.scalaxy.writer.gcp.gcs.DataFrameToGCSBucketWriter
 import com.clairvoyant.data.scalaxy.writer.gcp.gcs.formats.{CSVFileFormat as GCSCSVFileFormat, FileFormat as GCSFileFormat, JSONFileFormat as GCSJSONFileFormat, ParquetFileFormat as GCSParquetFileFormat, XMLFileFormat as GCSXMLFileFormat}
 import com.clairvoyant.data.scalaxy.writer.gcp.gcs.instances.*
 import com.clairvoyant.data.scalaxy.writer.local.file.DataFrameToLocalFileSystemWriter
@@ -110,7 +110,7 @@ case class S3Bucket(
     }
 
 case class GCSBucket(
-    serviceAccountCredentialsFile: Option[String],
+    serviceAccountCredentialsFile: Option[String] = None,
     bucketName: String,
     fileFormat: GCSFileFormat,
     filePath: String,
@@ -166,17 +166,18 @@ case class GCSBucket(
     }
 
 case class BigQuery(
-    serviceAccountCredentialsFile: Option[String],
+    serviceAccountCredentialsFile: Option[String] = None,
     table: String,
     dataset: Option[String] = None,
     project: Option[String] = None,
     parentProject: Option[String] = None,
-    saveMode: String = SaveMode.Overwrite.name(),
+    saveMode: String = SaveMode.ErrorIfExists.name(),
     writerType: BigQueryWriterType
 ) extends RestonomerPersistence:
 
   override def persist(restonomerResponseDF: DataFrame)(using sparkSession: SparkSession): Unit =
-    val hadoopConfigurations: Configuration = sparkSession.sparkContext.hadoopConfiguration
+    val hadoopConfigurations = sparkSession.sparkContext.hadoopConfiguration
+
     if (serviceAccountCredentialsFile.isDefined) {
       hadoopConfigurations.set("fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem")
       hadoopConfigurations.set("google.cloud.auth.service.account.enable", "true")
@@ -187,7 +188,7 @@ case class BigQuery(
     }
 
     writerType match {
-      case directWriterType: DirectBigQueryWriterType =>
+      case directBiqQueryWriterType: DirectBigQueryWriterType =>
         DataFrameToBigQueryWriter
           .write[DirectBigQueryWriterType](
             dataFrame = restonomerResponseDF,
@@ -196,9 +197,10 @@ case class BigQuery(
             project = project,
             parentProject = parentProject,
             saveMode = SaveMode.valueOf(saveMode),
-            writerType = directWriterType
+            writerType = directBiqQueryWriterType
           )
-      case indirectWriterType: IndirectBigQueryWriterType =>
+
+      case indirectBigQueryWriterType: IndirectBigQueryWriterType =>
         DataFrameToBigQueryWriter
           .write[IndirectBigQueryWriterType](
             dataFrame = restonomerResponseDF,
@@ -207,6 +209,6 @@ case class BigQuery(
             project = project,
             parentProject = parentProject,
             saveMode = SaveMode.valueOf(saveMode),
-            writerType = indirectWriterType
+            writerType = indirectBigQueryWriterType
           )
     }

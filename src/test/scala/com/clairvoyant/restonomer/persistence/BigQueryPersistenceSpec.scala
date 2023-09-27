@@ -22,27 +22,28 @@ class BigQueryPersistenceSpec extends DataFrameReader with DataFrameMatcher with
       |""".stripMargin
   )
 
-  lazy val dataFrameToFileSystemWriterOutputDirPath = s"out_${System.currentTimeMillis()}"
+  "persist() - with indirect write" should "save the dataframe to the big query table" in {
+    val indirectBigQueryWriterType = IndirectBigQueryWriterType(
+      temporaryGcsBucket = "gs://innersource-restonomer/task-big-query"
+    )
 
-  "persist() - with Indirect format" should "save the df to the bq" in {
+    val bigQueryPersistence = BigQuery(
+      serviceAccountCredentialsFile = Some("/Users/mandar179178/Documents/playground-375318-f7d2dda86716.json"),
+      table = "restonomer.dummy_table_001",
+      writerType = indirectBigQueryWriterType
+    )
 
-      val bqPersistence = BigQuery(
-        serviceAccountCredentialsFile = Option("/Users/mandar179178/Documents/playground-375318-f7d2dda86716.json"),
-        table = "restonomer.dummy_table_001",
-        // project = Option("playground-375318"),
-        writerType = IndirectBigQueryWriterType(temporaryGcsBucket = "gs://innersource-restonomer/task-big-query")
-      )
-      bqPersistence.persist(restonomerResponseDF)
-    }
+    bigQueryPersistence.persist(restonomerResponseDF)
+  }
 
-  "persist() - with direct format" should "save the df to the bq" in {
-
-    val bqPersistence = BigQuery(
+  "persist() - with direct write" should "save the dataframe to the big query table" in {
+    val bigQueryPersistence = BigQuery(
       serviceAccountCredentialsFile = Option("/Users/mandar179178/Documents/playground-375318-f7d2dda86716.json"),
       table = "restonomer.dummy_table_001",
-      // project = Option("playground-375318"),
       writerType = DirectBigQueryWriterType()
     )
-    bqPersistence.persist(restonomerResponseDF)
+
+    bigQueryPersistence.persist(restonomerResponseDF)
   }
+
 }
