@@ -38,8 +38,8 @@ class BigQueryPersistenceSpec extends DataFrameReader with DataFrameMatcher with
 
   "persist() - with direct write" should "save the dataframe to the big query table" in {
     val bigQueryPersistence = BigQuery(
-      serviceAccountCredentialsFile = Option("/Users/mandar179178/Documents/playground-375318-f7d2dda86716.json"),
-      table = "restonomer.dummy_table_001",
+      serviceAccountCredentialsFile = Option("/Users/rahulbhatia/Downloads/playground-375318-f7d2dda86716.json"),
+      table = "playground-375318:restonomer.dummy_table_001",
       writerType = DirectBigQueryWriterType()
     )
 
