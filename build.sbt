@@ -92,6 +92,7 @@ val monovoreDeclineVersion = "2.4.1"
 val odelayVersion = "0.4.0"
 val scalaParserCombinatorsVersion = "2.3.0"
 val scalaXmlVersion = "2.2.0"
+val sparkMLLibVersion = "3.5.0"
 val sttpVersion = "3.9.0"
 val testContainersScalaVersion = "0.41.0"
 val wireMockVersion = "3.0.1"
@@ -123,7 +124,7 @@ val dataScalaxyWriterDependencies = Seq(
 
 val googleCloudStorageDependencies = Seq("com.google.cloud" % "google-cloud-storage" % googleCloudStorageVersion)
 
-val unnecessaryMLDependencies = Seq("org.apache.spark" %% "spark-mllib" % "3.5.0")
+val sparkMLLibDependencies = Seq("org.apache.spark" %% "spark-mllib" % sparkMLLibVersion)
   .map(_.cross(CrossVersion.for3Use2_13))
   .map(_.excludeAll("org.typelevel", "cats-kernel"))
 
@@ -162,13 +163,13 @@ val restonomerDependencies =
     dataScalaxyTransformerDependencies ++
     dataScalaxyWriterDependencies ++
     googleCloudStorageDependencies ++
-    unnecessaryMLDependencies ++
     jsonPathDependencies ++
     jwtCoreDependencies ++
     monovoreDeclineDependencies ++
     odelayDependencies ++
     scalaParserCombinatorsDependencies ++
     scalaXmlDependencies ++
+    sparkMLLibDependencies ++
     sttpDependencies ++
     testContainersScalaDependencies ++
     wireMockDependencies ++
