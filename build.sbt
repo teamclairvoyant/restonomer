@@ -123,6 +123,10 @@ val dataScalaxyWriterDependencies = Seq(
 
 val googleCloudStorageDependencies = Seq("com.google.cloud" % "google-cloud-storage" % googleCloudStorageVersion)
 
+val unnecessaryMLDependencies = Seq("org.apache.spark" %% "spark-mllib" % "3.5.0")
+  .map(_.cross(CrossVersion.for3Use2_13))
+  .map(_.excludeAll("org.typelevel", "cats-kernel"))
+
 val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVersion)
 
 val jwtCoreDependencies = Seq("com.github.jwt-scala" %% "jwt-core" % jwtCoreVersion)
@@ -158,6 +162,7 @@ val restonomerDependencies =
     dataScalaxyTransformerDependencies ++
     dataScalaxyWriterDependencies ++
     googleCloudStorageDependencies ++
+    unnecessaryMLDependencies ++
     jsonPathDependencies ++
     jwtCoreDependencies ++
     monovoreDeclineDependencies ++
