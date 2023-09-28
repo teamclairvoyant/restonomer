@@ -10,6 +10,7 @@ sealed trait RestonomerPagination {
   def getNextPageToken(responseBody: String): Option[(String, String)]
 
   def placeNextTokenInURL(uri: Uri, nextPageToken: (String, String)): Uri = uri.withParams(nextPageToken)
+
 }
 
 case class PageNumberWithTotalRecordsBasedPagination(
@@ -56,7 +57,7 @@ case class CursorBasedPagination(
 
   override def getNextPageToken(responseBody: String): Option[(String, String)] =
     Option(JsonPath.read[Any](responseBody, nextCursorAttribute)) match
-      case Some(value) => Some(cursorTokenName -> value.toString())
+      case Some(value) => Some(cursorTokenName -> value.toString)
       case None        => None
 
 }
@@ -84,13 +85,13 @@ case class OffsetBasedPagination(
 }
 
 case class NextPageURLBasedPagination(
-    nextURLAttribute: String
+    nextUrlAttribute: String
 ) extends RestonomerPagination {
 
   override def placeNextTokenInURL(uri: Uri, nextPageToken: (String, String)): Uri = uri.withWholePath(nextPageToken._2)
 
   override def getNextPageToken(responseBody: String): Option[(String, String)] =
-    Option(JsonPath.read[String](responseBody, nextURLAttribute)) match
+    Option(JsonPath.read[String](responseBody, nextUrlAttribute)) match
       case Some(value) => Some("nextURL" -> value)
       case None        => None
 

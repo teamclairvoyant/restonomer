@@ -20,7 +20,7 @@ class NextPageURLBasedPaginationSpec extends CoreSpec {
         |}
         |""".stripMargin
 
-    val pagination = NextPageURLBasedPagination(nextURLAttribute = "$.next")
+    val pagination = NextPageURLBasedPagination(nextUrlAttribute = "$.next")
 
     pagination.getNextPageToken(responseBody) shouldBe Some("nextURL" -> "/v1/affiliates/1")
   }
@@ -41,7 +41,7 @@ class NextPageURLBasedPaginationSpec extends CoreSpec {
         |}
         |""".stripMargin
 
-    val pagination = NextPageURLBasedPagination(nextURLAttribute = "$.next")
+    val pagination = NextPageURLBasedPagination(nextUrlAttribute = "$.next")
 
     pagination.getNextPageToken(responseBody) shouldBe None
   }
