@@ -1,0 +1,10 @@
+{
+    "request": {
+      "url": "/v1/affiliates/1"
+    },
+    "response": {
+      "status": 200,
+      "bodyFileName": "mocked_next_page_url_based_pagination_2_response.json"
+    }
+  }
+  
