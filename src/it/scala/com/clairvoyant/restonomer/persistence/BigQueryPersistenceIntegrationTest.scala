@@ -8,7 +8,6 @@ class BigQueryPersistenceIntegrationTest extends IntegrationTestDependencies wit
 
   it should "persist the restonomer response dataframe in the BQ table" in {
     runCheckpoint(checkpointFileName = "checkpoint_big_query_persistence.conf")
-    // readJSONFromFile(outputPath) should matchExpectedDataFrame("expected_local_file_system_persistence.json")
   }
 
 }

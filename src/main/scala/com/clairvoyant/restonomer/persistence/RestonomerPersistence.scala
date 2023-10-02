@@ -16,8 +16,6 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import zio.config.derivation.nameWithLabel
 
-import scala.util.Using
-
 @nameWithLabel
 sealed trait RestonomerPersistence:
   def persist(restonomerResponseDF: DataFrame)(using sparkSession: SparkSession): Unit
@@ -166,13 +164,13 @@ case class GCSBucket(
     }
 
 case class BigQuery(
+    writerType: BigQueryWriterType,
     serviceAccountCredentialsFile: Option[String] = None,
     table: String,
     dataset: Option[String] = None,
     project: Option[String] = None,
     parentProject: Option[String] = None,
-    saveMode: String = SaveMode.ErrorIfExists.name(),
-    writerType: BigQueryWriterType
+    saveMode: String = SaveMode.ErrorIfExists.name()
 ) extends RestonomerPersistence:
 
   override def persist(restonomerResponseDF: DataFrame)(using sparkSession: SparkSession): Unit =
@@ -188,7 +186,7 @@ case class BigQuery(
     }
 
     writerType match {
-      case directBiqQueryWriterType: DirectBigQueryWriterType =>
+      case directBigQueryWriterType: DirectBigQueryWriterType =>
         DataFrameToBigQueryWriter
           .write[DirectBigQueryWriterType](
             dataFrame = restonomerResponseDF,
@@ -197,7 +195,7 @@ case class BigQuery(
             project = project,
             parentProject = parentProject,
             saveMode = SaveMode.valueOf(saveMode),
-            writerType = directBiqQueryWriterType
+            writerType = directBigQueryWriterType
           )
 
       case indirectBigQueryWriterType: IndirectBigQueryWriterType =>

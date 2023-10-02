@@ -20,7 +20,7 @@ class BigQueryPersistenceSpec extends DataFrameReader with DataFrameMatcher with
 
   "persist() - with direct write" should "save the dataframe to the big query table" in {
     val bigQueryPersistence = BigQuery(
-      serviceAccountCredentialsFile = Option("/Users/rahulbhatia/Downloads/playground-375318-f7d2dda86716.json"),
+      serviceAccountCredentialsFile = Some("/Users/rahulbhatia/Downloads/playground-375318-f7d2dda86716.json"),
       table = "playground-375318:restonomer.dummy_table_001",
       writerType = DirectBigQueryWriterType()
     )
@@ -33,7 +33,7 @@ class BigQueryPersistenceSpec extends DataFrameReader with DataFrameMatcher with
       serviceAccountCredentialsFile = Some("/Users/rahulbhatia/Downloads/playground-375318-f7d2dda86716.json"),
       table = "playground-375318:restonomer.dummy_table_002",
       writerType = IndirectBigQueryWriterType(
-        temporaryGcsBucket = "gs://innersource-restonomer/task-big-query"
+        temporaryGcsBucket = "innersource-restonomer"
       )
     )
 
