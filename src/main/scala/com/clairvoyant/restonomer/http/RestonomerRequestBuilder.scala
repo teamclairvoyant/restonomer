@@ -36,8 +36,10 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
         .getOrElse(httpRequest)
     )
 
-  def withHeaders(headers: Map[String, String]): RestonomerRequestBuilder =
-    copy(httpRequest = httpRequest.headers(headers))
+  def withHeaders(headers: Map[String, String]) (using tokenFunction: Option[String => String]): RestonomerRequestBuilder =
+      copy(httpRequest = httpRequest.headers( tokenFunction
+            .map(f => headers.view.mapValues(TokenSubstitutor(f).substitute).toMap)
+            .getOrElse(headers)))
 
   def withBody(body: Option[RestonomerRequestBody] = None): RestonomerRequestBuilder =
     copy(httpRequest =
