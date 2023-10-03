@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/coalesce-columns-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_coalesce_columns_transformation_response.json"
+  }
+}
