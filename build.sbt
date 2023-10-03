@@ -84,7 +84,6 @@ val catsVersion = "2.10.0"
 val dataScalaxyReaderVersion = "1.0.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
 val dataScalaxyTransformerVersion = "1.0.0"
-val dataScalaxyWriterVersion = "1.0.0"
 val googleCloudStorageVersion = "2.27.1"
 val jsonPathVersion = "2.8.0"
 val jwtCoreVersion = "9.4.4"
@@ -96,6 +95,9 @@ val sparkMLLibVersion = "3.5.0"
 val sttpVersion = "3.9.0"
 val testContainersScalaVersion = "0.41.0"
 val wireMockVersion = "3.0.1"
+val writerAWSVersion = "1.0.0"
+val writerGCPVersion = "1.1.0"
+val writerLocalFileSystemVersion = "1.0.0"
 val zioConfigVersion = "4.0.0-RC16"
 
 // ----- TOOL DEPENDENCIES ----- //
@@ -117,9 +119,9 @@ val dataScalaxyTransformerDependencies = Seq(
 )
 
 val dataScalaxyWriterDependencies = Seq(
-  "com.clairvoyant.data.scalaxy" %% "writer-local-file-system" % dataScalaxyWriterVersion,
-  "com.clairvoyant.data.scalaxy" %% "writer-aws" % dataScalaxyWriterVersion,
-  "com.clairvoyant.data.scalaxy" %% "writer-gcp" % dataScalaxyWriterVersion
+  "com.clairvoyant.data.scalaxy" %% "writer-local-file-system" % writerLocalFileSystemVersion,
+  "com.clairvoyant.data.scalaxy" %% "writer-aws" % writerAWSVersion,
+  "com.clairvoyant.data.scalaxy" %% "writer-gcp" % writerGCPVersion
 )
 
 val googleCloudStorageDependencies = Seq("com.google.cloud" % "google-cloud-storage" % googleCloudStorageVersion)
