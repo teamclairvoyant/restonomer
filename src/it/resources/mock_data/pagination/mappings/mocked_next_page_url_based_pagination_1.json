@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/next-page-url-based-pagination"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_next_page_url_based_pagination_1_response.json"
+  }
+}

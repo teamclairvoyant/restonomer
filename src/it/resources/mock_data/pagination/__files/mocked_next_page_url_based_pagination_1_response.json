@@ -1,0 +1,11 @@
+{
+  "data": [
+    {
+      "id": 3296105,
+      "date": "2021-05-01T23:34:21+02:00",
+      "status": "Paid to affiliate",
+      "orderValue": 623.21
+    }
+  ],
+  "next": "/v1/affiliates/1"
+}
