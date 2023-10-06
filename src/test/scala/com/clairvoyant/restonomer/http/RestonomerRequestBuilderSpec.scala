@@ -40,12 +40,13 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
   }
 
   "withHeaders - with custom headers and token" should "be added to the request" in {
-    val headers = Map("header_key" -> "token[hv]")
     given tokenFunction: Option[String => String] = Some(x => x + "_test")
 
-    val restonomerRequestBuilder = RestonomerRequestBuilder(basicHttpRequest).withHeaders(headers)
-    val tokenHeader = Header("header_key", "hv_test")
-    restonomerRequestBuilder.httpRequest.headers.contains(tokenHeader) shouldBe true
+    val restonomerRequestBuilder = RestonomerRequestBuilder(basicHttpRequest).withHeaders(
+      Map("header_key" -> "token[hv]")
+    )
+
+    restonomerRequestBuilder.httpRequest.headers.contains(Header("header_key", "hv_test")) shouldBe true
   }
 
   "withBody - with custom text data body" should "be added to the request" in {

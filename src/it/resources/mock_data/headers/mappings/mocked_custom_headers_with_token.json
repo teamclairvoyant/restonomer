@@ -1,17 +1,17 @@
 {
     "request": {
       "method": "GET",
-      "url": "/token-custom-headers",
+      "url": "/custom-headers-with-token",
       "headers": {
         "header_key_1": {
           "matches": "header_value_1"
         },
         "header_key_2": {
-          "matches": "header_value_2"
+          "matches": "bearer_123"
         }
       }
     },
     "response": {
-      "bodyFileName": "mocked_token_with_custom_headers_response.json"
+      "bodyFileName": "mocked_custom_headers_with_token_response.json"
     }
 }

@@ -21,8 +21,8 @@ class CustomHeadersIntegrationTest extends IntegrationTestDependencies with Mock
     outputDF should matchExpectedDataFrame("expected_custom_headers.json")
   }
 
-  it should "add token in custom headers when headers are provided" in {
-    runCheckpoint(checkpointFileName = "checkpoint_add_token_in_custom_headers.conf")
+  it should "add token value in custom headers when headers are provided" in {
+    runCheckpoint(checkpointFileName = "checkpoint_add_custom_headers_with_token.conf")
     outputDF should matchExpectedDataFrame("expected_custom_headers_with_token.json")
   }
 
