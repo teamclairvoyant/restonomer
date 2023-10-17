@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/xml-response-converter"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "sample_xml_response_body.xml"
+  }
+}

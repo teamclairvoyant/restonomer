@@ -42,4 +42,13 @@ case class Text(
             originalSchema = None,
             adaptSchemaColumns = identity
           )
+      
+      case htmlTableTextFomat: HTMLTableTextFormat =>
+        TextToDataFrameReader
+          .read[HTMLTableTextFormat](
+            text = restonomerResponseBody,
+            textFormat = htmlTableTextFomat,
+            originalSchema = None,
+            adaptSchemaColumns = identity
+          )
     }

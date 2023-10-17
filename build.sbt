@@ -81,7 +81,7 @@ ThisBuild / wartremoverErrors ++= Warts.allBut(
 // ----- TOOL VERSIONS ----- //
 
 val catsVersion = "2.10.0"
-val dataScalaxyReaderVersion = "1.0.0"
+val dataScalaxyReaderVersion = "1.1.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
 val dataScalaxyTransformerVersion = "1.0.0"
 val googleCloudStorageVersion = "2.27.1"
