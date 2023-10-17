@@ -1,7 +1,6 @@
 package com.clairvoyant.restonomer.response_body
 
-import com.clairvoyant.restonomer.common.IntegrationTestDependencies
-import com.clairvoyant.restonomer.common.MockFileSystemPersistence
+import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
 class HTMLTableResponseToDataFrameConverterIntegrationTest
     extends IntegrationTestDependencies

@@ -42,7 +42,7 @@ case class Text(
             originalSchema = None,
             adaptSchemaColumns = identity
           )
-      
+
       case htmlTableTextFomat: HTMLTableTextFormat =>
         TextToDataFrameReader
           .read[HTMLTableTextFormat](
