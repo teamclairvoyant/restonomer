@@ -170,11 +170,12 @@ case class ConvertColumnToJson(
 }
 
 case class ConvertJSONStringToStruct(
-    columnName: String
+    columnName: String,
+    schemaDDL: Option[String] = None
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.convertJSONStringToStruct(columnName)
+    restonomerResponseDF.convertJSONStringToStruct(columnName, schemaDDL)
 
 }
 
@@ -220,7 +221,8 @@ case class RenameColumns(
 
 case class ReplaceEmptyStringsWithNulls() extends RestonomerTransformation {
 
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.replaceEmptyStringsWithNulls
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.na.replace(restonomerResponseDF.columns, Map("" -> null))
 
 }
 
