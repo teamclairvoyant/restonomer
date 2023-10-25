@@ -83,7 +83,7 @@ ThisBuild / wartremoverErrors ++= Warts.allBut(
 val catsVersion = "2.10.0"
 val dataScalaxyReaderVersion = "1.1.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
-val dataScalaxyTransformerVersion = "1.0.0"
+val dataScalaxyTransformerVersion = "1.1.0"
 val googleCloudStorageVersion = "2.29.0"
 val jsonPathVersion = "2.8.0"
 val jwtCoreVersion = "9.4.4"
@@ -115,7 +115,7 @@ val dataScalaxyTestUtilDependencies = Seq(
 )
 
 val dataScalaxyTransformerDependencies = Seq(
-  "com.clairvoyant.data.scalaxy" %% "transformer" % dataScalaxyTestUtilVersion
+  "com.clairvoyant.data.scalaxy" %% "transformer" % dataScalaxyTransformerVersion
 )
 
 val dataScalaxyWriterDependencies = Seq(
