@@ -176,6 +176,7 @@ case class ConvertJSONStringToStruct(
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
     restonomerResponseDF.convertJSONStringToStruct(columnName, schemaDDL)
+
 }
 
 case class DeleteColumns(
