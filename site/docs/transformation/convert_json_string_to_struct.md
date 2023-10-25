@@ -1,4 +1,4 @@
-# ConvertJSONStringToStruct
+# Convert JSON String To Struct
 
 It lets the user convert a column of JSON string type to struct type.
 

@@ -1,4 +1,4 @@
-# FilterRecords
+# Filter Records
 
 It lets the user filter records from the response based on a provided filter condition.
 

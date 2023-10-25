@@ -1,4 +1,4 @@
-# SelectColumns
+# Select Columns
 
 It lets the user select a list of columns from the dataframe.
 

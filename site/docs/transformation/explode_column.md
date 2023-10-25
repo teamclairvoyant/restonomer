@@ -1,4 +1,4 @@
-# ExplodeColumn
+# Explode Column
 
 It lets the user explode specific column values into multiple rows with the same column name from the restonomer
 response dataframe.

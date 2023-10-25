@@ -1,4 +1,4 @@
-# AddSuffixToColumnNames
+# Add Suffix To Column Names
 
 It lets the user add a desired suffix to select/all column names.
 

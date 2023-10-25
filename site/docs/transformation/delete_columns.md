@@ -1,4 +1,4 @@
-# DeleteColumns
+# Delete Columns
 
 It lets the user delete specific columns from the restonomer response dataframe.
 

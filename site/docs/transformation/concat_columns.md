@@ -1,4 +1,4 @@
-# ConcatColumns
+# Concat Columns
 
 It lets the user create a new field with the value being formed by concatenating the values of other existing fields.
 

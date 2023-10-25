@@ -1,4 +1,4 @@
-# CastColumnsBasedOnPrefix
+# Cast Columns Based On Prefix
 
 It lets the user cast the data type of multiple columns to the desired different types at once based on the prefix of the columns.
 

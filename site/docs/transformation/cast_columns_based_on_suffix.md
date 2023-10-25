@@ -1,4 +1,4 @@
-# CastColumnsBasedOnSuffix
+# Cast Columns Based On Suffix
 
 It lets the user cast the data type of multiple columns to the desired different types at once based on the suffix of the columns.
 

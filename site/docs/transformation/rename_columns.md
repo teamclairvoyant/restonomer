@@ -1,4 +1,4 @@
-# RenameColumns
+# Rename Columns
 
 It lets the user rename one or multiple column(s) at once.
 
