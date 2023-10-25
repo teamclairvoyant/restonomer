@@ -1,0 +1,12 @@
+{
+  "col_A": 5,
+  "col_B_test": 4,
+  "col_D": {
+    "col_B_test": 6
+  },
+  "col_F": [
+    {
+      "col_B_test": 4.356343
+    }
+  ]
+}
