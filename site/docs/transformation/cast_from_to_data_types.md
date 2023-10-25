@@ -1,4 +1,4 @@
-# CastFromToDataTypes
+# Cast From To Data Types
 
 This transformation lets users cast all columns having `X` data type to a different `Y` data type.
 

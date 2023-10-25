@@ -1,4 +1,4 @@
-# AddPrefixToColumnNames
+# Add Prefix To Column Names
 
 It lets the user add a desired prefix to select/all column names.
 

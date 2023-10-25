@@ -226,6 +226,18 @@ case class ReplaceEmptyStringsWithNulls() extends RestonomerTransformation {
 
 }
 
+case class ReplaceStringInColumnName(
+    columnName: String,
+    pattern: String,
+    replacement: String,
+    replaceRecursively: Boolean = false
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.replaceStringInColumnName(columnName, pattern, replacement, replaceRecursively)
+
+}
+
 case class ReplaceStringInColumnValue(
     columnName: String,
     pattern: String,

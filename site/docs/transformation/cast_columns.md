@@ -1,4 +1,4 @@
-# CastColumns
+# Cast Columns
 
 It lets the user cast the data type of multiple columns to the desired different types at once.
 

@@ -1,4 +1,4 @@
-# ReplaceEmptyStringsWithNulls
+# Replace Empty Strings With Nulls
 
 This transformation lets users replace all occurrences of empty strings with nulls in a dataframe.
 

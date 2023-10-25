@@ -1,4 +1,4 @@
-# ChangeColumnCase
+# Change Column Case
 
 It lets the user change the case of the column names.
 

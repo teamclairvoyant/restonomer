@@ -1,4 +1,4 @@
-# FlattenSchema
+# Flatten Schema
 
 It lets the user flatten the schema of the restonomer response. If any of the column is of StructType or is nested,
 this transformation removes the nested structure and represent each nested attribute at a root level.

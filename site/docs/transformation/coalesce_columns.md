@@ -1,4 +1,4 @@
-# CoalesceColumns
+# Coalesce Columns
 
 It lets the user create a new field with the value being formed by getting the first non null value from the list of columns provided by the user.
 

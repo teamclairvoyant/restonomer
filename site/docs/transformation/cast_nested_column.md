@@ -1,4 +1,4 @@
-# CastNestedColumn
+# Cast Nested Column
 
 It lets the user cast the data type of any nested or struct type column from one type to another.
 

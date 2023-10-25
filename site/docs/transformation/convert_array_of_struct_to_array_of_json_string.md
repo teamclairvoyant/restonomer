@@ -1,4 +1,4 @@
-# ConvertArrayOfStructToArrayOfJSONString
+# Convert Array Of Struct To Array Of JSON String
 
 It lets the user convert columns of array of struct type to array of json string type.
 
