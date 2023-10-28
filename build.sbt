@@ -28,21 +28,17 @@ ThisBuild / publishTo := Some("Restonomer Github Repo" at "https://maven.pkg.git
 
 // ----- ASSEMBLY MERGE STRATEGY ----- //
 
-val mergeStrategyLastFiles = Seq(
-  "io.netty.versions.properties",
-  "reflection-config.json",
-  "native-image.properties",
-  "module-info.class",
-  "UnusedStubClass.class"
-)
-
-val mergeStrategyConcatFiles = Seq(
-  "public-suffix-list.txt"
-)
-
 ThisBuild / assemblyMergeStrategy := {
-  case PathList(ps @ _*) if mergeStrategyLastFiles.exists(ps.last endsWith _)   => MergeStrategy.last
-  case PathList(ps @ _*) if mergeStrategyConcatFiles.exists(ps.last endsWith _) => MergeStrategy.concat
+  case PathList(ps @ _*)
+      if Seq(
+        ".properties",
+        ".dat",
+        ".proto",
+        ".txt",
+        ".gitkeep",
+        ".class"
+      ).exists(ps.last endsWith _) =>
+    MergeStrategy.last
   case x => (ThisBuild / assemblyMergeStrategy).value(x)
 }
 
@@ -182,9 +178,14 @@ val restonomerDependencies =
 lazy val restonomer = (project in file("."))
   .configs(IntegrationTest)
   .settings(
-    libraryDependencies ++= restonomerDependencies.map(
-      _ excludeAll ("org.scala-lang.modules", "scala-collection-compat")
-    ),
+    libraryDependencies ++= restonomerDependencies
+      .map { dependency =>
+        if (dependency.organization == "org.apache.spark")
+          dependency % "provided"
+        else
+          dependency
+      }
+      .map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat")),
     Test / parallelExecution := false,
     IntegrationTest / parallelExecution := false,
     Defaults.itSettings,
