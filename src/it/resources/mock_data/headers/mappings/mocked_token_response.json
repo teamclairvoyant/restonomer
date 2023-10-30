@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/token-for-headers"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_token_for_headers_response.json"
+  }
+}

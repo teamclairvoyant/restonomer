@@ -42,7 +42,10 @@ object RestonomerResponse {
                     restonomerRequest = restonomerRequest.copy(httpRequest =
                       restonomerRequest.httpRequest.method(
                         method = restonomerRequest.httpRequest.method,
-                        uri = restonomerRequest.httpRequest.uri.withParams(nextPageToken)
+                        uri = pagination.placeNextTokenInURL(
+                          uri = restonomerRequest.httpRequest.uri,
+                          nextPageToken = nextPageToken
+                        )
                       )
                     ),
                     statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),

@@ -1,4 +1,4 @@
-# ReplaceStringInColumnValue
+# Replace String In Column Value
 
 It lets the user replace the pattern in the column specified by user.
 

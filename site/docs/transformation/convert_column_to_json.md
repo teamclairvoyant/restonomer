@@ -1,4 +1,4 @@
-# ConvertColumnToJson
+# Convert Column To Json
 
 It lets the user convert MapType or Struct type to JSON string.
 

@@ -1,4 +1,4 @@
-# SelectColumnsWithExpressions
+# Select Columns With Expressions
 
 It lets the user select and transform columns in a dataframe using SQL expressions. 
 

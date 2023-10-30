@@ -132,6 +132,27 @@ case class ChangeColumnCase(
 
 }
 
+case class CoalesceColumns(
+    newColumnName: String,
+    columnsToCoalesce: List[String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.withColumn(newColumnName, coalesce(columnsToCoalesce.map(col)*))
+
+}
+
+case class ConcatColumns(
+    newColumnName: String,
+    columnsToBeConcatenated: List[String],
+    separator: String = ""
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame) =
+    restonomerResponseDF.withColumn(newColumnName, concat_ws(separator, columnsToBeConcatenated.map(col)*))
+
+}
+
 case class ConvertArrayOfStructToArrayOfJSONString() extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
@@ -149,11 +170,12 @@ case class ConvertColumnToJson(
 }
 
 case class ConvertJSONStringToStruct(
-    columnName: String
+    columnName: String,
+    schemaDDL: Option[String] = None
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.convertJSONStringToStruct(columnName)
+    restonomerResponseDF.convertJSONStringToStruct(columnName, schemaDDL)
 
 }
 
@@ -199,7 +221,20 @@ case class RenameColumns(
 
 case class ReplaceEmptyStringsWithNulls() extends RestonomerTransformation {
 
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.replaceEmptyStringsWithNulls
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.na.replace(restonomerResponseDF.columns, Map("" -> null))
+
+}
+
+case class ReplaceStringInColumnName(
+    columnName: String,
+    pattern: String,
+    replacement: String,
+    replaceRecursively: Boolean = false
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.replaceStringInColumnName(columnName, pattern, replacement, replaceRecursively)
 
 }
 

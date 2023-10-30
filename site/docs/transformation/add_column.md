@@ -1,4 +1,4 @@
-# AddColumn
+# Add Column
 
 It lets the user add a new column with a literal value of the desired data type.
 

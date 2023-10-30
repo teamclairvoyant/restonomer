@@ -1,4 +1,4 @@
-package com.clairvoyant.restonomer.converter
+package com.clairvoyant.restonomer.response_body
 
 import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
@@ -6,7 +6,7 @@ class CSVResponseToDataFrameConverterIntegrationTest
     extends IntegrationTestDependencies
     with MockFileSystemPersistence {
 
-  override val mappingsDirectory: String = "converter"
+  override val mappingsDirectory: String = "response_body"
 
   it should "convert the CSV response body into a dataframe" in {
     runCheckpoint(checkpointFileName = "checkpoint_csv_response_dataframe_converter.conf")

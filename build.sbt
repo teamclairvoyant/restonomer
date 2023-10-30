@@ -1,4 +1,4 @@
-ThisBuild / scalaVersion := "3.3.0"
+ThisBuild / scalaVersion := "3.3.1"
 
 ThisBuild / credentials += Credentials(
   "GitHub Package Registry",
@@ -28,21 +28,17 @@ ThisBuild / publishTo := Some("Restonomer Github Repo" at "https://maven.pkg.git
 
 // ----- ASSEMBLY MERGE STRATEGY ----- //
 
-val mergeStrategyLastFiles = Seq(
-  "io.netty.versions.properties",
-  "reflection-config.json",
-  "native-image.properties",
-  "module-info.class",
-  "UnusedStubClass.class"
-)
-
-val mergeStrategyConcatFiles = Seq(
-  "public-suffix-list.txt"
-)
-
 ThisBuild / assemblyMergeStrategy := {
-  case PathList(ps @ _*) if mergeStrategyLastFiles.exists(ps.last endsWith _)   => MergeStrategy.last
-  case PathList(ps @ _*) if mergeStrategyConcatFiles.exists(ps.last endsWith _) => MergeStrategy.concat
+  case PathList(ps @ _*)
+      if Seq(
+        ".properties",
+        ".dat",
+        ".proto",
+        ".txt",
+        ".gitkeep",
+        ".class"
+      ).exists(ps.last endsWith _) =>
+    MergeStrategy.last
   case x => (ThisBuild / assemblyMergeStrategy).value(x)
 }
 
@@ -81,20 +77,23 @@ ThisBuild / wartremoverErrors ++= Warts.allBut(
 // ----- TOOL VERSIONS ----- //
 
 val catsVersion = "2.10.0"
-val dataScalaxyReaderVersion = "1.0.0"
+val dataScalaxyReaderVersion = "1.1.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
-val dataScalaxyTransformerVersion = "1.0.0"
-val dataScalaxyWriterVersion = "1.0.0"
-val googleCloudStorageVersion = "2.26.1"
+val dataScalaxyTransformerVersion = "1.2.0"
+val googleCloudStorageVersion = "2.29.0"
 val jsonPathVersion = "2.8.0"
-val jwtCoreVersion = "9.4.3"
+val jwtCoreVersion = "9.4.4"
 val monovoreDeclineVersion = "2.4.1"
 val odelayVersion = "0.4.0"
 val scalaParserCombinatorsVersion = "2.3.0"
 val scalaXmlVersion = "2.2.0"
+val sparkMLLibVersion = "3.5.0"
 val sttpVersion = "3.9.0"
-val testContainersScalaVersion = "0.40.17"
-val wireMockVersion = "2.27.2"
+val testContainersScalaVersion = "0.41.0"
+val wireMockVersion = "3.0.1"
+val writerAWSVersion = "1.0.0"
+val writerGCPVersion = "1.1.0"
+val writerLocalFileSystemVersion = "1.0.0"
 val zioConfigVersion = "4.0.0-RC16"
 
 // ----- TOOL DEPENDENCIES ----- //
@@ -112,16 +111,20 @@ val dataScalaxyTestUtilDependencies = Seq(
 )
 
 val dataScalaxyTransformerDependencies = Seq(
-  "com.clairvoyant.data.scalaxy" %% "transformer" % dataScalaxyTestUtilVersion
+  "com.clairvoyant.data.scalaxy" %% "transformer" % dataScalaxyTransformerVersion
 )
 
 val dataScalaxyWriterDependencies = Seq(
-  "com.clairvoyant.data.scalaxy" %% "writer-local-file-system" % dataScalaxyWriterVersion,
-  "com.clairvoyant.data.scalaxy" %% "writer-aws" % dataScalaxyWriterVersion,
-  "com.clairvoyant.data.scalaxy" %% "writer-gcp" % dataScalaxyWriterVersion
+  "com.clairvoyant.data.scalaxy" %% "writer-local-file-system" % writerLocalFileSystemVersion,
+  "com.clairvoyant.data.scalaxy" %% "writer-aws" % writerAWSVersion,
+  "com.clairvoyant.data.scalaxy" %% "writer-gcp" % writerGCPVersion
 )
 
 val googleCloudStorageDependencies = Seq("com.google.cloud" % "google-cloud-storage" % googleCloudStorageVersion)
+
+val sparkMLLibDependencies = Seq("org.apache.spark" %% "spark-mllib" % sparkMLLibVersion)
+  .map(_.cross(CrossVersion.for3Use2_13))
+  .map(_.excludeAll("org.typelevel", "cats-kernel"))
 
 val jsonPathDependencies = Seq("com.jayway.jsonpath" % "json-path" % jsonPathVersion)
 
@@ -164,6 +167,7 @@ val restonomerDependencies =
     odelayDependencies ++
     scalaParserCombinatorsDependencies ++
     scalaXmlDependencies ++
+    sparkMLLibDependencies ++
     sttpDependencies ++
     testContainersScalaDependencies ++
     wireMockDependencies ++
@@ -174,9 +178,14 @@ val restonomerDependencies =
 lazy val restonomer = (project in file("."))
   .configs(IntegrationTest)
   .settings(
-    libraryDependencies ++= restonomerDependencies.map(
-      _ excludeAll ("org.scala-lang.modules", "scala-collection-compat")
-    ),
+    libraryDependencies ++= restonomerDependencies
+      .map { dependency =>
+        if (dependency.organization == "org.apache.spark")
+          dependency % "provided"
+        else
+          dependency
+      }
+      .map(_ excludeAll ("org.scala-lang.modules", "scala-collection-compat")),
     Test / parallelExecution := false,
     IntegrationTest / parallelExecution := false,
     Defaults.itSettings,

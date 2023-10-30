@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/replace-string-in-column-name-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_replace_string_in_column_name_transformation_response.json"
+  }
+}

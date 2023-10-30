@@ -1,4 +1,4 @@
-# SplitColumn
+# Split Column
 
 This transformation allows user to create new columns using the value of another column that is a delimiter separated 
 string.
