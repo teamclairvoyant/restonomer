@@ -48,7 +48,7 @@ credentials += Credentials(
   "<github_token>"
 )
 
-libraryDependencies += "com.clairvoyant" %% "restonomer" % "3.0.0"
+libraryDependencies += "com.clairvoyant" %% "restonomer" % "3.1.0"
 ```
 
 `<github_token>` is the Personal Access Token with the permission to read packages.
