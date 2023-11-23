@@ -195,3 +195,10 @@ User can pass below options to the `RedshiftWriterOptions` instance:
   </tr>
 </table>
 
+Now, in order to make this work, user need to first authenticate against AWS account.
+User need to set below two environment variables in their execution environment:
+
+*   `AWS_ACCESS_KEY` or `AWS_ACCESS_KEY_ID`
+*   `AWS_SECRET_KEY` or `AWS_SECRET_ACCESS_KEY`
+
+Users should know beforehand the values of above credentials for their AWS account.
