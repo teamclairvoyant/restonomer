@@ -1,5 +1,6 @@
 package com.clairvoyant.restonomer.persistence
 
+import com.clairvoyant.data.scalaxy.writer.aws.redshift.{DataFrameToRedshiftWriter, RedshiftWriterOptions}
 import com.clairvoyant.data.scalaxy.writer.aws.s3.DataFrameToS3BucketWriter
 import com.clairvoyant.data.scalaxy.writer.aws.s3.formats.{CSVFileFormat as S3CSVFileFormat, FileFormat as S3FileFormat, JSONFileFormat as S3JSONFileFormat, ParquetFileFormat as S3ParquetFileFormat, XMLFileFormat as S3XMLFileFormat}
 import com.clairvoyant.data.scalaxy.writer.aws.s3.instances.*
@@ -210,3 +211,29 @@ case class BigQuery(
             writerType = indirectBigQueryWriterType
           )
     }
+
+case class Redshift(
+    hostName: String,
+    port: Int = 5439,
+    databaseName: String,
+    tableName: String,
+    userName: String,
+    password: String,
+    tempDirPath: String,
+    writerOptions: RedshiftWriterOptions = RedshiftWriterOptions(),
+    saveMode: String = SaveMode.ErrorIfExists.name()
+) extends RestonomerPersistence:
+
+  override def persist(restonomerResponseDF: DataFrame)(using sparkSession: SparkSession): Unit =
+    DataFrameToRedshiftWriter.write(
+      dataFrame = restonomerResponseDF,
+      hostName = hostName,
+      port = port,
+      databaseName = databaseName,
+      tableName = tableName,
+      userName = userName,
+      password = password,
+      tempDirS3Path = tempDirPath,
+      writerOptions = writerOptions,
+      saveMode = SaveMode.valueOf(saveMode)
+    )
