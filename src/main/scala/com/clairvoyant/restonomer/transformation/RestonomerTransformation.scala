@@ -226,6 +226,14 @@ case class ReplaceEmptyStringsWithNulls() extends RestonomerTransformation {
 
 }
 
+case class ReplaceNullsWithDefaultValue(
+    valueMap: Map[String, Any]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame) = restonomerResponseDF.na.fill(valueMap)
+
+}
+
 case class ReplaceStringInColumnName(
     columnName: String,
     pattern: String,
