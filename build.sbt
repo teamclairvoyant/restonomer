@@ -44,7 +44,7 @@ ThisBuild / assemblyMergeStrategy := {
 
 // ----- SCALA COMPILER OPTIONS ----- //
 
-Global / scalacOptions ++= Seq("-Xmax-inlines", "50")
+Global / scalacOptions ++= Seq("-Xmax-inlines", "100")
 
 // ----- SCALAFIX ----- //
 
