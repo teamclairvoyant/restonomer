@@ -227,7 +227,7 @@ case class ReplaceEmptyStringsWithNulls() extends RestonomerTransformation {
 }
 
 case class ReplaceNullsWithDefaultValue(
-    valueMap: Map[String, Any]
+    valueMap: Map[String, String]
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame) = restonomerResponseDF.na.fill(valueMap)

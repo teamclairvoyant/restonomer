@@ -10,13 +10,13 @@ class ReplaceNullsWithDefaultValueTransformationSpec extends DataFrameReader wit
       |[
       |  {
       |    "col_A": null,
-      |    "col_B": 5,
-      |    "col_C": null
+      |    "col_B": "val_B1",
+      |    "col_C": "val_C1"
       |  },
       |  {
       |    "col_A": "val_A2",
-      |    "col_B": null,
-      |    "col_C": 3.4
+      |    "col_B": "val_B2",
+      |    "col_C": null
       |  }
       |]
       |""".stripMargin
@@ -26,8 +26,8 @@ class ReplaceNullsWithDefaultValueTransformationSpec extends DataFrameReader wit
     val restonomerTransformation = ReplaceNullsWithDefaultValue(
       Map(
         "col_A" -> "Default_A",
-        "col_B" -> 0,
-        "col_C" -> 0.1
+        "col_B" -> "Default_B",
+        "col_C" -> "Default_C"
       )
     )
 
@@ -36,13 +36,13 @@ class ReplaceNullsWithDefaultValueTransformationSpec extends DataFrameReader wit
         |[
         |  {
         |    "col_A": "Default_A",
-        |    "col_B": 5,
-        |    "col_C": 0.1
+        |    "col_B": "val_B1",
+        |    "col_C": "val_C1"
         |  },
         |  {
         |    "col_A": "val_A2",
-        |    "col_B": 0,
-        |    "col_C": 3.4
+        |    "col_B": "val_B2",
+        |    "col_C": "Default_C"
         |  }
         |]
         |""".stripMargin

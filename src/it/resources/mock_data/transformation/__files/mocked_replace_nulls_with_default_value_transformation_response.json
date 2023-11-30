@@ -1,12 +1,12 @@
 [
   {
     "col_A": null,
-    "col_B": 5,
-    "col_C": null
+    "col_B": "val_B1",
+    "col_C": "val_C1"
   },
   {
     "col_A": "val_A2",
-    "col_B": null,
-    "col_C": 3.4
+    "col_B": "val_B2",
+    "col_C": null
   }
 ]
