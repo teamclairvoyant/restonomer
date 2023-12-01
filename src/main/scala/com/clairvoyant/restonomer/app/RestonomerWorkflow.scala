@@ -8,16 +8,15 @@ import com.clairvoyant.restonomer.http.*
 import com.clairvoyant.restonomer.model.*
 import com.clairvoyant.restonomer.sttpBackend
 import com.jayway.jsonpath.JsonPath
-import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
-class RestonomerWorkflow(using sparkSession: SparkSession) {
+object RestonomerWorkflow {
 
-  def run(checkpointConfig: CheckpointConfig): Unit = {
+  def run(checkpointConfig: CheckpointConfig)(using sparkSession: SparkSession): Unit = {
 
     val tokenFunction = checkpointConfig.token
       .map { tokenConfig =>
@@ -76,28 +75,6 @@ class RestonomerWorkflow(using sparkSession: SparkSession) {
     )
 
     Await.result(persistedRestonomerResponseDF, Duration.Inf)
-  }
-
-}
-
-private object RestonomerWorkflow {
-
-  def apply(applicationConfig: ApplicationConfig): RestonomerWorkflow = {
-    given sparkSession: SparkSession =
-      SparkSession
-        .builder()
-        .config(
-          applicationConfig.sparkConfigs
-            .map { sparkConfigs =>
-              sparkConfigs.foldLeft(new SparkConf()) { case (sparkConf, sparkConfig) =>
-                sparkConf.set(sparkConfig._1, sparkConfig._2)
-              }
-            }
-            .getOrElse(new SparkConf())
-        )
-        .getOrCreate()
-
-    new RestonomerWorkflow()
   }
 
 }

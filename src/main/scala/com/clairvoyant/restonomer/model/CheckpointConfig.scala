@@ -7,7 +7,8 @@ import zio.config.magnolia.*
 case class CheckpointConfig(
     name: String,
     token: Option[TokenConfig],
-    data: DataConfig
+    data: DataConfig,
+    runtimeConfigs: Option[Map[String, String]]
 )
 
 object CheckpointConfig {
