@@ -1,0 +1,9 @@
+{
+   "request": {
+    "url": "/filter-regex-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_filter_by_regex_transformation_response.json"
+  }
+}

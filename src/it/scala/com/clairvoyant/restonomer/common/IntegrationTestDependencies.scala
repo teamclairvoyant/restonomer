@@ -25,7 +25,8 @@ trait IntegrationTestDependencies
     override def apply(fileName: String): DataFrame = {
       val dataFrameReader = sparkSession.read
         .option("multiline", value = true)
-        .option("inferSchema", value = expectedDFSchema.isEmpty)
+        .option("inferSchema", value = expectedDFSchema.isEmpty)    
+        
 
       expectedDFSchema
         .map { schema => dataFrameReader.schema(schema) }
