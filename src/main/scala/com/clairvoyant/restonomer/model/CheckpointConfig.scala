@@ -8,7 +8,7 @@ case class CheckpointConfig(
     name: String,
     token: Option[TokenConfig],
     data: DataConfig,
-    runtimeConfigs: Option[Map[String, String]]
+    sparkConfigs: Option[Map[String, String]]
 )
 
 object CheckpointConfig {

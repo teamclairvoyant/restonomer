@@ -8,6 +8,8 @@ class APIKeyAuthenticationIntegrationTest extends IntegrationTestDependencies wi
 
   it should "authenticate request with api key authentication using query string" in {
     runCheckpoint(checkpointFileName = "checkpoint_api_key_authentication_query_param.conf")
+
+    sparkSession.sparkContext.getConf.get("spark.app.name") should be("checkpoint_api_key_authentication_query_param")
     outputDF should matchExpectedDataFrame("expected_api_key_authentication_query_param.json")
   }
 
