@@ -205,10 +205,13 @@ case class FilterRecords(
 }
 
 case class FilterByRegex(
-   columnName: String, regex: String
-)  extends RestonomerTransformation {
+    columnName: String,
+    regex: String
+) extends RestonomerTransformation {
 
-  override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.filterByRegex(columnName, regex)
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.filterByRegex(columnName, regex)
+
 }
 
 case class FlattenSchema() extends RestonomerTransformation {
