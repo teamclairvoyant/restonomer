@@ -8,7 +8,7 @@ case class CheckpointConfig(
     name: String,
     token: Option[TokenConfig],
     data: DataConfig,
-    sparkConfigs: Option[Map[String, String]]
+    sparkConfigs: Map[String, String] = Map.empty
 )
 
 object CheckpointConfig {

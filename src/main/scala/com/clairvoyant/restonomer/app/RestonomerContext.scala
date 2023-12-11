@@ -135,12 +135,7 @@ class RestonomerContext(
         .builder()
         .config {
           checkpointConfig.sparkConfigs
-            .map { sparkConfig =>
-              sparkConfig.foldLeft(sparkConf) { case (sparkConf, sparkConfig) =>
-                sparkConf.set(sparkConfig._1, sparkConfig._2)
-              }
-            }
-            .getOrElse(sparkConf)
+            .foldLeft(sparkConf) { case (sparkConf, sparkConfig) => sparkConf.set(sparkConfig._1, sparkConfig._2) }
         }
         .getOrCreate()
 
