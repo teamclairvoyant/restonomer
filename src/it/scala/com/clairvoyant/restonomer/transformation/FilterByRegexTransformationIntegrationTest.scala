@@ -2,7 +2,7 @@ package com.clairvoyant.restonomer.transformation
 
 import com.clairvoyant.restonomer.common.{IntegrationTestDependencies, MockFileSystemPersistence}
 
-class FilterRegexTransformationIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
+class FilterByRegexTransformationIntegrationTest extends IntegrationTestDependencies with MockFileSystemPersistence {
 
   override val mappingsDirectory: String = "transformation"
 

@@ -210,7 +210,7 @@ case class FilterByRegex(
 ) extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
-    restonomerResponseDF.filterByRegex(columnName, regex)
+    restonomerResponseDF.filter(col(columnName).rlike(regex))
 
 }
 
