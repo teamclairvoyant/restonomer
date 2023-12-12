@@ -10,4 +10,5 @@ class FilterRegexTransformationIntegrationTest extends IntegrationTestDependenci
     runCheckpoint(checkpointFileName = "checkpoint_filter_regex_transformation.conf")
     outputDF should matchExpectedDataFrame("expected_filter_regex_transformation.json")
   }
+
 }
