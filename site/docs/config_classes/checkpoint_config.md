@@ -6,11 +6,12 @@ trigger a checkpoint.
 
 The checkpoint configuration contains below config options to be provided by the user:
 
-| Config Name | Mandatory | Default Value | Description                                                       |
-|:------------|:---------:|:-------------:|:------------------------------------------------------------------|
-| name        |    Yes    |       -       | Unique name for your checkpoint                                   |
-| token       |    No     |       -       | Token request configuration represented by `TokenConfig` class    |
-| data        |    Yes    |       -       | Main data request configuration represented by `DataConfig` class |
+| Config Name  | Mandatory | Default Value | Description                                                                                                                                                                   |
+|:-------------|:---------:|:-------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name         |    Yes    |       -       | Unique name for your checkpoint                                                                                                                                               |
+| token        |    No     |       -       | Token request configuration represented by `TokenConfig` class                                                                                                                |
+| data         |    Yes    |       -       | Main data request configuration represented by `DataConfig` class                                                                                                             |
+| sparkConfigs |    No     |       -       | Map of spark configurations specific to the checkpoint. <br>If the same config is also present in `application.conf` file, then checkpoint specific config gets the priority. |
 
 User can provide checkpoint configuration file in HOCON format in the below format:
 
