@@ -30,32 +30,32 @@ case class LocalFileSystem(
   def persist(restonomerResponseDF: DataFrame)(using sparkSession: SparkSession): Unit =
     fileFormat match {
       case csvFileFormat: LocalCSVFileFormat =>
-        DataFrameToLocalFileSystemWriter
-          .write[LocalCSVFileFormat](
+        DataFrameToLocalFileSystemWriter[LocalCSVFileFormat]
+          .write(
             dataFrame = restonomerResponseDF,
             fileFormat = csvFileFormat,
             path = filePath
           )
 
       case jsonFileFormat: LocalJSONFileFormat =>
-        DataFrameToLocalFileSystemWriter
-          .write[LocalJSONFileFormat](
+        DataFrameToLocalFileSystemWriter[LocalJSONFileFormat]
+          .write(
             dataFrame = restonomerResponseDF,
             fileFormat = jsonFileFormat,
             path = filePath
           )
 
       case xmlFileFormat: LocalXMLFileFormat =>
-        DataFrameToLocalFileSystemWriter
-          .write[LocalXMLFileFormat](
+        DataFrameToLocalFileSystemWriter[LocalXMLFileFormat]
+          .write(
             dataFrame = restonomerResponseDF,
             fileFormat = xmlFileFormat,
             path = filePath
           )
 
       case parquetFileFormat: LocalParquetFileFormat =>
-        DataFrameToLocalFileSystemWriter
-          .write[LocalParquetFileFormat](
+        DataFrameToLocalFileSystemWriter[LocalParquetFileFormat]
+          .write(
             dataFrame = restonomerResponseDF,
             fileFormat = parquetFileFormat,
             path = filePath
@@ -72,8 +72,8 @@ case class S3Bucket(
   override def persist(restonomerResponseDF: DataFrame)(using sparkSession: SparkSession): Unit =
     fileFormat match {
       case csvFileFormat: S3CSVFileFormat =>
-        DataFrameToS3BucketWriter
-          .write[S3CSVFileFormat](
+        DataFrameToS3BucketWriter[S3CSVFileFormat]
+          .write(
             dataFrame = restonomerResponseDF,
             fileFormat = csvFileFormat,
             bucketName = bucketName,
@@ -81,8 +81,8 @@ case class S3Bucket(
           )
 
       case jsonFileFormat: S3JSONFileFormat =>
-        DataFrameToS3BucketWriter
-          .write[S3JSONFileFormat](
+        DataFrameToS3BucketWriter[S3JSONFileFormat]
+          .write(
             dataFrame = restonomerResponseDF,
             fileFormat = jsonFileFormat,
             bucketName = bucketName,
@@ -90,8 +90,8 @@ case class S3Bucket(
           )
 
       case xmlFileFormat: S3XMLFileFormat =>
-        DataFrameToS3BucketWriter
-          .write[S3XMLFileFormat](
+        DataFrameToS3BucketWriter[S3XMLFileFormat]
+          .write(
             dataFrame = restonomerResponseDF,
             fileFormat = xmlFileFormat,
             bucketName = bucketName,
@@ -99,8 +99,8 @@ case class S3Bucket(
           )
 
       case parquetFileFormat: S3ParquetFileFormat =>
-        DataFrameToS3BucketWriter
-          .write[S3ParquetFileFormat](
+        DataFrameToS3BucketWriter[S3ParquetFileFormat]
+          .write(
             dataFrame = restonomerResponseDF,
             fileFormat = parquetFileFormat,
             bucketName = bucketName,
@@ -128,8 +128,8 @@ case class GCSBucket(
 
     fileFormat match {
       case csvFileFormat: GCSCSVFileFormat =>
-        DataFrameToGCSBucketWriter
-          .write[GCSCSVFileFormat](
+        DataFrameToGCSBucketWriter[GCSCSVFileFormat]
+          .write(
             dataFrame = restonomerResponseDF,
             fileFormat = csvFileFormat,
             bucketName = bucketName,
@@ -137,8 +137,8 @@ case class GCSBucket(
           )
 
       case jsonFileFormat: GCSJSONFileFormat =>
-        DataFrameToGCSBucketWriter
-          .write[GCSJSONFileFormat](
+        DataFrameToGCSBucketWriter[GCSJSONFileFormat]
+          .write(
             dataFrame = restonomerResponseDF,
             fileFormat = jsonFileFormat,
             bucketName = bucketName,
@@ -146,8 +146,8 @@ case class GCSBucket(
           )
 
       case xmlFileFormat: GCSXMLFileFormat =>
-        DataFrameToGCSBucketWriter
-          .write[GCSXMLFileFormat](
+        DataFrameToGCSBucketWriter[GCSXMLFileFormat]
+          .write(
             dataFrame = restonomerResponseDF,
             fileFormat = xmlFileFormat,
             bucketName = bucketName,
@@ -155,8 +155,8 @@ case class GCSBucket(
           )
 
       case parquetFileFormat: GCSParquetFileFormat =>
-        DataFrameToGCSBucketWriter
-          .write[GCSParquetFileFormat](
+        DataFrameToGCSBucketWriter[GCSParquetFileFormat]
+          .write(
             dataFrame = restonomerResponseDF,
             fileFormat = parquetFileFormat,
             bucketName = bucketName,
@@ -188,8 +188,8 @@ case class BigQuery(
 
     writerType match {
       case directBigQueryWriterType: DirectBigQueryWriterType =>
-        DataFrameToBigQueryWriter
-          .write[DirectBigQueryWriterType](
+        DataFrameToBigQueryWriter[DirectBigQueryWriterType]
+          .write(
             dataFrame = restonomerResponseDF,
             table = table,
             dataset = dataset,
@@ -200,8 +200,8 @@ case class BigQuery(
           )
 
       case indirectBigQueryWriterType: IndirectBigQueryWriterType =>
-        DataFrameToBigQueryWriter
-          .write[IndirectBigQueryWriterType](
+        DataFrameToBigQueryWriter[IndirectBigQueryWriterType]
+          .write(
             dataFrame = restonomerResponseDF,
             table = table,
             dataset = dataset,

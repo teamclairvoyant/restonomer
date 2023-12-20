@@ -17,8 +17,8 @@ case class Text(
   override def read(restonomerResponseBody: Seq[String])(using sparkSession: SparkSession): DataFrame =
     textFormat match {
       case csvTextFormat: CSVTextFormat =>
-        TextToDataFrameReader
-          .read[CSVTextFormat](
+        TextToDataFrameReader[CSVTextFormat]
+          .read(
             text = restonomerResponseBody,
             textFormat = csvTextFormat,
             originalSchema = None,
@@ -26,8 +26,8 @@ case class Text(
           )
 
       case jsonTextFormat: JSONTextFormat =>
-        TextToDataFrameReader
-          .read[JSONTextFormat](
+        TextToDataFrameReader[JSONTextFormat]
+          .read(
             text = restonomerResponseBody,
             textFormat = jsonTextFormat,
             originalSchema = None,
@@ -35,8 +35,8 @@ case class Text(
           )
 
       case xmlTextFormat: XMLTextFormat =>
-        TextToDataFrameReader
-          .read[XMLTextFormat](
+        TextToDataFrameReader[XMLTextFormat]
+          .read(
             text = restonomerResponseBody,
             textFormat = xmlTextFormat,
             originalSchema = None,
@@ -44,8 +44,8 @@ case class Text(
           )
 
       case htmlTableTextFomat: HTMLTableTextFormat =>
-        TextToDataFrameReader
-          .read[HTMLTableTextFormat](
+        TextToDataFrameReader[HTMLTableTextFormat]
+          .read(
             text = restonomerResponseBody,
             textFormat = htmlTableTextFomat,
             originalSchema = None,
