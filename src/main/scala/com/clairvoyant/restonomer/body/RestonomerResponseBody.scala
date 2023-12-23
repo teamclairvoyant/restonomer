@@ -8,10 +8,13 @@ import zio.config.derivation.nameWithLabel
 
 @nameWithLabel
 sealed trait RestonomerResponseBody:
+  val compression: Option[String]
+  
   def read(restonomerResponseBody: Seq[String])(using sparkSession: SparkSession): DataFrame
 
 case class Text(
-    textFormat: TextFormat
+    textFormat: TextFormat,
+    override val compression: Option[String] = None
 ) extends RestonomerResponseBody:
 
   override def read(restonomerResponseBody: Seq[String])(using sparkSession: SparkSession): DataFrame =
