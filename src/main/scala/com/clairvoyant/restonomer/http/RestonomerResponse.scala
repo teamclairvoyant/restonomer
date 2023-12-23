@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.http
 
 import cats.syntax.eq.*
-import com.clairvoyant.restonomer.common.*
 import com.clairvoyant.restonomer.common.ResponseBodyCompressionTypes.*
+import com.clairvoyant.restonomer.common.*
 import com.clairvoyant.restonomer.exception.RestonomerException
 import com.clairvoyant.restonomer.model.RetryConfig
 import com.clairvoyant.restonomer.pagination.RestonomerPagination
