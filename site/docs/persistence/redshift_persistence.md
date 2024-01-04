@@ -116,7 +116,8 @@ User can pass below options to the `RedshiftWriterOptions` instance:
     <td>No</td>
     <td>-</td>
     <td>
-      <p>A description for the table. Will be set using the SQL COMMENT command, and should show up in most query tools. See also the description metadata to set descriptions on individual columns.
+      <p>A description for the table. Will be set using the SQL COMMENT command, and should show up in most query tools. See also the description metadata to set descriptions on individual columns.</p>
+    </td>
   </tr>
   <tr>
     <td>pre-actions</td>
