@@ -30,10 +30,48 @@ data = {
 }
 ```
 
-Just like `row-tag`, user can configure below other properties for XML text format that will help restonomer for parsing:
+## Compression
+
+In case the xml text that is returned by the api is compressed, user can configure the checkpoint in below format:
+
+```hocon
+name = "checkpoint_xml_response_dataframe_converter"
+
+data = {
+  data-request = {
+    url = "http://localhost:8080/xml-response-converter"
+  }
+
+  data-response = {
+    body = {
+      type = "Text"
+      compression = "GZIP"
+      text-format = {
+        type = "XMLTextFormat"
+        row-tag = "ROW"
+      }
+    }
+
+    persistence = {
+      type = "LocalFileSystem"
+      file-format = {
+        type = "ParquetFileFormat"
+      }
+      file-path = "/tmp/response_body"
+    }
+  }
+}
+```
+
+As of now, restonomer supports only `GZIP` compression format.
+
+## XML Text Format Configurations
+
+Just like `row-tag`, user can configure below other properties for XML text format that will help restonomer for
+parsing:
 
 | Parameter Name                |    Default Value    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| :---------------------------- | :-----------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|:------------------------------|:-------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | attribute-prefix              |          _          | The prefix for attributes so that we can differentiate attributes and elements.                                                                                                                                                                                                                                                                                                                                                               |
 | charset                       |        UTF-8        | Defaults to 'UTF-8' but can be set to other valid charset names.                                                                                                                                                                                                                                                                                                                                                                              |
 | column-name-of-corrupt-record |   _corrupt_record   | Allows renaming the new field having malformed string created by PERMISSIVE mode. This overrides spark.sql.columnNameOfCorruptRecord.                                                                                                                                                                                                                                                                                                         |
