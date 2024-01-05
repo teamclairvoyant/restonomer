@@ -30,10 +30,47 @@ data = {
 }
 ```
 
+## Compression
+
+In case the csv text that is returned by the api is compressed, user can configure the checkpoint in below format:
+
+```hocon
+name = "checkpoint_csv_response_dataframe_converter"
+
+data = {
+  data-request = {
+    url = "http://localhost:8080/csv-response-converter"
+  }
+
+  data-response = {
+    body = {
+      type = "Text"
+      compression = "GZIP"
+      text-format = {
+        type = "CSVTextFormat"
+        sep = ";"
+      }
+    }
+
+    persistence = {
+      type = "LocalFileSystem"
+      file-format = {
+        type = "ParquetFileFormat"
+      }
+      file-path = "/tmp/response_body"
+    }
+  }
+}
+```
+
+As of now, restonomer supports only `GZIP` compression format.
+
+## CSV Text Format Configurations
+
 Just like `sep`, user can configure below other properties for CSV text format that will help restonomer for parsing:
 
 | Parameter Name                    |        Default Value        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| :-------------------------------- | :-------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|:----------------------------------|:---------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | char-to-escape-quote-escaping     |              \              | Sets a single character used for escaping the escape for the quote character.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | column-name-of-corrupt-record     |       _corrupt_record       | Allows renaming the new field having malformed string created by PERMISSIVE mode. <br/>This overrides `spark.sql.columnNameOfCorruptRecord`.                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | comment                           |              #              | Sets a single character used for skipping lines beginning with this character.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |

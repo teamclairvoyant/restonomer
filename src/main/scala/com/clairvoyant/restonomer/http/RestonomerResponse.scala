@@ -1,6 +1,8 @@
 package com.clairvoyant.restonomer.http
 
 import cats.syntax.eq.*
+import com.clairvoyant.restonomer.common.ResponseBodyCompressionTypes.*
+import com.clairvoyant.restonomer.common.*
 import com.clairvoyant.restonomer.exception.RestonomerException
 import com.clairvoyant.restonomer.model.RetryConfig
 import com.clairvoyant.restonomer.pagination.RestonomerPagination
@@ -10,6 +12,8 @@ import sttp.client3.*
 import sttp.model.HeaderNames.Location
 import sttp.model.{Header, StatusCode}
 
+import java.io.{BufferedReader, ByteArrayInputStream, InputStreamReader}
+import java.util.zip.GZIPInputStream
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
@@ -22,14 +26,12 @@ object RestonomerResponse {
   private val random: Random.type = scala.util.Random
 
   def fetchFromRequest(
-      restonomerRequest: RestonomerRequest,
+      httpRequest: Request[Either[String, String], Any],
+      compression: Option[String],
       retryConfig: RetryConfig,
       restonomerPagination: Option[RestonomerPagination]
   ): RestonomerResponse = {
-    def getPages(
-        restonomerRequest: RestonomerRequest,
-        httpResponseBody: Future[Seq[String]]
-    ): Future[Seq[String]] = {
+    def getPages(httpResponseBody: Future[Seq[String]]): Future[Seq[String]] = {
       restonomerPagination
         .map { pagination =>
           httpResponseBody.flatMap { httpResponseBodySeq =>
@@ -37,15 +39,12 @@ object RestonomerResponse {
               .getNextPageToken(httpResponseBodySeq.last)
               .map { nextPageToken =>
                 getPages(
-                  restonomerRequest = restonomerRequest,
                   httpResponseBody = getBody(
-                    restonomerRequest = restonomerRequest.copy(httpRequest =
-                      restonomerRequest.httpRequest.method(
-                        method = restonomerRequest.httpRequest.method,
-                        uri = pagination.placeNextTokenInURL(
-                          uri = restonomerRequest.httpRequest.uri,
-                          nextPageToken = nextPageToken
-                        )
+                    httpRequest = httpRequest.method(
+                      method = httpRequest.method,
+                      uri = pagination.placeNextTokenInURL(
+                        uri = httpRequest.uri,
+                        nextPageToken = nextPageToken
                       )
                     ),
                     statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
@@ -61,9 +60,13 @@ object RestonomerResponse {
 
     RestonomerResponse {
       getPages(
-        restonomerRequest = restonomerRequest,
         httpResponseBody = getBody(
-          restonomerRequest = restonomerRequest,
+          httpRequest = compression
+            .map {
+              ResponseBodyCompressionTypes(_) match
+                case GZIP => httpRequest.response(asByteArray)
+            }
+            .getOrElse(httpRequest.response(asString)),
           statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
           maxRetries = retryConfig.maxRetries
         )
@@ -73,29 +76,37 @@ object RestonomerResponse {
 
   private def sleepTimeInSeconds: Int = 10 + random.nextInt(10) + 1
 
-  private def getBody(
-      restonomerRequest: RestonomerRequest,
+  private def getBody[T](
+      httpRequest: Request[Either[String, T], Any],
       statusCodesToRetry: List[StatusCode],
       maxRetries: Int,
       currentRetryAttemptNumber: Int = 0
   ): Future[Seq[String]] = {
-    restonomerRequest.httpRequest
+    httpRequest
       .send(sttpBackend)
       .flatMap {
-        case Response(body, StatusCode.Ok, _, _, _, _) => Future(body.toSeq)
+        case Response(body, StatusCode.Ok, _, _, _, _) =>
+          body match {
+            case Right(responseBody: String) => Future(Seq(responseBody))
+
+            case Right(responseBody: Array[Byte]) =>
+              val gzipStream = new GZIPInputStream(new ByteArrayInputStream(responseBody))
+              val inputStreamReader = new InputStreamReader(gzipStream)
+              val bufferedReader = new BufferedReader(inputStreamReader)
+              Future(Iterator.continually(bufferedReader.readLine()).takeWhile(_ != null).toSeq)
+
+            case _ => Future(Seq.empty)
+          }
 
         case response @ Response(_, statusCode, _, headers, _, _)
             if statusCodesToRetry.contains(statusCode) && currentRetryAttemptNumber < maxRetries =>
           waitBeforeRetry(
             whatToRetry = getBody(
-              restonomerRequest = restonomerRequest
-                .copy(
-                  httpRequest = restonomerRequest.httpRequest
-                    .header(
-                      k = "retry-attempt",
-                      v = (currentRetryAttemptNumber + 1).toString,
-                      replaceExisting = true
-                    )
+              httpRequest = httpRequest
+                .header(
+                  k = "retry-attempt",
+                  v = (currentRetryAttemptNumber + 1).toString,
+                  replaceExisting = true
                 ),
               statusCodesToRetry = statusCodesToRetry,
               maxRetries = maxRetries,
@@ -109,13 +120,10 @@ object RestonomerResponse {
 
         case Response(_, StatusCode.Found, _, headers, _, requestMetadata) =>
           getBody(
-            restonomerRequest = restonomerRequest
-              .copy(httpRequest =
-                restonomerRequest.httpRequest.method(
-                  method = requestMetadata.method,
-                  uri = uri"${headers.find(_.name == Location).get}"
-                )
-              ),
+            httpRequest = httpRequest.method(
+              method = requestMetadata.method,
+              uri = uri"${headers.find(_.name == Location).get}"
+            ),
             statusCodesToRetry = statusCodesToRetry,
             maxRetries = maxRetries,
             currentRetryAttemptNumber = currentRetryAttemptNumber + 1
@@ -128,7 +136,6 @@ object RestonomerResponse {
             s"Something totally unexpected bad happened while calling the API ${currentRetryAttemptNumber + 1} times."
           )
       }
-
   }
 
   private def waitBeforeRetry[T](

@@ -57,7 +57,8 @@ object RestonomerWorkflow {
         .build
 
     val dataRestonomerResponse = RestonomerResponse.fetchFromRequest(
-      restonomerRequest = dataRestonomerRequest,
+      httpRequest = dataRestonomerRequest.httpRequest,
+      compression = checkpointConfig.data.dataResponse.body.compression,
       retryConfig = checkpointConfig.data.dataRequest.retry,
       restonomerPagination = checkpointConfig.data.dataResponse.pagination
     )

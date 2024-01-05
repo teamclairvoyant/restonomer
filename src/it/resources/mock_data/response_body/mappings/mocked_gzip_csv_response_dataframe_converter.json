@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/gzip-csv-response-converter"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "sample_gzip_csv_response_body.gz"
+  }
+}
