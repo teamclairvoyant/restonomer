@@ -94,7 +94,7 @@ val sparkMLLibVersion = "3.5.0"
 val sttpVersion = "3.9.2"
 val testContainersScalaVersion = "0.41.0"
 val wireMockVersion = "3.0.1"
-val zioConfigVersion = "4.0.0-RC16"
+val zioConfigVersion = "4.0.1"
 
 // ----- TOOL DEPENDENCIES ----- //
 
