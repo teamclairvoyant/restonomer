@@ -6,7 +6,7 @@ User need to provide below configs for Data Response Configuration:
 
 | Config Name     | Mandatory | Default Value | Description                                                                                         |
 |:----------------|:---------:|:-------------:|:----------------------------------------------------------------------------------------------------|
-| body            |    Yes    |       -       | The body config represented by `DataResponseBodyConfig`                                             |
+| body            |    Yes    |       -       | The body config represented by `RestonomerResponseBody`.                                            |
 | transformations |    No     |       -       | List of transformations to be applied on the restonomer response dataframe                          |
 | persistence     |    Yes    |       -       | The persistence attribute that tells where to persist the transformed restonomer response dataframe |
 

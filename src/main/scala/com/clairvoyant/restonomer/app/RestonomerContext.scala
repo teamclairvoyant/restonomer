@@ -4,7 +4,8 @@ import com.clairvoyant.restonomer.config.{ConfigVariablesSubstitutor, GCSRestono
 import com.clairvoyant.restonomer.exception.RestonomerException
 import com.clairvoyant.restonomer.model.{ApplicationConfig, CheckpointConfig}
 import com.google.cloud.storage.{Storage, StorageOptions}
-import zio.Config
+import org.apache.spark.SparkConf
+import org.apache.spark.sql.SparkSession
 import zio.config.magnolia.*
 
 import java.io.FileNotFoundException
@@ -37,9 +38,9 @@ class RestonomerContext(
     val restonomerContextDirectoryPath: String,
     val configVariablesFromApplicationArgs: Map[String, String]
 ) {
+  // ---------- CONFIG VARIABLES ---------- //
+
   private val CONFIG_VARIABLES_FILE_PATH = s"$restonomerContextDirectoryPath/uncommitted/config_variables.conf"
-  private val APPLICATION_CONFIG_FILE_PATH = s"$restonomerContextDirectoryPath/application.conf"
-  private val CHECKPOINTS_CONFIG_DIRECTORY_PATH = s"$restonomerContextDirectoryPath/checkpoints"
 
   private val configVariablesFromFile = {
     given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = None
@@ -50,6 +51,13 @@ class RestonomerContext(
     else
       Map[String, String]()
   }
+
+  given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] =
+    Some(ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs))
+
+  // ---------- APPLICATION CONFIGS ---------- //
+
+  private val APPLICATION_CONFIG_FILE_PATH = s"$restonomerContextDirectoryPath/application.conf"
 
   private val applicationConfig = {
     given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] = None
@@ -63,8 +71,24 @@ class RestonomerContext(
       )
   }
 
-  given configVariablesSubstitutor: Option[ConfigVariablesSubstitutor] =
-    Some(ConfigVariablesSubstitutor(configVariablesFromFile, configVariablesFromApplicationArgs))
+  // ---------- RUN CHECKPOINTS ---------- //
+
+  private val sparkConf = applicationConfig.sparkConfigs
+    .map { sparkConfigs =>
+      sparkConfigs.foldLeft(new SparkConf()) { case (sparkConf, sparkConfig) =>
+        sparkConf.set(sparkConfig._1, sparkConfig._2)
+      }
+    }
+    .getOrElse(new SparkConf())
+
+  private def runCheckpoints(checkpointConfigs: List[CheckpointConfig]): Unit =
+    checkpointConfigs.foreach { checkpointConfig =>
+      println(s"Checkpoint Name -> ${checkpointConfig.name}\n")
+      runCheckpoint(checkpointConfig)
+      println("\n=====================================================\n")
+    }
+
+  private val CHECKPOINTS_CONFIG_DIRECTORY_PATH = s"$restonomerContextDirectoryPath/checkpoints"
 
   def runCheckpoint(checkpointFilePath: String): Unit = {
     val absoluteCheckpointFilePath = s"$CHECKPOINTS_CONFIG_DIRECTORY_PATH/$checkpointFilePath"
@@ -105,14 +129,17 @@ class RestonomerContext(
         s"The config directory with the path: $CHECKPOINTS_CONFIG_DIRECTORY_PATH does not exists."
       )
 
-  private def runCheckpoints(checkpointConfigs: List[CheckpointConfig]): Unit =
-    checkpointConfigs.foreach { checkpointConfig =>
-      println(s"Checkpoint Name -> ${checkpointConfig.name}\n")
-      runCheckpoint(checkpointConfig)
-      println("\n=====================================================\n")
-    }
+  def runCheckpoint(checkpointConfig: CheckpointConfig): Unit = {
+    given sparkSession: SparkSession =
+      SparkSession
+        .builder()
+        .config {
+          checkpointConfig.sparkConfigs
+            .foldLeft(sparkConf) { case (sparkConf, sparkConfig) => sparkConf.set(sparkConfig._1, sparkConfig._2) }
+        }
+        .getOrCreate()
 
-  def runCheckpoint(checkpointConfig: CheckpointConfig): Unit =
-    RestonomerWorkflow(applicationConfig).run(checkpointConfig)
+    RestonomerWorkflow.run(checkpointConfig)
+  }
 
 }

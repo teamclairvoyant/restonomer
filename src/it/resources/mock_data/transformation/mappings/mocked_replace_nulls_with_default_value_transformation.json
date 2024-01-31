@@ -1,0 +1,9 @@
+{
+  "request": {
+    "url": "/replace-nulls-with-default-value-transformation"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "mocked_replace_nulls_with_default_value_transformation_response.json"
+  }
+}

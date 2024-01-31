@@ -57,6 +57,10 @@ data = {
     }
   }
 }
+
+spark-configs = {
+  "spark.app.name" = "sample_postman_checkpoint"
+}
 ```
 
 You can place a checkpoint file either:

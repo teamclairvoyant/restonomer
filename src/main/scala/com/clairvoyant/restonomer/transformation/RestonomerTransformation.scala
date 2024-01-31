@@ -204,6 +204,16 @@ case class FilterRecords(
 
 }
 
+case class FilterByRegex(
+    columnName: String,
+    regex: String
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame): DataFrame =
+    restonomerResponseDF.filter(col(columnName).rlike(regex))
+
+}
+
 case class FlattenSchema() extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame = restonomerResponseDF.flattenSchema
@@ -223,6 +233,14 @@ case class ReplaceEmptyStringsWithNulls() extends RestonomerTransformation {
 
   override def transform(restonomerResponseDF: DataFrame): DataFrame =
     restonomerResponseDF.na.replace(restonomerResponseDF.columns, Map("" -> null))
+
+}
+
+case class ReplaceNullsWithDefaultValue(
+    valueMap: Map[String, String]
+) extends RestonomerTransformation {
+
+  override def transform(restonomerResponseDF: DataFrame) = restonomerResponseDF.na.fill(valueMap)
 
 }
 

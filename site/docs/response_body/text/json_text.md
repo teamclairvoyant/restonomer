@@ -1,6 +1,7 @@
 # JSON
 
-Restonomer can parse the api response of text type in JSON format. User need to configure the checkpoint in below format:
+Restonomer can parse the api response of text type in JSON format. User need to configure the checkpoint in below
+format:
 
 ```hocon
 name = "checkpoint_json_response_dataframe_converter"
@@ -30,10 +31,48 @@ data = {
 }
 ```
 
-Just like `primitives-as-string`, user can configure below other properties for JSON text format that will help restonomer for parsing:
+## Compression
+
+In case the json text that is returned by the api is compressed, user can configure the checkpoint in below format:
+
+```hocon
+name = "checkpoint_json_response_dataframe_converter"
+
+data = {
+  data-request = {
+    url = "http://localhost:8080/json-response-converter"
+  }
+
+  data-response = {
+    body = {
+      type = "Text"
+      compression = "GZIP"
+      text-format = {
+        type = "JSONTextFormat"
+        primitives-as-string = true
+      }
+    }
+
+    persistence = {
+      type = "LocalFileSystem"
+      file-format = {
+        type = "ParquetFileFormat"
+      }
+      file-path = "/tmp/response_body"
+    }
+  }
+}
+```
+
+As of now, restonomer supports only `GZIP` compression format.
+
+## JSON Text Format Configurations
+
+Just like `primitives-as-string`, user can configure below other properties for JSON text format that will help
+restonomer for parsing:
 
 | Parameter Name                         |        Default Value        | Description                                                                                                                                                  |
-| :------------------------------------- | :-------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|:---------------------------------------|:---------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | allow-backslash-escaping-any-character |            false            | Allows accepting quoting of all character using backslash quoting mechanism.                                                                                 |
 | allow-comments                         |            false            | Ignores Java/C++ style comment in JSON records.                                                                                                              |
 | allow-non-numeric-numbers              |            true             | Allows JSON parser to recognize set of “Not-a-Number” (NaN) tokens as legal floating number values.                                                          |
