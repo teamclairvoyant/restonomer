@@ -20,7 +20,7 @@ ThisBuild / resolvers ++= Seq(
 
 ThisBuild / organization := "com.clairvoyant"
 
-ThisBuild / version := "3.1.0"
+ThisBuild / version := "3.2.0"
 
 // ----- PUBLISH TO GITHUB PACKAGES ----- //
 
