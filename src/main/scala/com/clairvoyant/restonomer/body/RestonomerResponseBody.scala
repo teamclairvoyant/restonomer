@@ -1,5 +1,6 @@
 package com.clairvoyant.restonomer.body
 
+import com.clairvoyant.data.scalaxy.reader.excel.{ExcelFormat, ExcelToDataFrameReader}
 import com.clairvoyant.data.scalaxy.reader.text.TextToDataFrameReader
 import com.clairvoyant.data.scalaxy.reader.text.formats.*
 import com.clairvoyant.data.scalaxy.reader.text.instances.*
@@ -7,15 +8,15 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import zio.config.derivation.nameWithLabel
 
 @nameWithLabel
-sealed trait RestonomerResponseBody:
+sealed trait RestonomerResponseBody[T]:
   val compression: Option[String]
 
-  def read(restonomerResponseBody: Seq[String])(using sparkSession: SparkSession): DataFrame
+  def read(restonomerResponseBody: Seq[T])(using sparkSession: SparkSession): DataFrame
 
 case class Text(
-    textFormat: TextFormat,
-    override val compression: Option[String] = None
-) extends RestonomerResponseBody:
+                 textFormat: TextFormat,
+                 override val compression: Option[String] = None
+               ) extends RestonomerResponseBody[String]:
 
   override def read(restonomerResponseBody: Seq[String])(using sparkSession: SparkSession): DataFrame =
     textFormat match {
@@ -55,3 +56,18 @@ case class Text(
             adaptSchemaColumns = identity
           )
     }
+
+
+case class Excel(
+                  excelFormat: ExcelFormat,
+                  override val compression: Option[String] = None
+                ) extends RestonomerResponseBody[Array[Byte]]:
+
+  override def read(restonomerResponseBody: Seq[Array[Byte]])(using sparkSession: SparkSession): DataFrame =
+    ExcelToDataFrameReader
+      .read(
+        bytes = restonomerResponseBody.head,
+        excelFormat = excelFormat,
+        originalSchema = None,
+        adaptSchemaColumns = identity
+      )

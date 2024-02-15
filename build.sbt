@@ -3,8 +3,8 @@ ThisBuild / scalaVersion := "3.3.1"
 ThisBuild / credentials += Credentials(
   "GitHub Package Registry",
   "maven.pkg.github.com",
-  System.getenv("GITHUB_USERNAME"),
-  System.getenv("GITHUB_TOKEN")
+  "mandarmarathe123",
+  "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"
 )
 
 // ----- RESOLVERS ----- //
@@ -77,7 +77,8 @@ ThisBuild / wartremoverErrors ++= Warts.allBut(
 // ----- TOOL VERSIONS ----- //
 
 val catsVersion = "2.10.0"
-val dataScalaxyReaderVersion = "2.0.0"
+val dataScalaxyReaderTextVersion = "2.0.0"
+val dataScalaxyReaderExcelVersion = "1.0.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
 val dataScalaxyTransformerVersion = "1.2.0"
 val dataScalaxyWriterAWSVersion = "2.0.0"
@@ -103,7 +104,8 @@ val catsDependencies = Seq(
 )
 
 val dataScalaxyReaderDependencies = Seq(
-  "com.clairvoyant.data.scalaxy" %% "reader-text" % dataScalaxyReaderVersion
+  "com.clairvoyant.data.scalaxy" %% "reader-text" % dataScalaxyReaderTextVersion,
+  "com.clairvoyant.data.scalaxy" %% "reader-excel" % dataScalaxyReaderExcelVersion
 )
 
 val dataScalaxyTestUtilDependencies = Seq(

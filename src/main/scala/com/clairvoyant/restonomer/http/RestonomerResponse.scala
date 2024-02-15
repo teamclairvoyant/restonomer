@@ -27,7 +27,8 @@ object RestonomerResponse {
 
   def fetchFromRequest(
       httpRequest: Request[Either[String, String], Any],
-      compression: Option[String],
+      isCompressed: Boolean,
+      isText: Boolean,
       retryConfig: RetryConfig,
       restonomerPagination: Option[RestonomerPagination]
   ): RestonomerResponse = {
@@ -47,6 +48,8 @@ object RestonomerResponse {
                         nextPageToken = nextPageToken
                       )
                     ),
+                    isText = isText,
+                    isCompressed = isCompressed,
                     statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
                     maxRetries = retryConfig.maxRetries
                   ).map(httpResponseBodySeq ++ _)
@@ -61,12 +64,9 @@ object RestonomerResponse {
     RestonomerResponse {
       getPages(
         httpResponseBody = getBody(
-          httpRequest = compression
-            .map {
-              ResponseBodyCompressionTypes(_) match
-                case GZIP => httpRequest.response(asByteArray)
-            }
-            .getOrElse(httpRequest.response(asString)),
+          httpRequest = httpRequest,
+          isText = isText,
+          isCompressed = isCompressed,
           statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
           maxRetries = retryConfig.maxRetries
         )
@@ -78,23 +78,37 @@ object RestonomerResponse {
 
   private def getBody[T](
       httpRequest: Request[Either[String, T], Any],
+      isText: Boolean,
+      isCompressed: Boolean,
       statusCodesToRetry: List[StatusCode],
       maxRetries: Int,
       currentRetryAttemptNumber: Int = 0
-  ): Future[Seq[String]] = {
-    httpRequest
-      .send(sttpBackend)
+  ): Future[Seq[T]] = {
+
+    val response = if isText && !isCompressed then httpRequest.response(asString) else httpRequest.response(asByteArray)
+    
+    response.send(sttpBackend)
       .flatMap {
         case Response(body, StatusCode.Ok, _, _, _, _) =>
           body match {
-            case Right(responseBody: String) => Future(Seq(responseBody))
+            case Right(responseBody: T) => {
+              responseBody match {
+                case textResponse: String => Future(Seq(textResponse))
+                case byteResponse: Array[Byte] =>
+                  if(isText && isCompressed) {
 
-            case Right(responseBody: Array[Byte]) =>
-              val gzipStream = new GZIPInputStream(new ByteArrayInputStream(responseBody))
-              val inputStreamReader = new InputStreamReader(gzipStream)
-              val bufferedReader = new BufferedReader(inputStreamReader)
-              Future(Iterator.continually(bufferedReader.readLine()).takeWhile(_ != null).toSeq)
-
+                    Future(Seq(byteResponse))
+                    // if response is compressed and text convert to string and return
+//                    val gzipStream = new GZIPInputStream(new ByteArrayInputStream(byteResponse))
+//                    val inputStreamReader = new InputStreamReader(gzipStream)
+//                    val bufferedReader = new BufferedReader(inputStreamReader)
+//                    Future(Iterator.continually(bufferedReader.readLine()).takeWhile(_ != null).toSeq)
+                  } else {
+                    // it is excel (or PDF) file, return as is (Array[String])
+                    Future(Seq(byteResponse))
+                  }
+              }
+            }
             case _ => Future(Seq.empty)
           }
 
@@ -108,6 +122,8 @@ object RestonomerResponse {
                   v = (currentRetryAttemptNumber + 1).toString,
                   replaceExisting = true
                 ),
+              isText = isText,
+              isCompressed = isCompressed,
               statusCodesToRetry = statusCodesToRetry,
               maxRetries = maxRetries,
               currentRetryAttemptNumber = currentRetryAttemptNumber + 1
@@ -124,6 +140,8 @@ object RestonomerResponse {
               method = requestMetadata.method,
               uri = uri"${headers.find(_.name == Location).get}"
             ),
+            isText = isText,
+            isCompressed = isCompressed,
             statusCodesToRetry = statusCodesToRetry,
             maxRetries = maxRetries,
             currentRetryAttemptNumber = currentRetryAttemptNumber + 1

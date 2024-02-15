@@ -1,6 +1,7 @@
 package com.clairvoyant.restonomer.app
 
 import cats.syntax.eq.*
+import com.clairvoyant.restonomer.body.{Excel, Text}
 import com.clairvoyant.restonomer.common.TokenResponsePlaceholders
 import com.clairvoyant.restonomer.common.TokenResponsePlaceholders.*
 import com.clairvoyant.restonomer.exception.RestonomerException
@@ -58,7 +59,11 @@ object RestonomerWorkflow {
 
     val dataRestonomerResponse = RestonomerResponse.fetchFromRequest(
       httpRequest = dataRestonomerRequest.httpRequest,
-      compression = checkpointConfig.data.dataResponse.body.compression,
+      isCompressed = checkpointConfig.data.dataResponse.body.compression.isDefined,
+      isText = checkpointConfig.data.dataResponse.body match {
+        case Text(_, _) => true
+        case _ => false
+      },
       retryConfig = checkpointConfig.data.dataRequest.retry,
       restonomerPagination = checkpointConfig.data.dataResponse.pagination
     )
