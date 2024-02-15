@@ -3,8 +3,8 @@ ThisBuild / scalaVersion := "3.3.1"
 ThisBuild / credentials += Credentials(
   "GitHub Package Registry",
   "maven.pkg.github.com",
-  "mandarmarathe123",
-  "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"
+  System.getenv("GITHUB_USERNAME"),
+  System.getenv("GITHUB_TOKEN")
 )
 
 // ----- RESOLVERS ----- //
