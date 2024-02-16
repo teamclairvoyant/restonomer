@@ -1,8 +1,8 @@
 package com.clairvoyant.restonomer.http
 
 import cats.syntax.eq.*
-import com.clairvoyant.restonomer.common.ResponseBodyCompressionTypes.*
 import com.clairvoyant.restonomer.common.*
+import com.clairvoyant.restonomer.common.ResponseBodyCompressionTypes.*
 import com.clairvoyant.restonomer.exception.RestonomerException
 import com.clairvoyant.restonomer.model.RetryConfig
 import com.clairvoyant.restonomer.pagination.RestonomerPagination
@@ -19,20 +19,21 @@ import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 import scala.util.Random
 
-case class RestonomerResponse(body: Future[Seq[String]])
+case class RestonomerResponse[T](body: Future[Seq[T]])
 
 object RestonomerResponse {
 
   private val random: Random.type = scala.util.Random
 
-  def fetchFromRequest(
-      httpRequest: Request[Either[String, String], Any],
-      isCompressed: Boolean,
-      isText: Boolean,
+  def fetchFromRequest[T](
+      httpRequest: Request[Either[String, T], Any],
       retryConfig: RetryConfig,
       restonomerPagination: Option[RestonomerPagination]
-  ): RestonomerResponse = {
-    def getPages(httpResponseBody: Future[Seq[String]]): Future[Seq[String]] = {
+  ): RestonomerResponse[T] = {
+    def getPages(
+        httpRequest: Request[Either[String, String], Any],
+        httpResponseBody: Future[Seq[String]]
+    ): Future[Seq[String]] = {
       restonomerPagination
         .map { pagination =>
           httpResponseBody.flatMap { httpResponseBodySeq =>
@@ -40,7 +41,8 @@ object RestonomerResponse {
               .getNextPageToken(httpResponseBodySeq.last)
               .map { nextPageToken =>
                 getPages(
-                  httpResponseBody = getBody(
+                  httpRequest,
+                  httpResponseBody = getBody[String](
                     httpRequest = httpRequest.method(
                       method = httpRequest.method,
                       uri = pagination.placeNextTokenInURL(
@@ -48,8 +50,6 @@ object RestonomerResponse {
                         nextPageToken = nextPageToken
                       )
                     ),
-                    isText = isText,
-                    isCompressed = isCompressed,
                     statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
                     maxRetries = retryConfig.maxRetries
                   ).map(httpResponseBodySeq ++ _)
@@ -62,15 +62,23 @@ object RestonomerResponse {
     }
 
     RestonomerResponse {
-      getPages(
-        httpResponseBody = getBody(
-          httpRequest = httpRequest,
-          isText = isText,
-          isCompressed = isCompressed,
-          statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
-          maxRetries = retryConfig.maxRetries
-        )
-      )
+      httpRequest match {
+        case stringHttpRequest: Request[Either[String, String], Any] =>
+          getPages(
+            httpRequest = stringHttpRequest,
+            httpResponseBody = getBody[String](
+              httpRequest = stringHttpRequest,
+              statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
+              maxRetries = retryConfig.maxRetries
+            )
+          )
+        case byteArrayHttpRequest: Request[Either[String, Array[Byte]], Any] =>
+          getBody[Array[Byte]](
+            httpRequest = byteArrayHttpRequest,
+            statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
+            maxRetries = retryConfig.maxRetries
+          )
+      }
     }
   }
 
@@ -78,38 +86,17 @@ object RestonomerResponse {
 
   private def getBody[T](
       httpRequest: Request[Either[String, T], Any],
-      isText: Boolean,
-      isCompressed: Boolean,
       statusCodesToRetry: List[StatusCode],
       maxRetries: Int,
       currentRetryAttemptNumber: Int = 0
   ): Future[Seq[T]] = {
-
-    val response = if isText && !isCompressed then httpRequest.response(asString) else httpRequest.response(asByteArray)
-    
-    response.send(sttpBackend)
+    httpRequest
+      .send(sttpBackend)
       .flatMap {
         case Response(body, StatusCode.Ok, _, _, _, _) =>
           body match {
-            case Right(responseBody: T) => {
-              responseBody match {
-                case textResponse: String => Future(Seq(textResponse))
-                case byteResponse: Array[Byte] =>
-                  if(isText && isCompressed) {
-
-                    Future(Seq(byteResponse))
-                    // if response is compressed and text convert to string and return
-//                    val gzipStream = new GZIPInputStream(new ByteArrayInputStream(byteResponse))
-//                    val inputStreamReader = new InputStreamReader(gzipStream)
-//                    val bufferedReader = new BufferedReader(inputStreamReader)
-//                    Future(Iterator.continually(bufferedReader.readLine()).takeWhile(_ != null).toSeq)
-                  } else {
-                    // it is excel (or PDF) file, return as is (Array[String])
-                    Future(Seq(byteResponse))
-                  }
-              }
-            }
-            case _ => Future(Seq.empty)
+            case Right(responseBody) => Future(Seq(responseBody))
+            case Left(_)             => Future(Seq.empty)
           }
 
         case response @ Response(_, statusCode, _, headers, _, _)
@@ -122,8 +109,6 @@ object RestonomerResponse {
                   v = (currentRetryAttemptNumber + 1).toString,
                   replaceExisting = true
                 ),
-              isText = isText,
-              isCompressed = isCompressed,
               statusCodesToRetry = statusCodesToRetry,
               maxRetries = maxRetries,
               currentRetryAttemptNumber = currentRetryAttemptNumber + 1
@@ -140,8 +125,6 @@ object RestonomerResponse {
               method = requestMetadata.method,
               uri = uri"${headers.find(_.name == Location).get}"
             ),
-            isText = isText,
-            isCompressed = isCompressed,
             statusCodesToRetry = statusCodesToRetry,
             maxRetries = maxRetries,
             currentRetryAttemptNumber = currentRetryAttemptNumber + 1

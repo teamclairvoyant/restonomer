@@ -4,8 +4,8 @@ import com.amazonaws.DefaultRequest
 import com.amazonaws.auth.internal.SignerConstants.*
 import com.amazonaws.auth.{AWS4Signer, BasicAWSCredentials}
 import com.amazonaws.http.HttpMethodName
-import com.clairvoyant.restonomer.common.APIKeyPlaceholders.*
 import com.clairvoyant.restonomer.common.*
+import com.clairvoyant.restonomer.common.APIKeyPlaceholders.*
 import com.clairvoyant.restonomer.exception.RestonomerException
 import com.clairvoyant.restonomer.sttpBackend
 import com.jayway.jsonpath.JsonPath
@@ -28,11 +28,11 @@ sealed trait RestonomerAuthentication {
 
   def validateCredentials(): Unit
 
-  def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any]
+  def authenticate[T](httpRequest: Request[Either[String, T], Any]): Request[Either[String, T], Any]
 
-  def validateCredentialsAndAuthenticate(
-      httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] = {
+  def validateCredentialsAndAuthenticate[T](
+      httpRequest: Request[Either[String, T], Any]
+  ): Request[Either[String, T], Any] = {
     validateCredentials()
     authenticate(httpRequest)
   }
@@ -67,9 +67,9 @@ case class BasicAuthentication(
       )
   }
 
-  override def authenticate(
-      httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] =
+  override def authenticate[T](
+      httpRequest: Request[Either[String, T], Any]
+  ): Request[Either[String, T], Any] =
     basicToken
       .map(httpRequest.auth.basicToken)
       .getOrElse(
@@ -95,9 +95,9 @@ case class BearerAuthentication(
       )
   }
 
-  override def authenticate(
-      httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] = httpRequest.auth.bearer(bearerToken)
+  override def authenticate[T](
+      httpRequest: Request[Either[String, T], Any]
+  ): Request[Either[String, T], Any] = httpRequest.auth.bearer(bearerToken)
 
 }
 
@@ -128,12 +128,12 @@ case class APIKeyAuthentication(
       )
   }
 
-  override def authenticate(
-      httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] =
+  override def authenticate[T](
+      httpRequest: Request[Either[String, T], Any]
+  ): Request[Either[String, T], Any] =
     APIKeyPlaceholders(placeholder) match {
       case QueryParam =>
-        httpRequest.copy[Identity, Either[String, String], Any](
+        httpRequest.copy[Identity, Either[String, T], Any](
           uri = httpRequest.uri.addParam(apiKeyName, apiKeyValue)
         )
       case RequestHeader => httpRequest.header(apiKeyName, apiKeyValue, replaceExisting = true)
@@ -170,9 +170,9 @@ case class JWTAuthentication(
     }
   }
 
-  override def authenticate(
-      httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] =
+  override def authenticate[T](
+      httpRequest: Request[Either[String, T], Any]
+  ): Request[Either[String, T], Any] =
     httpRequest.auth.bearer(
       Jwt.encode(
         claim = JwtClaim(subject = Option(subject)).issuedNow.expiresIn(tokenExpiresIn),
@@ -209,9 +209,9 @@ case class DigestAuthentication(
       )
   }
 
-  override def authenticate(
-      httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] =
+  override def authenticate[T](
+      httpRequest: Request[Either[String, T], Any]
+  ): Request[Either[String, T], Any] =
     httpRequest.auth.digest(
       user = userName,
       password = password
@@ -227,7 +227,7 @@ case class OAuth2Authentication(
 
   override def validateCredentials(): Unit = grantType.validateCredentials()
 
-  override def authenticate(httpRequest: Request[Either[String, String], Any]): Request[Either[String, String], Any] =
+  override def authenticate[T](httpRequest: Request[Either[String, T], Any]): Request[Either[String, T], Any] =
     httpRequest.auth.bearer(grantType.getAccessToken)
 
 }
@@ -307,9 +307,9 @@ case class AwsSignatureAuthentication(
       )
   }
 
-  override def authenticate(
-      httpRequest: Request[Either[String, String], Any]
-  ): Request[Either[String, String], Any] = {
+  override def authenticate[T](
+      httpRequest: Request[Either[String, T], Any]
+  ): Request[Either[String, T], Any] = {
     val awsRequest = new DefaultRequest("AWS")
     awsRequest.setHttpMethod(HttpMethodName.GET)
     awsRequest.setEndpoint(new URI(s"${httpRequest.uri.scheme.get}://${httpRequest.uri.host.get}"))

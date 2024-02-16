@@ -14,7 +14,7 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
     val authentication = None
     val restonomerRequestBuilder = RestonomerRequestBuilder(basicHttpRequest)
 
-    restonomerRequestBuilder.withAuthentication(authentication) shouldBe a[RestonomerRequestBuilder]
+    restonomerRequestBuilder.withAuthentication(authentication) shouldBe a[RestonomerRequestBuilder[String]]
 
     restonomerRequestBuilder
       .withAuthentication(authentication)
@@ -25,7 +25,7 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
     val authentication = Some(BasicAuthentication(basicToken = Some("test_token")))
     val restonomerRequestBuilder = RestonomerRequestBuilder(basicHttpRequest)
 
-    restonomerRequestBuilder.withAuthentication(authentication) shouldBe a[RestonomerRequestBuilder]
+    restonomerRequestBuilder.withAuthentication(authentication) shouldBe a[RestonomerRequestBuilder[String]]
 
     restonomerRequestBuilder
       .withAuthentication(authentication)
@@ -90,7 +90,7 @@ class RestonomerRequestBuilderSpec extends CoreSpec with HttpMockSpec {
   }
 
   "build" should "return RestonomerRequestObject" in {
-    RestonomerRequestBuilder(basicHttpRequest).build shouldBe a[RestonomerRequest]
+    RestonomerRequestBuilder(basicHttpRequest).build shouldBe a[RestonomerRequest[String]]
   }
 
 }
