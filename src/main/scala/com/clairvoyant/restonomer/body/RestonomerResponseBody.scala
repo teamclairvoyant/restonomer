@@ -23,17 +23,18 @@ case class Text(
     override val compression: Option[String] = None
 ) extends RestonomerResponseBody:
 
-  override def read[T](restonomerResponseBody: Seq[T])(using sparkSession: SparkSession): DataFrame =
+  def read[T](restonomerResponseBody: Seq[T])(using sparkSession: SparkSession): DataFrame =
     val finalRestonomerResponseBody =
       restonomerResponseBody match {
         case uncompressedTextResponse: Seq[String] => uncompressedTextResponse
         case compressedTextResponse: Seq[Array[Byte]] =>
-          ResponseBodyCompressionTypes(compression.get) match
+          ResponseBodyCompressionTypes(compression.get) match {
             case GZIP =>
               val gzipStream = new GZIPInputStream(new ByteArrayInputStream(compressedTextResponse.head))
               val inputStreamReader = new InputStreamReader(gzipStream)
               val bufferedReader = new BufferedReader(inputStreamReader)
               Iterator.continually(bufferedReader.readLine()).takeWhile(_ != null).toSeq
+          }
       }
 
     textFormat match {
@@ -79,7 +80,7 @@ case class Excel(
     override val compression: Option[String] = None
 ) extends RestonomerResponseBody:
 
-  override def read[T](restonomerResponseBody: Seq[T])(using sparkSession: SparkSession): DataFrame =
+  def read[T](restonomerResponseBody: Seq[T])(using sparkSession: SparkSession): DataFrame =
     restonomerResponseBody match {
       case Seq(responseBody: Array[Byte]) =>
         ExcelToDataFrameReader.read(

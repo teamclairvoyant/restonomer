@@ -1,8 +1,6 @@
 package com.clairvoyant.restonomer.http
 
 import cats.syntax.eq.*
-import com.clairvoyant.restonomer.common.*
-import com.clairvoyant.restonomer.common.ResponseBodyCompressionTypes.*
 import com.clairvoyant.restonomer.exception.RestonomerException
 import com.clairvoyant.restonomer.model.RetryConfig
 import com.clairvoyant.restonomer.pagination.RestonomerPagination
@@ -12,8 +10,6 @@ import sttp.client3.*
 import sttp.model.HeaderNames.Location
 import sttp.model.{Header, StatusCode}
 
-import java.io.{BufferedReader, ByteArrayInputStream, InputStreamReader}
-import java.util.zip.GZIPInputStream
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt

@@ -19,6 +19,7 @@ import scala.concurrent.duration.Duration
 object RestonomerWorkflow {
 
   def run(checkpointConfig: CheckpointConfig)(using sparkSession: SparkSession): Unit = {
+
     checkpointConfig.data.dataResponse.body match
       case Text(_, Some(_)) => start[Array[Byte]](asByteArray)
       case Text(_, None)    => start[String](asString)
