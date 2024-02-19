@@ -1,10 +1,10 @@
 package com.clairvoyant.restonomer.http
 
 import cats.syntax.eq.*
+import com.clairvoyant.restonomer.*
 import com.clairvoyant.restonomer.exception.RestonomerException
 import com.clairvoyant.restonomer.model.RetryConfig
 import com.clairvoyant.restonomer.pagination.RestonomerPagination
-import com.clairvoyant.restonomer.sttpBackend
 import odelay.Delay
 import sttp.client3.*
 import sttp.model.HeaderNames.Location
@@ -22,14 +22,14 @@ object RestonomerResponse {
   private val random: Random.type = scala.util.Random
 
   def fetchFromRequest[T](
-      httpRequest: Request[Either[String, T], Any],
+      httpRequest: HttpRequest[T],
       retryConfig: RetryConfig,
       restonomerPagination: Option[RestonomerPagination]
   ): RestonomerResponse[T] = {
     def getPages(
-        httpRequest: Request[Either[String, String], Any],
-        httpResponseBody: Future[Seq[String]]
-    ): Future[Seq[String]] = {
+        httpRequest: HttpRequest[String],
+        httpResponseBody: Future[HttpResponseBody[String]]
+    ): Future[HttpResponseBody[String]] = {
       restonomerPagination
         .map { pagination =>
           httpResponseBody.flatMap { httpResponseBodySeq =>
@@ -59,7 +59,7 @@ object RestonomerResponse {
 
     RestonomerResponse {
       httpRequest match {
-        case stringHttpRequest: Request[Either[String, String], Any] =>
+        case stringHttpRequest: HttpRequest[String] =>
           getPages(
             httpRequest = stringHttpRequest,
             httpResponseBody = getBody[String](
@@ -68,12 +68,14 @@ object RestonomerResponse {
               maxRetries = retryConfig.maxRetries
             )
           )
-        case byteArrayHttpRequest: Request[Either[String, Array[Byte]], Any] =>
+        case byteArrayHttpRequest: HttpRequest[Array[Byte]] =>
           getBody[Array[Byte]](
             httpRequest = byteArrayHttpRequest,
             statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
             maxRetries = retryConfig.maxRetries
           )
+        case _ =>
+          throw new RestonomerException("Unsupported target response type. Supported types are [String, Array[Byte]]")
       }
     }
   }
@@ -81,11 +83,11 @@ object RestonomerResponse {
   private def sleepTimeInSeconds: Int = 10 + random.nextInt(10) + 1
 
   private def getBody[T](
-      httpRequest: Request[Either[String, T], Any],
+      httpRequest: HttpRequest[T],
       statusCodesToRetry: List[StatusCode],
       maxRetries: Int,
       currentRetryAttemptNumber: Int = 0
-  ): Future[Seq[T]] = {
+  ): Future[HttpResponseBody[T]] = {
     httpRequest
       .send(sttpBackend)
       .flatMap {

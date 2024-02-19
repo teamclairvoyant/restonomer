@@ -1,12 +1,12 @@
 package com.clairvoyant.restonomer.http
 
+import com.clairvoyant.restonomer.*
 import com.clairvoyant.restonomer.authentication.*
 import com.clairvoyant.restonomer.body.*
-import sttp.client3.Request
 import sttp.model.Header
 import sttp.model.HeaderNames.*
 
-case class RestonomerRequestBuilder[T](httpRequest: Request[Either[String, T], Any]) {
+case class RestonomerRequestBuilder[T](httpRequest: HttpRequest[T]) {
 
   def withQueryParams(queryParams: Map[String, String])(
       using tokenFunction: Option[String => String]

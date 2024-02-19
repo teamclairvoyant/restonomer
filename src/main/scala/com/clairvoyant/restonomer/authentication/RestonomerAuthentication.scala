@@ -4,8 +4,8 @@ import com.amazonaws.DefaultRequest
 import com.amazonaws.auth.internal.SignerConstants.*
 import com.amazonaws.auth.{AWS4Signer, BasicAWSCredentials}
 import com.amazonaws.http.HttpMethodName
-import com.clairvoyant.restonomer.common.*
 import com.clairvoyant.restonomer.common.APIKeyPlaceholders.*
+import com.clairvoyant.restonomer.common.*
 import com.clairvoyant.restonomer.exception.RestonomerException
 import com.clairvoyant.restonomer.sttpBackend
 import com.jayway.jsonpath.JsonPath

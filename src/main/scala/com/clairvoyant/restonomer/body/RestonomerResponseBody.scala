@@ -4,6 +4,7 @@ import com.clairvoyant.data.scalaxy.reader.excel.{ExcelFormat, ExcelToDataFrameR
 import com.clairvoyant.data.scalaxy.reader.text.TextToDataFrameReader
 import com.clairvoyant.data.scalaxy.reader.text.formats.*
 import com.clairvoyant.data.scalaxy.reader.text.instances.*
+import com.clairvoyant.restonomer.HttpResponseBody
 import com.clairvoyant.restonomer.common.ResponseBodyCompressionTypes
 import com.clairvoyant.restonomer.common.ResponseBodyCompressionTypes.*
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -16,14 +17,14 @@ import java.util.zip.GZIPInputStream
 sealed trait RestonomerResponseBody:
   val compression: Option[String]
 
-  def read[T](restonomerResponseBody: Seq[T])(using sparkSession: SparkSession): DataFrame
+  def read[T](restonomerResponseBody: HttpResponseBody[T])(using sparkSession: SparkSession): DataFrame
 
 case class Text(
     textFormat: TextFormat,
     override val compression: Option[String] = None
 ) extends RestonomerResponseBody:
 
-  def read[T](restonomerResponseBody: Seq[T])(using sparkSession: SparkSession): DataFrame =
+  def read[T](restonomerResponseBody: HttpResponseBody[T])(using sparkSession: SparkSession): DataFrame =
     val finalRestonomerResponseBody =
       restonomerResponseBody match {
         case uncompressedTextResponse: Seq[String] => uncompressedTextResponse
@@ -80,7 +81,7 @@ case class Excel(
     override val compression: Option[String] = None
 ) extends RestonomerResponseBody:
 
-  def read[T](restonomerResponseBody: Seq[T])(using sparkSession: SparkSession): DataFrame =
+  def read[T](restonomerResponseBody: HttpResponseBody[T])(using sparkSession: SparkSession): DataFrame =
     restonomerResponseBody match {
       case Seq(responseBody: Array[Byte]) =>
         ExcelToDataFrameReader.read(
