@@ -92,7 +92,7 @@ val scalaParserCombinatorsVersion = "2.3.0"
 val scalaXmlVersion = "2.2.0"
 val sparkMLLibVersion = "3.5.0"
 val sttpVersion = "3.9.2"
-val testContainersScalaVersion = "0.41.2"
+val testContainersScalaVersion = "0.41.3"
 val wireMockVersion = "3.0.1"
 val zioConfigVersion = "4.0.0-RC16"
 
