@@ -25,24 +25,24 @@ case class Text(
 ) extends RestonomerResponseBody:
 
   def read[T](restonomerResponseBody: HttpResponseBody[T])(using sparkSession: SparkSession): DataFrame =
-    val finalRestonomerResponseBody =
+    val textResponse: Seq[String] =
       restonomerResponseBody match {
-        case uncompressedTextResponse: Seq[String] => uncompressedTextResponse
-        case compressedTextResponse: Seq[Array[Byte]] =>
+        case Seq(compressedTextResponse: Array[Byte]) =>
           ResponseBodyCompressionTypes(compression.get) match {
             case GZIP =>
-              val gzipStream = new GZIPInputStream(new ByteArrayInputStream(compressedTextResponse.head))
+              val gzipStream = new GZIPInputStream(new ByteArrayInputStream(compressedTextResponse))
               val inputStreamReader = new InputStreamReader(gzipStream)
               val bufferedReader = new BufferedReader(inputStreamReader)
               Iterator.continually(bufferedReader.readLine()).takeWhile(_ != null).toSeq
           }
+        case unCompressedTextResponse: Seq[String] => unCompressedTextResponse
       }
 
     textFormat match {
       case csvTextFormat: CSVTextFormat =>
         TextToDataFrameReader[CSVTextFormat]
           .read(
-            text = finalRestonomerResponseBody,
+            text = textResponse,
             textFormat = csvTextFormat,
             originalSchema = None,
             adaptSchemaColumns = identity
@@ -51,7 +51,7 @@ case class Text(
       case jsonTextFormat: JSONTextFormat =>
         TextToDataFrameReader[JSONTextFormat]
           .read(
-            text = finalRestonomerResponseBody,
+            text = textResponse,
             textFormat = jsonTextFormat,
             originalSchema = None,
             adaptSchemaColumns = identity
@@ -60,7 +60,7 @@ case class Text(
       case xmlTextFormat: XMLTextFormat =>
         TextToDataFrameReader[XMLTextFormat]
           .read(
-            text = finalRestonomerResponseBody,
+            text = textResponse,
             textFormat = xmlTextFormat,
             originalSchema = None,
             adaptSchemaColumns = identity
@@ -69,7 +69,7 @@ case class Text(
       case htmlTableTextFormat: HTMLTableTextFormat =>
         TextToDataFrameReader[HTMLTableTextFormat]
           .read(
-            text = finalRestonomerResponseBody,
+            text = textResponse,
             textFormat = htmlTableTextFormat,
             originalSchema = None,
             adaptSchemaColumns = identity
