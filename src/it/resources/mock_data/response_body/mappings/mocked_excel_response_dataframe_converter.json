@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/excel-response-converter"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "sample_excel_response_body.xlsx"
+  }
+}

@@ -1,16 +1,16 @@
 package com.clairvoyant.restonomer.http
 
+import com.clairvoyant.restonomer.*
 import com.clairvoyant.restonomer.authentication.*
 import com.clairvoyant.restonomer.body.*
-import sttp.client3.Request
 import sttp.model.Header
 import sttp.model.HeaderNames.*
 
-case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String], Any]) {
+case class RestonomerRequestBuilder[T](httpRequest: HttpRequest[T]) {
 
   def withQueryParams(queryParams: Map[String, String])(
       using tokenFunction: Option[String => String]
-  ): RestonomerRequestBuilder =
+  ): RestonomerRequestBuilder[T] =
     copy(httpRequest =
       httpRequest.method(
         method = httpRequest.method,
@@ -24,7 +24,7 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
 
   def withAuthentication(
       authenticationConfig: Option[RestonomerAuthentication]
-  )(using tokenFunction: Option[String => String]): RestonomerRequestBuilder =
+  )(using tokenFunction: Option[String => String]): RestonomerRequestBuilder[T] =
     copy(httpRequest =
       authenticationConfig
         .map { restonomerAuthentication =>
@@ -38,7 +38,7 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
 
   def withHeaders(
       headers: Map[String, String]
-  )(using tokenFunction: Option[String => String]): RestonomerRequestBuilder =
+  )(using tokenFunction: Option[String => String]): RestonomerRequestBuilder[T] =
     copy(httpRequest =
       httpRequest.headers(
         tokenFunction
@@ -47,7 +47,7 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
       )
     )
 
-  def withBody(body: Option[RestonomerRequestBody] = None): RestonomerRequestBuilder =
+  def withBody(body: Option[RestonomerRequestBody] = None): RestonomerRequestBuilder[T] =
     copy(httpRequest =
       body
         .map {
@@ -61,5 +61,5 @@ case class RestonomerRequestBuilder(httpRequest: Request[Either[String, String],
         .getOrElse(httpRequest)
     )
 
-  def build: RestonomerRequest = new RestonomerRequest(httpRequest)
+  def build: RestonomerRequest[T] = new RestonomerRequest(httpRequest)
 }

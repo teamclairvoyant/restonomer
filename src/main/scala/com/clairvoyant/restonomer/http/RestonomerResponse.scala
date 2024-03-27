@@ -1,37 +1,35 @@
 package com.clairvoyant.restonomer.http
 
 import cats.syntax.eq.*
-import com.clairvoyant.restonomer.common.ResponseBodyCompressionTypes.*
-import com.clairvoyant.restonomer.common.*
+import com.clairvoyant.restonomer.*
 import com.clairvoyant.restonomer.exception.RestonomerException
 import com.clairvoyant.restonomer.model.RetryConfig
 import com.clairvoyant.restonomer.pagination.RestonomerPagination
-import com.clairvoyant.restonomer.sttpBackend
 import odelay.Delay
 import sttp.client3.*
 import sttp.model.HeaderNames.Location
 import sttp.model.{Header, StatusCode}
 
-import java.io.{BufferedReader, ByteArrayInputStream, InputStreamReader}
-import java.util.zip.GZIPInputStream
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 import scala.util.Random
 
-case class RestonomerResponse(body: Future[Seq[String]])
+case class RestonomerResponse[T](body: Future[Seq[T]])
 
 object RestonomerResponse {
 
   private val random: Random.type = scala.util.Random
 
-  def fetchFromRequest(
-      httpRequest: Request[Either[String, String], Any],
-      compression: Option[String],
+  def fetchFromRequest[T](
+      httpRequest: HttpRequest[T],
       retryConfig: RetryConfig,
       restonomerPagination: Option[RestonomerPagination]
-  ): RestonomerResponse = {
-    def getPages(httpResponseBody: Future[Seq[String]]): Future[Seq[String]] = {
+  ): RestonomerResponse[T] = {
+    def getPages(
+        httpRequest: HttpRequest[String],
+        httpResponseBody: Future[HttpResponseBody[String]]
+    ): Future[HttpResponseBody[String]] = {
       restonomerPagination
         .map { pagination =>
           httpResponseBody.flatMap { httpResponseBodySeq =>
@@ -39,7 +37,8 @@ object RestonomerResponse {
               .getNextPageToken(httpResponseBodySeq.last)
               .map { nextPageToken =>
                 getPages(
-                  httpResponseBody = getBody(
+                  httpRequest,
+                  httpResponseBody = getBody[String](
                     httpRequest = httpRequest.method(
                       method = httpRequest.method,
                       uri = pagination.placeNextTokenInURL(
@@ -59,43 +58,43 @@ object RestonomerResponse {
     }
 
     RestonomerResponse {
-      getPages(
-        httpResponseBody = getBody(
-          httpRequest = compression
-            .map {
-              ResponseBodyCompressionTypes(_) match
-                case GZIP => httpRequest.response(asByteArray)
-            }
-            .getOrElse(httpRequest.response(asString)),
-          statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
-          maxRetries = retryConfig.maxRetries
-        )
-      )
+      httpRequest match {
+        case stringHttpRequest: HttpRequest[String] =>
+          getPages(
+            httpRequest = stringHttpRequest,
+            httpResponseBody = getBody[String](
+              httpRequest = stringHttpRequest,
+              statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
+              maxRetries = retryConfig.maxRetries
+            )
+          )
+        case byteArrayHttpRequest: HttpRequest[Array[Byte]] =>
+          getBody[Array[Byte]](
+            httpRequest = byteArrayHttpRequest,
+            statusCodesToRetry = retryConfig.statusCodesToRetry.map(StatusCode(_)),
+            maxRetries = retryConfig.maxRetries
+          )
+        case _ =>
+          throw new RestonomerException("Unsupported target response type. Supported types are [String, Array[Byte]]")
+      }
     }
   }
 
   private def sleepTimeInSeconds: Int = 10 + random.nextInt(10) + 1
 
   private def getBody[T](
-      httpRequest: Request[Either[String, T], Any],
+      httpRequest: HttpRequest[T],
       statusCodesToRetry: List[StatusCode],
       maxRetries: Int,
       currentRetryAttemptNumber: Int = 0
-  ): Future[Seq[String]] = {
+  ): Future[HttpResponseBody[T]] = {
     httpRequest
       .send(sttpBackend)
       .flatMap {
         case Response(body, StatusCode.Ok, _, _, _, _) =>
           body match {
-            case Right(responseBody: String) => Future(Seq(responseBody))
-
-            case Right(responseBody: Array[Byte]) =>
-              val gzipStream = new GZIPInputStream(new ByteArrayInputStream(responseBody))
-              val inputStreamReader = new InputStreamReader(gzipStream)
-              val bufferedReader = new BufferedReader(inputStreamReader)
-              Future(Iterator.continually(bufferedReader.readLine()).takeWhile(_ != null).toSeq)
-
-            case _ => Future(Seq.empty)
+            case Right(responseBody) => Future(Seq(responseBody))
+            case Left(_)             => Future(Seq.empty)
           }
 
         case response @ Response(_, statusCode, _, headers, _, _)
