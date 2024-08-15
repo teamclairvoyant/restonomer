@@ -1,4 +1,4 @@
-ThisBuild / scalaVersion := "3.4.1"
+ThisBuild / scalaVersion := "3.4.3"
 
 ThisBuild / credentials += Credentials(
   "GitHub Package Registry",
