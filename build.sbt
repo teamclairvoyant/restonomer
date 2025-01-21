@@ -76,7 +76,7 @@ ThisBuild / wartremoverErrors ++= Warts.allBut(
 
 // ----- TOOL VERSIONS ----- //
 
-val catsVersion = "2.10.0"
+val catsVersion = "2.13.0"
 val dataScalaxyReaderTextVersion = "2.0.0"
 val dataScalaxyReaderExcelVersion = "1.0.0"
 val dataScalaxyTestUtilVersion = "1.0.0"
