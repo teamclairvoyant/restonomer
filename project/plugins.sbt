@@ -1,5 +1,5 @@
 val assemblyVersion = "2.2.0"
-val scalafixVersion = "0.12.1"
+val scalafixVersion = "0.14.2"
 val scalafmtVersion = "2.5.2"
 val wartremoverVersion = "3.1.6"
 
